@@ -1,0 +1,19 @@
+{
+  "name": "Builder mail DSFR — prototype",
+  "short_name": "Mail DSFR",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "lang": "fr",
+  "background_color": "#ffffff",
+  "theme_color": "#000091",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "upstream_repository": "https://github.com/GouvernementFR/dsfr-mail",
+  "upstream_commit": "8b7b35f35526674f7f4a0225fea8107c2156163b",
+  "snum_repository": "https://github.com/alexandra-guiderdoni/assistant-ia-newsletter-com-snum",
+  "snum_commit": "d6b17ffc76a51ec2352928c419769add384c3cc6",
+  "files": [
+    {
+      "source": "assets/Marianne-Light@2x.png",
+      "copy": "Marianne-Light@2x.png",
+      "sha256": "9a28dc89e8243135d66e4c49b3a16f81d45b45977023468b1f5babed32ebfdd3"
+    },
+    {
+      "source": "assets/placeholder.16x9.png",
+      "copy": "placeholder.16x9.png",
+      "sha256": "c86724ef7f1f78003808ede554cba5a0f63fb0e8a9e80eb45173988e8bd71ede"
+    },
+    {
+      "source": "_source/mail-tool-render.js",
+      "copy": "snum-packet.js",
+      "sha256": "c58ede03622a97bc2a48da6a330d20d19efa3d37669993e03b3a0481d17f084b"
+    }
+  ],
+  "adaptations": [
+    "Rendu prototype adapté par l’application : styles inline et trois familles de blocs ; aucune modification de l’amont.",
+    "Module SNUM copié sans modification ; seule sa fonction parse est appelée."
+  ]
+}

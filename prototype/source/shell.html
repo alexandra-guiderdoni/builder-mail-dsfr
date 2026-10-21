@@ -1,0 +1,34 @@
+<!doctype html>
+<!-- PDG-LARGE-FILE-JUSTIFICATION: prototype distribué autonome, assemblé depuis des sources séparées ; scripts et images incorporés pour le double-clic hors connexion. -->
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="@@CSP@@"><meta name="theme-color" content="#000091">
+<title>Builder de courriels DSFR — prototype de faisabilité</title>@@MANIFEST@@<style>@@STYLE@@</style></head>
+<body><a class="skip" href="#main">Aller au contenu</a>
+<header><h1>Composer un courriel DSFR</h1><p><strong>Prototype de faisabilité.</strong> Peut-on composer, sauvegarder, reprendre et exporter le même mail avec ses images, dans un fichier portable et une webapp hors connexion ?</p><p id="environment"></p></header>
+<main id="main" tabindex="-1">
+<noscript><p>JavaScript doit être activé pour utiliser ce prototype.</p></noscript>
+<div class="notice"><p>Une seule composition est sauvegardée automatiquement dans ce navigateur. Exportez le fichier de travail pour la conserver indépendamment du profil. L’aperçu ne qualifie pas le mail reçu dans Outlook ou Mélissa.</p><p id="save-state" role="status" aria-live="polite"></p></div>
+<p id="error" class="error" role="alert" hidden></p><p id="status" role="status" aria-live="polite"></p>
+<div class="layout"><div>
+<section class="panel" aria-labelledby="identity-title"><h2 id="identity-title">1. Identité et contenu</h2>
+<label for="service">Nom du service</label><input id="service" autocomplete="off">
+<label for="subject">Titre du courriel</label><input id="subject" autocomplete="off">
+<label for="footer">Pied de page</label><textarea id="footer" rows="2"></textarea>
+<div class="actions"><button data-action="demo">Charger l’exemple</button><button data-action="restore">Rouvrir le brouillon</button></div>
+<h2>2. Blocs du courriel</h2><p>Le prototype exerce trois familles du futur catalogue complet. Les images choisies restent incorporées à la composition.</p>
+<div id="blocks"></div><div class="actions"><button data-add="text">Ajouter un paragraphe</button><button data-add="image">Ajouter une image</button><button data-add="button">Ajouter une action</button></div></section>
+<section class="panel" aria-labelledby="imports-title"><h2 id="imports-title">Reprendre un contenu préparé</h2>
+<label for="project-input">Importer une composition du prototype (.json)</label><input id="project-input" type="file" accept="application/json,.json">
+<details><summary>Importer un paquet SNUM</summary><label for="snum-input">Paquet JSON ou bloc complet de Collecte</label><textarea id="snum-input" rows="7"></textarea><div class="actions"><button id="snum-import">Importer le paquet SNUM</button></div><p>Les remarques de collecte sont exclues du courriel.</p></details></section>
+</div><div>
+<section class="panel" aria-labelledby="preview-title"><h2 id="preview-title">3. Aperçu et sorties</h2>
+<div class="actions"><button class="primary" data-action="copy">Copier le mail</button><button data-action="mail">Télécharger le mail HTML</button><button data-action="project">Exporter le fichier de travail</button></div>
+<iframe id="preview" title="Aperçu du courriel" sandbox="" referrerpolicy="no-referrer"></iframe></section>
+<section class="panel" aria-labelledby="state-title"><h2 id="state-title">Composition en cours</h2><dl><dt>Service</dt><dd id="state-service"></dd><dt>Titre</dt><dd id="state-subject"></dd><dt>Contenu</dt><dd id="state-count"></dd></dl></section>
+</div></div>
+<section class="panel" aria-labelledby="walk-title"><h2 id="walk-title">Parcours guidés de faisabilité</h2>
+<div role="tablist" aria-label="Scénarios"><button role="tab" id="tab-save" aria-controls="walk-save" aria-selected="true">Sauvegarder et reprendre</button><button role="tab" id="tab-transport" aria-controls="walk-transport" aria-selected="false" tabindex="-1">Transporter le mail</button><button role="tab" id="tab-invalid" aria-controls="walk-invalid" aria-selected="false" tabindex="-1">Refuser un import invalide</button></div>
+<div role="tabpanel" id="walk-save" aria-labelledby="tab-save"><p>Chargez l’exemple, personnalisez son titre, sauvegardez et rouvrez le brouillon. Rechargez ensuite réellement la page pour distinguer stockage et mémoire.</p><div class="actions"><button data-action="demo">1. Charger l’exemple</button><button data-action="save">2. Sauvegarder maintenant</button><button data-action="restore">3. Relire le brouillon</button></div></div>
+<div role="tabpanel" id="walk-transport" aria-labelledby="tab-transport" hidden><p>Exportez la composition puis importez ce fichier dans un autre profil. Vérifiez les images. Le HTML est la sortie de diffusion ; l’envoi et la réception dans la messagerie restent une recette sur poste cible.</p><div class="actions"><button data-action="project">1. Exporter la composition</button><button data-action="mail">2. Exporter le courriel</button><button data-action="copy">3. Copier le courriel</button></div></div>
+<div role="tabpanel" id="walk-invalid" aria-labelledby="tab-invalid" hidden><p>Le format invalide doit être refusé avant tout remplacement de votre composition. Contrôlez le titre et le nombre de blocs après cette action.</p><div class="actions"><button data-action="invalid">Essayer un import invalide</button></div></div>
+</section></main><script>@@SCRIPT@@</script></body></html>

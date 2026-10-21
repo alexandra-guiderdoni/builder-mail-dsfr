@@ -1,0 +1,87 @@
+{
+  "observed_at": "2026-10-21T22:57:37.437938+02:00",
+  "scope": "Prototype de faisabilité, trois familles de blocs et un brouillon ; qualification de production non réalisée.",
+  "environment": {
+    "os": "macOS",
+    "os_version": "26.5.2",
+    "firefox": "156.0",
+    "chromium": "156.0.8078.4"
+  },
+  "verdict": "PARCOURS_PROTOTYPE_OBSERVE",
+  "firefox": {
+    "checks": [
+      "édition, image locale, duplication et retrait",
+      "téléchargements réels du projet et du mail, images incorporées et texte échappé",
+      "restauration après fermeture et réouverture de l’onglet",
+      "écriture du presse-papiers via un clic utilisateur BiDi",
+      "import invalide refusé sans remplacement",
+      "fichier de travail avec lien javascript refusé, brouillon conservé",
+      "import du paquet SNUM réel de recette",
+      "article SNUM dupliqué : lien source conservé dans le HTML réellement téléchargé",
+      "réimport du fichier téléchargé",
+      "restauration du fichier de travail sous une autre origine et préparation du cache",
+      "réouverture web avec serveur réellement arrêté",
+      "redémarrage complet de Firefox : brouillon file et cache web restaurés sans serveur"
+    ],
+    "errors": [],
+    "clipboard_write_status": "Mail copié en HTML et texte. Vérifiez ensuite le collage dans votre messagerie."
+  },
+  "chromium": {
+    "checks": [
+      "fichier local : édition, image, sauvegarde, rechargement, téléchargements réels et lecture du presse-papiers HTML",
+      "onglets guidés : activation et déplacement du focus avec la flèche droite",
+      "activation au clavier et presse-papiers réellement relu : source SNUM et duplicata présents dans text/html et text/plain",
+      "fichier de travail restauré avec images dans un profil neuf",
+      "variante web : préparation du cache et rechargement avec serveur réellement arrêté"
+    ],
+    "errors": [],
+    "clipboard": {
+      "types": [
+        "text/plain",
+        "text/html"
+      ],
+      "htmlLength": 14953,
+      "embeddedImage": true
+    }
+  },
+  "reference_commits": {
+    "dsfr_mail": "8b7b35f35526674f7f4a0225fea8107c2156163b",
+    "snum": "d6b17ffc76a51ec2352928c419769add384c3cc6"
+  },
+  "artifact_sha256": {
+    "prototype/distribution/portable.html": "0df9566cf87e6a71b5dfa97f45caca060ee5b5e165cd63bfb2c841055a842954",
+    "prototype/distribution/web/icon.svg": "5505b460c862ebb01858dd50199029259b1f7a6aa3764f219f4ab83405181a23",
+    "prototype/distribution/web/index.html": "63c7bd9598417520917999366775a18bbfebc9b4429b3d5d8319981e6369f205",
+    "prototype/distribution/web/manifest.webmanifest": "4c3bcf2a7c0d7b742467d05f0d7f410092407962aa45cc02128c432afa354509",
+    "prototype/distribution/web/sw.js": "cb1e7de967349447dbcf96286105b80c3a1409a4a9f632184e81ac3898c69ebc",
+    "prototype/reference/Marianne-Light@2x.png": "9a28dc89e8243135d66e4c49b3a16f81d45b45977023468b1f5babed32ebfdd3",
+    "prototype/reference/placeholder.16x9.png": "c86724ef7f1f78003808ede554cba5a0f63fb0e8a9e80eb45173988e8bd71ede",
+    "prototype/reference/provenance.json": "a146f8920cb4874419849984c9ad637d9a04fd7ddab25d232445ba7831cd48d2",
+    "prototype/reference/snum-packet.js": "c58ede03622a97bc2a48da6a330d20d19efa3d37669993e03b3a0481d17f084b",
+    "prototype/source/draft-store.js": "b161b454989981a9b80f14428ddfb80d777084ea3ac987aba9f6638bfd4d0e78",
+    "prototype/source/editor.js": "957d5dcb5f8f73a93d7fe6913b8a631dbe1063a37a14dbe1c011d2a407409127",
+    "prototype/source/icon.svg": "5505b460c862ebb01858dd50199029259b1f7a6aa3764f219f4ab83405181a23",
+    "prototype/source/model.js": "4fc96e9ace970f5908a357e362ef956093c94f557b90669221a3a49343bdf86d",
+    "prototype/source/render-mail.js": "a70695b9497b3a6459f5d2e10d96c10a91d310f7446548bfb14afc9713b9a953",
+    "prototype/source/shell.html": "3207de04c09c253489edcc5968883bea8514fad0f9489d5c32c822ea4dc6def8",
+    "prototype/source/style.css": "06ababcfecc2de16d968a5382b0e0afb2ee08f174db2a034211660250a03f0a8",
+    "prototype/source/sw.js": "e05eafff6039fd3af6a0bd01c52ba1a0438ae3cc5f487fd48e5fb0fd378ad56c",
+    "scripts/build.py": "02f53312d01c0e0627e79206874cc0a3cbab43b4be2d3c9b94d7ba9d6bbe3d35"
+  },
+  "local_evidence": {
+    "firefox": "evidence/verified/firefox-receipt.json",
+    "chromium": "evidence/verified-keyboard/chromium-receipt.json",
+    "copy_diagnostic": "evidence/copy-diagnostic.json"
+  },
+  "scenario_sha256": {
+    "evidence/capture-firefox.mjs": "b1f2a90b8acfc4835ecbd92c943c98b2024de8f0ff4e2074d3e4fcbdc485dc87",
+    "evidence/capture-chromium.cjs": "a214067ead4f451ea4254366211bef64236c4634c67c8fed0e69ab547917c2bf"
+  },
+  "not_qualified": [
+    "Windows et versions du parc",
+    "Collage, retouche, envoi et réception dans Outlook et Mélissa",
+    "Installation native depuis une origine HTTPS du parc",
+    "Quotas, fermeture pendant sauvegarde et mise à jour avec brouillon ouvert",
+    "Conformité RGAA et fidélité complète au catalogue officiel"
+  ]
+}
