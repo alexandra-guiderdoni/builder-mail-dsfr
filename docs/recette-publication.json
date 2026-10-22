@@ -199,8 +199,12 @@
     "default_branch_main": true,
     "live_url_verified": true,
     "url": "https://alexandra-guiderdoni.github.io/builder-mail-dsfr/",
-    "workflow_run": "https://github.com/alexandra-guiderdoni/builder-mail-dsfr/actions/runs/39822607625",
-    "receipt": "recette-pages.json"
+    "workflow_run": "https://github.com/alexandra-guiderdoni/builder-mail-dsfr/actions/runs/39830471099",
+    "receipt": "recette-pages.json",
+    "verified_content_commit": "2b5cd073357aa4608aac18c0b48ce53dea74aa56",
+    "public_update_preserves_library": true,
+    "custom_label_preview_and_offline_reload": true,
+    "runtime_receipt_sha256": "302a86eef2ab3959c1c410a66cbe3f0a88ed3aed35977e7df1d5e57082c810ec"
   },
   "editor_source_labels_and_dsfr": {
     "base_commit": "db045a3b6933e152a71704210a1f834a48516ca1",
@@ -249,7 +253,8 @@
       "review": "Astra GO local / GO PDV",
       "initial_public_failure_sha256": "e88762946d72e7012d80f6a0760ab46cac3037cb44e98e9f213aa2b248f69b7d",
       "red_log_sha256": "8654e88dd8bb41a48f26e08f406c178cc5c8732fbcabe5121ec1c22aa9691458",
-      "green_log_sha256": "7af493dd4e1b53bdf220f88c15cc2e1ef22c32322253720bdc85354a60340672"
+      "green_log_sha256": "7af493dd4e1b53bdf220f88c15cc2e1ef22c32322253720bdc85354a60340672",
+      "public_retest": "PASS"
     }
   }
 }
