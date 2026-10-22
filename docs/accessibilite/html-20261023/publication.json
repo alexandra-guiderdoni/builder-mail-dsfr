@@ -1,0 +1,117 @@
+{
+  "deployment": {
+    "conclusion": "success",
+    "databaseId": 39871142463,
+    "headSha": "dbcaf3f8c7a5aacc6361f35f9ace8052fa34f43e",
+    "status": "completed",
+    "url": "https://github.com/alexandra-guiderdoni/builder-mail-dsfr/actions/runs/39871142463"
+  },
+  "runtime": {
+    "commit": "dbcaf3f8c7a5aacc6361f35f9ace8052fa34f43e",
+    "files": [
+      {
+        "name": "index.html",
+        "status": 200,
+        "sha256": "f40148345b11443cf6e5be4c17cf2a7b9000079acce6ac9feba5ca105af49bb2"
+      },
+      {
+        "name": "sw.js",
+        "status": 200,
+        "sha256": "62733a10899e8509217666e25817d28469468d69a5ce8f7e8bdacb4c90a83aa7"
+      },
+      {
+        "name": "manifest.webmanifest",
+        "status": 200,
+        "sha256": "8714de33ac81701d61efab69403d603626c0b03373ecb652b2ddcf760cb35da9"
+      },
+      {
+        "name": "icon.svg",
+        "status": 200,
+        "sha256": "5505b460c862ebb01858dd50199029259b1f7a6aa3764f219f4ab83405181a23"
+      },
+      {
+        "name": "icon-192.png",
+        "status": 200,
+        "sha256": "aadd19a40c58106b744454719023d88db1173eb9d37244c00b58e2c5263cab4f"
+      },
+      {
+        "name": "icon-512.png",
+        "status": 200,
+        "sha256": "62744b0258125bd90992841da6127622aa038f501099c0bd7a917b4bc76bfee1"
+      },
+      {
+        "name": "snum.html",
+        "status": 200,
+        "sha256": "4ee0e17b63690da8657ad68890a8b8c7885e1a927806e434de40d36883d6281d"
+      },
+      {
+        "name": "atelier-portable.html",
+        "status": 200,
+        "sha256": "38692c8ad208afe1e35c91c559f0b30bfbb732819ff9018df59b921e4f37d28d"
+      }
+    ],
+    "observations": [
+      {
+        "step": "preview-sandboxed",
+        "title": "Recette publique du balisage",
+        "heightAttribute": null,
+        "heightStyle": "auto",
+        "ratio": 1.7777777777777777,
+        "naturalRatio": 1.7777777777777777,
+        "colposCount": 0,
+        "emptyDimensions": 0
+      },
+      {
+        "step": "download-opened",
+        "title": "Recette publique du balisage",
+        "heightAttribute": null,
+        "heightStyle": "auto",
+        "ratio": 1.7777777777777777,
+        "naturalRatio": 1.7777777777777777,
+        "colposCount": 0,
+        "emptyDimensions": 0
+      },
+      {
+        "step": "offline-restored",
+        "title": "Recette publique du balisage",
+        "heightAttribute": null,
+        "heightStyle": "auto",
+        "ratio": 1.7777777777777777,
+        "naturalRatio": 1.7777777777777777,
+        "colposCount": 0,
+        "emptyDimensions": 0
+      }
+    ],
+    "errors": [],
+    "completed": true,
+    "humanQualification": false,
+    "screenReaderExecuted": false,
+    "mailClientExecuted": false,
+    "lastRequestedFile": "atelier-portable.html",
+    "jsonExportUnchanged": true,
+    "offlineRestored": true
+  },
+  "verificationSourceSha256": {
+    "evidence/validation-html-20261023/verifier-public.cjs": "23d44db2ee2ef61a670b965801a448d988a1345bbbfaa7f1a43a32d16ab93ac0",
+    "evidence/validation-html-20261023/consolider-publication.py": "256ef8197a7c5af684ccd21abaccc855d9613c47e1da5f5ec7133f2a690d6b7b"
+  },
+  "artifactSha256": {
+    "evidence/validation-html-20261023/deploiement.json": "879776dd8734f9423b4d0271211ef1c26d8b3f86b03809d7d2d5d68dbc2a8704",
+    "evidence/validation-html-20261023/publication-1792711270013/balisage-hors-connexion.png": "8cd04119b5ba31a4e5a05a64f8bdad009ae7d23268ee5bb773b0890a6f94047c",
+    "evidence/validation-html-20261023/publication-1792711270013/composition.json": "e7cef18ff8ad556950e619c7a3c7b1e29c886466b0cfc4c8922f3d327c4e0a4a",
+    "evidence/validation-html-20261023/publication-1792711270013/courriel.html": "2c22ceb6c6f8fd217f1e6f49d43a0184abd9a6f53a78930bf7a9b534fdca3430",
+    "evidence/validation-html-20261023/publication-1792711270013/runtime.json": "fddf620f2903ca8ea483a4d199210e75f7e43b81c75910a020bb4a2ca26291d6",
+    "evidence/validation-html-20261023/publication.log": "ba1f5b9b70c079230cb2a2101cb678485dcc453547e185a060542566011ad453"
+  },
+  "scope": "Webapp publique : import synthétique de mail-06/33/46, aperçu sandboxé, HTML téléchargé et ouvert, export JSON et restauration hors connexion. Les huit fichiers publics sont comparés par empreinte ; SNUM public ne possède pas de parcours interactif dans cette recette.",
+  "notVerified": [
+    "Qualification des neuf familles d’erreurs vnu résiduelles",
+    "Écoute réelle d’un lecteur d’écran",
+    "Windows/Outlook",
+    "Collage ou réception en messagerie de cette version",
+    "Installation sur le parc",
+    "Autorisation métier de l’origine HTTPS",
+    "Qualifications humaines RGAA"
+  ],
+  "official_compliance_rate": null
+}
