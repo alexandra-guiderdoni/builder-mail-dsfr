@@ -132,12 +132,11 @@ def build():
                 + b"\0"
                 + hashlib.sha256(result[path]).digest()
             )
+    worker_source = (SOURCE / "sw.js").read_text(encoding="utf-8")
+    digest.update(b"sw.js\0" + worker_source.encode("utf-8"))
     version = digest.hexdigest()[:16]
-    result[DIST / "web/sw.js"] = (
-        (SOURCE / "sw.js")
-        .read_text(encoding="utf-8")
-        .replace("@@VERSION@@", version)
-        .encode("utf-8")
+    result[DIST / "web/sw.js"] = worker_source.replace("@@VERSION@@", version).encode(
+        "utf-8"
     )
     result.update(
         {DIST / name: content for name, content in artifacts(catalogue).items()}

@@ -27,7 +27,7 @@ print(json.dumps({p.name:base64.b64encode(data).decode('ascii') for p,data in re
         let data = await fs.readFile(file);
         if (generation === 2 && iconDelivery[path.basename(file)]) data = Buffer.from(iconDelivery[path.basename(file)], 'base64');
         const types = {'.html': 'text/html', '.js': 'text/javascript', '.webmanifest': 'application/manifest+json', '.svg': 'image/svg+xml', '.png': 'image/png'};
-        response.writeHead(200, {'Content-Type': types[path.extname(file)], 'Cache-Control': 'no-store'}); response.end(data);
+        response.writeHead(200, {'Content-Type': types[path.extname(file)], 'Cache-Control': path.basename(file) === 'sw.js' ? 'no-store' : 'public, max-age=600'}); response.end(data);
       } catch { response.writeHead(404); response.end(); }
     });
     await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
@@ -44,8 +44,11 @@ print(json.dumps({p.name:base64.b64encode(data).decode('ascii') for p,data in re
     const manifest = await session.send('Page.getAppManifest');
     assert.equal(manifest.errors.length, 0); assert.equal(JSON.parse(manifest.data).icons.length, 2);
     const installability = await session.send('Page.getInstallabilityErrors');
-    generation = 2; await page.evaluate(async () => { const registration = await navigator.serviceWorker.getRegistration(); await registration.update(); });
+    generation = 2; await page.evaluate(async () => { window.previousController = navigator.serviceWorker.controller; const registration = await navigator.serviceWorker.getRegistration(); await registration.update(); });
     await page.locator('#update').waitFor({state: 'visible'});
+    assert(await page.evaluate(() => navigator.serviceWorker.controller === window.previousController));
+    const beforeActivation = await page.evaluate(async () => [...new Uint8Array(await (await fetch('./icon-192.png')).arrayBuffer())]);
+    assert.deepEqual(Buffer.from(beforeActivation), originalIcon);
     const reload = page.waitForEvent('load'); await click(page, '#update'); await reload; await page.waitForFunction(() => window.MailBuilder?.ready);
     assert.deepEqual(await state(page), before);
     const caches = await page.evaluate(() => window.caches.keys()); assert.equal(caches.length, 2); assert(caches.includes(otherCache));

@@ -2,6 +2,7 @@
 
 import importlib.util
 import os
+import re
 import subprocess
 import sys
 import unittest
@@ -22,6 +23,25 @@ def module(name):
 
 
 class BuildContract(unittest.TestCase):
+    def test_worker_source_change_uses_a_distinct_application_cache(self):
+        build = module("build_app")
+        source = build.SOURCE / "sw.js"
+        read_text = Path.read_text
+        worker = build.DIST / "web/sw.js"
+        baseline = build.build()[worker]
+        with patch.object(
+            Path,
+            "read_text",
+            lambda p, *a, **kw: (
+                read_text(p, *a, **kw) + ("\n// test" if p == source else "")
+            ),
+        ):
+            changed = build.build()[worker]
+        version = lambda value: re.search(rb'const CACHE = PREFIX \+ "([^"]+)"', value)[
+            1
+        ]
+        self.assertNotEqual(version(baseline), version(changed))
+
     def test_each_icon_and_manifest_change_the_worker(self):
         read_bytes, read_text, dumps = (
             Path.read_bytes,
