@@ -1,0 +1,71 @@
+{
+  "commit": "bb49473948d8a12e6ce26807150b48f10b914fb4",
+  "files": [
+    {
+      "name": "index.html",
+      "status": 200,
+      "sha256": "686145cdebc83acc444979ac75d4bb1f7fea10092c6ac1fc64764beb79e82622"
+    },
+    {
+      "name": "sw.js",
+      "status": 200,
+      "sha256": "ee186ea34dafca816dc96c161459b249c8e1109c24ac01a2244baa2aaa18cbd0"
+    },
+    {
+      "name": "manifest.webmanifest",
+      "status": 200,
+      "sha256": "8714de33ac81701d61efab69403d603626c0b03373ecb652b2ddcf760cb35da9"
+    },
+    {
+      "name": "icon.svg",
+      "status": 200,
+      "sha256": "5505b460c862ebb01858dd50199029259b1f7a6aa3764f219f4ab83405181a23"
+    },
+    {
+      "name": "icon-192.png",
+      "status": 200,
+      "sha256": "aadd19a40c58106b744454719023d88db1173eb9d37244c00b58e2c5263cab4f"
+    },
+    {
+      "name": "icon-512.png",
+      "status": 200,
+      "sha256": "62744b0258125bd90992841da6127622aa038f501099c0bd7a917b4bc76bfee1"
+    },
+    {
+      "name": "snum.html",
+      "status": 200,
+      "sha256": "8f4cd01559f6f26114acf8a98d6dba54af7fa9f9c7c7572303ac75fb5d0da262"
+    },
+    {
+      "name": "atelier-portable.html",
+      "status": 200,
+      "sha256": "74b464a8d723205e8e5870a6c69955ab8de6c9fb098abcd2ce13b3f86e856812"
+    }
+  ],
+  "errors": [],
+  "screenReaderExecuted": false,
+  "mailClientVerified": false,
+  "headings": [
+    1,
+    2,
+    3,
+    4,
+    4
+  ],
+  "worker": {
+    "controller": "https://alexandra-guiderdoni.github.io/builder-mail-dsfr/sw.js",
+    "caches": [
+      "atelier-courriels-https%3A%2F%2Falexandra-guiderdoni.github.io%2Fbuilder-mail-dsfr%2F-51a5f3bdac95d7e4"
+    ]
+  },
+  "offlineReload": true,
+  "browser": "156.0.8078.4",
+  "errorAssociationObserved": true,
+  "deployment": {
+    "run": 39847111606,
+    "conclusion": "success",
+    "url": "https://github.com/alexandra-guiderdoni/builder-mail-dsfr/actions/runs/39847111606"
+  },
+  "scope": "Profil vierge ; données synthétiques ; blocage réseau du navigateur puis rechargement ; aperçu contrôlé après défilement explicite.",
+  "raw_receipt": "evidence/accessibilite-titres-20261022/publication-paint/receipt.json"
+}

@@ -31,6 +31,10 @@ L’adaptation est dérivée des gabarits épinglés. Modèles canoniques, 178 c
 
 Le constat historique `MAIL-TITRES-001`, rattaché au [test 9.1.3](https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#9.1.3), passe à `A_RETESTER` sur P05/P13. Le balisage est corrigé et éprouvé ; pertinence éditoriale, hiérarchie des compositions réelles et restitution par les technologies d’assistance restent à qualifier. Le test 9.1.1 n’est pas déclaré validé.
 
+## Vérification de la publication
+
+Le [déploiement de cette tranche](https://github.com/alexandra-guiderdoni/builder-mail-dsfr/actions/runs/39847111606) a réussi. Les huit fichiers publics sont identiques aux distributions vérifiées. Dans un profil Chromium vierge : titres natifs et association d’erreur observés, intitulé source personnalisé, bibliothèque sauvegardée puis retrouvée après rechargement réseau coupé. L’aperçu hors connexion a aussi été examiné après défilement explicite ; une capture pleine page d’un cadre hors écran ne suffit pas à constater sa peinture. Le [reçu public](publication.json) conserve les empreintes et limites. Aucune installation sur le parc ni transformation par une messagerie n’est prouvée par ce contrôle.
+
 ## Collectes et limites instrumentales
 
 La campagne principale consigne **819 appels sur treize pages**. Elle termine sans phase en échec ; validation `PARTIEL`, audit DSFR et capture automatique des rapports `IGNORÉ`. Une génération de rapport ou un code de commande nul ne constitue aucune conformité RGAA.
