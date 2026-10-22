@@ -1,0 +1,2908 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:dsfr-mail:composition:1:6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278f74858e8cddd6e72af8b",
+  "title": "Compositions et bibliothèques de courriels DSFR",
+  "description": "L’import complète ces contraintes par la validation des URL, des identifiants uniques et de la composition active.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/document"
+    },
+    {
+      "$ref": "#/$defs/library"
+    }
+  ],
+  "$defs": {
+    "mail-00": {
+      "type": "object",
+      "title": "En-têtes — Pré-en-tête masqué",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "component": {
+          "const": "mail-00"
+        },
+        "values": {
+          "type": "object",
+          "title": "Pré-en-tête masqué",
+          "properties": {
+            "f0": {
+              "type": "string",
+              "title": "Texte 1"
+            }
+          },
+          "required": [
+            "f0"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "values",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "mail-01": {
+      "type": "object",
+      "title": "En-têtes — Lien vers la version en ligne",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "component": {
+          "const": "mail-01"
+        },
+        "values": {
+          "type": "object",
+          "title": "Lien vers la version en ligne",
+          "properties": {
+            "f0": {
+              "type": "string",
+              "title": "Texte 1"
+            },
+            "f1": {
+              "type": "string",
+              "title": "Lien HTTPS",
+              "description": "Lien HTTPS ; les règles d’URL complètes sont contrôlées à l’import."
+            },
+            "f2": {
+              "type": "string",
+              "title": "Texte 2"
+            }
+          },
+          "required": [
+            "f0",
+            "f1",
+            "f2"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "values",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "mail-02": {
+      "type": "object",
+      "title": "En-têtes — En-tête Marianne",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "component": {
+          "const": "mail-02"
+        },
+        "values": {
+          "type": "object",
+          "title": "En-tête Marianne",
+          "properties": {
+            "f0": {
+              "type": "string",
+              "title": "Image locale",
+              "pattern": "^data:image/(?:png|jpeg|gif|webp);base64,[A-Za-z0-9+/]+={0,2}$"
+            },
+            "f1": {
+              "type": "string",
+              "title": "Alternative de l’image"
+            },
+            "f2": {
+              "type": "string",
+              "title": "Image locale",
+              "pattern": "^data:image/(?:png|jpeg|gif|webp);base64,[A-Za-z0-9+/]+={0,2}$"
+            },
+            "f3": {
+              "type": "string",
+              "title": "Alternative de l’image"
+            },
+            "f4": {
+              "type": "string",
+              "title": "Nom du service"
+            }
+          },
+          "required": [
+            "f0",
+            "f1",
+            "f2",
+            "f3",
+            "f4"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "values",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "mail-03": {
+      "type": "object",
+      "title": "En-têtes — En-tête avec logo opérateur",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "component": {
+          "const": "mail-03"
+        },
+        "values": {
+          "type": "object",
+          "title": "En-tête avec logo opérateur",
+          "properties": {
+            "f0": {
+              "type": "string",
+              "title": "Image locale",
+              "pattern": "^data:image/(?:png|jpeg|gif|webp);base64,[A-Za-z0-9+/]+={0,2}$"
+            },
+            "f1": {
+              "type": "string",
+              "title": "Alternative de l’image"
+            },
+            "f2": {
+              "type": "string",
+              "title": "Image locale",
+              "pattern": "^data:image/(?:png|jpeg|gif|webp);base64,[A-Za-z0-9+/]+={0,2}$"
+            },
+            "f3": {
+              "type": "string",
+              "title": "Alternative de l’image"
+            },
+            "f4": {
+              "type": "string",
+              "title": "Image locale",
+              "pattern": "^data:image/(?:png|jpeg|gif|webp);base64,[A-Za-z0-9+/]+={0,2}$"
+            },
+            "f5": {
+              "type": "string",
+              "title": "Alternative de l’image"
+            },
+            "f6": {
+              "type": "string",
+              "title": "Nom du service"
+            }
+          },
+          "required": [
+            "f0",
+            "f1",
+            "f2",
+            "f3",
+            "f4",
+            "f5",
+            "f6"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "values",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "mail-04": {
+      "type": "object",
+      "title": "Titres — Bannière de campagne",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "component": {
+          "const": "mail-04"
+        },
+        "values": {
+          "type": "object",
+          "title": "Bannière de campagne",
+          "properties": {
+            "f0": {
+              "type": "string",
+              "title": "Image locale",
+              "pattern": "^data:image/(?:png|jpeg|gif|webp);base64,[A-Za-z0-9+/]+={0,2}$"
+            },
+            "f1": {
+              "type": "string",
+              "title": "Alternative de l’image"
+            },
+            "f2": {
+              "type": "string",
+              "title": "Texte 1"
+            }
+          },
+          "required": [
+            "f0",
+            "f1",
+            "f2"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "values",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "mail-05": {
+      "type": "object",
+      "title": "Titres — Titre principal",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "component": {
+          "const": "mail-05"
+        },
+        "values": {
+          "type": "object",
+          "title": "Titre principal",
+          "properties": {
+            "f0": {
+              "type": "string",
+              "title": "Titre"
+            }
+          },
+          "required": [
+            "f0"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "values",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "mail-06": {
+      "type": "object",
+      "title": "Titres — Titre principal avec image",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "component": {
+          "const": "mail-06"
+        },
+        "values": {
+          "type": "object",
+          "title": "Titre principal avec image",
+          "properties": {
+            "f0": {
+              "type": "string",
+              "title": "Titre"
+            },
+            "f1": {
+              "type": "string",
+              "title": "Image locale",
+              "pattern": "^data:image/(?:png|jpeg|gif|webp);base64,[A-Za-z0-9+/]+={0,2}$"
+            },
+            "f2": {
+              "type": "string",
+              "title": "Alternative de l’image"
+            }
+          },
+          "required": [
+            "f0",
+            "f1",
+            "f2"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "values",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "mail-07": {
+      "type": "object",
+      "title": "Textes — Texte de prévisualisation",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "component": {
+          "const": "mail-07"
+        },
+        "values": {
+          "type": "object",
+          "title": "Texte de prévisualisation",
+          "properties": {
+            "f0": {
+              "type": "string",
+              "title": "Texte 1"
+            }
+          },
+          "required": [
+            "f0"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "values",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "mail-08": {
+      "type": "object",
+      "title": "Textes — Chapô signé",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "component": {
+          "const": "mail-08"
+        },
+        "values": {
+          "type": "object",
+          "title": "Chapô signé",
+          "properties": {
+            "f0": {
+              "type": "string",
+              "title": "Chapô"
+            },
+            "f1": {
+              "type": "string",
+              "title": "Texte 2"
+            },
+            "f2": {
+              "type": "string",
+              "title": "Texte 3"
+            }
+          },
+          "required": [
+            "f0",
+            "f1",
+            "f2"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "values",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "mail-09": {
+      "type": "object",
+      "title": "Textes — Chapô de service",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "component": {
+          "const": "mail-09"
+        },
+        "values": {
+          "type": "object",
+          "title": "Chapô de service",
+          "properties": {
+            "f0": {
+              "type": "string",
+              "title": "Chapô"
+            },
+            "f1": {
+              "type": "string",
+              "title": "Texte 2"
+            }
+          },
+          "required": [
+            "f0",
+            "f1"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "values",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "mail-10": {
+      "type": "object",
+      "title": "Titres — Section et accroche · lavande",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "component": {
+          "const": "mail-10"
+        },
+        "values": {
+          "type": "object",
+          "title": "Section et accroche · lavande",
+          "properties": {
+            "f0": {
+              "type": "string",
+              "title": "Texte 1"
+            },
+            "f1": {
+              "type": "string",
+              "title": "Accroche"
+            }
+          },
+          "required": [
+            "f0",
+            "f1"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "values",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "mail-11": {
+      "type": "object",
+      "title": "Titres — Section et accroche · blanc",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "component": {
+          "const": "mail-11"
+        },
+        "values": {
+          "type": "object",
+          "title": "Section et accroche · blanc",
+          "properties": {
+            "f0": {
+              "type": "string",
+              "title": "Texte 1"
+            },
+            "f1": {
+              "type": "string",
+              "title": "Accroche"
+            }
+          },
+          "required": [
+            "f0",
+            "f1"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "values",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "mail-12": {
+      "type": "object",
+      "title": "Titres — Section · lavande",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "component": {
+          "const": "mail-12"
+        },
+        "values": {
+          "type": "object",
+          "title": "Section · lavande",
+          "properties": {
+            "f0": {
+              "type": "string",
+              "title": "Texte 1"
+            }
+          },
+          "required": [
+            "f0"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "values",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "mail-13": {
+      "type": "object",
+      "title": "Titres — Section · blanc",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "component": {
+          "const": "mail-13"
+        },
+        "values": {
+          "type": "object",
+          "title": "Section · blanc",
+          "properties": {
+            "f0": {
+              "type": "string",
+              "title": "Texte 1"
+            }
+          },
+          "required": [
+            "f0"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "values",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "mail-14": {
+      "type": "object",
+      "title": "Titres — Partie et accroche · lavande",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "component": {
+          "const": "mail-14"
+        },
+        "values": {
+          "type": "object",
+          "title": "Partie et accroche · lavande",
+          "properties": {
+            "f0": {
+              "type": "string",
+              "title": "Texte 1"
+            },
+            "f1": {
+              "type": "string",
+              "title": "Accroche"
+            }
+          },
+          "required": [
+            "f0",
+            "f1"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "values",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "mail-15": {
+      "type": "object",
+      "title": "Titres — Partie et accroche · blanc",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "component": {
+          "const": "mail-15"
+        },
+        "values": {
+          "type": "object",
+          "title": "Partie et accroche · blanc",
+          "properties": {
+            "f0": {
+              "type": "string",
+              "title": "Texte 1"
+            },
+            "f1": {
+              "type": "string",
+              "title": "Accroche"
+            }
+          },
+          "required": [
+            "f0",
+            "f1"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "values",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "mail-16": {
+      "type": "object",
+      "title": "Titres — Partie · lavande",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "component": {
+          "const": "mail-16"
+        },
+        "values": {
+          "type": "object",
+          "title": "Partie · lavande",
+          "properties": {
+            "f0": {
+              "type": "string",
+              "title": "Texte 1"
+            }
+          },
+          "required": [
+            "f0"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "values",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "mail-17": {
+      "type": "object",
+      "title": "Titres — Partie · blanc",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "component": {
+          "const": "mail-17"
+        },
+        "values": {
+          "type": "object",
+          "title": "Partie · blanc",
+          "properties": {
+            "f0": {
+              "type": "string",
+              "title": "Texte 1"
+            }
+          },
+          "required": [
+            "f0"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "values",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "mail-18": {
+      "type": "object",
+      "title": "Textes — Paragraphe · lavande",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "component": {
+          "const": "mail-18"
+        },
+        "values": {
+          "type": "object",
+          "title": "Paragraphe · lavande",
+          "properties": {
+            "f0": {
+              "type": "string",
+              "title": "Texte"
+            }
+          },
+          "required": [
+            "f0"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "values",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "mail-19": {
+      "type": "object",
+      "title": "Textes — Paragraphe · blanc",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "component": {
+          "const": "mail-19"
+        },
+        "values": {
+          "type": "object",
+          "title": "Paragraphe · blanc",
+          "properties": {
+            "f0": {
+              "type": "string",
+              "title": "Texte"
+            }
+          },
+          "required": [
+            "f0"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "values",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "mail-20": {
+      "type": "object",
+      "title": "Textes — Liste de trois éléments · lavande",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "component": {
+          "const": "mail-20"
+        },
+        "values": {
+          "type": "object",
+          "title": "Liste de trois éléments · lavande",
+          "properties": {
+            "f0": {
+              "type": "string",
+              "title": "Texte"
+            },
+            "f1": {
+              "type": "string",
+              "title": "Texte"
+            },
+            "f2": {
+              "type": "string",
+              "title": "Texte"
+            },
+            "f3": {
+              "type": "string",
+              "title": "Texte"
+            }
+          },
+          "required": [
+            "f0",
+            "f1",
+            "f2",
+            "f3"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "values",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "mail-21": {
+      "type": "object",
+      "title": "Textes — Liste de trois éléments · blanc",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "component": {
+          "const": "mail-21"
+        },
+        "values": {
+          "type": "object",
+          "title": "Liste de trois éléments · blanc",
+          "properties": {
+            "f0": {
+              "type": "string",
+              "title": "Texte"
+            },
+            "f1": {
+              "type": "string",
+              "title": "Texte"
+            },
+            "f2": {
+              "type": "string",
+              "title": "Texte"
+            },
+            "f3": {
+              "type": "string",
+              "title": "Texte"
+            }
+          },
+          "required": [
+            "f0",
+            "f1",
+            "f2",
+            "f3"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "values",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "mail-22": {
+      "type": "object",
+      "title": "Textes — Liste de deux éléments · lavande",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "component": {
+          "const": "mail-22"
+        },
+        "values": {
+          "type": "object",
+          "title": "Liste de deux éléments · lavande",
+          "properties": {
+            "f0": {
+              "type": "string",
+              "title": "Texte"
+            },
+            "f1": {
+              "type": "string",
+              "title": "Texte"
+            }
+          },
+          "required": [
+            "f0",
+            "f1"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "values",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "mail-23": {
+      "type": "object",
+      "title": "Textes — Liste de deux éléments · blanc",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "component": {
+          "const": "mail-23"
+        },
+        "values": {
+          "type": "object",
+          "title": "Liste de deux éléments · blanc",
+          "properties": {
+            "f0": {
+              "type": "string",
+              "title": "Texte"
+            },
+            "f1": {
+              "type": "string",
+              "title": "Texte"
+            }
+          },
+          "required": [
+            "f0",
+            "f1"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "values",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "mail-24": {
+      "type": "object",
+      "title": "Textes — Titre et description · lavande",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "component": {
+          "const": "mail-24"
+        },
+        "values": {
+          "type": "object",
+          "title": "Titre et description · lavande",
+          "properties": {
+            "f0": {
+              "type": "string",
+              "title": "Titre"
+            },
+            "f1": {
+              "type": "string",
+              "title": "Description"
+            }
+          },
+          "required": [
+            "f0",
+            "f1"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "values",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "mail-25": {
+      "type": "object",
+      "title": "Textes — Titre et description · blanc",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "component": {
+          "const": "mail-25"
+        },
+        "values": {
+          "type": "object",
+          "title": "Titre et description · blanc",
+          "properties": {
+            "f0": {
+              "type": "string",
+              "title": "Titre"
+            },
+            "f1": {
+              "type": "string",
+              "title": "Description"
+            }
+          },
+          "required": [
+            "f0",
+            "f1"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "values",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "mail-26": {
+      "type": "object",
+      "title": "Images — Image 16:9 et source · lavande",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "component": {
+          "const": "mail-26"
+        },
+        "values": {
+          "type": "object",
+          "title": "Image 16:9 et source · lavande",
+          "properties": {
+            "f0": {
+              "type": "string",
+              "title": "Image locale",
+              "pattern": "^data:image/(?:png|jpeg|gif|webp);base64,[A-Za-z0-9+/]+={0,2}$"
+            },
+            "f1": {
+              "type": "string",
+              "title": "Alternative de l’image"
+            },
+            "f2": {
+              "type": "string",
+              "title": "Texte 1"
+            }
+          },
+          "required": [
+            "f0",
+            "f1",
+            "f2"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "values",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "mail-27": {
+      "type": "object",
+      "title": "Images — Image 16:9 et source · blanc",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "component": {
+          "const": "mail-27"
+        },
+        "values": {
+          "type": "object",
+          "title": "Image 16:9 et source · blanc",
+          "properties": {
+            "f0": {
+              "type": "string",
+              "title": "Image locale",
+              "pattern": "^data:image/(?:png|jpeg|gif|webp);base64,[A-Za-z0-9+/]+={0,2}$"
+            },
+            "f1": {
+              "type": "string",
+              "title": "Alternative de l’image"
+            },
+            "f2": {
+              "type": "string",
+              "title": "Texte 1"
+            }
+          },
+          "required": [
+            "f0",
+            "f1",
+            "f2"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "values",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "mail-28": {
+      "type": "object",
+      "title": "Images — Image carrée et source · lavande",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "component": {
+          "const": "mail-28"
+        },
+        "values": {
+          "type": "object",
+          "title": "Image carrée et source · lavande",
+          "properties": {
+            "f0": {
+              "type": "string",
+              "title": "Image locale",
+              "pattern": "^data:image/(?:png|jpeg|gif|webp);base64,[A-Za-z0-9+/]+={0,2}$"
+            },
+            "f1": {
+              "type": "string",
+              "title": "Alternative de l’image"
+            },
+            "f2": {
+              "type": "string",
+              "title": "Texte 1"
+            }
+          },
+          "required": [
+            "f0",
+            "f1",
+            "f2"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "values",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "mail-29": {
+      "type": "object",
+      "title": "Images — Image carrée et source · blanc",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "component": {
+          "const": "mail-29"
+        },
+        "values": {
+          "type": "object",
+          "title": "Image carrée et source · blanc",
+          "properties": {
+            "f0": {
+              "type": "string",
+              "title": "Image locale",
+              "pattern": "^data:image/(?:png|jpeg|gif|webp);base64,[A-Za-z0-9+/]+={0,2}$"
+            },
+            "f1": {
+              "type": "string",
+              "title": "Alternative de l’image"
+            },
+            "f2": {
+              "type": "string",
+              "title": "Texte 1"
+            }
+          },
+          "required": [
+            "f0",
+            "f1",
+            "f2"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "values",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "mail-30": {
+      "type": "object",
+      "title": "Cartes — Article avec vignette",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "component": {
+          "const": "mail-30"
+        },
+        "values": {
+          "type": "object",
+          "title": "Article avec vignette",
+          "properties": {
+            "f0": {
+              "type": "string",
+              "title": "Image locale",
+              "pattern": "^data:image/(?:png|jpeg|gif|webp);base64,[A-Za-z0-9+/]+={0,2}$"
+            },
+            "f1": {
+              "type": "string",
+              "title": "Alternative de l’image"
+            },
+            "f2": {
+              "type": "string",
+              "title": "Texte 1"
+            },
+            "f3": {
+              "type": "string",
+              "title": "Titre"
+            },
+            "f4": {
+              "type": "string",
+              "title": "Texte 3"
+            },
+            "f5": {
+              "type": "string",
+              "title": "Texte 4"
+            }
+          },
+          "required": [
+            "f0",
+            "f1",
+            "f2",
+            "f3",
+            "f4",
+            "f5"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "values",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "mail-31": {
+      "type": "object",
+      "title": "Cartes — Article avec vignette et lien",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "component": {
+          "const": "mail-31"
+        },
+        "values": {
+          "type": "object",
+          "title": "Article avec vignette et lien",
+          "properties": {
+            "f0": {
+              "type": "string",
+              "title": "Image locale",
+              "pattern": "^data:image/(?:png|jpeg|gif|webp);base64,[A-Za-z0-9+/]+={0,2}$"
+            },
+            "f1": {
+              "type": "string",
+              "title": "Alternative de l’image"
+            },
+            "f2": {
+              "type": "string",
+              "title": "Texte 1"
+            },
+            "f3": {
+              "type": "string",
+              "title": "Lien HTTPS",
+              "description": "Lien HTTPS ; les règles d’URL complètes sont contrôlées à l’import."
+            },
+            "f4": {
+              "type": "string",
+              "title": "Texte 2"
+            },
+            "f5": {
+              "type": "string",
+              "title": "Texte 3"
+            },
+            "f6": {
+              "type": "string",
+              "title": "Texte 4"
+            }
+          },
+          "required": [
+            "f0",
+            "f1",
+            "f2",
+            "f3",
+            "f4",
+            "f5",
+            "f6"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "values",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "mail-32": {
+      "type": "object",
+      "title": "Cartes — Appel à contribution",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "component": {
+          "const": "mail-32"
+        },
+        "values": {
+          "type": "object",
+          "title": "Appel à contribution",
+          "properties": {
+            "f0": {
+              "type": "string",
+              "title": "Texte 1"
+            },
+            "f1": {
+              "type": "string",
+              "title": "Texte 2"
+            },
+            "f2": {
+              "type": "string",
+              "title": "Image locale",
+              "pattern": "^data:image/(?:png|jpeg|gif|webp);base64,[A-Za-z0-9+/]+={0,2}$"
+            },
+            "f3": {
+              "type": "string",
+              "title": "Alternative de l’image"
+            }
+          },
+          "required": [
+            "f0",
+            "f1",
+            "f2",
+            "f3"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "values",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "mail-33": {
+      "type": "object",
+      "title": "Cartes — Appel à contribution et bouton",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "component": {
+          "const": "mail-33"
+        },
+        "values": {
+          "type": "object",
+          "title": "Appel à contribution et bouton",
+          "properties": {
+            "f0": {
+              "type": "string",
+              "title": "Texte 1"
+            },
+            "f1": {
+              "type": "string",
+              "title": "Texte 2"
+            },
+            "f2": {
+              "type": "string",
+              "title": "Lien HTTPS",
+              "description": "Lien HTTPS ; les règles d’URL complètes sont contrôlées à l’import."
+            },
+            "f3": {
+              "type": "string",
+              "title": "Texte 3"
+            },
+            "f4": {
+              "type": "string",
+              "title": "Image locale",
+              "pattern": "^data:image/(?:png|jpeg|gif|webp);base64,[A-Za-z0-9+/]+={0,2}$"
+            },
+            "f5": {
+              "type": "string",
+              "title": "Alternative de l’image"
+            }
+          },
+          "required": [
+            "f0",
+            "f1",
+            "f2",
+            "f3",
+            "f4",
+            "f5"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "values",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "mail-34": {
+      "type": "object",
+      "title": "Mises en avant — Chiffres clés et liste",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "component": {
+          "const": "mail-34"
+        },
+        "values": {
+          "type": "object",
+          "title": "Chiffres clés et liste",
+          "properties": {
+            "f0": {
+              "type": "string",
+              "title": "Texte 1"
+            },
+            "f1": {
+              "type": "string",
+              "title": "Texte"
+            },
+            "f2": {
+              "type": "string",
+              "title": "Texte"
+            },
+            "f3": {
+              "type": "string",
+              "title": "Texte 4"
+            },
+            "f4": {
+              "type": "string",
+              "title": "Description"
+            },
+            "f5": {
+              "type": "string",
+              "title": "Texte 6"
+            },
+            "f6": {
+              "type": "string",
+              "title": "Description"
+            },
+            "f7": {
+              "type": "string",
+              "title": "Texte 8"
+            },
+            "f8": {
+              "type": "string",
+              "title": "Description"
+            },
+            "f9": {
+              "type": "string",
+              "title": "Texte 10"
+            },
+            "f10": {
+              "type": "string",
+              "title": "Description"
+            }
+          },
+          "required": [
+            "f0",
+            "f1",
+            "f2",
+            "f3",
+            "f4",
+            "f5",
+            "f6",
+            "f7",
+            "f8",
+            "f9",
+            "f10"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "values",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "mail-35": {
+      "type": "object",
+      "title": "Mises en avant — Mise en avant · lavande",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "component": {
+          "const": "mail-35"
+        },
+        "values": {
+          "type": "object",
+          "title": "Mise en avant · lavande",
+          "properties": {
+            "f0": {
+              "type": "string",
+              "title": "Texte 1"
+            },
+            "f1": {
+              "type": "string",
+              "title": "Description"
+            }
+          },
+          "required": [
+            "f0",
+            "f1"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "values",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "mail-36": {
+      "type": "object",
+      "title": "Mises en avant — Mise en avant · gris",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "component": {
+          "const": "mail-36"
+        },
+        "values": {
+          "type": "object",
+          "title": "Mise en avant · gris",
+          "properties": {
+            "f0": {
+              "type": "string",
+              "title": "Texte 1"
+            },
+            "f1": {
+              "type": "string",
+              "title": "Description"
+            }
+          },
+          "required": [
+            "f0",
+            "f1"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "values",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "mail-37": {
+      "type": "object",
+      "title": "Images — Partie illustrée avec sous-sections",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "component": {
+          "const": "mail-37"
+        },
+        "values": {
+          "type": "object",
+          "title": "Partie illustrée avec sous-sections",
+          "properties": {
+            "f0": {
+              "type": "string",
+              "title": "Texte 1"
+            },
+            "f1": {
+              "type": "string",
+              "title": "Image locale",
+              "pattern": "^data:image/(?:png|jpeg|gif|webp);base64,[A-Za-z0-9+/]+={0,2}$"
+            },
+            "f2": {
+              "type": "string",
+              "title": "Alternative de l’image"
+            },
+            "f3": {
+              "type": "string",
+              "title": "Texte 2"
+            },
+            "f4": {
+              "type": "string",
+              "title": "Texte 3"
+            },
+            "f5": {
+              "type": "string",
+              "title": "Description"
+            },
+            "f6": {
+              "type": "string",
+              "title": "Texte 5"
+            },
+            "f7": {
+              "type": "string",
+              "title": "Description"
+            }
+          },
+          "required": [
+            "f0",
+            "f1",
+            "f2",
+            "f3",
+            "f4",
+            "f5",
+            "f6",
+            "f7"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "values",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "mail-38": {
+      "type": "object",
+      "title": "Images — Partie illustrée",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "component": {
+          "const": "mail-38"
+        },
+        "values": {
+          "type": "object",
+          "title": "Partie illustrée",
+          "properties": {
+            "f0": {
+              "type": "string",
+              "title": "Texte 1"
+            },
+            "f1": {
+              "type": "string",
+              "title": "Image locale",
+              "pattern": "^data:image/(?:png|jpeg|gif|webp);base64,[A-Za-z0-9+/]+={0,2}$"
+            },
+            "f2": {
+              "type": "string",
+              "title": "Alternative de l’image"
+            },
+            "f3": {
+              "type": "string",
+              "title": "Texte 2"
+            },
+            "f4": {
+              "type": "string",
+              "title": "Description"
+            }
+          },
+          "required": [
+            "f0",
+            "f1",
+            "f2",
+            "f3",
+            "f4"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "values",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "mail-39": {
+      "type": "object",
+      "title": "Contacts — Contact de service",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "component": {
+          "const": "mail-39"
+        },
+        "values": {
+          "type": "object",
+          "title": "Contact de service",
+          "properties": {
+            "f0": {
+              "type": "string",
+              "title": "Texte 1"
+            },
+            "f1": {
+              "type": "string",
+              "title": "Nom du service"
+            },
+            "f2": {
+              "type": "string",
+              "title": "Texte 3"
+            },
+            "f3": {
+              "type": "string",
+              "title": "Coordonnées du service"
+            }
+          },
+          "required": [
+            "f0",
+            "f1",
+            "f2",
+            "f3"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "values",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "mail-40": {
+      "type": "object",
+      "title": "Actions — Bouton primaire",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "component": {
+          "const": "mail-40"
+        },
+        "values": {
+          "type": "object",
+          "title": "Bouton primaire",
+          "properties": {
+            "f0": {
+              "type": "string",
+              "title": "Lien HTTPS",
+              "description": "Lien HTTPS ; les règles d’URL complètes sont contrôlées à l’import."
+            },
+            "f1": {
+              "type": "string",
+              "title": "Texte 1"
+            }
+          },
+          "required": [
+            "f0",
+            "f1"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "values",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "mail-41": {
+      "type": "object",
+      "title": "Actions — Bouton secondaire",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "component": {
+          "const": "mail-41"
+        },
+        "values": {
+          "type": "object",
+          "title": "Bouton secondaire",
+          "properties": {
+            "f0": {
+              "type": "string",
+              "title": "Lien HTTPS",
+              "description": "Lien HTTPS ; les règles d’URL complètes sont contrôlées à l’import."
+            },
+            "f1": {
+              "type": "string",
+              "title": "Texte 1"
+            }
+          },
+          "required": [
+            "f0",
+            "f1"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "values",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "mail-42": {
+      "type": "object",
+      "title": "Actions — Bouton tertiaire",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "component": {
+          "const": "mail-42"
+        },
+        "values": {
+          "type": "object",
+          "title": "Bouton tertiaire",
+          "properties": {
+            "f0": {
+              "type": "string",
+              "title": "Lien HTTPS",
+              "description": "Lien HTTPS ; les règles d’URL complètes sont contrôlées à l’import."
+            },
+            "f1": {
+              "type": "string",
+              "title": "Texte 1"
+            }
+          },
+          "required": [
+            "f0",
+            "f1"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "values",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "mail-43": {
+      "type": "object",
+      "title": "Actions — Liens d’action et de texte",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "component": {
+          "const": "mail-43"
+        },
+        "values": {
+          "type": "object",
+          "title": "Liens d’action et de texte",
+          "properties": {
+            "f0": {
+              "type": "string",
+              "title": "Lien HTTPS",
+              "description": "Lien HTTPS ; les règles d’URL complètes sont contrôlées à l’import."
+            },
+            "f1": {
+              "type": "string",
+              "title": "Texte 1"
+            },
+            "f2": {
+              "type": "string",
+              "title": "Lien HTTPS",
+              "description": "Lien HTTPS ; les règles d’URL complètes sont contrôlées à l’import."
+            },
+            "f3": {
+              "type": "string",
+              "title": "Texte 2"
+            }
+          },
+          "required": [
+            "f0",
+            "f1",
+            "f2",
+            "f3"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "values",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "mail-44": {
+      "type": "object",
+      "title": "Mises en avant — Chiffre clé et séparateur",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "component": {
+          "const": "mail-44"
+        },
+        "values": {
+          "type": "object",
+          "title": "Chiffre clé et séparateur",
+          "properties": {
+            "f0": {
+              "type": "string",
+              "title": "Texte 1"
+            },
+            "f1": {
+              "type": "string",
+              "title": "Description"
+            }
+          },
+          "required": [
+            "f0",
+            "f1"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "values",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "mail-45": {
+      "type": "object",
+      "title": "Actions — Invitation à devenir partenaire",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "component": {
+          "const": "mail-45"
+        },
+        "values": {
+          "type": "object",
+          "title": "Invitation à devenir partenaire",
+          "properties": {
+            "f0": {
+              "type": "string",
+              "title": "Texte 1"
+            },
+            "f1": {
+              "type": "string",
+              "title": "Texte 2"
+            },
+            "f2": {
+              "type": "string",
+              "title": "Lien HTTPS",
+              "description": "Lien HTTPS ; les règles d’URL complètes sont contrôlées à l’import."
+            },
+            "f3": {
+              "type": "string",
+              "title": "Texte 3"
+            }
+          },
+          "required": [
+            "f0",
+            "f1",
+            "f2",
+            "f3"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "values",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "mail-46": {
+      "type": "object",
+      "title": "Cartes — Deux cartes d’information",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "component": {
+          "const": "mail-46"
+        },
+        "values": {
+          "type": "object",
+          "title": "Deux cartes d’information",
+          "properties": {
+            "f0": {
+              "type": "string",
+              "title": "Texte 1"
+            },
+            "f1": {
+              "type": "string",
+              "title": "Image locale",
+              "pattern": "^data:image/(?:png|jpeg|gif|webp);base64,[A-Za-z0-9+/]+={0,2}$"
+            },
+            "f2": {
+              "type": "string",
+              "title": "Alternative de l’image"
+            },
+            "f3": {
+              "type": "string",
+              "title": "Titre"
+            },
+            "f4": {
+              "type": "string",
+              "title": "Description"
+            },
+            "f5": {
+              "type": "string",
+              "title": "Texte 4"
+            },
+            "f6": {
+              "type": "string",
+              "title": "Image locale",
+              "pattern": "^data:image/(?:png|jpeg|gif|webp);base64,[A-Za-z0-9+/]+={0,2}$"
+            },
+            "f7": {
+              "type": "string",
+              "title": "Alternative de l’image"
+            },
+            "f8": {
+              "type": "string",
+              "title": "Titre"
+            },
+            "f9": {
+              "type": "string",
+              "title": "Description"
+            },
+            "f10": {
+              "type": "string",
+              "title": "Texte 7"
+            }
+          },
+          "required": [
+            "f0",
+            "f1",
+            "f2",
+            "f3",
+            "f4",
+            "f5",
+            "f6",
+            "f7",
+            "f8",
+            "f9",
+            "f10"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "values",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "mail-47": {
+      "type": "object",
+      "title": "Pieds de page — Pied de page Marianne",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "component": {
+          "const": "mail-47"
+        },
+        "values": {
+          "type": "object",
+          "title": "Pied de page Marianne",
+          "properties": {
+            "f0": {
+              "type": "string",
+              "title": "Texte 1"
+            },
+            "f1": {
+              "type": "string",
+              "title": "Lien HTTPS",
+              "description": "Lien HTTPS ; les règles d’URL complètes sont contrôlées à l’import."
+            },
+            "f2": {
+              "type": "string",
+              "title": "Texte 2"
+            },
+            "f3": {
+              "type": "string",
+              "title": "Image locale",
+              "pattern": "^data:image/(?:png|jpeg|gif|webp);base64,[A-Za-z0-9+/]+={0,2}$"
+            },
+            "f4": {
+              "type": "string",
+              "title": "Alternative de l’image"
+            },
+            "f5": {
+              "type": "string",
+              "title": "Image locale",
+              "pattern": "^data:image/(?:png|jpeg|gif|webp);base64,[A-Za-z0-9+/]+={0,2}$"
+            },
+            "f6": {
+              "type": "string",
+              "title": "Alternative de l’image"
+            },
+            "f7": {
+              "type": "string",
+              "title": "Nom du service"
+            }
+          },
+          "required": [
+            "f0",
+            "f1",
+            "f2",
+            "f3",
+            "f4",
+            "f5",
+            "f6",
+            "f7"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "values",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "mail-48": {
+      "type": "object",
+      "title": "Pieds de page — Pied de page avec logo opérateur",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "component": {
+          "const": "mail-48"
+        },
+        "values": {
+          "type": "object",
+          "title": "Pied de page avec logo opérateur",
+          "properties": {
+            "f0": {
+              "type": "string",
+              "title": "Texte 1"
+            },
+            "f1": {
+              "type": "string",
+              "title": "Lien HTTPS",
+              "description": "Lien HTTPS ; les règles d’URL complètes sont contrôlées à l’import."
+            },
+            "f2": {
+              "type": "string",
+              "title": "Texte 2"
+            },
+            "f3": {
+              "type": "string",
+              "title": "Image locale",
+              "pattern": "^data:image/(?:png|jpeg|gif|webp);base64,[A-Za-z0-9+/]+={0,2}$"
+            },
+            "f4": {
+              "type": "string",
+              "title": "Alternative de l’image"
+            },
+            "f5": {
+              "type": "string",
+              "title": "Image locale",
+              "pattern": "^data:image/(?:png|jpeg|gif|webp);base64,[A-Za-z0-9+/]+={0,2}$"
+            },
+            "f6": {
+              "type": "string",
+              "title": "Alternative de l’image"
+            },
+            "f7": {
+              "type": "string",
+              "title": "Image locale",
+              "pattern": "^data:image/(?:png|jpeg|gif|webp);base64,[A-Za-z0-9+/]+={0,2}$"
+            },
+            "f8": {
+              "type": "string",
+              "title": "Alternative de l’image"
+            },
+            "f9": {
+              "type": "string",
+              "title": "Nom du service"
+            }
+          },
+          "required": [
+            "f0",
+            "f1",
+            "f2",
+            "f3",
+            "f4",
+            "f5",
+            "f6",
+            "f7",
+            "f8",
+            "f9"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "values",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "mail-49": {
+      "type": "object",
+      "title": "Pieds de page — Lien de désabonnement",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "component": {
+          "const": "mail-49"
+        },
+        "values": {
+          "type": "object",
+          "title": "Lien de désabonnement",
+          "properties": {
+            "f0": {
+              "type": "string",
+              "title": "Texte 1"
+            },
+            "f1": {
+              "type": "string",
+              "title": "Lien HTTPS",
+              "description": "Lien HTTPS ; les règles d’URL complètes sont contrôlées à l’import."
+            },
+            "f2": {
+              "type": "string",
+              "title": "Texte 2"
+            }
+          },
+          "required": [
+            "f0",
+            "f1",
+            "f2"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "values",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "mail-50": {
+      "type": "object",
+      "title": "Pieds de page — Gestion des abonnements",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "component": {
+          "const": "mail-50"
+        },
+        "values": {
+          "type": "object",
+          "title": "Gestion des abonnements",
+          "properties": {
+            "f0": {
+              "type": "string",
+              "title": "Texte 1"
+            },
+            "f1": {
+              "type": "string",
+              "title": "Lien HTTPS",
+              "description": "Lien HTTPS ; les règles d’URL complètes sont contrôlées à l’import."
+            },
+            "f2": {
+              "type": "string",
+              "title": "Texte 2"
+            }
+          },
+          "required": [
+            "f0",
+            "f1",
+            "f2"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "values",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "mail-51": {
+      "type": "object",
+      "title": "Pieds de page — Texte de clôture",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "component": {
+          "const": "mail-51"
+        },
+        "values": {
+          "type": "object",
+          "title": "Texte de clôture",
+          "properties": {
+            "f0": {
+              "type": "string",
+              "title": "Texte 1"
+            }
+          },
+          "required": [
+            "f0"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "component",
+        "values",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "document": {
+      "type": "object",
+      "title": "Composition générique",
+      "properties": {
+        "schema": {
+          "const": "dsfr-mail/document"
+        },
+        "version": {
+          "const": 1
+        },
+        "catalogue": {
+          "const": "6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278f74858e8cddd6e72af8b"
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "subject": {
+          "type": "string"
+        },
+        "blocks": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "$ref": "#/$defs/mail-00"
+              },
+              {
+                "$ref": "#/$defs/mail-01"
+              },
+              {
+                "$ref": "#/$defs/mail-02"
+              },
+              {
+                "$ref": "#/$defs/mail-03"
+              },
+              {
+                "$ref": "#/$defs/mail-04"
+              },
+              {
+                "$ref": "#/$defs/mail-05"
+              },
+              {
+                "$ref": "#/$defs/mail-06"
+              },
+              {
+                "$ref": "#/$defs/mail-07"
+              },
+              {
+                "$ref": "#/$defs/mail-08"
+              },
+              {
+                "$ref": "#/$defs/mail-09"
+              },
+              {
+                "$ref": "#/$defs/mail-10"
+              },
+              {
+                "$ref": "#/$defs/mail-11"
+              },
+              {
+                "$ref": "#/$defs/mail-12"
+              },
+              {
+                "$ref": "#/$defs/mail-13"
+              },
+              {
+                "$ref": "#/$defs/mail-14"
+              },
+              {
+                "$ref": "#/$defs/mail-15"
+              },
+              {
+                "$ref": "#/$defs/mail-16"
+              },
+              {
+                "$ref": "#/$defs/mail-17"
+              },
+              {
+                "$ref": "#/$defs/mail-18"
+              },
+              {
+                "$ref": "#/$defs/mail-19"
+              },
+              {
+                "$ref": "#/$defs/mail-20"
+              },
+              {
+                "$ref": "#/$defs/mail-21"
+              },
+              {
+                "$ref": "#/$defs/mail-22"
+              },
+              {
+                "$ref": "#/$defs/mail-23"
+              },
+              {
+                "$ref": "#/$defs/mail-24"
+              },
+              {
+                "$ref": "#/$defs/mail-25"
+              },
+              {
+                "$ref": "#/$defs/mail-26"
+              },
+              {
+                "$ref": "#/$defs/mail-27"
+              },
+              {
+                "$ref": "#/$defs/mail-28"
+              },
+              {
+                "$ref": "#/$defs/mail-29"
+              },
+              {
+                "$ref": "#/$defs/mail-30"
+              },
+              {
+                "$ref": "#/$defs/mail-31"
+              },
+              {
+                "$ref": "#/$defs/mail-32"
+              },
+              {
+                "$ref": "#/$defs/mail-33"
+              },
+              {
+                "$ref": "#/$defs/mail-34"
+              },
+              {
+                "$ref": "#/$defs/mail-35"
+              },
+              {
+                "$ref": "#/$defs/mail-36"
+              },
+              {
+                "$ref": "#/$defs/mail-37"
+              },
+              {
+                "$ref": "#/$defs/mail-38"
+              },
+              {
+                "$ref": "#/$defs/mail-39"
+              },
+              {
+                "$ref": "#/$defs/mail-40"
+              },
+              {
+                "$ref": "#/$defs/mail-41"
+              },
+              {
+                "$ref": "#/$defs/mail-42"
+              },
+              {
+                "$ref": "#/$defs/mail-43"
+              },
+              {
+                "$ref": "#/$defs/mail-44"
+              },
+              {
+                "$ref": "#/$defs/mail-45"
+              },
+              {
+                "$ref": "#/$defs/mail-46"
+              },
+              {
+                "$ref": "#/$defs/mail-47"
+              },
+              {
+                "$ref": "#/$defs/mail-48"
+              },
+              {
+                "$ref": "#/$defs/mail-49"
+              },
+              {
+                "$ref": "#/$defs/mail-50"
+              },
+              {
+                "$ref": "#/$defs/mail-51"
+              }
+            ]
+          }
+        }
+      },
+      "required": [
+        "schema",
+        "version",
+        "catalogue",
+        "id",
+        "name",
+        "subject",
+        "blocks"
+      ],
+      "additionalProperties": false
+    },
+    "identity": {
+      "type": "object",
+      "title": "Identité de service",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "blocks": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "$ref": "#/$defs/mail-00"
+              },
+              {
+                "$ref": "#/$defs/mail-01"
+              },
+              {
+                "$ref": "#/$defs/mail-02"
+              },
+              {
+                "$ref": "#/$defs/mail-03"
+              },
+              {
+                "$ref": "#/$defs/mail-47"
+              },
+              {
+                "$ref": "#/$defs/mail-48"
+              },
+              {
+                "$ref": "#/$defs/mail-49"
+              },
+              {
+                "$ref": "#/$defs/mail-50"
+              },
+              {
+                "$ref": "#/$defs/mail-51"
+              }
+            ]
+          }
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "blocks"
+      ],
+      "additionalProperties": false
+    },
+    "library": {
+      "type": "object",
+      "title": "Bibliothèque générique",
+      "properties": {
+        "schema": {
+          "const": "dsfr-mail/library"
+        },
+        "version": {
+          "const": 1
+        },
+        "catalogue": {
+          "const": "6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278f74858e8cddd6e72af8b"
+        },
+        "activeId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "documents": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/document"
+          },
+          "minItems": 1
+        },
+        "templates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/document"
+          }
+        },
+        "identities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/identity"
+          }
+        }
+      },
+      "required": [
+        "schema",
+        "version",
+        "catalogue",
+        "activeId",
+        "documents",
+        "templates",
+        "identities"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

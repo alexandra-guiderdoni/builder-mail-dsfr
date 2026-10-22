@@ -1,0 +1,30 @@
+{
+  "repository": "https://github.com/GouvernementFR/dsfr-mail",
+  "commit": "8b7b35f35526674f7f4a0225fea8107c2156163b",
+  "files": [
+    {
+      "path": "template-generique.html",
+      "sha256": "5ba14f67952bc10d1356abf8bdcbd7f3d6028a8b45f0ce968927c6444e4c3dd5"
+    },
+    {
+      "path": "assets/Marianne-Dark@2x.png",
+      "sha256": "7d45e27ffc93bc67cdb785da6bb5feec4605dd69701838d966a940215e7b70ed"
+    },
+    {
+      "path": "assets/Marianne-Light@2x.png",
+      "sha256": "9a28dc89e8243135d66e4c49b3a16f81d45b45977023468b1f5babed32ebfdd3"
+    },
+    {
+      "path": "assets/placeholder.16x9.png",
+      "sha256": "c86724ef7f1f78003808ede554cba5a0f63fb0e8a9e80eb45173988e8bd71ede"
+    },
+    {
+      "path": "assets/placeholder.1x1.png",
+      "sha256": "80fed44cf92a14bf932bc7196171701682b52a3ec514055efff1fec19c3cc772"
+    }
+  ],
+  "adaptations": [
+    "Gabarits compilés en champs de texte, liens et images ; espaces textuels normalisés, coordonnées et nom de service de démonstration neutralisés.",
+    "Images incorporées ; liens de démonstration non HTTPS remplacés par une URL réservée .invalid."
+  ]
+}

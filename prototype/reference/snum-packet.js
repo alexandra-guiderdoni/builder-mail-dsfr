@@ -1,4 +1,4 @@
-/* Rendu déterministe du paquet V519 ; les données n'ajoutent aucun balisage. */
+/* Copie locale V519 : contrôle du jour ajouté pour #24 ; projet SNUM source intact. */
 (() => {
   "use strict";
   const months = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
@@ -29,7 +29,10 @@
     const prefix = weekday ? "(?:(?:lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche) )?" : "";
     const match = typeof value === "string" && value.match(new RegExp(`^${prefix}([1-9]|[12]\\d|3[01]) (${months.join("|")}) (\\d{4})$`));
     if (!match) fail(`${label} : date en toutes lettres attendue (14 octobre 2026).`);
-    return isoDate(`${match[3]}-${String(months.indexOf(match[2]) + 1).padStart(2, "0")}-${match[1].padStart(2, "0")}`, label);
+    const iso = isoDate(`${match[3]}-${String(months.indexOf(match[2]) + 1).padStart(2, "0")}-${match[1].padStart(2, "0")}`, label);
+    const day = weekday && value.match(/^(lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche) /)?.[1];
+    if (day && day !== ["dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"][new Date(iso + "T00:00:00Z").getUTCDay()]) fail(`${label} : jour de semaine incohérent avec la date.`);
+    return iso;
   }
 
   function validate(payload) {

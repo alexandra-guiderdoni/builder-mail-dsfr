@@ -22,7 +22,19 @@
       tx.onerror = tx.onabort = () => reject(new Error("La sauvegarde ou la lecture a échoué. Le fichier de travail reste votre solution de récupération."));
     });
   }
-  const save = doc => run("readwrite", store => store.put({doc: MailDocument.copy(doc), savedAt: new Date().toISOString()}, "current"));
+  async function save(doc, expectedToken = null) {
+    const snapshot = MailDocument.copy(doc), db = await database();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction("drafts", "readwrite"), store = tx.objectStore("drafts"), current = store.get("current");
+      const record = {doc: snapshot, savedAt: new Date().toISOString(), token: crypto.randomUUID()}; let conflict = false;
+      current.onsuccess = () => {
+        if ((current.result?.token ?? null) !== expectedToken) { conflict = true; tx.abort(); return; }
+        try { store.put(record, "current"); } catch { tx.abort(); }
+      };
+      tx.oncomplete = () => resolve(record);
+      tx.onerror = tx.onabort = () => reject(new Error(conflict ? "Une autre fenêtre a modifié le brouillon. Exportez votre travail, puis rouvrez le brouillon pour reprendre la version enregistrée." : "Le brouillon n’a pas été sauvegardé. Exportez votre travail avant de fermer."));
+    });
+  }
   const load = () => run("readonly", store => store.get("current"));
   window.PrototypeDraft = Object.freeze({save, load});
 })();

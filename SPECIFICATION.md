@@ -1,12 +1,12 @@
 # Atelier autonome de courriels DSFR
 
-Statut : cadrage produit confirmé ; spécification technique de la tranche de faisabilité. La recette détermine ce qui peut être retenu pour l’implémentation complète.
+Statut : application et corrections implémentées ; qualification métier partielle. Les sections de faisabilité conservent le cadrage initial. Le [suivi courant](docs/SUIVI-CORRECTIONS.md) et la [recette](docs/RECETTE-APPLICATION.md) font foi pour la livraison et les limites.
 
 ## Résultat métier
 
 Un agent compose un courriel institutionnel à partir des composants disponibles, adapte l’en-tête, le pied de page et le contenu, puis récupère un courriel exploitable dans sa messagerie. La composition et les modèles restent réutilisables sans service distant de données.
 
-Les deux parcours métier annoncés sont Windows avec Firefox vers Outlook installé, et un webmail Mélissa. Les versions, restrictions et le navigateur exact du webmail restent à relever. La cible de portabilité générale est conservée ; aucune compatibilité universelle n’est affirmée.
+Les deux parcours métier annoncés sont Windows avec Firefox vers Outlook installé, et le webmail Mélissa. Un premier parcours Firefox vers Chrome/Mélissa puis Gmail a été observé sur Mac. Les versions et restrictions Windows restent à relever. La cible de portabilité générale est conservée ; aucune compatibilité universelle n’est affirmée.
 
 ## Décisions produit
 
@@ -25,7 +25,7 @@ Les deux parcours métier annoncés sont Windows avec Firefox vers Outlook insta
 
 ## Frontières impératives
 
-- Toutes les écritures restent locales et concernent l’application. Toute éventuelle publication exige un mandat distinct et ne peut viser que son dépôt GitHub.
+- Les écritures concernent l’application. Le mandat de livraison du 22 octobre autorise commit, push sur `main` dans son seul dépôt personnel et clôture des issues satisfaites. Il n’autorise aucun déploiement sur le parc ni changement de politique d’installation.
 - Le dépôt officiel et son clone local sont en lecture seule. Aucun fork de contribution, branche officielle, PR ou push amont.
 - Le projet SNUM et les changements concurrents du workspace sont préservés.
 - Le poste métier fonctionne sans Python ni Node.js. Aucun compte ou service d’IA n’est requis par l’application.
@@ -74,3 +74,15 @@ Les derniers essais exigent un opérateur et les postes réels. Aucun accès à 
 ## Critère de fin de cette tranche
 
 Livrer un prototype ouvrable, les sources et leur génération, une recette observée avec versions et preuves, puis conclure sur l’hypothèse et les inconnues restantes. La prochaine réalisation reprend les conclusions utiles, sans convertir automatiquement le prototype en produit complet.
+
+## Décision après essai du 22 octobre 2026
+
+L’essai utilisateur confirme l’intérêt du builder, mais la présentation de l’import SNUM ne convient pas. La correction retenue conserve un builder générique : il importe des compositions et bibliothèques JSON, avec un schéma et des exemples documentés. Le contrat v1, son empreinte de catalogue et les données locales existantes sont conservés.
+
+La collecte SNUM rejoint une page HTML autonome dédiée, dans le seul dépôt applicatif. Son adaptateur transforme les données métier en rubriques et blocs du contrat générique, puis exporte une composition importable dans le builder. Les deux pages réutilisent le même moteur de rendu. Le projet SNUM source, le prototype conservé et la référence officielle restent préservés. La recette correspondante figure dans [RECETTE-APPLICATION.md](docs/RECETTE-APPLICATION.md).
+
+## Gestion de bibliothèque après comparaison avec Pupitro
+
+L’accueil « Mes newsletters » devient le point d’entrée. Il reprend les fonctions de gestion de bibliothèque de Pupitro : ouvrir, renommer, dupliquer, exporter et supprimer après confirmation. Un accès permanent relie l’éditeur à cet accueil ; les fichiers et sauvegardes restent accessibles depuis les deux vues. Une entrée reste une composition indépendante, sans nouveau regroupement par publication ni changement de politique de doublons.
+
+Le cache du programme et la bibliothèque restent séparés : changer de newsletter ne demande aucun nettoyage du cache. La navigation ne recharge pas le programme et respecte les gardes de sauvegarde et de saisie. Le [ticket local](docs/tickets/accueil-mes-newsletters.md) et la recette consignent les critères, les revues et les limites. L’utilisateur a explicitement autorisé l’implémentation après le GO ShipGuard, malgré l’absence d’avis Claude.

@@ -1,0 +1,273 @@
+{
+  "schema": "builder-mail-dsfr/observed-recipe-v1",
+  "observed_at_utc": "2026-10-22T08:40:24.899880+00:00",
+  "verdict": "LOCAL_OBSERVED_BUSINESS_QUALIFICATION_PENDING",
+  "git": {
+    "branch": "feature/atelier-autonome",
+    "base_commit": "c329339aee8e6ba36288197ab22000772bb248ae",
+    "new_commit": false,
+    "published": false
+  },
+  "environment": {
+    "os": "macOS 26.5.2",
+    "python": "3.14.7",
+    "node": "v24.18.0",
+    "chromium": "156.0.8078.4",
+    "firefox": "156.0"
+  },
+  "catalogue": {
+    "sections": 52,
+    "fields": 178,
+    "families": {
+      "En-têtes": 4,
+      "Titres": 11,
+      "Textes": 11,
+      "Images": 6,
+      "Cartes": 5,
+      "Mises en avant": 4,
+      "Contacts": 1,
+      "Actions": 5,
+      "Pieds de page": 5
+    },
+    "contract": "6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278f74858e8cddd6e72af8b",
+    "reference_sha256": "5ba14f67952bc10d1356abf8bdcbd7f3d6028a8b45f0ce968927c6444e4c3dd5",
+    "dom_and_presentation_attributes_compared": 52,
+    "official_css_equal": true,
+    "content_attributes_adapted": [
+      "src",
+      "href",
+      "alt"
+    ]
+  },
+  "checks": {
+    "npm_ci_ignore_scripts": "PASS; 2 development packages; audit reported 0 vulnerabilities; no browser download",
+    "npm_run_check": "APPLICATION_DISTRIBUTIONS_OK; DISTRIBUTIONS_OK",
+    "syntax_and_ruff": "PASS",
+    "reference_bytes_and_sha256": "5 copies match the pinned local upstream",
+    "npm_test": {
+      "passed": 28,
+      "failed": 0,
+      "skipped": 0,
+      "duration_ms": 11232.563459,
+      "log": "evidence/application/accueil-suite-finale.log"
+    },
+    "expanded_editing_scenario": {
+      "passed": 3,
+      "failed": 0,
+      "log": "evidence/application/accueil-parcours-cibles-final.log",
+      "scope": "Home library, targeted CRUD, focus, narrow window, guarded navigation and recovery export"
+    },
+    "firefox_native_recipe": "PARCOURS_FIREFOX_OBSERVE",
+    "pwa_update_and_offline": "PASS; loopback origin only",
+    "two_scopes_offline": "PASS",
+    "independent_review": "Initial P1 and 2 P2 fixed and covered; separate SNUM review passed; home pre-review GO via sg-pre-review; one independent final static home review found no P0/P1/P2; runtime proof supplied by parent",
+    "native_installation_mac": {
+      "verdict": "INSTALLATION_RELANCE_OBSERVEES",
+      "route": "PWA.install / PWA.changeAppUserSettings / PWA.launch; Chrome for Testing; loopback only",
+      "standalone_window": true,
+      "full_browser_restart": true,
+      "server_stopped_connection_refused": true,
+      "library_and_image_preserved": true,
+      "recipe_installation_removed": true,
+      "human_install_dialog": false,
+      "system_shortcut_launch": false
+    },
+    "close_while_saving": {
+      "verdict": "PASS",
+      "scope": "Chromium ; écriture retardée avant la transaction réelle",
+      "forced_process_termination": false
+    },
+    "json_schema": {
+      "draft": "2020-12",
+      "validator": "jsonschema 4.26.0 already available locally",
+      "meta_schema": "PASS",
+      "example_and_52_variants": "PASS",
+      "runtime_dependency_added": false
+    },
+    "separate_snum": {
+      "browser": "156.0.8078.4",
+      "offlineStandalone": true,
+      "rubrics": 5,
+      "articleTitles": 5,
+      "articleTitleSize": 22,
+      "genericJSONImported": true,
+      "importedRenderByteIdentical": true,
+      "clipboardSourcePreserved": true,
+      "watchExcluded": true,
+      "invalidInputPreservesLastConversion": true,
+      "staleExportsDisabled": true,
+      "errors": []
+    },
+    "generic_v1_compatibility": {
+      "contract_changed": false,
+      "indexeddb_changed": false,
+      "frozen_document_import": "PASS",
+      "snum_parser_in_generic_builder": false
+    },
+    "structure": {
+      "verdict": "GO",
+      "scope": "Generic JSON, separate SNUM and home library",
+      "largest_application_source_lines": 194,
+      "shared_model_render_and_exports": true,
+      "persistent_navigation_state_added": false
+    },
+    "library_home": {
+      "offline": true,
+      "existingCompositionRestored": true,
+      "targetOtherThanActive": true,
+      "imageExported": true,
+      "independentClone": true,
+      "cancelledDeletionPreserved": true,
+      "focusRestored": true,
+      "mobile390": true,
+      "lastDeletionPreservesInvariant": true
+    },
+    "pre_implementation_reviews": {
+      "shipguard": "GO; read-only source review",
+      "claude": "NON_VERIFIE; timeout after 180 seconds, no opinion",
+      "claude_retry": false,
+      "user_explicitly_authorized_without_claude": true
+    },
+    "protected_existing_sources": {
+      "unchanged_bytes": [
+        "app/source/model.js",
+        "app/source/storage.js",
+        "app/source/state.js",
+        "app/source/imports.js",
+        "app/source/render.js",
+        "app/distribution/snum.html"
+      ],
+      "contract_changed": false,
+      "indexeddb_changed": false
+    }
+  },
+  "local_receipts": {
+    "catalogue": "evidence/application/catalogue-dom.json",
+    "chromium": "evidence/application/parcours-chromium.json",
+    "firefox": "evidence/application/firefox-1792657967435/receipt.json",
+    "pwa": "evidence/application/pwa-chromium.json",
+    "scopes": "evidence/application/pwa-scopes.json",
+    "native_installation_mac": "evidence/application/native-install-1792658205490/receipt.json",
+    "close_while_saving": "evidence/application/fermeture-sauvegarde.json",
+    "separate_snum": "evidence/application/separation-snum.json",
+    "separate_snum_screenshot": "evidence/application/snum-standalone.png",
+    "library_home": "evidence/application/bibliotheque-accueil.json",
+    "library_desktop_screenshot": "evidence/application/accueil-newsletters.png",
+    "library_mobile_screenshot": "evidence/application/accueil-newsletters-mobile.png",
+    "claude_attempt": "evidence/application/revue-bibliotheque/claude-preavis.json"
+  },
+  "incident": {
+    "initial_full_run": "19 passed, 1 browser context closed; cause not established",
+    "isolated_retry": "PASS; evidence/application/reprise-lecture-fichier.log",
+    "full_retry": "20 passed, 0 failed, 0 skipped"
+  },
+  "not_verified": [
+    "Windows and enterprise restrictions",
+    "Outlook installed: paste, edit, authorized send and received message",
+    "Mélissa webmail: paste, edit, authorized send and received message",
+    "Received visual rendering by component family",
+    "Real HTTPS origin",
+    "Complete accessibility audit",
+    "Future schema migration",
+    "Survival after profile deletion",
+    "Human installation dialog on target workstation",
+    "Launching installed app from an operating-system shortcut"
+  ],
+  "sha256": {
+    ".npmrc": "302a3ab98854ffb8d14cc3c3e7490222ed4828036b9401359482a899d0e32e94",
+    "README.md": "7a8822ba0dab451885ebc2c3d1c99b7aeb618ebf159f0e2618b907ce59c895d4",
+    "SPECIFICATION.md": "44612df69608d417d6698d6227ce113d4a5095fd71838a568e8cdf123c7ee583",
+    "app/assets/icon-192.png": "aadd19a40c58106b744454719023d88db1173eb9d37244c00b58e2c5263cab4f",
+    "app/assets/icon-512.png": "62744b0258125bd90992841da6127622aa038f501099c0bd7a917b4bc76bfee1",
+    "app/assets/icon.svg": "5505b460c862ebb01858dd50199029259b1f7a6aa3764f219f4ab83405181a23",
+    "app/distribution/courriels.schema.json": "935f69e462547bfe49c01958d057be9f5d672e0270fcde8ca6d7f8b9d35fe532",
+    "app/distribution/exemple.courriel.json": "ffbb458d7ca89fc18a5362aa0aa7ebe75607bc4835b5be177344eb5dce4fb510",
+    "app/distribution/portable.html": "4ff4eb05e7c7e36680987213c7880b7a503afcbbeec317bcf4ad06f28422d0c0",
+    "app/distribution/qualification.courriels.json": "aeec3d48135da06dfddb8d23ed632e3df4db30dbe21fd76a2e7527c071906882",
+    "app/distribution/snum.html": "bd954cdea7c0c36bfac0e68f2028d73d3c5aa1c0901e2d46979b6233d5e00be2",
+    "app/distribution/web/icon-192.png": "aadd19a40c58106b744454719023d88db1173eb9d37244c00b58e2c5263cab4f",
+    "app/distribution/web/icon-512.png": "62744b0258125bd90992841da6127622aa038f501099c0bd7a917b4bc76bfee1",
+    "app/distribution/web/icon.svg": "5505b460c862ebb01858dd50199029259b1f7a6aa3764f219f4ab83405181a23",
+    "app/distribution/web/index.html": "8a29550d7ab015c53b1b59ab3774ed03584f82334c89a176beaecf62941797e2",
+    "app/distribution/web/manifest.webmanifest": "8714de33ac81701d61efab69403d603626c0b03373ecb652b2ddcf760cb35da9",
+    "app/distribution/web/sw.js": "ed691bde873319a0d7221b2efd0edce23ebd1da5f216ddac97cc2a19d1d6f8c3",
+    "app/snum/adapter.js": "6be8f9c801df8069e57b8ccc952434278e3ef4b03db396d8a9f92c37801e0395",
+    "app/snum/page.js": "302509ee83446cea4583cb9348976c683609e3d32cfa3df46a091efc9d6cf575",
+    "app/snum/shell.html": "bd8ed9473b264b0e6d36507f970384f033629938c79908dcb772ec706111dce5",
+    "app/snum/style.css": "47de42bb9f9c8815b1de196453a0a8f7bfc6aee85e1371f78488683067ba19a2",
+    "app/source/editor.js": "a4f591d9911d8f335932ddf8d218175fe2f7cff942296d5dda087df139d06c70",
+    "app/source/files.js": "272bae08feb3a3881b4fd27d39ea0667911259824afe90e2535ed19b2b383edc",
+    "app/source/imports.js": "d8331f4b709c61140983a3ecf419238f5872c503af7d385a7ee187506b163e92",
+    "app/source/library-actions.js": "ff7c42c52b76006cac4b5472e1f28df808cdf46587d9c2ac1397e78042c9860e",
+    "app/source/library.css": "193326cfd935bc26a49aaed03ac82656e59a830a9ad16ec96172756591340b33",
+    "app/source/library.js": "5550b7b0fa579d111c38a2319aaecc8d496eb11a2b43aff161b5eff457ad4e07",
+    "app/source/model.js": "92b337237c78b135db1db8d698a182837c6c9b7c49d82a4ec1386a9a3aa946d2",
+    "app/source/pwa.js": "a826733383abda713e3fd9c2321e2e584657233226b138728035b9e2d26355cb",
+    "app/source/render.js": "2211e5d6097f212926bd5433733b6c5ba5b29b96b0878247821d68589dff63aa",
+    "app/source/shell.html": "14256e8936402e1ceba6fdfd3547bc78d0bd48e11606c7bd8be8052703691bf6",
+    "app/source/state.js": "64d8b8f3dd0b40776972b4e16a3f0bb7be0e59e8f000a76924f2ac4634784df1",
+    "app/source/storage.js": "d6dd7f4479f6c945106362d10e5b63366ab65dc4a26bc9c3b82b61580514dbd0",
+    "app/source/style.css": "0e9e876e7d52900d3fb951f532a8127e921d90ec489ad59812d3ee24f3de0433",
+    "app/source/sw.js": "fdcb019d8a64be1e7f31c5d5400690aa2d0c2e009d51c5b340207d93a5890b8f",
+    "app/source/view.js": "fc66b4a3e3ffa90298534fc9989ba04114d4a965dbf5f8e96efc093ebfc4e829",
+    "cuisine-moi/2026-10-22-bibliotheque-newsletters.md": "6d2b4c5a352126c6ebaa603aabed0d3793bcdb6be5ed2c919306fb73091fa593",
+    "docs/FORMAT-JSON.md": "579e25edaeefab649d6572439d10615a6ec96bd6e274f0b460a6ab4e86f9751c",
+    "docs/MAINTENANCE.md": "2b5a5d9d07a1e9c9437f7c350d9eb68eb3254084a8188b5fd49f9f85bccd66ae",
+    "docs/RECETTE-APPLICATION.md": "8bba3d6f168f7821e2e33181a9659177fe518a235be2808e2e9064fdcc94f564",
+    "docs/SUIVI-APPLICATION.md": "546c66807b3b6bb7ff00f38718d1ff1c5acdae786c2c7c0c74ccfc6199a79e45",
+    "docs/UTILISATION.md": "a70c9d73a32c9fd36533dda6b3fab652ffd0ed33dcb276f55811e43d3cdb4ae9",
+    "docs/tickets/accueil-mes-newsletters.md": "e39ef59afcb8ca62fdb404387542cd1c821ad403259f3bd7db3c7f565d19bbf1",
+    "package-lock.json": "746f1cecb9502856c8fb3e3a9520b02736502b51e95ba3c28fda0e4659ec78df",
+    "package.json": "c9fc966b91d5be607f698d4f422f37f274d53d606bebd5e4178a80539de27e23",
+    "prototype/reference/snum-packet.js": "c58ede03622a97bc2a48da6a330d20d19efa3d37669993e03b3a0481d17f084b",
+    "reference/NOTICE.md": "af26699f33b0fe0bbe51077ad64739f500084fbae2ddbfdccca1591f4af7f689",
+    "reference/catalogue.json": "7f7a49817fb0475caa3dfc5b1e4750172b344e0cacecb5e6b95e8907fda1b26a",
+    "reference/dsfr-mail/assets/Marianne-Dark@2x.png": "7d45e27ffc93bc67cdb785da6bb5feec4605dd69701838d966a940215e7b70ed",
+    "reference/dsfr-mail/assets/Marianne-Light@2x.png": "9a28dc89e8243135d66e4c49b3a16f81d45b45977023468b1f5babed32ebfdd3",
+    "reference/dsfr-mail/assets/placeholder.16x9.png": "c86724ef7f1f78003808ede554cba5a0f63fb0e8a9e80eb45173988e8bd71ede",
+    "reference/dsfr-mail/assets/placeholder.1x1.png": "80fed44cf92a14bf932bc7196171701682b52a3ec514055efff1fec19c3cc772",
+    "reference/dsfr-mail/template-generique.html": "5ba14f67952bc10d1356abf8bdcbd7f3d6028a8b45f0ce968927c6444e4c3dd5",
+    "reference/provenance.json": "abf04a2122f3312fe4e0c760c36dd6dac783a318b56635f544037b8d7863f1d0",
+    "scripts/build_app.py": "4f1a5a078999ce931deed1bd14edc0d390180a442aab5b44383884d462dd41fc",
+    "scripts/catalogue.py": "40a7fbac95cf6bb0c75a4549202c02566858a04e2dee1796d5d1223bfe5e7263",
+    "scripts/interchange.py": "3584c468610395355a35942510e439d1ce880b5dcd625b6ad034a20fd2ffb9b5",
+    "scripts/recipe_firefox.mjs": "091c00c19fe370a73360398676fafb829096b1b1cdcaebd7d73483b64225eec1",
+    "scripts/recipe_installation.cjs": "92606e6a85ec71c5422f0cb6028ec0da5731554d2d643b5a6e535cf539803035",
+    "tests/browser-support.cjs": "37e63cf6f17611a680d2baf981241bd96dce33b79843a9916acefd0cd004687d",
+    "tests/browser.test.cjs": "03dbf43c09cb450fd387fed41cdb3ec9bb4ec3adb10e883d961f798f689c4fcc",
+    "tests/firefox-support.mjs": "0293f2376c0f5c84742d829e9f0d45f70c010bcaab41b1513708191665439975",
+    "tests/fixtures/snum.cjs": "f82c844fdff48977ac062de34da5d4996d3ee3cb4b6f8a27d8d742380baf6f81",
+    "tests/interchange-browser.test.cjs": "c87531d2dd24e89dc1f6dcadcadc842748f269f7668b14b69f8f2a5487ca9294",
+    "tests/library-browser.test.cjs": "684f8014b84f63847e1c8e02021341093707f68b7cf8cf0a76a8d959e586fa5a",
+    "tests/model.test.cjs": "3d480fb6b70a102d16d6e6c92fe52536cc55e003c3f09612fbeee6c5f055f0dd",
+    "tests/pwa-browser.test.cjs": "84213dd3072389749489ef0f0639ff3f425baf92793c828fd5c489a3d1d73fb3",
+    "tests/storage-browser.test.cjs": "32563020a3223374055ee2120172c061ce72292e59f9406b13c9d1b731cdcd2b"
+  },
+  "native_install_incident": {
+    "first_probe": "PASS; evidence/application/native-install-1792618562760/receipt.json",
+    "failed_scenarios": [
+      "evidence/application/native-install-1792618601633/receipt.json",
+      "evidence/application/native-install-1792618654519/receipt.json",
+      "evidence/application/native-install-1792618716219/receipt.json"
+    ],
+    "observation": "PWA.launch target ID replaced; scenario follows the unique surviving standalone window at the recipe URL; both launches observed replacement",
+    "final_scenario": "PASS; recipe installation removed"
+  },
+  "separation_incident": {
+    "first_run": "14 passed, 1 scenario read before asynchronous file import completed; evidence/application/separation-premier-parcours.log",
+    "fix": "Test waits for import notification, then saved state; no app change for this wait",
+    "targeted_retry": "4 passed, 0 failed; evidence/application/separation-parcours-cibles.log",
+    "final_suite": "25 passed, 0 failed, 0 skipped"
+  },
+  "library_ui_incident": {
+    "red_baseline": "Home absent; evidence/application/accueil-test-rouge.log",
+    "symptom": "Keyboard helper could focus a hidden control during asynchronous page transition; missing return focus or unopened rename dialog",
+    "evidence": [
+      "evidence/application/accueil-parcours-cibles.log",
+      "evidence/application/accueil-focus-sonde-3.log"
+    ],
+    "fix": "Wait for control visibility before native keyboard activation; app focus returns to existing row or a fallback after removal",
+    "targeted_after_fix": "3 passed, 0 failed",
+    "final_suite": "28 passed, 0 failed, 0 skipped"
+  }
+}

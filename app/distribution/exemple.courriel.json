@@ -1,0 +1,35 @@
+{
+  "schema": "dsfr-mail/document",
+  "version": 1,
+  "catalogue": "6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278f74858e8cddd6e72af8b",
+  "id": "exemple",
+  "name": "Exemple de composition",
+  "subject": "Information de service",
+  "blocks": [
+    {
+      "id": "exemple-mail-05",
+      "component": "mail-05",
+      "values": {
+        "f0": "Titre"
+      },
+      "source": ""
+    },
+    {
+      "id": "exemple-mail-19",
+      "component": "mail-19",
+      "values": {
+        "f0": "Texte"
+      },
+      "source": ""
+    },
+    {
+      "id": "exemple-mail-40",
+      "component": "mail-40",
+      "values": {
+        "f0": "https://exemple.invalid/",
+        "f1": "Bouton primaire"
+      },
+      "source": ""
+    }
+  ]
+}

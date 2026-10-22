@@ -1,0 +1,32 @@
+const path = require('node:path');
+const fs = require('node:fs/promises');
+const assert = require('node:assert/strict');
+const {chromium} = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
+const root = path.resolve(__dirname, '..'), evidence = process.env.MAIL_BUILDER_EVIDENCE || path.join(root, 'evidence/application');
+const portable = 'file://' + path.join(root, 'app/distribution/portable.html');
+const click = async (page, selector) => { const control = page.locator(selector); await control.waitFor({state: 'visible'}); await control.focus(); await control.press('Enter'); };
+async function open(browser, contextOptions = {}, beforeNavigate) {
+  const context = await browser.newContext({acceptDownloads: true, viewport: {width: 1600, height: 1000}, ...contextOptions});
+  const page = await context.newPage();
+  const observations = {errors: [], requests: []};
+  page.on('pageerror', error => observations.errors.push(error.message));
+  page.on('request', request => observations.requests.push(request.url()));
+  if (beforeNavigate) await beforeNavigate(page);
+  await page.goto(portable); await page.waitForFunction(() => window.MailBuilder?.ready);
+  await enterEditor(page);
+  return {context, page, observations};
+}
+async function enterEditor(page) { if (await page.locator('[data-action=resume-document]').isVisible()) await click(page, '[data-action=resume-document]'); }
+async function saved(page) {
+  await page.waitForFunction(() => document.querySelector('#save-state').textContent === 'Bibliothèque sauvegardée dans ce navigateur.');
+}
+async function expand(page, text) { const summary = page.locator('summary').filter({hasText: text}); if (!(await summary.evaluate(e => e.parentElement.open))) await summary.click(); }
+async function download(page, selector, filename) {
+  await fs.mkdir(evidence, {recursive: true});
+  const event = page.waitForEvent('download'); await click(page, selector);
+  const result = await event, destination = path.join(evidence, filename); await result.saveAs(destination); return destination;
+}
+async function selectBlock(page, id) { await click(page, `[data-select="${id}"]`); }
+const state = page => page.evaluate(() => JSON.parse(JSON.stringify(MailBuilder.library)));
+const store = page => page.evaluate(() => MailBuilder.Storage.load());
+module.exports = {root, evidence, portable, click, open, enterEditor, saved, expand, download, selectBlock, state, store, chromium, fs, assert};

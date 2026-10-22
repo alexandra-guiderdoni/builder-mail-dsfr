@@ -1,46 +1,49 @@
-# Builder de courriels DSFR
+# Atelier de courriels DSFR
 
-Spécification et **prototype de faisabilité**, sans qualification de production.
+Application locale pour composer des courriels à partir des **52 sections et variantes du modèle officiel épinglé**, conserver plusieurs compositions, réutiliser des modèles et des identités de service, puis récupérer le courriel dans sa messagerie.
 
-La [recette observée](docs/RECETTE.md) couvre Firefox 156 et Chromium 156 sur macOS : sauvegarde, restauration avec images, exports, copie enrichie et cache après arrêt du serveur. Windows, Outlook, Mélissa et l’installation native restent à qualifier.
+**Version en qualification.** Édition, bibliothèque, copie et installation avec relance hors connexion ont été exercées sur Mac. Des messages envoyés depuis Gmail et Mélissa ont été reçus avec les images PNG/JPEG conservées. Le débordement horizontal découvert dans le message Mélissa possède une correction et des tests dédiés. Windows/Outlook, le lecteur d’écran retenu, l’installation sur le parc et son origine HTTPS restent à qualifier. Le [dossier de recette](docs/RECETTE-APPLICATION.md) distingue chaque preuve et ses limites.
 
-Ouvrir [le prototype portable](prototype/distribution/portable.html) par double-clic. Le poste utilisateur ne nécessite aucune installation de dépendance. Le prototype conserve un brouillon dans une base locale portant explicitement son nom ; exporter le fichier de travail pour en disposer indépendamment du navigateur.
+## Ouvrir l’atelier
 
-Il permet d’éditer un en-tête, des paragraphes, une image locale, une action et un pied de page, puis de sauvegarder, restaurer, copier le mail et télécharger ses deux sorties. L’import SNUM exerce l’adaptation au format générique. Le catalogue complet, la bibliothèque de plusieurs modèles et les profils de service restent dans la [spécification](SPECIFICATION.md), au-delà de cette tranche.
+Télécharger puis ouvrir [le fichier portable](app/distribution/portable.html) par double-clic. Il contient l’interface, les composants et les images de départ ; il fonctionne dès la première ouverture sans réseau. Aucun Python, Node.js, compte ou service d’IA n’est nécessaire sur le poste métier.
 
-## Utilisation du prototype
+L’accueil « Mes newsletters » retrouve les compositions de ce navigateur. Ouvrir une édition, la renommer, la dupliquer, l’exporter ou la supprimer après confirmation. Dans l’éditeur, « Retour à Mes newsletters » ramène à cet accueil. Les fichiers et sauvegardes restent accessibles depuis les deux vues.
 
-1. Charger l’exemple puis modifier les champs et les blocs.
-2. Ajouter une image PNG ou JPEG locale et son alternative.
-3. Attendre l’indication de sauvegarde ; recharger pour éprouver la restauration.
-4. Télécharger la composition, la rouvrir avec « Importer une composition » et contrôler les images.
-5. Copier le courriel ou télécharger son HTML. Le résultat dans Outlook et Mélissa nécessite une recette distincte.
+Personnaliser les blocs, charger ses images locales, puis attendre l’indication de sauvegarde. **Exporter régulièrement la bibliothèque** : les données du navigateur dépendent du profil et de son origine. Un fichier de travail exporté contient aussi les images. Changer de newsletter ne demande pas de vider le cache du programme.
 
-Les scénarios guidés permettent aussi de vérifier un import invalide et les exports. Les boutons de déplacement remplacent le glisser-déposer pour le clavier.
+Le [guide d’utilisation](docs/UTILISATION.md) explique modèles, identités, imports JSON, exports et récupération. Le [format JSON générique](docs/FORMAT-JSON.md) possède un [exemple importable](app/distribution/exemple.courriel.json) et un [schéma](app/distribution/courriels.schema.json). Les anciens fichiers de composition v1 restent acceptés.
 
-## Maintenance locale
+La collecte SNUM a sa [page HTML autonome dédiée](app/distribution/snum.html) : elle convertit le paquet métier en composition JSON, à importer ensuite dans le builder. Elle organise les rubriques et les articles avec le même moteur de rendu. Le builder ne contient plus d’import spécifique SNUM.
 
-Python 3 sert uniquement à générer les livraisons et à servir la variante web pendant la recette :
+La [variante web](app/distribution/web/index.html) partage le moteur du portable ; elle doit être servie depuis une origine HTTPS autorisée pour son usage installé. Son cache et sa relance après installation ont été exercés en boucle locale sur le Mac ; l’installation sur le parc reste à qualifier.
+
+Pour la recette métier, importer [la bibliothèque des neuf familles](app/distribution/qualification.courriels.json) : elle contient les 52 sections à examiner dans les messages reçus.
+
+## Développer et vérifier
+
+Python 3.10+ et Node.js 22+ servent à la génération et aux recettes, uniquement sur le poste de développement :
 
 ```sh
-python3 scripts/build.py
-python3 scripts/build.py --check
-python3 -m http.server 8765 --bind 127.0.0.1 --directory prototype/distribution/web
+python3 scripts/build_app.py
+npm run check
+PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm ci --ignore-scripts
+npm test
 ```
 
-La variante web locale se trouve ensuite à `http://127.0.0.1:8765/`. La distribution sur un vrai poste utilise une origine HTTPS autorisée ; localhost est seulement un environnement de développement. L’installation native et les restrictions du parc ne sont pas déduites du fonctionnement du cache.
+Les tests navigateur nécessitent le Chromium de la version Playwright épinglée. La [maintenance](docs/MAINTENANCE.md) décrit les sources, les prérequis, la recette Firefox, le stockage et la procédure de mise à jour.
 
-Sources de vérité : `prototype/source/`, ressources et code repris sous `prototype/reference/`. Les fichiers de `prototype/distribution/` sont générés. Le moteur de rendu est partagé entre les deux sorties ; aucune bibliothèque distante n’est chargée à l’exécution.
+## Sources et périmètre
 
-## Sources et limites
+- [Cadrage confirmé](docs/cadrage-source.md) et [spécification](SPECIFICATION.md) : intention et contraintes.
+- [Suivi des critères](docs/SUIVI-APPLICATION.md) : réalisation et qualification restante.
+- [Notice des références](reference/NOTICE.md) : origine, empreintes et adaptations.
+- [Prototype conservé](prototype/distribution/portable.html) et [sa recette historique](docs/RECETTE.md) : première tranche, distincte de cette application.
 
-- [Cadrage source](docs/cadrage-source.md) : choix utilisateur et limites d’autorisation.
-- [Spécification](SPECIFICATION.md) : périmètre complet et questions techniques.
-- [Recette](docs/RECETTE.md) : observations exécutées et limites.
-- `prototype/reference/provenance.json` : origine et empreintes des ressources reprises.
+Sources éditables : `app/source/`, `app/snum/`, `app/assets/`, `scripts/` et `reference/catalogue.json`. Les distributions sont générées ; les gabarits officiels sont conservés sous `reference/dsfr-mail/`. Aucun DSFR web n’est chargé dans le courriel.
 
-Le dépôt officiel `GouvernementFR/dsfr-mail`, son clone local et le dépôt SNUM restent en lecture seule. Le seul dépôt applicatif concerné est `alexandra-guiderdoni/builder-mail-dsfr`. Aucun push ni envoi de mail ne fait partie de cette tranche.
+Le dépôt officiel, son clone de référence et le projet SNUM restent en lecture seule. La publication autorisée concerne uniquement `main` dans le dépôt personnel du builder. Les essais de messagerie ont reçu leur autorisation distincte ; l’application n’accède à aucun compte et n’envoie aucun message. Aucun déploiement sur le parc n’est déduit de cette publication Git.
 
-<!-- PDG-BINARY-ASSET-JUSTIFICATION: les deux PNG de référence sont conservés pour rendre l'exemple et sa régénération autonomes ; les livraisons incorporent les mêmes ressources pour l'usage hors connexion. -->
+<!-- PDG-LARGE-FILE-JUSTIFICATION: les distributions HTML incorporent le moteur, le catalogue et les ressources pour le premier démarrage hors connexion ; le gabarit amont est conservé intégralement comme référence vérifiable. Les sources applicatives restent modulaires. -->
 
-<!-- PDG-LARGE-FILE-JUSTIFICATION: les deux HTML générés incorporent volontairement le moteur, l'interface et les ressources ; leurs sources restent séparées et bornées. -->
+<!-- PDG-BINARY-ASSET-JUSTIFICATION: quatre images amont et les icônes locales rendent la génération et la distribution indépendantes du réseau. -->

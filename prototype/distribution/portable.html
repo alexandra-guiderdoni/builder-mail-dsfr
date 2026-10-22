@@ -1,7 +1,7 @@
 <!doctype html>
 <!-- PDG-LARGE-FILE-JUSTIFICATION: prototype distribué autonome, assemblé depuis des sources séparées ; scripts et images incorporés pour le double-clic hors connexion. -->
 <html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-l79DT+qdL0Zuc+hDzOXFbxUsod6ul9UsfGhlPfNsmkk='; style-src 'unsafe-inline'; img-src data: blob:; frame-src blob:; base-uri 'none'; form-action 'none'; connect-src 'none'; worker-src 'none'"><meta name="theme-color" content="#000091">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-Yfc685I0AxMnTH9v2C3HlHQ1a0XKhvAoOOd8PHkvA4E='; style-src 'unsafe-inline'; img-src data: blob:; frame-src blob:; base-uri 'none'; form-action 'none'; connect-src 'none'; worker-src 'none'"><meta name="theme-color" content="#000091">
 <title>Builder de courriels DSFR — prototype de faisabilité</title><style>:root { color-scheme:light; font:100%/1.5 Arial,Helvetica,sans-serif; color:#161616; background:#f6f6f6; }
 * { box-sizing:border-box; }
 body { margin:0; }
@@ -67,7 +67,7 @@ small { font-size:.9rem; }
 <div role="tabpanel" id="walk-save" aria-labelledby="tab-save"><p>Chargez l’exemple, personnalisez son titre, sauvegardez et rouvrez le brouillon. Rechargez ensuite réellement la page pour distinguer stockage et mémoire.</p><div class="actions"><button data-action="demo">1. Charger l’exemple</button><button data-action="save">2. Sauvegarder maintenant</button><button data-action="restore">3. Relire le brouillon</button></div></div>
 <div role="tabpanel" id="walk-transport" aria-labelledby="tab-transport" hidden><p>Exportez la composition puis importez ce fichier dans un autre profil. Vérifiez les images. Le HTML est la sortie de diffusion ; l’envoi et la réception dans la messagerie restent une recette sur poste cible.</p><div class="actions"><button data-action="project">1. Exporter la composition</button><button data-action="mail">2. Exporter le courriel</button><button data-action="copy">3. Copier le courriel</button></div></div>
 <div role="tabpanel" id="walk-invalid" aria-labelledby="tab-invalid" hidden><p>Le format invalide doit être refusé avant tout remplacement de votre composition. Contrôlez le titre et le nombre de blocs après cette action.</p><div class="actions"><button data-action="invalid">Essayer un import invalide</button></div></div>
-</section></main><script>/* Rendu déterministe du paquet V519 ; les données n'ajoutent aucun balisage. */
+</section></main><script>/* Copie locale V519 : contrôle du jour ajouté pour #24 ; projet SNUM source intact. */
 (() => {
   "use strict";
   const months = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
@@ -98,7 +98,10 @@ small { font-size:.9rem; }
     const prefix = weekday ? "(?:(?:lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche) )?" : "";
     const match = typeof value === "string" && value.match(new RegExp(`^${prefix}([1-9]|[12]\\d|3[01]) (${months.join("|")}) (\\d{4})$`));
     if (!match) fail(`${label} : date en toutes lettres attendue (14 octobre 2026).`);
-    return isoDate(`${match[3]}-${String(months.indexOf(match[2]) + 1).padStart(2, "0")}-${match[1].padStart(2, "0")}`, label);
+    const iso = isoDate(`${match[3]}-${String(months.indexOf(match[2]) + 1).padStart(2, "0")}-${match[1].padStart(2, "0")}`, label);
+    const day = weekday && value.match(/^(lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche) /)?.[1];
+    if (day && day !== ["dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"][new Date(iso + "T00:00:00Z").getUTCDay()]) fail(`${label} : jour de semaine incohérent avec la date.`);
+    return iso;
   }
 
   function validate(payload) {
@@ -201,6 +204,33 @@ small { font-size:.9rem; }
   window.SnumMail = Object.freeze({parse, build});
 })();
 
+/* Décodage natif partagé : imports et fichiers locaux, sans modification des données. */
+(() => {
+  "use strict";
+  const maxBytes = 10 * 1024 * 1024, maxSide = 8192, maxPixels = 16 * 1024 * 1024;
+  async function decode(value, label = "Image") {
+    const payload = value.slice(value.indexOf(",") + 1), padding = payload.endsWith("==") ? 2 : payload.endsWith("=") ? 1 : 0;
+    if (Math.floor(payload.length * 3 / 4) - padding > maxBytes) throw new Error(`${label} : limite de 10 Mio par image dépassée ; le fichier original est conservé.`);
+    const image = new Image(); image.src = value;
+    try { await image.decode(); if (!image.naturalWidth || !image.naturalHeight) throw new Error(); }
+    catch { throw new Error(`${label} : le contenu de l’image est illisible ou incomplet.`); }
+    if (image.naturalWidth > maxSide || image.naturalHeight > maxSide || image.naturalWidth * image.naturalHeight > maxPixels) throw new Error(`${label} : limites de 8192 pixels par côté et 16 777 216 pixels dépassées ; le fichier original est conservé.`);
+  }
+  async function validate(entries) {
+    const seen = new Set();
+    for (const {value, label} of entries) if (!seen.has(value)) { await decode(value, label); seen.add(value); }
+  }
+  async function read(file, formats) {
+    if (!file || !formats.includes(file.type)) throw new Error("Choisissez un fichier image dans un format pris en charge.");
+    if (file.size > maxBytes) throw new Error("Image : limite de 10 Mio dépassée ; le fichier original est conservé.");
+    const value = await new Promise((resolve, reject) => {
+      const reader = new FileReader(); reader.onload = () => resolve(reader.result); reader.onerror = () => reject(new Error("Le fichier image est illisible.")); reader.readAsDataURL(file);
+    });
+    await decode(value); return value;
+  }
+  window.MailImages = Object.freeze({decode, validate, read});
+})();
+
 /* Document de composition du prototype ; aucune dépendance au DOM. */
 (() => {
   "use strict";
@@ -210,7 +240,15 @@ small { font-size:.9rem; }
   const fail = message => { throw new Error(message); };
   const string = (v, label) => { if (typeof v !== "string") fail(`${label} : texte attendu.`); };
   function image(value) {
-    if (!/^data:image\/(?:png|jpeg);base64,[A-Za-z0-9+/]+={0,2}$/.test(value)) fail("Une image PNG ou JPEG incorporée est requise.");
+    const match = /^data:image\/(png|jpeg);base64,([A-Za-z0-9+/]+={0,2})$/.exec(value);
+    let bytes;
+    try {
+      if (!match) throw new Error();
+      bytes = atob(match[2]);
+      if (btoa(bytes).replace(/=+$/, "") !== match[2].replace(/=+$/, "")) throw new Error();
+    } catch { fail("Une image PNG ou JPEG avec un contenu Base64 valide est requise."); }
+    const valid = match[1] === "png" ? bytes.length >= 33 && bytes.startsWith("\x89PNG\r\n\x1a\n") : bytes.length >= 4 && bytes.startsWith("\xff\xd8\xff");
+    if (!valid) fail("Le contenu de l’image ne correspond pas au format annoncé.");
   }
   function link(value) {
     let url;
@@ -220,14 +258,15 @@ small { font-size:.9rem; }
   function validate(value) {
     if (!value || value.schema !== schema || !Array.isArray(value.blocks)) fail("Le format de composition du prototype est requis.");
     for (const key of ["service", "subject", "footer", "logo"]) string(value[key], key);
-    image(value.logo);
+    try { image(value.logo); } catch (cause) { fail(`Logo : ${cause.message}`); }
     const ids = new Set();
     for (const block of value.blocks) {
       if (!block || !kinds.includes(block.type)) fail("Type de bloc inconnu.");
       for (const key of ["id", "title", "body", "url", "image", "alt"]) string(block[key], key);
       if (!block.id || ids.has(block.id)) fail("Identifiant de bloc absent ou dupliqué.");
       ids.add(block.id);
-      if (block.type === "image") image(block.image);
+      if (block.type === "image") { try { image(block.image); } catch (cause) { fail(`Bloc ${value.blocks.indexOf(block) + 1} : ${cause.message}`); } }
+      if (block.type === "button" && !block.title.trim()) fail("Le libellé de l’action est requis.");
       if (block.type === "button" || block.url) link(block.url);
     }
     return value;
@@ -235,7 +274,7 @@ small { font-size:.9rem; }
   function block(type, id) {
     return {id, type, title: type === "button" ? "Consulter les informations" : "Un titre de section",
       body: "Un contenu de démonstration à personnaliser.", url: type === "button" ? "https://www.service-public.gouv.fr/" : "",
-      image: "data:image/png;base64,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", alt: "Visuel de démonstration"};
+      image: type === "image" ? "data:image/png;base64,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" : "", alt: "Visuel de démonstration"};
   }
   function initial() {
     return {schema, service: "Direction de démonstration", subject: "Invitation à une rencontre",
@@ -245,7 +284,9 @@ small { font-size:.9rem; }
   function parse(input) {
     let value;
     try { value = JSON.parse(input); } catch { fail("Le fichier de composition n’est pas un JSON valide."); }
-    return copy(validate(value));
+    const normalized = copy(validate(value));
+    normalized.blocks.filter(b => b.type !== "image").forEach(b => { b.image = ""; });
+    return normalized;
   }
   function fromSnum(input) {
     const packet = window.SnumMail.parse(input), doc = initial();
@@ -258,7 +299,7 @@ small { font-size:.9rem; }
     if (!doc.blocks.length) doc.blocks.push({...block("text", "vide"), title: "Collecte à compléter", body: "Aucun article sélectionné."});
     return {doc: validate(doc), notes: packet.watch.length};
   }
-  window.MailDocument = Object.freeze({schema, initial, validate, parse, block, fromSnum, copy});
+  window.MailDocument = Object.freeze({schema, initial, validate, parse, block, fromSnum, copy, image});
 })();
 
 /* Rendu de courriel adapté : styles inline, tableaux de présentation, données échappées. */
@@ -274,12 +315,12 @@ small { font-size:.9rem; }
     const rows = doc.blocks.map(block => {
       if (block.type === "image") return `<tr><td style="padding:16px 24px;"><img src="${escape(block.image)}" alt="${escape(block.alt)}" width="552" style="display:block;width:100%;max-width:552px;height:auto;border:0;"></td></tr>`;
       if (block.type === "button") return `<tr><td style="padding:16px 24px 28px;"><a href="${escape(block.url)}" style="${font}display:inline-block;background:#000091;color:#fff;text-decoration:underline;font-size:16px;font-weight:bold;padding:14px 20px;">${escape(block.title)}</a></td></tr>`;
-      return `<tr><td style="padding:20px 24px;"><h2 style="${font}font-size:22px;line-height:1.4;color:#000091;margin:0 0 12px;">${escape(block.title)}</h2>${block.body.split(/\n\n+/).map(p => `<p style="${paragraph}">${escape(p).replace(/\n/g, "<br>")}</p>`).join("")}${block.url ? `<p style="${paragraph}"><a href="${escape(block.url)}" style="color:#000091;">Consulter la source</a></p>` : ""}</td></tr>`;
+      return `<tr><td style="padding:20px 24px;">${block.title.trim() ? `<h2 style="${font}font-size:22px;line-height:1.4;color:#000091;margin:0 0 12px;">${escape(block.title)}</h2>` : ""}${block.body.split(/\n\n+/).map(p => `<p style="${paragraph}">${escape(p).replace(/\n/g, "<br>")}</p>`).join("")}${block.url ? `<p style="${paragraph}"><a href="${escape(block.url)}" style="color:#000091;">Consulter la source</a></p>` : ""}</td></tr>`;
     }).join("\n");
     return `<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#f6f6f6;"><tr><td align="center" style="padding:20px 0;">
 <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" style="width:100%;max-width:600px;background:white;border-top:5px solid #000091;">
 <tr><td style="padding:24px;"><img src="${escape(doc.logo)}" width="76" height="66" alt="République française" style="display:block;border:0;"><p style="${paragraph}font-weight:bold;margin:16px 0 0;">${escape(doc.service)}</p></td></tr>
-<tr><td style="padding:24px;background:#ececfe;"><h1 style="${font}font-size:28px;line-height:1.4;color:#161616;margin:0;">${escape(doc.subject)}</h1></td></tr>
+${doc.subject.trim() ? `<tr><td style="padding:24px;background:#ececfe;"><h1 style="${font}font-size:28px;line-height:1.4;color:#161616;margin:0;">${escape(doc.subject)}</h1></td></tr>` : ""}
 ${rows}
 <tr><td style="padding:24px;background:#eee;border-top:1px solid #ddd;"><p style="${font}font-size:14px;line-height:1.6;color:#3a3a3a;margin:0;">${escape(doc.footer).replace(/\n/g, "<br>")}</p></td></tr>
 </table></td></tr></table>`;
@@ -317,7 +358,19 @@ ${rows}
       tx.onerror = tx.onabort = () => reject(new Error("La sauvegarde ou la lecture a échoué. Le fichier de travail reste votre solution de récupération."));
     });
   }
-  const save = doc => run("readwrite", store => store.put({doc: MailDocument.copy(doc), savedAt: new Date().toISOString()}, "current"));
+  async function save(doc, expectedToken = null) {
+    const snapshot = MailDocument.copy(doc), db = await database();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction("drafts", "readwrite"), store = tx.objectStore("drafts"), current = store.get("current");
+      const record = {doc: snapshot, savedAt: new Date().toISOString(), token: crypto.randomUUID()}; let conflict = false;
+      current.onsuccess = () => {
+        if ((current.result?.token ?? null) !== expectedToken) { conflict = true; tx.abort(); return; }
+        try { store.put(record, "current"); } catch { tx.abort(); }
+      };
+      tx.oncomplete = () => resolve(record);
+      tx.onerror = tx.onabort = () => reject(new Error(conflict ? "Une autre fenêtre a modifié le brouillon. Exportez votre travail, puis rouvrez le brouillon pour reprendre la version enregistrée." : "Le brouillon n’a pas été sauvegardé. Exportez votre travail avant de fermer."));
+    });
+  }
   const load = () => run("readonly", store => store.get("current"));
   window.PrototypeDraft = Object.freeze({save, load});
 })();
@@ -325,9 +378,18 @@ ${rows}
 (() => {
   "use strict";
   const get = id => document.getElementById(id), escape = MailRender.escape;
-  let doc = MailDocument.initial(), revision = 0, previewURL;
+  let doc = MailDocument.initial(), revision = 0, importTicket = 0, restoreTicket = 0, previewURL, startup, token = null, saveQueue = Promise.resolve();
+  let documentGeneration = 0; const imageTickets = new Map();
+  const invalid = new Map();
+  function newGeneration() { documentGeneration++; imageTickets.clear(); }
   const status = message => { get("status").textContent = message; };
-  const error = message => { get("error").textContent = message; get("error").hidden = !message; };
+  const error = message => { const shown = invalid.values().next().value || message; get("error").textContent = shown; get("error").hidden = !shown; };
+  function guard() { if (invalid.size) throw new Error("Corrigez les champs signalés avant cette action."); }
+  function edit(input, mutator, label) {
+    const next = MailDocument.copy(doc);
+    try { mutator(next); MailDocument.validate(next); invalid.delete(input.id); input.removeAttribute("aria-invalid"); input.removeAttribute("aria-describedby"); doc = next; changed(); }
+    catch (cause) { invalid.set(input.id, `${label} : ${cause.message}`); input.setAttribute("aria-invalid", "true"); input.setAttribute("aria-describedby", "error"); error(cause.message); }
+  }
   function summary() {
     get("state-service").textContent = doc.service;
     get("state-subject").textContent = doc.subject;
@@ -342,10 +404,12 @@ ${rows}
   async function save() {
     const current = revision, snapshot = MailDocument.copy(doc);
     get("save-state").textContent = "Sauvegarde en cours…";
-    try {
-      await PrototypeDraft.save(snapshot);
+    saveQueue = saveQueue.then(async () => {
+      await startup;
+      const saved = await PrototypeDraft.save(snapshot, token); token = saved.token;
       if (revision === current) get("save-state").textContent = "Brouillon sauvegardé dans ce navigateur.";
-    } catch (cause) { get("save-state").textContent = "Sauvegarde non réalisée."; error(cause.message); }
+    }).catch(cause => { get("save-state").textContent = "Sauvegarde non réalisée."; error(cause.message); });
+    return saveQueue;
   }
   function changed() { revision++; error(""); preview(); save(); }
   function field(label, name, value, textarea = false) {
@@ -355,57 +419,73 @@ ${rows}
   function draw() {
     get("service").value = doc.service; get("subject").value = doc.subject; get("footer").value = doc.footer;
     get("blocks").innerHTML = doc.blocks.map((b, i) => `<section class="block" data-id="${escape(b.id)}" aria-labelledby="heading-${i}">
-      <h3 id="heading-${i}">${i + 1}. ${{text: "Paragraphe", image: "Image", button: "Action"}[b.type]}</h3>
+      <h3 id="heading-${i}" tabindex="-1">${i + 1}. ${{text: "Paragraphe", image: "Image", button: "Action"}[b.type]}</h3>
       ${b.type === "image" ? `<label for="image-${i}">Image PNG ou JPEG locale</label><input id="image-${i}" data-image type="file" accept="image/png,image/jpeg">${field("Alternative de l’image", `${i}-alt`, b.alt)}` : field("Titre ou libellé", `${i}-title`, b.title)}
-      ${b.type === "text" ? field("Texte", `${i}-body`, b.body, true) : ""}
+      ${b.type === "text" ? field("Texte", `${i}-body`, b.body, true) + field("Lien HTTPS de la source (facultatif)", `${i}-url`, b.url) : ""}
       ${b.type === "button" ? field("Lien HTTPS", `${i}-url`, b.url) : ""}
       <div class="actions"><button data-move="-1" ${i === 0 ? "disabled" : ""} aria-label="Monter le bloc ${i + 1}">Monter</button><button data-move="1" ${i === doc.blocks.length - 1 ? "disabled" : ""} aria-label="Descendre le bloc ${i + 1}">Descendre</button><button data-duplicate aria-label="Dupliquer le bloc ${i + 1}">Dupliquer</button><button data-remove aria-label="Retirer le bloc ${i + 1}">Retirer</button></div></section>`).join("");
     preview();
   }
-  function replace(next) { MailDocument.validate(next); doc = MailDocument.copy(next); revision++; draw(); save(); }
+  function replace(next) { guard(); MailDocument.validate(next); newGeneration(); doc = MailDocument.copy(next); revision++; draw(); save(); }
   function download(content, type, name) {
     const url = URL.createObjectURL(new Blob([content], {type})), a = document.createElement("a");
     a.href = url; a.download = name; document.body.append(a); a.click(); a.remove();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
   async function localImage(file) {
-    if (!file || !["image/png", "image/jpeg"].includes(file.type)) throw new Error("Choisissez une image PNG ou JPEG.");
-    const value = await new Promise((resolve, reject) => {
-      const reader = new FileReader(); reader.onload = () => resolve(reader.result); reader.onerror = () => reject(new Error("Image illisible.")); reader.readAsDataURL(file);
-    });
-    const img = new Image(); img.src = value;
-    try { await img.decode(); } catch { throw new Error("Le contenu du fichier n’est pas une image lisible."); }
-    return value;
+    const value = await MailImages.read(file, ["image/png", "image/jpeg"]); MailDocument.image(value); return value;
   }
-  for (const key of ["service", "subject", "footer"]) get(key).addEventListener("input", event => { doc[key] = event.target.value; changed(); });
+  async function validateImages(next) {
+    MailDocument.validate(next);
+    await MailImages.validate([{value: next.logo, label: "Logo"}, ...next.blocks.filter(b => b.type === "image").map((b, i) => ({value: b.image, label: `Image de contenu ${i + 1}`}))]);
+    return next;
+  }
+  for (const key of ["service", "subject", "footer"]) get(key).addEventListener("input", event => edit(event.target, next => { next[key] = event.target.value; }, event.target.labels[0].textContent));
   get("blocks").addEventListener("input", event => {
     const name = event.target.dataset.field;
     if (!name) return;
-    const match = name.match(/^(\d+)-(\w+)$/), next = MailDocument.copy(doc);
-    next.blocks[Number(match[1])][match[2]] = event.target.value;
-    try { MailDocument.validate(next); doc = next; changed(); } catch (cause) { error(cause.message); }
+    const match = name.match(/^(\d+)-(\w+)$/);
+    edit(event.target, next => { next.blocks[Number(match[1])][match[2]] = event.target.value; }, `Bloc ${Number(match[1]) + 1}, ${event.target.labels[0].textContent}`);
   });
   get("blocks").addEventListener("change", async event => {
     if (!event.target.hasAttribute("data-image")) return;
     const id = event.target.closest("[data-id]").dataset.id;
-    try { const image = await localImage(event.target.files[0]); const target = doc.blocks.find(b => b.id === id); if (target) { target.image = image; changed(); } } catch (cause) { error(cause.message); }
+    const generation = documentGeneration, ticket = (imageTickets.get(id) || 0) + 1; imageTickets.set(id, ticket); status("Chargement de l’image locale…");
+    try {
+      const image = await localImage(event.target.files[0]), target = doc.blocks.find(b => b.id === id);
+      if (generation !== documentGeneration || imageTickets.get(id) !== ticket || !target) { status("Image obsolète ignorée ; le contenu actuel est conservé."); return; }
+      target.image = image; changed(); status("Image locale incorporée au brouillon.");
+    } catch (cause) { error(cause.message); }
   });
   get("blocks").addEventListener("click", event => {
     const button = event.target.closest("button"); if (!button) return;
+    try { guard(); } catch (cause) { error(cause.message); return; }
     const index = doc.blocks.findIndex(b => b.id === button.closest("[data-id]").dataset.id);
+    if (index < 0) return;
+    let focusId = doc.blocks[index].id, focusAction = "h3";
     if (button.hasAttribute("data-move")) {
       const destination = index + Number(button.dataset.move);
       [doc.blocks[index], doc.blocks[destination]] = [doc.blocks[destination], doc.blocks[index]];
-    } else if (button.hasAttribute("data-duplicate")) doc.blocks.splice(index + 1, 0, {...MailDocument.copy(doc.blocks[index]), id: crypto.randomUUID()});
-    else if (button.hasAttribute("data-remove")) doc.blocks.splice(index, 1);
+      focusAction = `[data-move="${button.dataset.move}"]:not([disabled])`;
+    } else if (button.hasAttribute("data-duplicate")) {
+      const clone = {...MailDocument.copy(doc.blocks[index]), id: crypto.randomUUID()}; doc.blocks.splice(index + 1, 0, clone); focusId = clone.id;
+    } else if (button.hasAttribute("data-remove")) {
+      imageTickets.set(doc.blocks[index].id, (imageTickets.get(doc.blocks[index].id) || 0) + 1); doc.blocks.splice(index, 1); focusId = doc.blocks[Math.min(index, doc.blocks.length - 1)]?.id;
+    }
     revision++; draw(); save();
-    get("blocks").querySelector("button:not([disabled])")?.focus();
+    const section = [...get("blocks").children].find(e => e.dataset.id === focusId);
+    (section?.querySelector(focusAction) || section?.querySelector("h3") || document.querySelector("[data-add=text]")).focus();
   });
-  document.querySelectorAll("[data-add]").forEach(button => button.addEventListener("click", () => { doc.blocks.push(MailDocument.block(button.dataset.add, crypto.randomUUID())); revision++; draw(); save(); }));
+  document.querySelectorAll("[data-add]").forEach(button => button.addEventListener("click", () => { try { guard(); doc.blocks.push(MailDocument.block(button.dataset.add, crypto.randomUUID())); revision++; draw(); save(); } catch (cause) { error(cause.message); } }));
   get("project-input").addEventListener("change", async event => {
-    if (!event.target.files[0]) return;
-    try { replace(MailDocument.parse(await event.target.files[0].text())); error(""); status("Composition importée avec ses images."); } catch (cause) { error(cause.message); }
-    event.target.value = "";
+    const file = event.target.files[0]; if (!file) return;
+    const started = revision, ticket = ++importTicket;
+    try {
+      const next = await validateImages(MailDocument.parse(await file.text()));
+      if (started !== revision || ticket !== importTicket) throw new Error("Import obsolète ignoré : une saisie ou un import plus récent est conservé.");
+      replace(next); error(""); status("Composition importée avec ses images.");
+    } catch (cause) { error(cause.message); }
+    if (ticket === importTicket) event.target.value = "";
   });
   get("snum-import").addEventListener("click", () => {
     try { const result = MailDocument.fromSnum(get("snum-input").value); replace(result.doc); error(""); status(`Paquet SNUM importé. ${result.notes} remarques de collecte exclues du mail ; consultez le paquet source pour les relire.`); } catch (cause) { error(cause.message); }
@@ -413,10 +493,19 @@ ${rows}
   const actions = {
     demo: () => { replace(MailDocument.initial()); status("Exemple chargé. L’ancien brouillon sera remplacé après sauvegarde."); },
     save,
-    restore: async () => { const stored = await PrototypeDraft.load(); if (!stored) throw new Error("Aucun brouillon sauvegardé dans ce navigateur."); doc = MailDocument.copy(MailDocument.validate(stored.doc)); revision++; draw(); status("Brouillon relu depuis le stockage local."); },
-    project: () => { download(JSON.stringify(MailDocument.validate(doc), null, 2), "application/json", "composition.builder-mail.json"); status("Fichier de travail proposé au téléchargement."); },
-    mail: () => { download(MailRender.html(doc), "text/html;charset=utf-8", "courriel.html"); status("Courriel HTML proposé au téléchargement."); },
+    restore: async () => {
+      guard();
+      const started = revision, ticket = ++restoreTicket;
+      await saveQueue;
+      const stored = await PrototypeDraft.load(); if (!stored) throw new Error("Aucun brouillon sauvegardé dans ce navigateur.");
+      const next = MailDocument.copy(await validateImages(stored.doc));
+      guard(); if (started !== revision || ticket !== restoreTicket) throw new Error("La restauration obsolète est ignorée ; la saisie plus récente est conservée.");
+      newGeneration(); doc = next; token = stored.token ?? null; revision++; draw(); status("Brouillon relu depuis le stockage local.");
+    },
+    project: () => { guard(); download(JSON.stringify(MailDocument.validate(doc), null, 2), "application/json", "composition.builder-mail.json"); status("Fichier de travail proposé au téléchargement."); },
+    mail: () => { guard(); download(MailRender.html(doc), "text/html;charset=utf-8", "courriel.html"); status("Courriel HTML proposé au téléchargement."); },
     copy: async () => {
+      guard();
       if (!navigator.clipboard?.write || !window.ClipboardItem) throw new Error("Copie enrichie indisponible ici : téléchargez le mail et qualifiez son insertion sur le poste cible.");
       await navigator.clipboard.write([new ClipboardItem({"text/html": new Blob([MailRender.body(doc)], {type: "text/html"}), "text/plain": new Blob([MailRender.plain(doc)], {type: "text/plain"})})]);
       status("Mail copié en HTML et texte. Vérifiez ensuite le collage dans votre messagerie.");
@@ -427,9 +516,10 @@ ${rows}
   const tabs = [...document.querySelectorAll('[role="tab"]')];
   function selectTab(index) { tabs.forEach((tab, i) => { tab.setAttribute("aria-selected", String(i === index)); tab.tabIndex = i === index ? 0 : -1; get(tab.getAttribute("aria-controls")).hidden = i !== index; }); }
   tabs.forEach((tab, i) => { tab.addEventListener("click", () => selectTab(i)); tab.addEventListener("keydown", event => { if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return; event.preventDefault(); const next = event.key === "Home" ? 0 : event.key === "End" ? tabs.length - 1 : (i + (event.key === "ArrowRight" ? 1 : -1) + tabs.length) % tabs.length; selectTab(next); tabs[next].focus(); }); });
-  get("environment").textContent = location.protocol === "file:" ? "Fichier portable · aucun accès réseau requis" : "Variante web · préparation du hors connexion en cours";
+  const webApp = location.protocol !== "file:" && !!document.querySelector('link[rel="manifest"]');
+  get("environment").textContent = webApp ? "Variante web · préparation du hors connexion en cours" : "Fichier portable · aucun accès réseau requis";
   draw();
-  PrototypeDraft.load().then(stored => { if (stored && revision === 0) { doc = MailDocument.copy(MailDocument.validate(stored.doc)); draw(); get("save-state").textContent = "Brouillon restauré depuis ce navigateur."; } else if (!stored) get("save-state").textContent = "Aucun brouillon sauvegardé : modifiez le contenu pour démarrer."; }).catch(cause => { get("save-state").textContent = "Sauvegarde indisponible."; error(cause.message); });
-  if (location.protocol !== "file:" && "serviceWorker" in navigator) navigator.serviceWorker.register("./sw.js").then(() => navigator.serviceWorker.ready).then(() => { get("environment").textContent = "Variante web · ressources préparées pour le hors connexion"; navigator.serviceWorker.addEventListener("controllerchange", () => { get("environment").textContent = "Variante web · hors connexion pris en charge par le cache"; }); }).catch(cause => { get("environment").textContent = "Préparation du hors connexion échouée."; error(cause.message); });
+  startup = PrototypeDraft.load().then(stored => { token = stored?.token ?? null; if (stored && revision === 0 && !invalid.size) { newGeneration(); doc = MailDocument.copy(MailDocument.validate(stored.doc)); draw(); get("save-state").textContent = "Brouillon restauré depuis ce navigateur."; } else if (!stored) get("save-state").textContent = "Aucun brouillon sauvegardé : modifiez le contenu pour démarrer."; }).catch(cause => { get("save-state").textContent = "Sauvegarde indisponible."; error(cause.message); });
+  if (webApp && "serviceWorker" in navigator) navigator.serviceWorker.register("./sw.js").then(() => navigator.serviceWorker.ready).then(() => { get("environment").textContent = "Variante web · ressources préparées pour le hors connexion"; navigator.serviceWorker.addEventListener("controllerchange", () => { get("environment").textContent = "Variante web · hors connexion pris en charge par le cache"; }); }).catch(cause => { get("environment").textContent = "Préparation du hors connexion échouée."; error(cause.message); });
 })();
 </script></body></html>

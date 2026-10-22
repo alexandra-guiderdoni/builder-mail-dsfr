@@ -1,0 +1,85 @@
+/* Deux vues du même état ; la bibliothèque n’ajoute aucun stockage ni contrat. */
+(() => {
+  "use strict";
+  const A = window.MailBuilder, M = A.Model, get = id => document.getElementById(id), esc = A.Render.escape;
+  let currentDialog, busy = false;
+  const find = id => { const doc = A.library.documents.find(d => d.id === id); if (!doc) throw new Error("Cette composition n’est plus disponible."); return doc; };
+  const attempt = async action => { try { await action(); } catch (cause) { A.error(cause.message); } };
+  function show(editor) {
+    get("library-home").hidden = editor; get("editor-page").hidden = !editor;
+    get("library-back").hidden = !editor; get("resume-document").hidden = editor;
+    get(editor ? "composition-title" : "home-title").focus();
+  }
+  function refresh() {
+    get("newsletter-list").innerHTML = A.library.documents.map(doc => `<li data-document="${esc(doc.id)}"><h3><button data-library-action="open" aria-label="Ouvrir ${esc(doc.name)}">${esc(doc.name)}</button></h3><p>${esc(doc.subject || "Sans objet")} · ${doc.blocks.length} blocs${doc.id === A.library.activeId ? " · Composition active" : ""}</p><div class="actions">${[["rename", "Renommer"], ["duplicate", "Dupliquer"], ["export", "Exporter"], ["remove", "Supprimer"]].map(([action, label]) => `<button data-library-action="${action}" aria-label="${label} ${esc(doc.name)}">${label}</button>`).join("")}</div></li>`).join("");
+    get("resume-document").textContent = `Reprendre « ${A.doc().name} »`;
+  }
+  function focusRow(id, action = "open") {
+    const item = [...get("newsletter-list").children].find(e => e.dataset.document === id);
+    if (get("editor-page").hidden) (item?.querySelector(`[data-library-action="${action}"]`) || get("home-title")).focus();
+    else get("composition-title").focus();
+  }
+  async function open(id) {
+    A.State.guard(); find(id); if (!A.recoveryOnly) await A.State.flush();
+    if (id !== A.library.activeId) { await A.State.change(lib => { lib.activeId = id; }); if (!A.recoveryOnly) await A.State.flush(); }
+    A.UI.refresh(); show(true);
+  }
+  async function home() { A.State.guard(); await A.State.flush(); refresh(); show(false); }
+  async function duplicate(id) {
+    A.State.guard(); const clone = M.clone(find(id), `${find(id).name} · copie`);
+    A.notice(""); await A.State.change(lib => { lib.documents.push(clone); lib.activeId = clone.id; });
+    await A.State.flush(); focusRow(clone.id); A.notice("Copie indépendante ajoutée et sauvegardée dans la bibliothèque.");
+  }
+  function ask(kind, id) {
+    A.State.guard(); const doc = find(id), removing = kind === "remove";
+    currentDialog = {kind, id, index: A.library.documents.findIndex(d => d.id === id)};
+    get("library-dialog-title").textContent = removing ? `Supprimer « ${doc.name} » ?` : "Renommer la composition";
+    get("library-dialog-description").textContent = removing ? "Cette composition sera retirée de ce navigateur. Les fichiers déjà exportés restent conservés." : "Le nom change dans la bibliothèque ; l’objet du courriel reste conservé.";
+    get("library-name-field").hidden = removing; get("library-name").disabled = removing;
+    get("library-name").value = doc.name; get("library-name").removeAttribute("aria-invalid"); get("library-dialog-error").textContent = "";
+    get("library-confirm").textContent = removing ? "Supprimer cette composition" : "Enregistrer le nom";
+    get("library-dialog").showModal(); get(removing ? "library-cancel" : "library-name").focus();
+    if (!removing) get("library-name").select();
+  }
+  get("newsletter-list").addEventListener("click", event => {
+    const button = event.target.closest("[data-library-action]"); if (!button) return;
+    const id = button.closest("[data-document]").dataset.document, action = button.dataset.libraryAction;
+    attempt(async () => {
+      A.State.guard();
+      if (action === "open") return open(id);
+      if (action === "duplicate") return duplicate(id);
+      if (action === "export") { A.Files.json(M.document(find(id)), "composition.courriel.json"); A.notice("Composition choisie proposée au téléchargement avec ses images."); return; }
+      ask(action, id);
+    });
+  });
+  get("library-cancel").addEventListener("click", () => get("library-dialog").close());
+  get("library-dialog").addEventListener("cancel", event => { if (busy) event.preventDefault(); });
+  get("library-dialog").addEventListener("close", () => {
+    if (!currentDialog) return;
+    const exists = A.library.documents.some(d => d.id === currentDialog.id), fallback = A.library.documents[Math.min(currentDialog.index, A.library.documents.length - 1)].id;
+    focusRow(exists ? currentDialog.id : fallback, exists ? currentDialog.kind : "open");
+  });
+  get("library-form").addEventListener("submit", async event => {
+    event.preventDefault(); if (busy || !currentDialog) return;
+    const target = {...currentDialog}, label = get("library-name").value.trim();
+    if (target.kind === "rename" && !label) { get("library-dialog-error").textContent = "Renseignez un nom pour la composition."; get("library-name").setAttribute("aria-invalid", "true"); get("library-name").focus(); return; }
+    busy = true; get("library-confirm").disabled = get("library-cancel").disabled = true; A.notice("");
+    try {
+      A.State.guard(); find(target.id); let emptied = false;
+      await A.State.change(lib => {
+        if (target.kind === "rename") lib.documents.find(d => d.id === target.id).name = label;
+        else {
+          lib.documents = lib.documents.filter(d => d.id !== target.id);
+          if (!lib.documents.length) { lib.documents.push(M.create()); emptied = true; }
+          if (lib.activeId === target.id) lib.activeId = lib.documents[0].id;
+        }
+      });
+      get("library-dialog").close(); await A.State.flush();
+      const fallback = A.library.documents[Math.min(target.index, A.library.documents.length - 1)].id;
+      focusRow(target.kind === "rename" ? target.id : fallback, target.kind === "rename" ? "rename" : "open");
+      A.notice(target.kind === "rename" ? "Nom enregistré dans la bibliothèque." : emptied ? "Dernière composition supprimée. Une composition de départ avec six blocs est prête pour la suite." : "Composition supprimée ; les autres éditions sont conservées.");
+    } catch (cause) { if (get("library-dialog").open) get("library-dialog-error").textContent = cause.message; else A.error(cause.message); }
+    finally { busy = false; get("library-confirm").disabled = get("library-cancel").disabled = false; }
+  });
+  A.Library = Object.freeze({refresh, open, home, duplicate, ask});
+})();
