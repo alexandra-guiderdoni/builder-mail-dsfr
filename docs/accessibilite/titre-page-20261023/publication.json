@@ -1,0 +1,137 @@
+{
+  "deployment": {
+    "conclusion": "success",
+    "databaseId": 39867837036,
+    "headSha": "1f756999f99f8498b6085e6d5612bc8946ec6e8b",
+    "status": "completed",
+    "url": "https://github.com/alexandra-guiderdoni/builder-mail-dsfr/actions/runs/39867837036"
+  },
+  "runtime": {
+    "commit": "1f756999f99f8498b6085e6d5612bc8946ec6e8b",
+    "files": [
+      {
+        "name": "index.html",
+        "status": 200,
+        "sha256": "22b764f7c1c15d537e2818b9107654fc4c1968d2db8faca901506e02f418df60"
+      },
+      {
+        "name": "sw.js",
+        "status": 200,
+        "sha256": "0c787b182b86b9c6592cde0f3b988afc8d3ce18eead7ef405bec9b817cabc5af"
+      },
+      {
+        "name": "manifest.webmanifest",
+        "status": 200,
+        "sha256": "8714de33ac81701d61efab69403d603626c0b03373ecb652b2ddcf760cb35da9"
+      },
+      {
+        "name": "icon.svg",
+        "status": 200,
+        "sha256": "5505b460c862ebb01858dd50199029259b1f7a6aa3764f219f4ab83405181a23"
+      },
+      {
+        "name": "icon-192.png",
+        "status": 200,
+        "sha256": "aadd19a40c58106b744454719023d88db1173eb9d37244c00b58e2c5263cab4f"
+      },
+      {
+        "name": "icon-512.png",
+        "status": 200,
+        "sha256": "62744b0258125bd90992841da6127622aa038f501099c0bd7a917b4bc76bfee1"
+      },
+      {
+        "name": "snum.html",
+        "status": 200,
+        "sha256": "7effde63214baa8ea551f4f93778b1272c4f2d29a85c838822d486760d7681d4"
+      },
+      {
+        "name": "atelier-portable.html",
+        "status": 200,
+        "sha256": "5a17e9959e3c73528c8f9fdcab8be75b4ca0be8aa91b91662bb70cab724deb8f"
+      }
+    ],
+    "observations": [
+      {
+        "subject": "Objet prioritaire",
+        "expected": "Objet prioritaire",
+        "previewTitle": "Objet prioritaire",
+        "exportedTitle": "Objet prioritaire",
+        "jsonSubject": "Objet prioritaire",
+        "documentUnchanged": true
+      },
+      {
+        "subject": "   ",
+        "expected": "Qualification titre & <composition>",
+        "previewTitle": "Qualification titre & <composition>",
+        "exportedTitle": "Qualification titre & <composition>",
+        "jsonSubject": "   ",
+        "documentUnchanged": true
+      },
+      {
+        "subject": "",
+        "expected": "Qualification titre & <composition>",
+        "previewTitle": "Qualification titre & <composition>",
+        "exportedTitle": "Qualification titre & <composition>",
+        "jsonSubject": "",
+        "documentUnchanged": true
+      }
+    ],
+    "errors": [],
+    "completed": true,
+    "humanQualification": false,
+    "screenReaderExecuted": false,
+    "help": {
+      "optional": true,
+      "descriptions": [
+        {
+          "id": "subject-help",
+          "visible": true,
+          "text": "Sans objet, le nom de la composition devient le titre du fichier HTML et apparaît dans son onglet."
+        }
+      ]
+    },
+    "offline": {
+      "reloaded": true,
+      "compositionRestored": true,
+      "subject": "",
+      "previewTitle": "Qualification titre & <composition>"
+    }
+  },
+  "failedAttempts": [
+    {
+      "completed": false,
+      "filesVerified": 6,
+      "failedFile": "snum.html",
+      "observedHttpStatus": 503,
+      "evidence": "evidence/titre-page-20261023/publication-1792709492370/runtime.json",
+      "qualification": "Échec conservé ; une seconde exécution distincte termine avec huit fichiers identiques et trois cas de titre."
+    }
+  ],
+  "verificationSourceSha256": {
+    "evidence/titre-page-20261023/verifier-public.cjs": "07bd7ac54678d89d389f3d7f2f92afe864533622da8c95a131a1bc8ca37ffe42",
+    "evidence/titre-page-20261023/consolider-publication.py": "7475db41bed2a56c9db2bc6bf74bef13322097b383880ef149493dbe0d7ddaa2"
+  },
+  "artifactSha256": {
+    "evidence/titre-page-20261023/deploiement.json": "9165f43d338bd3c0c2dd50276f31425c37edd4530a632f5b9c00202b27310b80",
+    "evidence/titre-page-20261023/publication-1792709492370/runtime.json": "20d2460c86cd2e5b7d08f1da5fa18b00ff96e1f2e5dc6b40ffbca0aa5ccb1a05",
+    "evidence/titre-page-20261023/publication-1792709517708/composition-0.json": "c78a125d662150e3bb2560dda9e945ff6e8d58fd2a806c1a658fe3218bf1619f",
+    "evidence/titre-page-20261023/publication-1792709517708/composition-1.json": "a975a8838b59af479d96247ac30bb3ed91bc6cbecc479dc3aef80b19b41c1fe0",
+    "evidence/titre-page-20261023/publication-1792709517708/composition-2.json": "88fc8d690c5a942bed3cf9c0f1092f4efe8803f3ab116e9711f748cfaf156cf5",
+    "evidence/titre-page-20261023/publication-1792709517708/courriel-0.html": "02f637e045c259307748071a431c8220e1197a79dae20187d7cad56025ce01d7",
+    "evidence/titre-page-20261023/publication-1792709517708/courriel-1.html": "c772ac1b3a5e43a4ef69f6ac9446db976db2cf423de07f83db26ac94b940f830",
+    "evidence/titre-page-20261023/publication-1792709517708/courriel-2.html": "c772ac1b3a5e43a4ef69f6ac9446db976db2cf423de07f83db26ac94b940f830",
+    "evidence/titre-page-20261023/publication-1792709517708/runtime.json": "3aeb8a4edfa824cb4d28a621ad1ecc8da308c983338d0724be7ef2d98b51fa31",
+    "evidence/titre-page-20261023/publication-1792709517708/titre-hors-connexion.png": "330d36280bc0c7bbf27c915d72ba3cd0ef411a0586c87da28bc6d0da4f15c1ff",
+    "evidence/titre-page-public-20261023.log": "d346112a9735d0858e5037992deb667541c787c7522ba7447a7f1d6860b8954f",
+    "evidence/titre-page-public-v2-20261023.log": "131f9e49ea65f84f03bb88e9dc78f17b043c2aa9031c7f9c6da63aa201bb7fbc"
+  },
+  "notVerified": [
+    "Pertinence éditoriale des titres",
+    "Écoute réelle d’un lecteur d’écran",
+    "Windows/Outlook",
+    "Collage dans une messagerie de cette version",
+    "Installation sur le parc",
+    "Autorisation métier de l’origine HTTPS"
+  ],
+  "official_compliance_rate": null
+}
