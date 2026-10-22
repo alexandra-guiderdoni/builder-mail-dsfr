@@ -1,7 +1,7 @@
 (() => {
   "use strict";
   const A = window.MailBuilder, M = A.Model, get = id => document.getElementById(id);
-  const attempt = async action => { try { await action(); } catch (cause) { A.error(cause.message); } };
+  const attempt = async action => { try { await action(); } catch (cause) { if (cause.linkIssue) A.UI.showLinkIssue(cause.linkIssue); A.error(cause.message); } };
   document.addEventListener("click", event => {
     const action = event.target.closest("[data-action]");
     if (action && !action.disabled) attempt(async () => { await A.Actions[action.dataset.action](); if (["new-document", "use-template"].includes(action.dataset.action)) await A.Library.open(A.library.activeId); });
@@ -24,6 +24,7 @@
   function edit(input, mutator) {
     const next = M.copy(A.library);
     try {
+      if (input.hasAttribute("data-link-label") && !input.value.trim()) throw new Error("Renseignez l’intitulé du lien.");
       mutator(next); M.library(next); A.invalid.delete(input.id); A.UI.fieldError(input, "");
       A.State.change(mutator, false, true); A.UI.selections(); A.UI.blockList();
     } catch (cause) { A.invalid.add(input.id); A.UI.fieldError(input, cause.message); A.error(`${cause.message} Ce champ n’est pas sauvegardé.`); }

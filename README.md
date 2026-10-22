@@ -6,9 +6,9 @@ Application locale pour composer des courriels à partir des **52 sections et va
 
 ## Ouvrir l’atelier
 
-La [campagne RGAA en cours](docs/accessibilite/formulaires-20261022/RAPPORT.md) publie les matrices des 106 critères et 258 tests, les corrections vérifiées et les lacunes restantes. Titres natifs et présentation CSS sont éprouvés sur les 52 composants ; les 88 tests applicatifs passent. Le nom de composition et les 13 champs URL obligatoires annoncent leur contrainte ; les parcours d’erreur, de correction et de retour du focus sont observés. **La conformité RGAA à 100 % reste à démontrer**, avec qualification de chaque test applicable et essais humains manquants.
+La [campagne RGAA en cours](docs/accessibilite/liens-20261023/RAPPORT.md) publie les matrices des 106 critères et 258 tests, les corrections vérifiées et les lacunes restantes. Les **97 tests applicatifs passent**. Les 13 intitulés des liens intégrés aux composants sont obligatoires avant copie ou téléchargement HTML ; les anciens JSON restent récupérables et leur aperçu indique les liens à compléter sans les activer. Le nom de composition et les 13 champs URL annoncent aussi leur contrainte. **La conformité RGAA à 100 % reste à démontrer**, avec qualification de chaque test applicable et essais humains manquants.
 
-Le [complément de contraste](docs/accessibilite/contrastes-20261022/RAPPORT.md) ajoute 80 observations ciblées et cinq contrôles négatifs, sans modifier le produit ni qualifier globalement les critères de couleur.
+Le [protocole de contraste](docs/accessibilite/contrastes-20261022/RAPPORT.md) décrit 80 observations ciblées et cinq contrôles négatifs. Leur renouvellement sur cette version figure dans la campagne courante ; il ne qualifie pas globalement les critères de couleur.
 
 **[Ouvrir l’atelier en ligne](https://alexandra-guiderdoni.github.io/builder-mail-dsfr/)**. La publication HTTPS et le rechargement hors connexion après préparation du cache ont été vérifiés le 22 octobre 2026 ; [reçu de publication](docs/recette-pages.json).
 

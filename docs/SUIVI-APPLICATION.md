@@ -1,8 +1,8 @@
 # Réalisation de l’atelier autonome
 
-Actualisation accessibilité : [campagne RGAA](accessibilite/formulaires-20261022/RAPPORT.md), **88 tests applicatifs réussis**, titres natifs et présentation CSS dans les courriels, contraintes obligatoires et transitions d’erreur vérifiées. Les 52 composants passent 1 248 cas de rendu et copie ; les matrices exhaustives restent à qualifier par instance. Aucune conformité RGAA globale ni recette Outlook annoncée. Les chiffres antérieurs décrivent leurs campagnes historiques.
+Actualisation accessibilité : [campagne RGAA du 23 octobre](accessibilite/liens-20261023/RAPPORT.md), **97 tests applicatifs réussis sans saut**. Les 13 liens intégrés exigent un intitulé avant diffusion ; les anciens fichiers restent récupérables et leur aperçu neutralise les liens à compléter. Titres natifs, présentation CSS et 1 248 cas de rendu et copie sont vérifiés sur les 52 composants. Les matrices exhaustives restent à qualifier par instance. Aucune conformité RGAA globale ni recette Outlook annoncée. Les chiffres antérieurs décrivent leurs campagnes historiques.
 
-Le [complément de contraste](accessibilite/contrastes-20261022/RAPPORT.md) ajoute 80 observations aux 365 observations de formulaires, sans nouveau critère déclaré conforme ou non applicable. Les cinq contrôles négatifs exercent aussi les limites du collecteur.
+Le [protocole de contraste](accessibilite/contrastes-20261022/RAPPORT.md) reste la référence méthodologique. Ses 80 observations et cinq contrôles négatifs sont renouvelés dans la campagne courante, avec les formulaires et les nouveaux états des liens. Aucun nouveau critère n’est déclaré conforme ou non applicable.
 
 Objectif : application complète du cadrage confirmé, depuis le prototype `c329339`. Le mandat de livraison du 22 octobre autorise la publication sur `main` dans le dépôt personnel et la clôture des issues satisfaites. Les essais de messagerie sur Mac ont été autorisés séparément ; le site public est livré, l’accès et l’installation depuis le parc restent à qualifier.
 

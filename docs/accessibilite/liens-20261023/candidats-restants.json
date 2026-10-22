@@ -1,0 +1,26 @@
+{
+  "candidate_test": "8.6.1",
+  "automatic_status": "FAIL_CANDIDATE",
+  "humanQualification": false,
+  "screenReaderExecuted": false,
+  "method": "Objet vidé par l’interface, téléchargement réel et ouverture du HTML autonome dans Chromium, profil isolé",
+  "cases": [
+    {
+      "subject": "",
+      "title": "",
+      "html": "evidence/liens-vides-20261023/objet-vide/objet-0.html",
+      "documentUnchanged": true
+    },
+    {
+      "subject": "   ",
+      "title": "",
+      "html": "evidence/liens-vides-20261023/objet-vide/objet-1.html",
+      "documentUnchanged": true
+    }
+  ],
+  "sourceSha256": {
+    "app/source/model.js": "24ef413e4e6e050e34547ec8c96b6f42ca0cc10d270dd279a0fa9fa0bf8799f9",
+    "app/source/render.js": "d82ad81e8e77882adad6e7655a27b2549544af5172d06c58dfd9b9755d5e4f86",
+    "app/distribution/portable.html": "0865d9a861b17fd639a1c12972b6ef382dd9939e6efc3e35f9db1f053fbb90f0"
+  }
+}

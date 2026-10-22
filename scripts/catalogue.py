@@ -9,9 +9,9 @@ from html.parser import HTMLParser
 from pathlib import Path
 
 if __package__:
-    from .mail_layout import LAYOUT_CSS, css_template
+    from .mail_layout import LAYOUT_CSS, Element, Fragment, css_template
 else:
-    from mail_layout import LAYOUT_CSS, css_template
+    from mail_layout import LAYOUT_CSS, Element, Fragment, css_template
 
 ROOT = Path(__file__).resolve().parents[1]
 REF = ROOT / "reference/dsfr-mail"
@@ -195,6 +195,42 @@ class Fields(HTMLParser):
         self.parts.append(f"<!--{value}-->")
 
 
+def link_fields(template, fields):
+    """Associe chaque destination à son unique champ d’intitulé canonique."""
+    types = {field["key"]: field["type"] for field in fields}
+    result = []
+
+    def text_nodes(element):
+        return "".join(
+            text_nodes(child) if isinstance(child, Element) else child
+            for child in element.children
+            if isinstance(child, Element) or not child.startswith("<!--")
+        )
+
+    for anchor in Fragment(template).root.elements():
+        if anchor.tag != "a":
+            continue
+        destination = re.fullmatch(r"\{\{(f\d+)\}\}", anchor.attrs.get("href", ""))
+        labels = re.findall(r"\{\{(f\d+)\}\}", text_nodes(anchor))
+        if (
+            not destination
+            or types.get(destination[1]) != "url"
+            or len(labels) != 1
+            or types.get(labels[0]) != "text"
+            or template.count("{{" + labels[0] + "}}") != 1
+            or any(
+                key in {"role", "tabindex"} or key.startswith("on")
+                for key in anchor.attrs
+            )
+        ):
+            raise ValueError("Association destination/intitulé non reconnue.")
+        result.append({"url": destination[1], "label": labels[0]})
+    urls = [item["url"] for item in result]
+    if sorted(urls) != sorted(key for key, kind in types.items() if kind == "url"):
+        raise ValueError("Chaque URL doit posséder un unique lien avec intitulé.")
+    return result
+
+
 def compile_catalogue():
     path = REF / "template-generique.html"
     source = path.read_text(encoding="utf-8")
@@ -223,6 +259,7 @@ def compile_catalogue():
                 "template": template,
                 "semanticTemplate": css_template(index, semantic),
                 "headings": headings,
+                "links": link_fields(template, fields.fields),
                 "fields": fields.fields,
                 "source": {
                     "file": "template-generique.html",

@@ -21,7 +21,7 @@ Les deux parcours métier annoncés sont Windows avec Firefox vers Outlook insta
 | Images | Fichiers locaux, conservés avec la composition et le fichier de travail. |
 | Conservation | Bibliothèque locale, sauvegarde automatique, modèles et identités réutilisables ; export/import de fichiers de travail. |
 | Sorties | Copier le mail mis en forme et télécharger le HTML autonome. |
-| Accessibilité | Atteindre et démontrer 100 % des critères RGAA applicables sur l’échantillon audité ; aucun taux favorable déduit des seules sondes. Le [dossier courant](docs/accessibilite/formulaires-20261022/RAPPORT.md) conserve preuves et qualifications manquantes. |
+| Accessibilité | Atteindre et démontrer 100 % des critères RGAA applicables sur l’échantillon audité ; aucun taux favorable déduit des seules sondes. Le [dossier courant](docs/accessibilite/liens-20261023/RAPPORT.md) conserve preuves et qualifications manquantes. |
 | Dépôt | Application séparée dans le dépôt existant ; provenance et version amont explicites. |
 
 ## Frontières impératives
@@ -91,3 +91,5 @@ Le cache du programme et la bibliothèque restent séparés : changer de newslet
 ## Intitulés et interface après retour utilisateur
 
 Chaque bloc permet de personnaliser l’intitulé de son lien source. Le champ facultatif `sourceLabel` complète le contrat v1 sans modifier le catalogue ni les données antérieures ; le texte par défaut reste disponible. L’interface du builder reprend les ressources DSFR web officielles locales pour la typographie, la grille, les champs et les boutons. Les gabarits de courriels et le socle visuel du convertisseur SNUM restent séparés de ce CSS web. La [recette](docs/RECETTE-APPLICATION.md#intitulés-et-interface-dsfr) borne les contrôles réalisés et ne revendique aucune conformité globale.
+
+Les 13 liens intégrés au catalogue exigent leur propre intitulé avant diffusion. Les associations destination/intitulé sont dérivées du gabarit canonique ; le format JSON et son empreinte restent inchangés. Un ancien fichier avec des intitulés vides reste importable, sauvegardable et exportable en JSON. L’aperçu signale ces liens sans les activer ; la copie et le téléchargement HTML demandent leur correction, avec sélection du bloc et erreur associée au champ.

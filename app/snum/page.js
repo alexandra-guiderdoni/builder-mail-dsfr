@@ -7,7 +7,7 @@
   A.notice = message => { get("notice").textContent = message; };
   A.State = Object.freeze({guard() { if (!current || dirty) throw new Error("Convertissez la collecte actuelle avant d’exporter."); }});
   const buttons = () => { for (const id of ["export-json", "export-html", "copy"]) get(id).disabled = !current || dirty; };
-  const attempt = async action => { try { await action(); } catch (cause) { A.error(cause.message); } };
+  const attempt = async action => { try { await action(); } catch (cause) { A.error(cause.linkIssue ? `${cause.message} Exportez le JSON puis corrigez cet intitulé dans le builder.` : cause.message); } };
   get("snum-input").addEventListener("input", () => { dirty = true; buttons(); A.error(""); A.notice(current ? "Collecte modifiée : reconvertissez avant d’exporter. L’aperçu précédent est conservé." : ""); });
   get("convert").addEventListener("click", () => attempt(() => {
     const result = A.SnumAdapter.convert(get("snum-input").value);

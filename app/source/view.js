@@ -13,6 +13,12 @@
     if (descriptions.size) input.setAttribute("aria-describedby", [...descriptions].join(" ")); else input.removeAttribute("aria-describedby");
   }
   function clearFieldErrors() { for (const hint of document.querySelectorAll("[data-field-error]")) { const input = get(hint.dataset.fieldError); if (input) fieldError(input, ""); else hint.remove(); } }
+  function showLinkIssue(issue) {
+    if (get("editor-page").hidden) return;
+    A.selected = issue.block; blockList(); fields();
+    const input = get(`field-${issue.field}`);
+    if (input) { fieldError(input, issue.message); input.focus(); }
+  }
   function option(value, label, selected = false) { return `<option value="${esc(value)}" ${selected ? "selected" : ""}>${esc(label)}</option>`; }
   function selections() {
     const doc = A.doc();
@@ -34,9 +40,10 @@
     if (!b) { get("block-editor").innerHTML = "<p>Ajoutez un composant au courriel pour personnaliser son contenu.</p>"; return; }
     const definition = M.component(b.component), index = A.doc().blocks.indexOf(b);
     get("block-editor").innerHTML = `<h3>${esc(definition.label)}</h3><p class="muted">${esc(definition.family)}</p>` + definition.fields.map(f => {
-      const label = f.type === "url" ? `${f.label} (obligatoire)` : f.label, id = `field-${f.key}`, v = b.values[f.key];
+      const linkLabel = definition.links.some(link => link.label === f.key), required = f.type === "url" || linkLabel;
+      const label = linkLabel ? `${f.label} — Intitulé du lien (obligatoire)` : required ? `${f.label} (obligatoire)` : f.label, id = `field-${f.key}`, v = b.values[f.key];
       if (f.type === "image") return `<div class="image-field"><img src="${esc(v)}" alt="Aperçu de l’image sélectionnée"><label class="fr-label" for="${id}">${esc(label)}</label><input id="${id}" data-image-field="${esc(f.key)}" type="file" accept="image/png,image/jpeg,image/gif,image/webp"></div>`;
-      return `<label class="fr-label" for="${id}">${esc(label)}</label>${f.type === "text" ? `<textarea class="fr-input" id="${id}" data-field="${f.key}" rows="3">${esc(v)}</textarea>` : `<input class="fr-input" id="${id}" data-field="${f.key}" type="${f.type === "url" ? "url" : "text"}"${f.type === "url" ? ' aria-required="true"' : ""} value="${esc(v)}">`}`;
+      return `<label class="fr-label" for="${id}">${esc(label)}</label>${f.type === "text" ? `<textarea class="fr-input" id="${id}" data-field="${f.key}" rows="3"${linkLabel ? ' data-link-label aria-required="true"' : ""}>${esc(v)}</textarea>` : `<input class="fr-input" id="${id}" data-field="${f.key}" type="${f.type === "url" ? "url" : "text"}"${required ? ' aria-required="true"' : ""} value="${esc(v)}">`}`;
     }).join("") + `<label class="fr-label" for="article-source">Lien source facultatif du bloc</label><input class="fr-input" id="article-source" type="url" data-source value="${esc(b.source)}"><label class="fr-label" for="article-source-label">Intitulé du lien source</label><input class="fr-input" id="article-source-label" type="text" data-source-label value="${esc(b.sourceLabel ?? "")}" placeholder="Consulter la source" aria-describedby="source-label-help"><p id="source-label-help" class="muted">Sans intitulé, le lien affiche « Consulter la source ». Sans URL, aucun lien source n’est ajouté.</p><div class="actions"><button class="fr-btn fr-btn--secondary" data-block-action="up" ${index === 0 ? "disabled" : ""}>Monter</button><button class="fr-btn fr-btn--secondary" data-block-action="down" ${index === A.doc().blocks.length - 1 ? "disabled" : ""}>Descendre</button><button class="fr-btn fr-btn--secondary" data-block-action="duplicate">Dupliquer</button><button class="fr-btn fr-btn--secondary" data-block-action="remove">Retirer le bloc</button><button class="fr-btn fr-btn--secondary" data-action="cancel-fields">Annuler les champs invalides</button></div>`;
   }
   function preview() {
@@ -54,5 +61,5 @@
     get("catalogue").innerHTML = visible.map(c => option(c.id, `${c.family} — ${c.label}`)).join("");
     get("catalogue-count").textContent = `${visible.length} composants sur ${A.catalog.components.length}`;
   }
-  A.UI = Object.freeze({refresh, preview, fields, blockList, selections, catalogue, fieldError, clearFieldErrors});
+  A.UI = Object.freeze({refresh, preview, fields, blockList, selections, catalogue, fieldError, clearFieldErrors, showLinkIssue});
 })();

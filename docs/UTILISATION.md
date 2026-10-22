@@ -14,6 +14,8 @@ Le catalogue conserve les structures et les styles du modèle de courriel éping
 
 Pour personnaliser « Consulter la source », sélectionner le bloc, renseigner « Lien source facultatif du bloc », puis **« Intitulé du lien source »**, par exemple « Lire le dossier complet ». Un intitulé vide garde le texte par défaut. Sans URL, le lien est absent du courriel et l’intitulé reste disponible pour la prochaine saisie d’URL. Les liens déjà intégrés aux composants possèdent leurs propres champs de texte et d’adresse.
 
+Pour les liens intégrés aux composants, le champ **« Intitulé du lien (obligatoire) »** doit contenir du texte. Une saisie vide est signalée et ne remplace pas la valeur enregistrée. Si un ancien fichier contient déjà des intitulés vides, son aperçu affiche les liens à renseigner sans les activer. La copie et le téléchargement HTML sélectionnent le premier champ à corriger. Corriger les champs progressivement ; l’export JSON de sauvegarde reste possible. Dans SNUM, le message indique le bloc et le champ : exporter le JSON puis l’importer dans le builder pour le corriger.
+
 ## Gérer Mes newsletters
 
 Chaque entrée de l’accueil est une composition indépendante, par exemple « Lettre du service — octobre ». Son titre ouvre l’éditeur ; « Retour à Mes newsletters » revient à la liste après vérification de la sauvegarde. « Reprendre » ouvre la composition active. Un rechargement du programme revient à l’accueil en conservant la bibliothèque.

@@ -1,8 +1,8 @@
 # Recette de l’application autonome
 
-La [campagne d’accessibilité du 22 octobre](accessibilite/formulaires-20261022/RAPPORT.md) complète cette recette : **88 tests applicatifs réussis sans saut**, titres natifs et présentation CSS, 1 248 cas de rendu et copie, contraintes obligatoires et transitions d’erreur, parcours complet Firefox rejoué, matrices 106/258 et limites explicites. La copie conserve les gouttières avec des colonnes égales ; l’export garde les proportions d’origine. Les campagnes antérieures ci-dessous restent historiques. Qualifications humaines et clients restent ouvertes ; aucun taux RGAA validé.
+La [campagne d’accessibilité du 23 octobre](accessibilite/liens-20261023/RAPPORT.md) complète cette recette : **97 tests applicatifs réussis sans saut**, titres natifs et présentation CSS, 1 248 cas de rendu et copie, contraintes obligatoires et transitions d’erreur, parcours complet Firefox rejoué, matrices 106/258 et limites explicites. Les 13 liens intégrés sans intitulé empêchent copie et téléchargement HTML ; anciens imports, aperçu neutralisé et récupération JSON restent disponibles. La copie conserve les gouttières avec des colonnes égales ; l’export garde les proportions d’origine. Les campagnes antérieures ci-dessous restent historiques. Qualifications humaines et clients restent ouvertes ; aucun taux RGAA validé.
 
-Le [complément de contraste](accessibilite/contrastes-20261022/RAPPORT.md) ajoute 74 mesures et six constats d’inactivité modale, avec cinq contrôles négatifs. Il porte sur les mêmes octets du produit et conserve les résultats axe incomplets ; la qualification globale des couleurs reste ouverte.
+Le [protocole de contraste](accessibilite/contrastes-20261022/RAPPORT.md) distingue 74 mesures et six constats d’inactivité modale, avec cinq contrôles négatifs. La campagne courante renouvelle ces observations et conserve les résultats axe incomplets ; la qualification globale des couleurs reste ouverte.
 
 **Application publiée, qualification métier incomplète.** Observations des 21 et 22 octobre 2026 sur macOS 26.5.2, Firefox natif 156.0 et Chromium 156.0.8078.4. Les campagnes couvrent l’accueil « Mes newsletters », le builder générique et la page SNUM séparée, puis l’origine HTTPS publique. La recette du [prototype](RECETTE.md) reste historique et distincte.
 
@@ -119,7 +119,7 @@ ruff check scripts/build_app.py scripts/catalogue.py scripts/interchange.py
 
 - Installation de développement : deux paquets ajoutés, audit npm sans vulnérabilité signalée. Aucun navigateur nouvellement téléchargé ; Chromium existant utilisé.
 - Génération et comparaison : `APPLICATION_DISTRIBUTIONS_OK` et `DISTRIBUTIONS_OK`.
-- Campagne historique de l’accueil : **28 réussites, 0 échec, 0 test sauté**, en 11,233 s ; journal `accueil-suite-finale.log`. La campagne courante de 65 tests figure en tête de cette fiche.
+- Campagne historique de l’accueil : **28 réussites, 0 échec, 0 test sauté**, en 11,233 s ; journal `accueil-suite-finale.log`. La campagne courante figure en tête de cette fiche.
 - Accueil : **3 tests ciblés réussis**, journal `accueil-parcours-cibles-final.log`. La distribution sans accueil avait d’abord échoué sur l’absence de cet écran : `accueil-test-rouge.log`.
 - Parcours ciblés de séparation : **4 tests réussis**, journal `separation-parcours-cibles.log`.
 - Firefox : **PARCOURS_FIREFOX_OBSERVE**, cinq groupes de contrôles incluant accueil, conversion séparée puis import générique, aucune erreur enregistrée ; reçu `firefox-1792657967435/receipt.json`.
