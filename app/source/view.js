@@ -16,7 +16,7 @@
     get("block-list").innerHTML = A.doc().blocks.map((b, i) => {
       const definition = M.component(b.component), title = definition.fields.find(f => f.type === "text");
       const detail = title ? b.values[title.key].slice(0, 64) : "";
-      return `<li><button type="button" data-select="${esc(b.id)}" aria-pressed="${A.selected === b.id}"><span>${i + 1}. ${esc(definition.label)}</span><small>${esc(detail)}</small></button></li>`;
+      return `<li><button class="fr-btn fr-btn--secondary" type="button" data-select="${esc(b.id)}" aria-pressed="${A.selected === b.id}"><span>${i + 1}. ${esc(definition.label)}</span><small>${esc(detail)}</small></button></li>`;
     }).join("");
   }
   function fields() {
@@ -25,9 +25,9 @@
     const definition = M.component(b.component), index = A.doc().blocks.indexOf(b);
     get("block-editor").innerHTML = `<h3>${esc(definition.label)}</h3><p class="muted">${esc(definition.family)}</p>` + definition.fields.map(f => {
       const label = f.label, id = `field-${f.key}`, v = b.values[f.key];
-      if (f.type === "image") return `<div class="image-field"><img src="${esc(v)}" alt="Aperçu de l’image sélectionnée"><label for="${id}">${esc(label)}</label><input id="${id}" data-image-field="${esc(f.key)}" type="file" accept="image/png,image/jpeg,image/gif,image/webp"></div>`;
-      return `<label for="${id}">${esc(label)}</label>${f.type === "text" ? `<textarea id="${id}" data-field="${f.key}" rows="3">${esc(v)}</textarea>` : `<input id="${id}" data-field="${f.key}" type="${f.type === "url" ? "url" : "text"}" value="${esc(v)}">`}`;
-    }).join("") + `<label for="article-source">Lien source facultatif de l’article</label><input id="article-source" type="url" data-source value="${esc(b.source)}"><div class="actions"><button data-block-action="up" ${index === 0 ? "disabled" : ""}>Monter</button><button data-block-action="down" ${index === A.doc().blocks.length - 1 ? "disabled" : ""}>Descendre</button><button data-block-action="duplicate">Dupliquer</button><button data-block-action="remove">Retirer le bloc</button><button data-action="cancel-fields">Annuler les champs invalides</button></div>`;
+      if (f.type === "image") return `<div class="image-field"><img src="${esc(v)}" alt="Aperçu de l’image sélectionnée"><label class="fr-label" for="${id}">${esc(label)}</label><input id="${id}" data-image-field="${esc(f.key)}" type="file" accept="image/png,image/jpeg,image/gif,image/webp"></div>`;
+      return `<label class="fr-label" for="${id}">${esc(label)}</label>${f.type === "text" ? `<textarea class="fr-input" id="${id}" data-field="${f.key}" rows="3">${esc(v)}</textarea>` : `<input class="fr-input" id="${id}" data-field="${f.key}" type="${f.type === "url" ? "url" : "text"}" value="${esc(v)}">`}`;
+    }).join("") + `<label class="fr-label" for="article-source">Lien source facultatif du bloc</label><input class="fr-input" id="article-source" type="url" data-source value="${esc(b.source)}"><label class="fr-label" for="article-source-label">Intitulé du lien source</label><input class="fr-input" id="article-source-label" type="text" data-source-label value="${esc(b.sourceLabel ?? "")}" placeholder="Consulter la source" aria-describedby="source-label-help"><p id="source-label-help" class="muted">Sans intitulé, le lien affiche « Consulter la source ». Sans URL, aucun lien source n’est ajouté.</p><div class="actions"><button class="fr-btn fr-btn--secondary" data-block-action="up" ${index === 0 ? "disabled" : ""}>Monter</button><button class="fr-btn fr-btn--secondary" data-block-action="down" ${index === A.doc().blocks.length - 1 ? "disabled" : ""}>Descendre</button><button class="fr-btn fr-btn--secondary" data-block-action="duplicate">Dupliquer</button><button class="fr-btn fr-btn--secondary" data-block-action="remove">Retirer le bloc</button><button class="fr-btn fr-btn--secondary" data-action="cancel-fields">Annuler les champs invalides</button></div>`;
   }
   function preview() {
     if (previewURL) URL.revokeObjectURL(previewURL);

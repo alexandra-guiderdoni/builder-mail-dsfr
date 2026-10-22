@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- PDG-LARGE-FILE-JUSTIFICATION: page autonome générée ; parseur, moteur et ressources incorporés depuis les sources séparées. -->
-<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none';script-src 'sha256-H4d9TJPSA81k3OHTOPmA8X76djSMVta/wB/zJofokd4=';style-src 'unsafe-inline';img-src data: blob:;frame-src blob:;base-uri 'none';form-action 'none';connect-src 'none';worker-src 'none'"><title>Collecte SNUM · Convertisseur de courriels</title><style>:root { color-scheme:light; font:100%/1.5 Arial,Helvetica,sans-serif; color:#161616; background:#f6f6f6; }
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none';script-src 'sha256-/CcPJvYc832REG8mhxY/QehatkZKABnO4vFbR4ZlGA4=';style-src 'unsafe-inline';img-src data: blob:;frame-src blob:;base-uri 'none';form-action 'none';connect-src 'none';worker-src 'none'"><title>Collecte SNUM · Convertisseur de courriels</title><style>:root { color-scheme:light; font:100%/1.5 Arial,Helvetica,sans-serif; color:#161616; background:#f6f6f6; }
 * { box-sizing:border-box; } body { margin:0; } button,input,select,textarea { font:inherit; }
 header { display:flex; justify-content:space-between; gap:24px; background:#fff; border-top:6px solid #000091; border-bottom:1px solid #ddd; padding:24px 3vw; }
 h1 { margin:0 0 8px; color:#000091; font-size:1.9rem; line-height:1.25; } h2 { font-size:1.25rem; margin:0 0 18px; } h3 { font-size:1.15rem; margin:0 0 8px; }
@@ -71,9 +71,9 @@ window.MailBuilder.catalog = {"id":"6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278
   const copy = value => JSON.parse(JSON.stringify(value));
   const fail = message => { throw new Error(message); };
   const text = (value, label) => { if (typeof value !== "string") fail(`${label} : texte requis.`); };
-  function object(value, fields, label) {
+  function object(value, fields, label, optional = []) {
     if (!value || typeof value !== "object" || Array.isArray(value)) fail(`${label} : objet requis.`);
-    if (Object.keys(value).length !== fields.length || fields.some(key => !Object.hasOwn(value, key))) fail(`${label} : champs manquants ou inconnus.`);
+    if (Object.keys(value).some(key => !fields.includes(key) && !optional.includes(key)) || fields.some(key => !Object.hasOwn(value, key))) fail(`${label} : champs manquants ou inconnus.`);
   }
   function url(value, empty = false) {
     if (empty && value === "") return;
@@ -96,7 +96,7 @@ window.MailBuilder.catalog = {"id":"6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278
   }
   function component(id) { const result = components.get(id); if (!result) fail("Composant de courriel inconnu."); return result; }
   function block(value) {
-    object(value, ["id", "component", "values", "source"], "Bloc");
+    object(value, ["id", "component", "values", "source"], "Bloc", ["sourceLabel"]);
     text(value.id, "Identifiant"); if (!value.id) fail("Identifiant de bloc vide.");
     const definition = component(value.component);
     object(value.values, definition.fields.map(f => f.key), definition.label);
@@ -106,6 +106,7 @@ window.MailBuilder.catalog = {"id":"6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278
       if (field.type === "url") url(v);
     }
     text(value.source, "Source"); url(value.source, true);
+    if (Object.hasOwn(value, "sourceLabel")) text(value.sourceLabel, "Intitulé du lien source");
     return value;
   }
   function blocks(values) {
@@ -178,7 +179,7 @@ window.MailBuilder.catalog = {"id":"6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278
       const encoded = escape(value.values[key]);
       return fields.get(key).type === "text" ? encoded.replace(/\n/g, "<br>") : encoded;
     });
-    if (value.source) result += `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td align="center"><table role="presentation" width="600" style="width:100%;max-width:600px"><tr><td style="padding:8px 52px 20px;font-family:Tahoma,Geneva,sans-serif;font-size:14px;"><a href="${escape(value.source)}" style="color:#000091">Consulter la source</a></td></tr></table></td></tr></table>`;
+    if (value.source) result += `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td align="center"><table role="presentation" width="600" style="width:100%;max-width:600px"><tr><td style="padding:8px 52px 20px;font-family:Tahoma,Geneva,sans-serif;font-size:14px;"><a href="${escape(value.source)}" style="color:#000091">${escape(value.sourceLabel?.trim() || "Consulter la source")}</a></td></tr></table></td></tr></table>`;
     return result;
   }
   function body(value) { M.document(value); return value.blocks.map(block).join("\n"); }
@@ -187,7 +188,7 @@ window.MailBuilder.catalog = {"id":"6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278
   }
   function plain(value) {
     M.document(value);
-    return [value.subject, ...value.blocks.map(b => [...M.component(b.component).fields.map(f => f.type === "image" ? "" : b.values[f.key]), b.source].filter(Boolean).join("\n"))].join("\n\n");
+    return [value.subject, ...value.blocks.map(b => [...M.component(b.component).fields.map(f => f.type === "image" ? "" : b.values[f.key]), ...(b.source && b.sourceLabel?.trim() ? [b.sourceLabel.trim()] : []), b.source].filter(Boolean).join("\n"))].join("\n\n");
   }
   function clipboardHtml(value) {
     const doc = new DOMParser().parseFromString(html(value), "text/html");

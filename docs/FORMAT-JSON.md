@@ -25,7 +25,8 @@ Fichiers prêts à utiliser : [exemple importable](../app/distribution/exemple.c
       "id": "texte-1",
       "component": "mail-19",
       "values": {"f0": "Un paragraphe de contenu."},
-      "source": "https://exemple.invalid/information"
+      "source": "https://exemple.invalid/information",
+      "sourceLabel": "Lire le dossier complet"
     }
   ]
 }
@@ -40,6 +41,7 @@ Fichiers prêts à utiliser : [exemple importable](../app/distribution/exemple.c
 | `component` | Composant et variante du catalogue, par exemple `mail-05` pour le titre principal. |
 | `values` | Tous les champs de ce composant, sous forme de chaînes. Le schéma donne leurs noms et libellés. |
 | `source` | Lien source HTTPS facultatif, ou chaîne vide ; conservé dans les sorties et après duplication. |
+| `sourceLabel` | Chaîne facultative : intitulé du lien source. Absent, vide ou composé d’espaces, affiche « Consulter la source ». Sans URL, reste enregistré sans produire de lien. |
 
 Les identifiants de blocs doivent être uniques dans une composition. Ils peuvent être des chaînes lisibles ; l’import crée de nouveaux identifiants pour fusionner sans collision. Une bibliothèque possède aussi un `activeId` qui désigne sa composition active.
 
@@ -56,6 +58,8 @@ Les textes restent du texte : aucun HTML ni script fourni par le JSON n’est ex
 Le [JSON Schema 2020-12](https://json-schema.org/understanding-json-schema/reference/object) décrit les propriétés requises et refuse les champs inconnus. Il sert aux éditeurs et validateurs ; ne pas ajouter `$schema` au fichier de composition. Le moteur complète ce schéma par les contrôles d’URL, d’identifiants uniques, de composition active et de catalogue.
 
 Un JSON refusé ne remplace pas le travail existant. Une autre version ou un autre catalogue exige une migration explicite ; changer seulement l’empreinte ne convertit pas les données.
+
+L’ajout facultatif de `sourceLabel` conserve la version 1, le catalogue et la base locale. Cette livraison lit les anciens fichiers sans les réécrire pour ajouter ce champ. Les anciennes livraisons qui refusent les propriétés inconnues ne lisent pas un fichier contenant `sourceLabel` : utiliser le builder à jour pour ces fichiers. L’intitulé est du texte échappé dans le HTML et accompagne l’URL dans la version texte du courriel.
 
 À l’import et au chargement d’une nouvelle image, le navigateur contrôle le contenu Base64, le format annoncé et le décodage réel. Chaque image est limitée à **10 Mio de données encodées dans le fichier image**, **8192 pixels par côté** et **16 777 216 pixels au total**. La limite d’octets concerne les données de l’image, avant leur expansion Base64 ; elle ne concerne pas la taille totale de la bibliothèque. Le refus nomme l’image et conserve le fichier original ainsi que le travail déjà présent. Le navigateur peut refuser un fichier plus petit si ses propres capacités de décodage ou de stockage sont dépassées.
 

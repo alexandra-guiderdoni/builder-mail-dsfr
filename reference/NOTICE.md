@@ -12,6 +12,14 @@ Le lien source ajouté après certains blocs est une adaptation de l’atelier. 
 
 La préparation du presse-papiers dans `app/source/render.js` est une adaptation locale supplémentaire : bornes de largeur inline, tableaux de présentation contraints et cellules de contenu sans largeur figée. Les cellules décoratives vides et colorées gardent leur épaisseur. Les valeurs éditoriales, liens, images et alternatives sont conservés avant écriture ; Chromium peut éliminer les variantes de logo masquées pendant sa normalisation. Les 52 composants sont testés sans CSS de tête à quatre largeurs. Le rendu HTML téléchargé et les fichiers officiels épinglés restent inchangés par cette préparation.
 
+## Interface web du builder
+
+Le sous-ensemble [DSFR web 1.15.4](https://github.com/GouvernementFR/dsfr/tree/v1.15.4) est conservé dans `dsfr-web/` : modules CSS `core`, `form`, `input`, `select`, `button`, trois fontes Marianne WOFF2 et icônes référencées. [Sa provenance](dsfr-web/provenance.json) inventorie chaque fichier avec son SHA-256. Les copies CSS et binaires sont intégrales ; `LICENSE.txt` et `CGU.txt` reproduisent les textes officiels.
+
+`scripts/dsfr_assets.py` contrôle ces empreintes à chaque génération. Il incorpore les URL locales en données, remplace les déclarations de fontes par les trois faces Marianne 400/500/700 et omet les références aux cartes de sources. Aucun JavaScript DSFR ni CDN n’est ajouté. Cette incorporation permet la première ouverture hors connexion du fichier unique ; la politique de sécurité autorise les fontes incorporées seulement pour le builder.
+
+Ces ressources concernent l’interface : conteneur commun, grille, typographie, champs et boutons. Les panneaux métier, sections natives `details` et dialogue natif restent locaux ; leur présence ne démontre pas une conformité DSFR/RGAA complète. Le CSS web n’entre pas dans l’aperçu ni dans le HTML des courriels. La page SNUM conserve séparément son ancien socle visuel dans `app/snum/base.css`.
+
 ## Import SNUM et prototype
 
 Le module `prototype/reference/snum-packet.js` est utilisé dans `app/distribution/snum.html` pour analyser les paquets. Sa source et sa provenance initiale sont conservées dans [la provenance du prototype](../prototype/reference/provenance.json). La copie locale contrôle aussi le jour de semaine depuis la correction #24 ; le projet SNUM extérieur reste intact. Le builder générique ne contient pas ce parseur. L’adaptateur local `app/snum/adapter.js` organise les rubriques et les articles en blocs du contrat générique ; son rendu utilise le moteur commun de l’application.
@@ -22,6 +30,6 @@ Les fichiers du prototype et son historique restent conservés. Leur qualificati
 
 <!-- PDG-LARGE-FILE-JUSTIFICATION: le gabarit amont de 3250 lignes est conservé intégralement et vérifié par empreinte pour rendre la provenance et les comparaisons observables. Les HTML de distribution incorporent volontairement toutes les ressources ; ils sont générés depuis les sources modulaires, jamais maintenus manuellement. -->
 
-<!-- PDG-BINARY-ASSET-JUSTIFICATION: les quatre PNG de référence et les icônes locales sont nécessaires à la reproduction sans réseau et au manifeste. Les copies dans les distributions proviennent du générateur. -->
+<!-- PDG-BINARY-ASSET-JUSTIFICATION: les quatre PNG de référence, les icônes locales et les trois fontes Marianne officielles sont nécessaires à la reproduction sans réseau. Les copies dans les distributions proviennent du générateur. -->
 
 La bibliothèque JSON de qualification est aussi générée : elle contient chaque section une seule fois, répartie entre neuf compositions de recette. Le schéma JSON est volumineux parce qu’il décrit les champs des 52 composants sans accepter de propriétés supplémentaires ; il est généré par `scripts/interchange.py`, avec un petit exemple importable. Les sources de `app/source/`, `app/snum/` et les compilateurs restent séparées par responsabilité. Le catalogue éditorial contient seulement les noms et familles des sections de la copie épinglée.

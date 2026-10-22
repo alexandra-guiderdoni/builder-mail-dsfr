@@ -11,7 +11,7 @@
     get(editor ? "composition-title" : "home-title").focus();
   }
   function refresh() {
-    get("newsletter-list").innerHTML = A.library.documents.map(doc => `<li data-document="${esc(doc.id)}"><h3><button data-library-action="open" aria-label="Ouvrir ${esc(doc.name)}">${esc(doc.name)}</button></h3><p>${esc(doc.subject || "Sans objet")} · ${doc.blocks.length} blocs${doc.id === A.library.activeId ? " · Composition active" : ""}</p><div class="actions">${[["rename", "Renommer"], ["duplicate", "Dupliquer"], ["export", "Exporter"], ["remove", "Supprimer"]].map(([action, label]) => `<button data-library-action="${action}" aria-label="${label} ${esc(doc.name)}">${label}</button>`).join("")}</div></li>`).join("");
+    get("newsletter-list").innerHTML = A.library.documents.map(doc => `<li class="fr-col-12 fr-col-md-6" data-document="${esc(doc.id)}"><div class="app-panel"><h3><button class="fr-btn fr-btn--tertiary-no-outline" data-library-action="open" aria-label="Ouvrir ${esc(doc.name)}">${esc(doc.name)}</button></h3><p>${esc(doc.subject || "Sans objet")} · ${doc.blocks.length} blocs${doc.id === A.library.activeId ? " · Composition active" : ""}</p><div class="actions">${[["rename", "Renommer"], ["duplicate", "Dupliquer"], ["export", "Exporter"], ["remove", "Supprimer"]].map(([action, label]) => `<button class="fr-btn fr-btn--secondary" data-library-action="${action}" aria-label="${label} ${esc(doc.name)}">${label}</button>`).join("")}</div></div></li>`).join("");
     get("resume-document").textContent = `Reprendre « ${A.doc().name} »`;
   }
   function focusRow(id, action = "open") {
@@ -22,7 +22,8 @@
   async function open(id) {
     A.State.guard(); find(id); if (!A.recoveryOnly) await A.State.flush();
     if (id !== A.library.activeId) { await A.State.change(lib => { lib.activeId = id; }); if (!A.recoveryOnly) await A.State.flush(); }
-    A.UI.refresh(); show(true);
+    // Le cadre doit être visible avant de charger son document d’aperçu.
+    show(true); A.UI.refresh();
   }
   async function home() { A.State.guard(); await A.State.flush(); refresh(); show(false); }
   async function duplicate(id) {

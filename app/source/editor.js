@@ -31,9 +31,9 @@
   get("document-name").addEventListener("input", event => edit(event.target, lib => { lib.documents.find(d => d.id === lib.activeId).name = event.target.value; }));
   get("subject").addEventListener("input", event => edit(event.target, lib => { lib.documents.find(d => d.id === lib.activeId).subject = event.target.value; }));
   get("block-editor").addEventListener("input", event => {
-    const input = event.target, key = input.dataset.field, source = input.hasAttribute("data-source"), id = A.selected;
-    if (!key && !source) return;
-    edit(input, lib => { const b = lib.documents.find(d => d.id === lib.activeId).blocks.find(b => b.id === id); if (source) b.source = input.value; else b.values[key] = input.value; });
+    const input = event.target, key = input.dataset.field, source = input.hasAttribute("data-source"), sourceLabel = input.hasAttribute("data-source-label"), id = A.selected;
+    if (!key && !source && !sourceLabel) return;
+    edit(input, lib => { const b = lib.documents.find(d => d.id === lib.activeId).blocks.find(b => b.id === id); if (source) b.source = input.value; else if (sourceLabel) b.sourceLabel = input.value; else b.values[key] = input.value; });
   });
   get("block-editor").addEventListener("change", event => {
     if (!event.target.hasAttribute("data-image-field")) return;

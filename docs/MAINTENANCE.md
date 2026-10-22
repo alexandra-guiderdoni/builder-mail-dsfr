@@ -8,6 +8,7 @@ L’application livrée est statique et autonome. Python et Node.js sont des out
 | --- | --- |
 | `reference/dsfr-mail/` et `reference/provenance.json` | Copie épinglée et empreintes des gabarits et images amont. |
 | `reference/catalogue.json` | Noms et familles des 52 sections, dans l’ordre de la référence. |
+| `reference/dsfr-web/`, `scripts/dsfr_assets.py` | Sous-ensemble officiel DSFR 1.15.4, empreintes et incorporation locale des CSS, icônes et fontes pour l’interface du builder. |
 | `scripts/catalogue.py` | Compilation des tables en champs typés, CSS et empreinte du contrat. |
 | `app/source/model.js`, `render.js`, `imports.js` | Validation, rendu commun et import des compositions et bibliothèques génériques. |
 | `app/snum/` | Page autonome et adaptation métier SNUM vers le contrat générique, sans stockage automatique. |
@@ -20,6 +21,8 @@ L’application livrée est statique et autonome. Python et Node.js sont des out
 | `tests/`, `scripts/recipe_firefox.mjs`, `scripts/recipe_installation.cjs` | Vérifications automatiques, recette Firefox et installation PWA de recette. |
 
 Le parseur SNUM utilisé est la copie conservée sous `prototype/reference/snum-packet.js` ; seule sa fonction `parse` est appelée dans la page SNUM dédiée. Cette copie locale contrôle maintenant la cohérence du jour de semaine avec la date (#24) ; le projet SNUM source reste intact. Le parseur n’est pas assemblé dans le builder générique. L’ancien prototype et ses distributions restent indépendants. Ne pas éditer les HTML générés pour corriger le produit.
+
+Le DSFR web est incorporé dans le builder uniquement, avec Marianne 400/500/700 et les modules CSS inventoriés dans sa provenance. Aucun accès réseau ni JavaScript DSFR n’est requis. Le convertisseur SNUM garde `app/snum/base.css`, copie de son ancien socle visuel ; le modèle et le rendu génériques restent partagés. Une mise à jour de ces ressources web se fait séparément d’une mise à jour du catalogue de courriels.
 
 ## Générer et vérifier
 
@@ -72,6 +75,8 @@ Ouvrir `http://127.0.0.1:8765/`. L’exception de sécurité de boucle locale se
 ## Données et migrations
 
 Les fichiers `dsfr-mail/document` et `dsfr-mail/library` portent `version: 1` et l’empreinte du catalogue. La bibliothèque contient compositions, modèles, identités et composition active. Les images sont des données incorporées ; aucun gabarit utilisateur ni HTML actif n’est accepté. Le [contrat JSON](FORMAT-JSON.md) et son schéma sont générés à partir du modèle existant : la séparation SNUM ne change ni le contrat v1, ni son empreinte, ni la base locale.
+
+`sourceLabel` est une propriété facultative de bloc, validée comme chaîne. Le schéma conserve les quatre propriétés obligatoires antérieures ; les autres propriétés inconnues restent refusées. Le rendu fournit le texte par défaut sans l’ajouter aux anciennes données. La compatibilité avec les anciens lecteurs stricts est détaillée dans le contrat JSON.
 
 Le schéma JSON Schema 2020-12 vérifie la structure ; les contrôles d’URL, d’unicité et de référence active restent aussi dans le moteur. Il ne crée aucune dépendance d’exécution. Lors de cette recette, le validateur Python local `jsonschema` 4.26.0 a contrôlé le métaschéma et les deux fichiers d’exemple ; il n’est pas requis pour ouvrir l’application.
 

@@ -6,7 +6,7 @@ const root = path.resolve(__dirname, '..'), evidence = process.env.MAIL_BUILDER_
 const portable = 'file://' + path.join(root, 'app/distribution/portable.html');
 const click = async (page, selector) => { const control = page.locator(selector); await control.waitFor({state: 'visible'}); await control.focus(); await control.press('Enter'); };
 async function open(browser, contextOptions = {}, beforeNavigate) {
-  const context = await browser.newContext({acceptDownloads: true, viewport: {width: 1600, height: 1000}, ...contextOptions});
+  const context = await browser.newContext({acceptDownloads: true, colorScheme: 'light', viewport: {width: 1600, height: 1000}, ...contextOptions});
   const page = await context.newPage();
   const observations = {errors: [], requests: []};
   page.on('pageerror', error => observations.errors.push(error.message));
@@ -16,11 +16,17 @@ async function open(browser, contextOptions = {}, beforeNavigate) {
   await enterEditor(page);
   return {context, page, observations};
 }
-async function enterEditor(page) { if (await page.locator('[data-action=resume-document]').isVisible()) await click(page, '[data-action=resume-document]'); }
+async function enterEditor(page) { if (await page.locator('[data-action=resume-document]').isVisible()) await click(page, '[data-action=resume-document]'); await page.locator('#editor-page').waitFor({state: 'visible'}); await page.evaluate(() => document.fonts.ready); }
 async function saved(page) {
   await page.waitForFunction(() => document.querySelector('#save-state').textContent === 'Bibliothèque sauvegardée dans ce navigateur.');
 }
-async function expand(page, text) { const summary = page.locator('summary').filter({hasText: text}); if (!(await summary.evaluate(e => e.parentElement.open))) await summary.click(); }
+async function expand(page, text) {
+  const summary = page.locator('summary').filter({hasText: text});
+  if (!(await summary.evaluate(e => e.parentElement.open))) {
+    await summary.scrollIntoViewIfNeeded(); await summary.click();
+    await page.waitForFunction(label => [...document.querySelectorAll('summary')].some(e => e.textContent.includes(label) && e.parentElement.open), text, {timeout: 3000});
+  }
+}
 async function download(page, selector, filename) {
   await fs.mkdir(evidence, {recursive: true});
   const event = page.waitForEvent('download'); await click(page, selector);

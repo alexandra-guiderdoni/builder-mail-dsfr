@@ -77,6 +77,10 @@ def schema(catalogue):
             f"{component['family']} — {component['label']}",
         )
         reference = {"$ref": f"#/$defs/{key}"}
+        definitions[key]["properties"]["sourceLabel"] = {
+            "type": "string",
+            "title": "Intitulé du lien source (facultatif)",
+        }
         all_blocks.append(reference)
         if component["family"] in ["En-têtes", "Pieds de page"]:
             frames.append(reference)

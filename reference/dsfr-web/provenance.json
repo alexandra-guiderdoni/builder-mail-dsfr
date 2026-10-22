@@ -1,0 +1,45 @@
+{
+  "package": "@gouvfr/dsfr",
+  "version": "1.15.4",
+  "source": "https://github.com/GouvernementFR/dsfr/tree/v1.15.4",
+  "license": "etalab-2.0",
+  "css": [
+    "dist/core/core.min.css",
+    "dist/component/form/form.min.css",
+    "dist/component/input/input.min.css",
+    "dist/component/select/select.min.css",
+    "dist/component/button/button.min.css"
+  ],
+  "fonts": {
+    "400": "dist/fonts/Marianne-Regular.woff2",
+    "500": "dist/fonts/Marianne-Medium.woff2",
+    "700": "dist/fonts/Marianne-Bold.woff2"
+  },
+  "transformation": "CSS modules embedded; original font-face declarations replaced by these three WOFF2 faces; local URLs embedded as data URIs; source maps omitted; no DSFR JavaScript added",
+  "files_sha256": {
+    "dist/component/button/button.min.css": "788ff63835ee08054fad1b977a13208e4ddafa80174ab8054bc0608af390ba22",
+    "dist/component/form/form.min.css": "ddb28d45fad8b8780f21e517ac5c72821413d708301078ec829e781a0f1ff88c",
+    "dist/component/input/input.min.css": "085d4574f34b74308d62a0e4873897e91b7241fa026e7bb769c573a4fa524cb2",
+    "dist/component/select/select.min.css": "7fac1fa3e92e172e2b17967f90420fd208d35c65e18ba232c3fb4d6fe49a5526",
+    "dist/core/core.min.css": "c051e9cef06dc3603d5048de10319f20846276e68b864ff28b8b9b2832c62f84",
+    "dist/fonts/Marianne-Bold.woff2": "03736567d99c2c360bad2c21026ca4741b15ca1e9ab533f272162a65f94cfbfb",
+    "dist/fonts/Marianne-Medium.woff2": "04e63da6c3f525e8f39f3aeedcfabd85f9a6a48e33e35030cfa79c0987e577dc",
+    "dist/fonts/Marianne-Regular.woff2": "812177facf2d71a85e7aa216f87fd46f5ce5189bee57171a0d0f654dba12b14f",
+    "dist/icons/arrows/arrow-up-down-line.svg": "457895476620d22dd211d3b6b18daac6c009ed922e06fe30f1caf695b77fd14c",
+    "dist/icons/arrows/arrow-up-line.svg": "c3947a0b7f4b018baf72d2b9edd988f391bc8de9e3c03b24733747c4cd2b5cd1",
+    "dist/icons/business/briefcase-fill.svg": "42dcb7598d7df0fa2c8b7c911111bde76dc52af63829b0a7c475a42f8efd3f9e",
+    "dist/icons/media/fullscreen-line.svg": "ea359d0f8927113c92c8c2c90cb8108972cb64ae9c645adc053f2fdd0fee6f79",
+    "dist/icons/system/close-line.svg": "0be127f1a5ee06cad6cc4dd668cfc27ee58d6f3e6841ad9dd0abfef3d9216b3a",
+    "dist/icons/system/external-link-line.svg": "e6f54f5ea8ae2921980b307fa4b770105f9a607d055f88bbd8abc2207b5076c8",
+    "dist/icons/system/fr--error-fill.svg": "86b989f89f360bca2c58f4dbeab64531af8bea9147a10f590fc3f7171b9579bf",
+    "dist/icons/system/fr--info-fill.svg": "5cbeb3f6f593c75522d66f52a09b55c531fc48028d18aa13563c9bb574570004",
+    "dist/icons/system/fr--success-fill.svg": "5f95ff9be7ee7e6baf914c9ce63896904a0c9cd7a0e9ee79ad6e1407d9cf305e",
+    "dist/icons/system/fr--theme-fill.svg": "e940c7c5ec9ff5caaad54af4217865a9a18ede167a6684baf084f64afca478e6",
+    "dist/icons/system/fr--warning-fill.svg": "ad92b318a907668848ffb334b356248e00ae3c81d246e8a43901ba3d71aabc5d",
+    "dist/icons/system/question-line.svg": "410cb77b3065e98a443c0b51f7d3dc0f2c8ddeb3162ed2af25bde2769d77c8ef",
+    "dist/icons/user/account-circle-fill.svg": "f7dadd07638c7511ef04c8000aa0dbdcb5f544a69d1940841b56a904fd211da3",
+    "dist/icons/user/team-line.svg": "58f6e6f0d3bc13839b4031ab793eed0e1ce70780c7715686eea6178058501a1e",
+    "LICENSE.txt": "f57c62e6a99a23ff58dbd7180586e4b89e24857a11b8052c3d55b1614a4e467c",
+    "CGU.txt": "d945f97a662e4def429cb132bc6b97e8daf82d4856e5a7173d5d0f94c929b032"
+  }
+}

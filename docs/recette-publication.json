@@ -9,20 +9,20 @@
       "DISTRIBUTIONS_OK"
     ],
     "npm_test": {
+      "tests": 70,
+      "pass": 70,
+      "fail": 0,
+      "skipped": 0
+    },
+    "log_sha256": "97abbc6fb02b4ada13b26b8060ae98ff095281bed472989d408409e40260fd4b",
+    "reference_sha256": "5ba14f67952bc10d1356abf8bdcbd7f3d6028a8b45f0ce968927c6444e4c3dd5",
+    "previous_npm_test": {
       "tests": 65,
       "pass": 65,
       "fail": 0,
       "skipped": 0
     },
-    "log_sha256": "ffa673f76ac28deef0d53e74935a0f8349192529147a9f585b661c2d730e1a06",
-    "reference_sha256": "5ba14f67952bc10d1356abf8bdcbd7f3d6028a8b45f0ce968927c6444e4c3dd5",
-    "previous_npm_test": {
-      "tests": 64,
-      "pass": 64,
-      "fail": 0,
-      "skipped": 0
-    },
-    "previous_log_sha256": "c74bf479db25cf6d2e7b70bd22a26b0acbd1388c9943d5017e88ca7a27c64ebf"
+    "previous_log_sha256": "ffa673f76ac28deef0d53e74935a0f8349192529147a9f585b661c2d730e1a06"
   },
   "mail": {
     "gmail_and_melissa_mac_received": true,
@@ -119,21 +119,21 @@
     "app/snum/page.js": "302509ee83446cea4583cb9348976c683609e3d32cfa3df46a091efc9d6cf575",
     "app/snum/shell.html": "bd8ed9473b264b0e6d36507f970384f033629938c79908dcb772ec706111dce5",
     "app/snum/style.css": "47de42bb9f9c8815b1de196453a0a8f7bfc6aee85e1371f78488683067ba19a2",
-    "app/source/editor.js": "eec5b3505d566505b5ddf04cbf8273f58435fe58326a47083d2772d98299f91d",
+    "app/source/editor.js": "dfeb6969270a7df9be5f5a3e7632a894770297dae1bf7484420bd5569e07f280",
     "app/source/files.js": "2bbd880b71562be34904dbe6c82e029867c2310e34a04597841c4f768ad9dd69",
     "app/source/imports.js": "e18940238107c72238dfba37f01e8ac4894bf76656e60ceda860bc35e5d14cfe",
     "app/source/library-actions.js": "ee0c06822a3fd5866ec96cc04f2480115cca6ddb7e23f13f7165ae158c309940",
-    "app/source/library.css": "193326cfd935bc26a49aaed03ac82656e59a830a9ad16ec96172756591340b33",
-    "app/source/library.js": "df54a459ce0428ba5cfbef45fedf72466f35bf44a0ebc88c694819cef229f18c",
-    "app/source/model.js": "d8a05db791e11bc049d139899908ac65c20cd230b02eafe289e2d9bcfc719392",
+    "app/source/library.css": "72373f768d3dc1b921244d2aee64441357e86423870caefa9239e1607be5c48e",
+    "app/source/library.js": "f7672f4b8e0a2ee4dd3f904acf0e67967610949db5c326d4b36ae7a0cb80cb3f",
+    "app/source/model.js": "24ef413e4e6e050e34547ec8c96b6f42ca0cc10d270dd279a0fa9fa0bf8799f9",
     "app/source/pwa.js": "8f48d9312b4bbcc7676e4059a7ca7ac93b316da1a662356106e1d478cc17ca51",
-    "app/source/render.js": "9c51ecafb9ffa9554fbd384ba184e377fc20672fa271f4f7850806338f7d8b33",
-    "app/source/shell.html": "14256e8936402e1ceba6fdfd3547bc78d0bd48e11606c7bd8be8052703691bf6",
+    "app/source/render.js": "4cab83d1d21e488707cef58792a081dab73aabfd619b7768ef405d2b5f1afe32",
+    "app/source/shell.html": "99822e146ee6b4a1cd71338272265eb53706728ad83c74d8218a53e53ed6c1f3",
     "app/source/state.js": "ca8af6f09f531229f9dcbabfb455e3dc2254ce8e4e46c24f49438822b2e85e37",
     "app/source/storage.js": "d6c8176e2d6a0f10a8b3243da4fefac333e74494d87c4276054cb45ce0df1d92",
-    "app/source/style.css": "0e9e876e7d52900d3fb951f532a8127e921d90ec489ad59812d3ee24f3de0433",
+    "app/source/style.css": "bb5beea7c93f76537d2e463400a42e9d4a57dc757752e3d9fbe41a2464959dda",
     "app/source/sw.js": "51f6cf5ea0f69a157d45a76935a6a0f28c0dfe134a9a35d4e6eb65d1aab3ef3f",
-    "app/source/view.js": "fc66b4a3e3ffa90298534fc9989ba04114d4a965dbf5f8e96efc093ebfc4e829",
+    "app/source/view.js": "28ee63f38a84ab6dabc18253c4b20f0a4fce96fbb0e8114378fbdf71eda39376",
     "prototype/source/draft-store.js": "421da00bd95011e1da1429450082add76296786928af1c9aacaa86c8f7b78a3e",
     "prototype/source/editor.js": "db6a517b35c0246083038e294468fb3654863a9cc747a3315cb85d77b04e4a4f",
     "prototype/source/icon.svg": "5505b460c862ebb01858dd50199029259b1f7a6aa3764f219f4ab83405181a23",
@@ -143,11 +143,11 @@
     "prototype/source/style.css": "06ababcfecc2de16d968a5382b0e0afb2ee08f174db2a034211660250a03f0a8",
     "prototype/source/sw.js": "4ac769e0865807eed2ec56ba7285d3a100e6df853e36e72eaad6ed5b5c729443",
     "scripts/build.py": "f3b64ff54e9efaa42ad387047f658386daeb9c67c174040d9292d137c32d3ea0",
-    "scripts/build_app.py": "65b80c85c367c5dbfefedeefe88dba6041b94a429b9859a3966aef4bd880886a",
+    "scripts/build_app.py": "83f4074d5716904c45f2af4f34869a5b97f8a58d1a1a03ca9eab742a32589677",
     "scripts/catalogue.py": "85a9a25c6be54133a564a4a3560fb326d3c55510595953f590431750126c9978",
-    "scripts/interchange.py": "3584c468610395355a35942510e439d1ce880b5dcd625b6ad034a20fd2ffb9b5",
+    "scripts/interchange.py": "d9a5b0dd7622574fbe26b3f7713bb089b8fdbb28b46c4ec1801ff301c9b8dbb9",
     "shared/image-files.js": "cd0ebdade4401b3df95ad5cfbff1a8cff28ec0a1174400bd89bcf0741ae64ba6",
-    "tests/browser-support.cjs": "9cb323ffedcb814d2c64fd08aa98e52aa9742658f23471b5114b3a0af009dda7",
+    "tests/browser-support.cjs": "8ced3df27b71274e838bee9c293b00f93b51e45e7d00b32e693d687573d743b3",
     "tests/browser.test.cjs": "1baa460fe36c33e381fe4b65849fde08a2ddac137318ec29aa81c608966e1aba",
     "tests/build.test.cjs": "f6c54f0c873f29a319378866df318d20d8f4e3140fffc8c2470c24b8b72e160b",
     "tests/image-limits-browser.test.cjs": "3348a4af2e67969316d219e6c44fac931488e8321429903ae3caa0ecf9312e27",
@@ -166,20 +166,25 @@
     "tests/reference-browser.test.cjs": "2cf8c655d03d301cefb819aef57973f90ff44e12e6276491f09a056e045511e3",
     "tests/storage-browser.test.cjs": "32563020a3223374055ee2120172c061ce72292e59f9406b13c9d1b731cdcd2b",
     "tests/storage-resilience-browser.test.cjs": "4341d9caea4f7a88cde4d191268ac58bc61b343952c9f83806af3a853a229ab1",
-    "tests/focus-browser.test.cjs": "28bccafbaf1a56eca856792c97c1826acae8ad7e39dcc0ecfc59e14df6caf1f2"
+    "tests/focus-browser.test.cjs": "28bccafbaf1a56eca856792c97c1826acae8ad7e39dcc0ecfc59e14df6caf1f2",
+    "app/snum/base.css": "0e9e876e7d52900d3fb951f532a8127e921d90ec489ad59812d3ee24f3de0433",
+    "scripts/dsfr_assets.py": "a7b327cb93efe013674c5f4e7a5a2ce6388657975dbea87b51b7f42a632690e5",
+    "tests/source-label.test.cjs": "6340601be62fc350f328c3336ea80826deda9a91439408df6050a671e044012f",
+    "tests/editor-dsfr-browser.test.cjs": "fa5b4f3d0e3a04af44641f2f736a47fbca3d54008b25fc0ba0698de22f2fb9b8",
+    "reference/dsfr-web/provenance.json": "fd595b7b2808a258ff39bec2fa910759b7d3bf2f89b0e9cd2e0087d9cfae79c2"
   },
   "distributions_sha256": {
-    "app/distribution/courriels.schema.json": "935f69e462547bfe49c01958d057be9f5d672e0270fcde8ca6d7f8b9d35fe532",
+    "app/distribution/courriels.schema.json": "aed6dd4cef7dcc03207b90cce4e053bd044dd8d733eede51f073c091abdf83f3",
     "app/distribution/exemple.courriel.json": "ffbb458d7ca89fc18a5362aa0aa7ebe75607bc4835b5be177344eb5dce4fb510",
-    "app/distribution/portable.html": "8d5536c6bdcd78ef3769949665510e7962ce9b25397fcfbf19c2a51f4841905f",
+    "app/distribution/portable.html": "a6f1409a42871963893a058c6fa5564f2f04121e2c28591f0c921984bda2e481",
     "app/distribution/qualification.courriels.json": "aeec3d48135da06dfddb8d23ed632e3df4db30dbe21fd76a2e7527c071906882",
-    "app/distribution/snum.html": "1d3186720a5b4c36d52c8007e140b6213d1184f4662ceed2a81d8e663727e414",
+    "app/distribution/snum.html": "093dfe96623394a6fb6462cdc24947be30403c5b16486bee0bd83d3634ca6c26",
     "app/distribution/web/icon-192.png": "aadd19a40c58106b744454719023d88db1173eb9d37244c00b58e2c5263cab4f",
     "app/distribution/web/icon-512.png": "62744b0258125bd90992841da6127622aa038f501099c0bd7a917b4bc76bfee1",
     "app/distribution/web/icon.svg": "5505b460c862ebb01858dd50199029259b1f7a6aa3764f219f4ab83405181a23",
-    "app/distribution/web/index.html": "de38b8d3bfe6e6ff6de0431c83043efae7adb1e0cc549d429a66d848c4461196",
+    "app/distribution/web/index.html": "e2077ab2325a7824097caa722a763541bf2e5ab17176ea3dd12159d75fff99dc",
     "app/distribution/web/manifest.webmanifest": "8714de33ac81701d61efab69403d603626c0b03373ecb652b2ddcf760cb35da9",
-    "app/distribution/web/sw.js": "08fae5893d450098b8a8e8e58d8ee303d0ddf20a9c96203aafd40f97c5a8d7db",
+    "app/distribution/web/sw.js": "efcdd163816ef06eb50aaaadc25ed63bb92904e787f239925691f251a10c2ee0",
     "prototype/distribution/portable.html": "fa94c7141de44b021f3a4e9f2508d850b0fa41f110e1848531b727554dc580ec",
     "prototype/distribution/web/icon.svg": "5505b460c862ebb01858dd50199029259b1f7a6aa3764f219f4ab83405181a23",
     "prototype/distribution/web/index.html": "2aed8f28105fc6326465f315ff5065b5d571b8abf92cc810a20e9f5398a1815a",
@@ -195,5 +200,43 @@
     "url": "https://alexandra-guiderdoni.github.io/builder-mail-dsfr/",
     "workflow_run": "https://github.com/alexandra-guiderdoni/builder-mail-dsfr/actions/runs/39822607625",
     "receipt": "recette-pages.json"
+  },
+  "editor_source_labels_and_dsfr": {
+    "base_commit": "db045a3b6933e152a71704210a1f834a48516ca1",
+    "dsfr_web_version": "1.15.4",
+    "provenance": "../reference/dsfr-web/provenance.json",
+    "optional_block_property": "sourceLabel",
+    "old_files_accepted": true,
+    "old_strict_readers_accept_new_field": false,
+    "viewports": [
+      320,
+      768,
+      992,
+      1248,
+      1440
+    ],
+    "official_vendor_files_verified": 24,
+    "snum_css_identical_to_previous": true,
+    "review": {
+      "reviewer": "Astra",
+      "local": "GO",
+      "pdv": "GO",
+      "identified_p0_p1_p2": 0,
+      "independent_build_and_hash_checks": true,
+      "independent_browser_reexecution": false
+    },
+    "browser_checks": {
+      "chromium": "156.0.8078.4",
+      "firefox": "156.0",
+      "mouse_wheel_then_single_click_chromium_headless_and_visible": true,
+      "mouse_wheel_then_single_click_firefox": true,
+      "firefox_label_preview_and_reload": true
+    },
+    "evidence_sha256": {
+      "evidence/application/editeur-dsfr.json": "dfe3fff02be2d8fae87a7586619a76bdd1638c98429cb6699f471487054db8cf",
+      "evidence/application/souris-dsfr-chromium.json": "423caea613267c1e35e04f2e38e63c7d05632b0c69ef8c9e2ca2ba1ddc19776f",
+      "evidence/pages-20261022/firefox-dsfr/receipt.json": "036f89ccc93d500a02a95af12bee5f14be0fcc20e936edee26c27c7160e76101",
+      "evidence/pages-20261022/dsfr-source-integrity.json": "c670894f3716301a22a7d9ed60bca0affdeeb8a14118f0f27bb6fb9683769e18"
+    }
   }
 }

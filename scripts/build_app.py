@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 
 from catalogue import compile_catalogue
+from dsfr_assets import styles as dsfr_styles
 from interchange import artifacts
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -49,21 +50,23 @@ def build():
         .read_text(encoding="utf-8")
         .replace(
             "@@STYLE@@",
-            (SOURCE / "style.css").read_text(encoding="utf-8")
+            dsfr_styles()
+            + "\n"
+            + (SOURCE / "style.css").read_text(encoding="utf-8")
             + (SOURCE / "library.css").read_text(encoding="utf-8"),
         )
         .replace("@@SCRIPT@@", script)
     )
     csp = f"default-src 'none';script-src 'sha256-{digest}';style-src 'unsafe-inline';img-src data: blob:;frame-src blob:;base-uri 'none';form-action 'none';"
     portable = shell.replace("@@MANIFEST@@", "").replace(
-        "@@CSP@@", csp + "connect-src 'none';worker-src 'none'"
+        "@@CSP@@", csp + "font-src data:;connect-src 'none';worker-src 'none'"
     )
     web = shell.replace(
         "@@MANIFEST@@", '<link rel="manifest" href="./manifest.webmanifest">'
     ).replace(
         "@@CSP@@",
         csp.replace("img-src data: blob:", "img-src 'self' data: blob:")
-        + "connect-src 'self';worker-src 'self';manifest-src 'self'",
+        + "font-src data:;connect-src 'self';worker-src 'self';manifest-src 'self'",
     )
     snum_script = "\n".join(
         core
@@ -82,7 +85,7 @@ def build():
         .read_text(encoding="utf-8")
         .replace(
             "@@STYLE@@",
-            (SOURCE / "style.css").read_text(encoding="utf-8")
+            (ROOT / "app/snum/base.css").read_text(encoding="utf-8")
             + (ROOT / "app/snum/style.css").read_text(encoding="utf-8"),
         )
         .replace("@@SCRIPT@@", snum_script)

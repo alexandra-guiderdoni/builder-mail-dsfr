@@ -12,6 +12,8 @@ Ouvrir `app/distribution/portable.html` dans Firefox ou un navigateur compatible
 
 Le catalogue conserve les structures et les styles du modèle de courriel épinglé. Les variantes encadrent la présentation ; aucun HTML libre n’est interprété. Le texte ressemblant à une balise reste du texte. Le lien source facultatif d’un bloc est conservé après duplication et dans les sorties HTML et texte.
 
+Pour personnaliser « Consulter la source », sélectionner le bloc, renseigner « Lien source facultatif du bloc », puis **« Intitulé du lien source »**, par exemple « Lire le dossier complet ». Un intitulé vide garde le texte par défaut. Sans URL, le lien est absent du courriel et l’intitulé reste disponible pour la prochaine saisie d’URL. Les liens déjà intégrés aux composants possèdent leurs propres champs de texte et d’adresse.
+
 ## Gérer Mes newsletters
 
 Chaque entrée de l’accueil est une composition indépendante, par exemple « Lettre du service — octobre ». Son titre ouvre l’éditeur ; « Retour à Mes newsletters » revient à la liste après vérification de la sauvegarde. « Reprendre » ouvre la composition active. Un rechargement du programme revient à l’accueil en conservant la bibliothèque.

@@ -14,6 +14,8 @@ L’accueil « Mes newsletters » retrouve les compositions de ce navigateur. Ou
 
 Personnaliser les blocs, charger ses images locales, puis attendre l’indication de sauvegarde. **Exporter régulièrement la bibliothèque** : les données du navigateur dépendent du profil et de son origine. Un fichier de travail exporté contient aussi les images. Changer de newsletter ne demande pas de vider le cache du programme.
 
+Chaque bloc propose « Lien source facultatif du bloc » et **« Intitulé du lien source »** : remplacer « Consulter la source » par le texte souhaité. Cet intitulé est conservé dans la bibliothèque, les modèles, les fichiers et la copie du courriel. L’interface utilise localement Marianne, la grille, les champs et les boutons du DSFR 1.15.4 ; les espacements et le repli des colonnes ont été vérifiés de 320 à 1440 px.
+
 Le [guide d’utilisation](docs/UTILISATION.md) explique modèles, identités, imports JSON, exports et récupération. Le [format JSON générique](docs/FORMAT-JSON.md) possède un [exemple importable](app/distribution/exemple.courriel.json) et un [schéma](app/distribution/courriels.schema.json). Les anciens fichiers de composition v1 restent acceptés.
 
 La collecte SNUM a sa [page HTML autonome dédiée](app/distribution/snum.html) : elle convertit le paquet métier en composition JSON, à importer ensuite dans le builder. Elle organise les rubriques et les articles avec le même moteur de rendu. Le builder ne contient plus d’import spécifique SNUM.

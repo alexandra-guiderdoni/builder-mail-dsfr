@@ -11,7 +11,7 @@
       const encoded = escape(value.values[key]);
       return fields.get(key).type === "text" ? encoded.replace(/\n/g, "<br>") : encoded;
     });
-    if (value.source) result += `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td align="center"><table role="presentation" width="600" style="width:100%;max-width:600px"><tr><td style="padding:8px 52px 20px;font-family:Tahoma,Geneva,sans-serif;font-size:14px;"><a href="${escape(value.source)}" style="color:#000091">Consulter la source</a></td></tr></table></td></tr></table>`;
+    if (value.source) result += `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td align="center"><table role="presentation" width="600" style="width:100%;max-width:600px"><tr><td style="padding:8px 52px 20px;font-family:Tahoma,Geneva,sans-serif;font-size:14px;"><a href="${escape(value.source)}" style="color:#000091">${escape(value.sourceLabel?.trim() || "Consulter la source")}</a></td></tr></table></td></tr></table>`;
     return result;
   }
   function body(value) { M.document(value); return value.blocks.map(block).join("\n"); }
@@ -20,7 +20,7 @@
   }
   function plain(value) {
     M.document(value);
-    return [value.subject, ...value.blocks.map(b => [...M.component(b.component).fields.map(f => f.type === "image" ? "" : b.values[f.key]), b.source].filter(Boolean).join("\n"))].join("\n\n");
+    return [value.subject, ...value.blocks.map(b => [...M.component(b.component).fields.map(f => f.type === "image" ? "" : b.values[f.key]), ...(b.source && b.sourceLabel?.trim() ? [b.sourceLabel.trim()] : []), b.source].filter(Boolean).join("\n"))].join("\n\n");
   }
   function clipboardHtml(value) {
     const doc = new DOMParser().parseFromString(html(value), "text/html");

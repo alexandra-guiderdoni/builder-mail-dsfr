@@ -5,9 +5,9 @@
   const copy = value => JSON.parse(JSON.stringify(value));
   const fail = message => { throw new Error(message); };
   const text = (value, label) => { if (typeof value !== "string") fail(`${label} : texte requis.`); };
-  function object(value, fields, label) {
+  function object(value, fields, label, optional = []) {
     if (!value || typeof value !== "object" || Array.isArray(value)) fail(`${label} : objet requis.`);
-    if (Object.keys(value).length !== fields.length || fields.some(key => !Object.hasOwn(value, key))) fail(`${label} : champs manquants ou inconnus.`);
+    if (Object.keys(value).some(key => !fields.includes(key) && !optional.includes(key)) || fields.some(key => !Object.hasOwn(value, key))) fail(`${label} : champs manquants ou inconnus.`);
   }
   function url(value, empty = false) {
     if (empty && value === "") return;
@@ -30,7 +30,7 @@
   }
   function component(id) { const result = components.get(id); if (!result) fail("Composant de courriel inconnu."); return result; }
   function block(value) {
-    object(value, ["id", "component", "values", "source"], "Bloc");
+    object(value, ["id", "component", "values", "source"], "Bloc", ["sourceLabel"]);
     text(value.id, "Identifiant"); if (!value.id) fail("Identifiant de bloc vide.");
     const definition = component(value.component);
     object(value.values, definition.fields.map(f => f.key), definition.label);
@@ -40,6 +40,7 @@
       if (field.type === "url") url(v);
     }
     text(value.source, "Source"); url(value.source, true);
+    if (Object.hasOwn(value, "sourceLabel")) text(value.sourceLabel, "Intitulé du lien source");
     return value;
   }
   function blocks(values) {
