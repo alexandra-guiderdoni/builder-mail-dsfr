@@ -1,0 +1,5007 @@
+{
+  "schema_version": 1,
+  "audited_at": "2026-10-22",
+  "target_percent": 100,
+  "official_compliance_rate": null,
+  "human_qualification": false,
+  "screen_reader_executed": false,
+  "git_parent": "2a7aa9198e5eaa767aa4858d43d5b805653151ab",
+  "distribution_sha256": {
+    "app/distribution/portable.html": "74b464a8d723205e8e5870a6c69955ab8de6c9fb098abcd2ce13b3f86e856812",
+    "app/distribution/web/index.html": "686145cdebc83acc444979ac75d4bb1f7fea10092c6ac1fc64764beb79e82622",
+    "app/distribution/web/sw.js": "ee186ea34dafca816dc96c161459b249c8e1109c24ac01a2244baa2aaa18cbd0",
+    "app/distribution/snum.html": "8f4cd01559f6f26114acf8a98d6dba54af7fa9f9c7c7572303ac75fb5d0da262"
+  },
+  "product_source_sha256": {
+    "app/source/editor.js": "3a7421288b2131ab4f3156765ff0dfbfbf0eaedf04482a2a984d88229d278867",
+    "app/source/files.js": "2bbd880b71562be34904dbe6c82e029867c2310e34a04597841c4f768ad9dd69",
+    "app/source/imports.js": "e18940238107c72238dfba37f01e8ac4894bf76656e60ceda860bc35e5d14cfe",
+    "app/source/library-actions.js": "f1e2f701ef1e4a1c309c61abb21db110f2a448c23005e4087f2bc21d60da3f62",
+    "app/source/library.css": "72373f768d3dc1b921244d2aee64441357e86423870caefa9239e1607be5c48e",
+    "app/source/library.js": "c76b58cda4e5a8b43855ef16d5c43fab94ffee50ff584d2c62ea3b2137d7dcab",
+    "app/source/model.js": "24ef413e4e6e050e34547ec8c96b6f42ca0cc10d270dd279a0fa9fa0bf8799f9",
+    "app/source/pwa.js": "8f48d9312b4bbcc7676e4059a7ca7ac93b316da1a662356106e1d478cc17ca51",
+    "app/source/render.js": "644700810809f4b21d0570bf8ba89ec6d059f3a6c963b643a1c41de1520df89e",
+    "app/source/shell.html": "99822e146ee6b4a1cd71338272265eb53706728ad83c74d8218a53e53ed6c1f3",
+    "app/source/state.js": "ca8af6f09f531229f9dcbabfb455e3dc2254ce8e4e46c24f49438822b2e85e37",
+    "app/source/storage.js": "d6c8176e2d6a0f10a8b3243da4fefac333e74494d87c4276054cb45ce0df1d92",
+    "app/source/style.css": "707de80db9695c9f0df0938e5f5a42c98ca92d2ec8335f7474f443b9c6cd9b9b",
+    "app/source/sw.js": "7d130e967c2404a80cc3ffc2a8388f42f87a9103dc0dadffc8ec7d59cdd96811",
+    "app/source/view.js": "465ec5537181c91ecec1fd1c8fc02b462788f630f2bba712685ce2ebbc8b3a39"
+  },
+  "browser_measured_sha256": {
+    "app/distribution/portable.html": "74b464a8d723205e8e5870a6c69955ab8de6c9fb098abcd2ce13b3f86e856812",
+    "app/distribution/web/index.html": "686145cdebc83acc444979ac75d4bb1f7fea10092c6ac1fc64764beb79e82622",
+    "app/distribution/web/sw.js": "ee186ea34dafca816dc96c161459b249c8e1109c24ac01a2244baa2aaa18cbd0",
+    "app/distribution/snum.html": "8f4cd01559f6f26114acf8a98d6dba54af7fa9f9c7c7572303ac75fb5d0da262",
+    "scripts/catalogue.py": "f348dec59978647ebeac25f8335c7a6623a71d8d16cba3852857efb2fa936668",
+    "app/source/editor.js": "3a7421288b2131ab4f3156765ff0dfbfbf0eaedf04482a2a984d88229d278867",
+    "app/source/files.js": "2bbd880b71562be34904dbe6c82e029867c2310e34a04597841c4f768ad9dd69",
+    "app/source/imports.js": "e18940238107c72238dfba37f01e8ac4894bf76656e60ceda860bc35e5d14cfe",
+    "app/source/library-actions.js": "f1e2f701ef1e4a1c309c61abb21db110f2a448c23005e4087f2bc21d60da3f62",
+    "app/source/library.css": "72373f768d3dc1b921244d2aee64441357e86423870caefa9239e1607be5c48e",
+    "app/source/library.js": "c76b58cda4e5a8b43855ef16d5c43fab94ffee50ff584d2c62ea3b2137d7dcab",
+    "app/source/model.js": "24ef413e4e6e050e34547ec8c96b6f42ca0cc10d270dd279a0fa9fa0bf8799f9",
+    "app/source/pwa.js": "8f48d9312b4bbcc7676e4059a7ca7ac93b316da1a662356106e1d478cc17ca51",
+    "app/source/render.js": "644700810809f4b21d0570bf8ba89ec6d059f3a6c963b643a1c41de1520df89e",
+    "app/source/shell.html": "99822e146ee6b4a1cd71338272265eb53706728ad83c74d8218a53e53ed6c1f3",
+    "app/source/state.js": "ca8af6f09f531229f9dcbabfb455e3dc2254ce8e4e46c24f49438822b2e85e37",
+    "app/source/storage.js": "d6c8176e2d6a0f10a8b3243da4fefac333e74494d87c4276054cb45ce0df1d92",
+    "app/source/style.css": "707de80db9695c9f0df0938e5f5a42c98ca92d2ec8335f7474f443b9c6cd9b9b",
+    "app/source/sw.js": "7d130e967c2404a80cc3ffc2a8388f42f87a9103dc0dadffc8ec7d59cdd96811",
+    "app/source/view.js": "465ec5537181c91ecec1fd1c8fc02b462788f630f2bba712685ce2ebbc8b3a39",
+    "app/snum/adapter.js": "6be8f9c801df8069e57b8ccc952434278e3ef4b03db396d8a9f92c37801e0395",
+    "app/snum/base.css": "0e9e876e7d52900d3fb951f532a8127e921d90ec489ad59812d3ee24f3de0433",
+    "app/snum/page.js": "302509ee83446cea4583cb9348976c683609e3d32cfa3df46a091efc9d6cf575",
+    "app/snum/shell.html": "bd8ed9473b264b0e6d36507f970384f033629938c79908dcb772ec706111dce5",
+    "app/snum/style.css": "47de42bb9f9c8815b1de196453a0a8f7bfc6aee85e1371f78488683067ba19a2"
+  },
+  "pages": [
+    {
+      "id": "P01",
+      "name": "Atelier de courriels DSFR",
+      "url": "http://127.0.0.1:4191/",
+      "rendered_sha256": "05a6b7c95fa403b69e374ed93aad3689a3b4824df266300342a4ae667a18504d",
+      "raw_collection": "evidence/accessibilite-titres-20261022/courant/campagne/captures-ay11/P01/attempt-001/127-0-0-1-4191-browser-collection.json",
+      "raw_axe": {
+        "violations": [],
+        "incomplete": [
+          {
+            "rule": "color-contrast",
+            "instances": 1
+          }
+        ]
+      },
+      "html_validator": {
+        "info": 5
+      }
+    },
+    {
+      "id": "P02",
+      "name": "Atelier de courriels DSFR",
+      "url": "http://127.0.0.1:4191/portable.html",
+      "rendered_sha256": "41a451b4099efac898ce38666d01368f0786a3db9cc6833dc78d6bcdb2cddc65",
+      "raw_collection": "evidence/accessibilite-titres-20261022/courant/campagne/captures-ay11/P02/attempt-001/127-0-0-1-4191-portable-html-browser-collection.json",
+      "raw_axe": {
+        "violations": [],
+        "incomplete": [
+          {
+            "rule": "color-contrast",
+            "instances": 1
+          }
+        ]
+      },
+      "html_validator": {
+        "info": 5
+      }
+    },
+    {
+      "id": "P03",
+      "name": "Collecte SNUM · Convertisseur de courriels",
+      "url": "http://127.0.0.1:4191/snum.html",
+      "rendered_sha256": "dc4ce60d60cbb7bbe718e12ba9f3749488d35bf6d115cdc2abec8daf65ccd37d",
+      "raw_collection": "evidence/accessibilite-titres-20261022/courant/campagne/captures-ay11/P03/attempt-001/127-0-0-1-4191-snum-html-browser-collection.json",
+      "raw_axe": {
+        "violations": [],
+        "incomplete": []
+      },
+      "html_validator": {
+        "info": 1
+      }
+    },
+    {
+      "id": "P04",
+      "name": "Recette : En-têtes",
+      "url": "http://127.0.0.1:4191/mail/01.html",
+      "rendered_sha256": "1ce6b612bef39a3d9ae0f44cb4f0434f9906342063476ed6b60ab18a069354da",
+      "raw_collection": "evidence/accessibilite-titres-20261022/courant/campagne/captures-ay11/P04/attempt-001/127-0-0-1-4191-mail-01-html-browser-collection.json",
+      "raw_axe": {
+        "violations": [
+          {
+            "rule": "landmark-one-main",
+            "instances": 1
+          },
+          {
+            "rule": "page-has-heading-one",
+            "instances": 1
+          },
+          {
+            "rule": "region",
+            "instances": 7
+          }
+        ],
+        "incomplete": [
+          {
+            "rule": "bypass",
+            "instances": 1
+          }
+        ]
+      },
+      "html_validator": {
+        "error": 71,
+        "info": 217
+      }
+    },
+    {
+      "id": "P05",
+      "name": "Recette : Titres",
+      "url": "http://127.0.0.1:4191/mail/02.html",
+      "rendered_sha256": "72ae757e4c2225345c5e498ccdbf097c29b4c36c8322d65fd883e905ae7a6df2",
+      "raw_collection": "evidence/accessibilite-titres-20261022/courant/campagne/captures-ay11/P05/attempt-001/127-0-0-1-4191-mail-02-html-browser-collection.json",
+      "raw_axe": {
+        "violations": [
+          {
+            "rule": "landmark-one-main",
+            "instances": 1
+          },
+          {
+            "rule": "region",
+            "instances": 11
+          }
+        ],
+        "incomplete": []
+      },
+      "html_validator": {
+        "error": 90,
+        "info": 321
+      }
+    },
+    {
+      "id": "P06",
+      "name": "Recette : Textes",
+      "url": "http://127.0.0.1:4191/mail/03.html",
+      "rendered_sha256": "57f61c0f03b5427761e2d1398ec6c3e7d60b39a5b7e3139a73f44bead633fb8e",
+      "raw_collection": "evidence/accessibilite-titres-20261022/courant/campagne/captures-ay11/P06/attempt-001/127-0-0-1-4191-mail-03-html-browser-collection.json",
+      "raw_axe": {
+        "violations": [
+          {
+            "rule": "landmark-one-main",
+            "instances": 1
+          },
+          {
+            "rule": "region",
+            "instances": 11
+          }
+        ],
+        "incomplete": []
+      },
+      "html_validator": {
+        "error": 85,
+        "info": 310
+      }
+    },
+    {
+      "id": "P07",
+      "name": "Recette : Images",
+      "url": "http://127.0.0.1:4191/mail/04.html",
+      "rendered_sha256": "e78fdafe8daa13dab8551f8e35d1a1a40fdcd67e7d2858c29fe3e77c806dbc72",
+      "raw_collection": "evidence/accessibilite-titres-20261022/courant/campagne/captures-ay11/P07/attempt-001/127-0-0-1-4191-mail-04-html-browser-collection.json",
+      "raw_axe": {
+        "violations": [
+          {
+            "rule": "landmark-one-main",
+            "instances": 1
+          },
+          {
+            "rule": "region",
+            "instances": 6
+          }
+        ],
+        "incomplete": []
+      },
+      "html_validator": {
+        "error": 65,
+        "info": 216
+      }
+    },
+    {
+      "id": "P08",
+      "name": "Recette : Cartes",
+      "url": "http://127.0.0.1:4191/mail/05.html",
+      "rendered_sha256": "cc61b74534763b7886369704711854a7f8c23763251dcc6366059cb10402e986",
+      "raw_collection": "evidence/accessibilite-titres-20261022/courant/campagne/captures-ay11/P08/attempt-001/127-0-0-1-4191-mail-05-html-browser-collection.json",
+      "raw_axe": {
+        "violations": [
+          {
+            "rule": "landmark-one-main",
+            "instances": 1
+          },
+          {
+            "rule": "region",
+            "instances": 5
+          }
+        ],
+        "incomplete": []
+      },
+      "html_validator": {
+        "error": 67,
+        "info": 279
+      }
+    },
+    {
+      "id": "P09",
+      "name": "Recette : Mises en avant",
+      "url": "http://127.0.0.1:4191/mail/06.html",
+      "rendered_sha256": "766594dc59d9afe43955e1aa0c920d3aad7fb8acaf993e7b64611643e85a7e88",
+      "raw_collection": "evidence/accessibilite-titres-20261022/courant/campagne/captures-ay11/P09/attempt-001/127-0-0-1-4191-mail-06-html-browser-collection.json",
+      "raw_axe": {
+        "violations": [
+          {
+            "rule": "landmark-one-main",
+            "instances": 1
+          },
+          {
+            "rule": "region",
+            "instances": 4
+          }
+        ],
+        "incomplete": []
+      },
+      "html_validator": {
+        "error": 45,
+        "info": 147
+      }
+    },
+    {
+      "id": "P10",
+      "name": "Recette : Contacts",
+      "url": "http://127.0.0.1:4191/mail/07.html",
+      "rendered_sha256": "8a218c07349ba26f5fd383ee6d379cd7f631859b6f808d7a2d6a74f0f781423e",
+      "raw_collection": "evidence/accessibilite-titres-20261022/courant/campagne/captures-ay11/P10/attempt-001/127-0-0-1-4191-mail-07-html-browser-collection.json",
+      "raw_axe": {
+        "violations": [
+          {
+            "rule": "landmark-one-main",
+            "instances": 1
+          },
+          {
+            "rule": "region",
+            "instances": 1
+          }
+        ],
+        "incomplete": []
+      },
+      "html_validator": {
+        "error": 27,
+        "info": 30
+      }
+    },
+    {
+      "id": "P11",
+      "name": "Recette : Actions",
+      "url": "http://127.0.0.1:4191/mail/08.html",
+      "rendered_sha256": "2091280ef32bf59f6fca00755142ba57116f82c843bd71e4daf0888515b9b033",
+      "raw_collection": "evidence/accessibilite-titres-20261022/courant/campagne/captures-ay11/P11/attempt-001/127-0-0-1-4191-mail-08-html-browser-collection.json",
+      "raw_axe": {
+        "violations": [
+          {
+            "rule": "landmark-one-main",
+            "instances": 1
+          },
+          {
+            "rule": "region",
+            "instances": 5
+          }
+        ],
+        "incomplete": []
+      },
+      "html_validator": {
+        "error": 51,
+        "info": 162
+      }
+    },
+    {
+      "id": "P12",
+      "name": "Recette : Pieds de page",
+      "url": "http://127.0.0.1:4191/mail/09.html",
+      "rendered_sha256": "2876cf8f2118dbfd752d44ef1feeff3e2bd516bf0471ba6393e3b90fade0eb85",
+      "raw_collection": "evidence/accessibilite-titres-20261022/courant/campagne/captures-ay11/P12/attempt-001/127-0-0-1-4191-mail-09-html-browser-collection.json",
+      "raw_axe": {
+        "violations": [
+          {
+            "rule": "landmark-one-main",
+            "instances": 1
+          },
+          {
+            "rule": "page-has-heading-one",
+            "instances": 1
+          },
+          {
+            "rule": "region",
+            "instances": 10
+          }
+        ],
+        "incomplete": [
+          {
+            "rule": "bypass",
+            "instances": 1
+          },
+          {
+            "rule": "link-in-text-block",
+            "instances": 2
+          }
+        ]
+      },
+      "html_validator": {
+        "error": 69,
+        "info": 224
+      }
+    },
+    {
+      "id": "P13",
+      "name": "Revue de presse — 14 octobre 2026",
+      "url": "http://127.0.0.1:4191/mail/10.html",
+      "rendered_sha256": "6a4ffff0a2e8824ad5fa1250eea4c58a17f868044e2ea99189bf0ed55c6cac04",
+      "raw_collection": "evidence/accessibilite-titres-20261022/courant/campagne/captures-ay11/P13/attempt-001/127-0-0-1-4191-mail-10-html-browser-collection.json",
+      "raw_axe": {
+        "violations": [
+          {
+            "rule": "landmark-one-main",
+            "instances": 1
+          },
+          {
+            "rule": "region",
+            "instances": 42
+          }
+        ],
+        "incomplete": []
+      },
+      "html_validator": {
+        "error": 247,
+        "info": 1085
+      }
+    }
+  ],
+  "mail_components": 52,
+  "mail_exports": [
+    {
+      "id": "01",
+      "name": "Recette : En-têtes",
+      "blocks": [
+        "mail-00",
+        "mail-01",
+        "mail-02",
+        "mail-03"
+      ],
+      "sha256": "e45174dca15e85dc41263a3743e61251356c6b70e9430fd219c3da495087c20c"
+    },
+    {
+      "id": "02",
+      "name": "Recette : Titres",
+      "blocks": [
+        "mail-04",
+        "mail-05",
+        "mail-06",
+        "mail-10",
+        "mail-11",
+        "mail-12",
+        "mail-13",
+        "mail-14",
+        "mail-15",
+        "mail-16",
+        "mail-17"
+      ],
+      "sha256": "06ebe31ef125f0b5caa35c82b2752da46f94cb5bc9d8ac3436938ed42673d36f"
+    },
+    {
+      "id": "03",
+      "name": "Recette : Textes",
+      "blocks": [
+        "mail-07",
+        "mail-08",
+        "mail-09",
+        "mail-18",
+        "mail-19",
+        "mail-20",
+        "mail-21",
+        "mail-22",
+        "mail-23",
+        "mail-24",
+        "mail-25"
+      ],
+      "sha256": "267c4cd50e8747cf8f86b40790a9632e6fb021526cf1afcd1726ae2578b277ea"
+    },
+    {
+      "id": "04",
+      "name": "Recette : Images",
+      "blocks": [
+        "mail-26",
+        "mail-27",
+        "mail-28",
+        "mail-29",
+        "mail-37",
+        "mail-38"
+      ],
+      "sha256": "c1b08cdda0db6d2f647093469d0b788dce89aa6e219b6b63091c9530db6cf057"
+    },
+    {
+      "id": "05",
+      "name": "Recette : Cartes",
+      "blocks": [
+        "mail-30",
+        "mail-31",
+        "mail-32",
+        "mail-33",
+        "mail-46"
+      ],
+      "sha256": "991de93c566c36ca003bad4cde8fe705dcf9f4e51f90992d6a78d5cf7b86b060"
+    },
+    {
+      "id": "06",
+      "name": "Recette : Mises en avant",
+      "blocks": [
+        "mail-34",
+        "mail-35",
+        "mail-36",
+        "mail-44"
+      ],
+      "sha256": "a5d087652866f2cacaec08f0f2316ee5bcf64eb48c965b3190aeedfaf4368c14"
+    },
+    {
+      "id": "07",
+      "name": "Recette : Contacts",
+      "blocks": [
+        "mail-39"
+      ],
+      "sha256": "e1ea026fc8202edea38563f1765487852d6e2558749e058c1b47822804135997"
+    },
+    {
+      "id": "08",
+      "name": "Recette : Actions",
+      "blocks": [
+        "mail-40",
+        "mail-41",
+        "mail-42",
+        "mail-43",
+        "mail-45"
+      ],
+      "sha256": "0aed88aea79e62d502b2e62baf19c639bdabeb9933fe1c4b2e57afe3aeeab45b"
+    },
+    {
+      "id": "09",
+      "name": "Recette : Pieds de page",
+      "blocks": [
+        "mail-47",
+        "mail-48",
+        "mail-49",
+        "mail-50",
+        "mail-51"
+      ],
+      "sha256": "bc4aa2878a21115e3af436f7947dcee1b00dd11dcd0fe418511d01b06db12fd2"
+    }
+  ],
+  "confirmed_findings": [
+    {
+      "id": "MAIL-TITRES-001",
+      "criterion": "9.1",
+      "test": "9.1.3",
+      "qualification": "A_RETESTER",
+      "pages": [
+        "P05",
+        "P13"
+      ],
+      "observation": "32 champs de titres adaptés ; titres natifs vérifiés dans aperçu, téléchargement, copie et arbre AX. Qualification éditoriale et restitution vocale encore manquantes.",
+      "expected": "Structurer les titres correspondant aux contenus, avec une hiérarchie cohérente.",
+      "reproduction": "Ouvrir exports/02.html et exports/10.html puis examiner les titres visuels et leur sémantique DOM.",
+      "review": "Astra : GO structurel local ; aucune conformité RGAA globale ni compatibilité Outlook nouvelle affirmée.",
+      "evidence": [
+        "evidence/accessibilite-titres-20261022/courant/semantic-retest.json"
+      ],
+      "source": "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#9.1.3",
+      "previous_qualification": "NC_CONFIRMEE"
+    },
+    {
+      "id": "MAIL-PRESENTATION-002",
+      "criterion": "10.1",
+      "test": "10.1.2",
+      "qualification": "NC_CONFIRMEE",
+      "pages": [
+        "P04",
+        "P05",
+        "P06",
+        "P07",
+        "P08",
+        "P09",
+        "P10",
+        "P11",
+        "P12",
+        "P13"
+      ],
+      "observation": "Attributs de présentation interdits présents dans les dix HTML autonomes ; exceptions img/objets et select appliquées.",
+      "scope": "HTML autonome ouvert dans un navigateur ; aucun verdict sur le message transformé par une messagerie",
+      "source": "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#10.1.2",
+      "evidence": "evidence/accessibilite-titres-20261022/courant/presentation-attributes.json",
+      "element_counts": {
+        "P04": 66,
+        "P05": 87,
+        "P06": 82,
+        "P07": 62,
+        "P08": 83,
+        "P09": 43,
+        "P10": 8,
+        "P11": 47,
+        "P12": 71,
+        "P13": 300
+      },
+      "attribute_counts": {
+        "P04": 217,
+        "P05": 321,
+        "P06": 310,
+        "P07": 216,
+        "P08": 279,
+        "P09": 147,
+        "P10": 30,
+        "P11": 162,
+        "P12": 224,
+        "P13": 1085
+      },
+      "review": "Astra : rattachement et non-conformité confirmés pour les HTML examinés comme pages web ; aucun verdict sur le message reçu."
+    }
+  ],
+  "browser_states": [
+    {
+      "id": "home",
+      "state": "Bibliothèque initiale",
+      "url": "file:///Users/alex/Claude-worktrees/builder-mail-dsfr-feasibility-20261021/app/distribution/portable.html",
+      "source": "DOM rendu par la distribution réelle",
+      "domSha256": "227faf871fbcec95e48244db15034a733c340a074000601562bd84d535433da5",
+      "axeVersion": "4.14.0",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "editor",
+      "state": "Éditeur initial",
+      "url": "file:///Users/alex/Claude-worktrees/builder-mail-dsfr-feasibility-20261021/app/distribution/portable.html",
+      "source": "DOM rendu par la distribution réelle",
+      "domSha256": "25a24789b26fb19df0ff7533d408494a19d78c7e5526ae21a9f87c17167e300d",
+      "axeVersion": "4.14.0",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "count": 1
+        },
+        {
+          "id": "frame-tested",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "editor-expanded",
+      "state": "Toutes les sections ouvertes",
+      "url": "file:///Users/alex/Claude-worktrees/builder-mail-dsfr-feasibility-20261021/app/distribution/portable.html",
+      "source": "DOM rendu par la distribution réelle",
+      "domSha256": "8ec6e5f9d0bd7ccd98b5f3dd939567c5f5dba2d13e82112f1d328dfefadfe25a",
+      "axeVersion": "4.14.0",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "count": 3
+        },
+        {
+          "id": "frame-tested",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "editor-invalid",
+      "state": "URL non HTTPS refusée",
+      "url": "file:///Users/alex/Claude-worktrees/builder-mail-dsfr-feasibility-20261021/app/distribution/portable.html",
+      "source": "DOM rendu par la distribution réelle",
+      "domSha256": "890a8796acb956b4f5630b0950cea88fddc228073c0cb43ad882100add700c4d",
+      "axeVersion": "4.14.0",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "count": 3
+        },
+        {
+          "id": "frame-tested",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "rename-dialog",
+      "state": "Dialogue de renommage",
+      "url": "file:///Users/alex/Claude-worktrees/builder-mail-dsfr-feasibility-20261021/app/distribution/portable.html",
+      "source": "DOM rendu par la distribution réelle",
+      "domSha256": "7dda7c86fd9d366151732aeb753e94ab7e66a16bc2c167e3e61ea62efc4e905c",
+      "axeVersion": "4.14.0",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "id": "rename-invalid",
+      "state": "Dialogue : nom vide refusé",
+      "url": "file:///Users/alex/Claude-worktrees/builder-mail-dsfr-feasibility-20261021/app/distribution/portable.html",
+      "source": "DOM rendu par la distribution réelle",
+      "domSha256": "d0f7779144febda97f31c1cc7cb7675d410cc66243d957bc729c569933927489",
+      "axeVersion": "4.14.0",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "id": "delete-dialog",
+      "state": "Confirmation de suppression",
+      "url": "file:///Users/alex/Claude-worktrees/builder-mail-dsfr-feasibility-20261021/app/distribution/portable.html",
+      "source": "DOM rendu par la distribution réelle",
+      "domSha256": "dfb78f36b1d4ccf389071ca222d05ad01033496e57b84a100cd9b39420b413ae",
+      "axeVersion": "4.14.0",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "id": "source-label",
+      "state": "Intitulé personnalisé et champ texte vide",
+      "url": "file:///Users/alex/Claude-worktrees/builder-mail-dsfr-feasibility-20261021/app/distribution/portable.html",
+      "source": "DOM rendu par la distribution réelle",
+      "domSha256": "ff7efcab79e1ba4ec9a86bfa789b66654ad550f4aead7cec3f422672fe9e3fd1",
+      "axeVersion": "4.14.0",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "count": 3
+        },
+        {
+          "id": "frame-tested",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "snum-initial",
+      "state": "Convertisseur SNUM initial",
+      "url": "file:///Users/alex/Claude-worktrees/builder-mail-dsfr-feasibility-20261021/app/distribution/snum.html",
+      "source": "DOM rendu par la distribution réelle",
+      "domSha256": "dc4ce60d60cbb7bbe718e12ba9f3749488d35bf6d115cdc2abec8daf65ccd37d",
+      "axeVersion": "4.14.0",
+      "violations": [],
+      "incomplete": []
+    },
+    {
+      "id": "snum-invalid",
+      "state": "Erreur de collecte SNUM",
+      "url": "file:///Users/alex/Claude-worktrees/builder-mail-dsfr-feasibility-20261021/app/distribution/snum.html",
+      "source": "DOM rendu par la distribution réelle",
+      "domSha256": "b84c7619e50cc507a17b570c462e16dd4c30f2fc913c6bdbb510ce30e09f8020",
+      "axeVersion": "4.14.0",
+      "violations": [],
+      "incomplete": []
+    },
+    {
+      "id": "snum-converted",
+      "state": "Collecte SNUM synthétique convertie",
+      "url": "file:///Users/alex/Claude-worktrees/builder-mail-dsfr-feasibility-20261021/app/distribution/snum.html",
+      "source": "DOM rendu par la distribution réelle",
+      "domSha256": "b467746796d19656bd43db4c477412985380905a0570c2da52aed6dc00a11aa3",
+      "axeVersion": "4.14.0",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "frame-tested",
+          "count": 1
+        }
+      ]
+    }
+  ],
+  "browser_errors": [],
+  "tests": {
+    "passed": 78,
+    "failed": 0,
+    "skipped": 0,
+    "log": "evidence/accessibilite-titres-20261022/courant/suite.log",
+    "log_sha256": "8a80af40e1a2a6ac8ef909bd7a3a75db7e8ad9fc3ca239eb4a50facf2fee69db"
+  },
+  "ay11": {
+    "families": 18,
+    "criteria_in_probe_catalogue": 52,
+    "main_calls": 819,
+    "supplement_probe_calls": 1140,
+    "supplement_captures": 20,
+    "supplement_command_failures": 0,
+    "supplement_collection_statuses": {
+      "sans_statut_de_collecte": 80,
+      "partially_collected": 410,
+      "collected_no_candidate": 634,
+      "not_collected": 11,
+      "collected_no_target": 5
+    },
+    "unavailable": [
+      {
+        "probe": "candidate-static",
+        "reason": "aucun critère proposé pour un --criterion obligatoire"
+      }
+    ],
+    "form_runs": [
+      {
+        "scene": "P01",
+        "scenario": "form-validation-1",
+        "status": "failed_target_unresolved",
+        "target": "input#library-name"
+      },
+      {
+        "scene": "P02",
+        "scenario": "form-validation-1",
+        "status": "failed_target_unresolved",
+        "target": "input#library-name"
+      },
+      {
+        "scene": "dialog",
+        "scenario": "form-validation-1",
+        "status": "failed_target_unresolved",
+        "target": "input#library-name"
+      },
+      {
+        "scene": "dialog-invalid",
+        "scenario": "form-validation-1",
+        "status": "captured",
+        "target": "input#library-name"
+      },
+      {
+        "scene": "editor",
+        "scenario": "form-validation-1",
+        "status": "failed_target_unresolved",
+        "target": "input#library-name"
+      },
+      {
+        "scene": "expanded",
+        "scenario": "form-validation-1",
+        "status": "failed_target_unresolved",
+        "target": "input#library-name"
+      },
+      {
+        "scene": "invalid",
+        "scenario": "form-validation-1",
+        "status": "failed_target_unresolved",
+        "target": "input#library-name"
+      }
+    ],
+    "profile_requested_in_supplements": "rgaa-106",
+    "automatic_conformity": false
+  },
+  "creator_phases": {
+    "preflight": "OK",
+    "catalog": "OK",
+    "plan": "OK",
+    "capture": "OK",
+    "collect": "OK",
+    "browser": "OK",
+    "rgaa": "OK",
+    "dsfr": "IGNORÉ",
+    "validator": "OK",
+    "protocols": "OK",
+    "report": "OK",
+    "report_capture": "IGNORÉ",
+    "validate": "PARTIEL"
+  },
+  "firefox": {
+    "scope": "Firefox natif sur le Mac de développement",
+    "checks": [
+      "52 composants disponibles ; compositions, modèle, identité, conversion SNUM séparée puis import JSON générique, duplication et image locale par l’interface",
+      "téléchargements réels avec image et liens source dupliqués ; écriture du presse-papiers par activation clavier native",
+      "import invalide refusé ; fichier de bibliothèque contenant compositions, modèle et identité",
+      "redémarrage complet de Firefox : bibliothèque portable restaurée",
+      "bibliothèque transportée vers la variante web ; rechargement serveur arrêté puis redémarrage complet hors connexion"
+    ],
+    "errors": [],
+    "browser": "156.0",
+    "verdict": "PARCOURS_FIREFOX_OBSERVE",
+    "notVerified": [
+      "Windows",
+      "Outlook",
+      "Mélissa",
+      "Installation native",
+      "Origine HTTPS réelle"
+    ]
+  },
+  "keyboard": {
+    "bypassCSP": false,
+    "screenReaderExecuted": false,
+    "keyboard": [
+      {
+        "id": "home",
+        "direction": "Tab",
+        "trace": [
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>a:nth-of-type(1)",
+            "tag": "A",
+            "text": "Aller au contenu",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "none"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "#resume-document",
+            "tag": "BUTTON",
+            "text": "Reprendre « Mon premier courriel »",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "#starter",
+            "tag": "SELECT",
+            "text": "Information de serviceLettre d’informationInvitation",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(58, 58, 58) 0px -2px 0px 0px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(1)>div:nth-of-type(1)>button:nth-of-type(1)",
+            "tag": "BUTTON",
+            "text": "Créer une composition",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "none"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(1)>ul:nth-of-type(1)>li:nth-of-type(1)>div:nth-of-type(1)>h3:nth-of-type(1)>button:nth-of-type(1)",
+            "tag": "BUTTON",
+            "text": "Ouvrir Mon premier courriel",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "none"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(1)>ul:nth-of-type(1)>li:nth-of-type(1)>div:nth-of-type(1)>div:nth-of-type(1)>button:nth-of-type(1)",
+            "tag": "BUTTON",
+            "text": "Renommer Mon premier courriel",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(1)>ul:nth-of-type(1)>li:nth-of-type(1)>div:nth-of-type(1)>div:nth-of-type(1)>button:nth-of-type(2)",
+            "tag": "BUTTON",
+            "text": "Dupliquer Mon premier courriel",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(1)>ul:nth-of-type(1)>li:nth-of-type(1)>div:nth-of-type(1)>div:nth-of-type(1)>button:nth-of-type(3)",
+            "tag": "BUTTON",
+            "text": "Exporter Mon premier courriel",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(1)>ul:nth-of-type(1)>li:nth-of-type(1)>div:nth-of-type(1)>div:nth-of-type(1)>button:nth-of-type(4)",
+            "tag": "BUTTON",
+            "text": "Supprimer Mon premier courriel",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(3)>details:nth-of-type(1)>summary:nth-of-type(1)",
+            "tag": "SUMMARY",
+            "text": "Fichiers et récupération",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "none"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(3)>details:nth-of-type(2)>summary:nth-of-type(1)",
+            "tag": "SUMMARY",
+            "text": "Importer du JSON",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "none"
+          },
+          {
+            "focused": false,
+            "reason": "Aucun élément focalisé dans les frames observées"
+          }
+        ],
+        "limitReached": false,
+        "qualification": "Trace instrumentée ; ordre pertinent et visibilité du focus à qualifier visuellement."
+      },
+      {
+        "id": "home",
+        "direction": "Shift+Tab",
+        "trace": [
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>a:nth-of-type(1)",
+            "tag": "A",
+            "text": "Aller au contenu",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "none"
+          },
+          {
+            "focused": false,
+            "reason": "Aucun élément focalisé dans les frames observées"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(3)>details:nth-of-type(2)>summary:nth-of-type(1)",
+            "tag": "SUMMARY",
+            "text": "Importer du JSON",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "none"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(3)>details:nth-of-type(1)>summary:nth-of-type(1)",
+            "tag": "SUMMARY",
+            "text": "Fichiers et récupération",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "none"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(1)>ul:nth-of-type(1)>li:nth-of-type(1)>div:nth-of-type(1)>div:nth-of-type(1)>button:nth-of-type(4)",
+            "tag": "BUTTON",
+            "text": "Supprimer Mon premier courriel",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(1)>ul:nth-of-type(1)>li:nth-of-type(1)>div:nth-of-type(1)>div:nth-of-type(1)>button:nth-of-type(3)",
+            "tag": "BUTTON",
+            "text": "Exporter Mon premier courriel",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(1)>ul:nth-of-type(1)>li:nth-of-type(1)>div:nth-of-type(1)>div:nth-of-type(1)>button:nth-of-type(2)",
+            "tag": "BUTTON",
+            "text": "Dupliquer Mon premier courriel",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(1)>ul:nth-of-type(1)>li:nth-of-type(1)>div:nth-of-type(1)>div:nth-of-type(1)>button:nth-of-type(1)",
+            "tag": "BUTTON",
+            "text": "Renommer Mon premier courriel",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(1)>ul:nth-of-type(1)>li:nth-of-type(1)>div:nth-of-type(1)>h3:nth-of-type(1)>button:nth-of-type(1)",
+            "tag": "BUTTON",
+            "text": "Ouvrir Mon premier courriel",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "none"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(1)>div:nth-of-type(1)>button:nth-of-type(1)",
+            "tag": "BUTTON",
+            "text": "Créer une composition",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "none"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "#starter",
+            "tag": "SELECT",
+            "text": "Information de serviceLettre d’informationInvitation",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(58, 58, 58) 0px -2px 0px 0px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "#resume-document",
+            "tag": "BUTTON",
+            "text": "Reprendre « Mon premier courriel »",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          }
+        ],
+        "limitReached": false,
+        "qualification": "Trace instrumentée ; ordre pertinent et visibilité du focus à qualifier visuellement."
+      },
+      {
+        "id": "rename-dialog",
+        "direction": "Tab",
+        "trace": [
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "#library-name",
+            "tag": "INPUT",
+            "text": "",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(58, 58, 58) 0px -2px 0px 0px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "#library-cancel",
+            "tag": "BUTTON",
+            "text": "Annuler",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "#library-confirm",
+            "tag": "BUTTON",
+            "text": "Enregistrer le nom",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "none"
+          },
+          {
+            "focused": false,
+            "reason": "Aucun élément focalisé dans les frames observées"
+          }
+        ],
+        "limitReached": false,
+        "qualification": "Trace instrumentée ; ordre pertinent et visibilité du focus à qualifier visuellement."
+      },
+      {
+        "id": "rename-dialog",
+        "direction": "Shift+Tab",
+        "trace": [
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "#library-name",
+            "tag": "INPUT",
+            "text": "",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(58, 58, 58) 0px -2px 0px 0px inset"
+          },
+          {
+            "focused": false,
+            "reason": "Aucun élément focalisé dans les frames observées"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "#library-confirm",
+            "tag": "BUTTON",
+            "text": "Enregistrer le nom",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "none"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "#library-cancel",
+            "tag": "BUTTON",
+            "text": "Annuler",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          }
+        ],
+        "limitReached": false,
+        "qualification": "Trace instrumentée ; ordre pertinent et visibilité du focus à qualifier visuellement."
+      },
+      {
+        "id": "expanded",
+        "direction": "Tab",
+        "trace": [
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>a:nth-of-type(1)",
+            "tag": "A",
+            "text": "Aller au contenu",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "none"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "#library-back",
+            "tag": "BUTTON",
+            "text": "Retour à Mes newsletters",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "#documents",
+            "tag": "SELECT",
+            "text": "Mon premier courriel",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(58, 58, 58) 0px -2px 0px 0px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>aside:nth-of-type(1)>div:nth-of-type(1)>div:nth-of-type(1)>div:nth-of-type(1)>button:nth-of-type(1)",
+            "tag": "BUTTON",
+            "text": "Dupliquer",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>aside:nth-of-type(1)>div:nth-of-type(1)>div:nth-of-type(1)>div:nth-of-type(1)>button:nth-of-type(2)",
+            "tag": "BUTTON",
+            "text": "Retirer",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>aside:nth-of-type(1)>div:nth-of-type(1)>details:nth-of-type(1)>summary:nth-of-type(1)",
+            "tag": "SUMMARY",
+            "text": "Mes modèles",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "none"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "#template-name",
+            "tag": "INPUT",
+            "text": "",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(58, 58, 58) 0px -2px 0px 0px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>aside:nth-of-type(1)>div:nth-of-type(1)>details:nth-of-type(1)>button:nth-of-type(1)",
+            "tag": "BUTTON",
+            "text": "Enregistrer cette composition comme modèle",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "#saved-templates",
+            "tag": "SELECT",
+            "text": "Choisir un modèle enregistré",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(58, 58, 58) 0px -2px 0px 0px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>aside:nth-of-type(1)>div:nth-of-type(1)>details:nth-of-type(1)>div:nth-of-type(1)>button:nth-of-type(1)",
+            "tag": "BUTTON",
+            "text": "Créer depuis ce modèle",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>aside:nth-of-type(1)>div:nth-of-type(1)>details:nth-of-type(1)>div:nth-of-type(1)>button:nth-of-type(2)",
+            "tag": "BUTTON",
+            "text": "Retirer le modèle",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>aside:nth-of-type(1)>div:nth-of-type(1)>details:nth-of-type(2)>summary:nth-of-type(1)",
+            "tag": "SUMMARY",
+            "text": "Identités de service",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "none"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "#identity-name",
+            "tag": "INPUT",
+            "text": "",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(58, 58, 58) 0px -2px 0px 0px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>aside:nth-of-type(1)>div:nth-of-type(1)>details:nth-of-type(2)>button:nth-of-type(1)",
+            "tag": "BUTTON",
+            "text": "Enregistrer l’identité",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "#identities",
+            "tag": "SELECT",
+            "text": "Choisir une identité enregistrée",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(58, 58, 58) 0px -2px 0px 0px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>aside:nth-of-type(1)>div:nth-of-type(1)>details:nth-of-type(2)>div:nth-of-type(1)>button:nth-of-type(1)",
+            "tag": "BUTTON",
+            "text": "Appliquer",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>aside:nth-of-type(1)>div:nth-of-type(1)>details:nth-of-type(2)>div:nth-of-type(1)>button:nth-of-type(2)",
+            "tag": "BUTTON",
+            "text": "Retirer l’identité",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "#document-name",
+            "tag": "INPUT",
+            "text": "",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(58, 58, 58) 0px -2px 0px 0px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "#subject",
+            "tag": "INPUT",
+            "text": "",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(58, 58, 58) 0px -2px 0px 0px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>section:nth-of-type(1)>div:nth-of-type(1)>details:nth-of-type(1)>summary:nth-of-type(1)",
+            "tag": "SUMMARY",
+            "text": "Composants du courriel",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "none"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>section:nth-of-type(1)>div:nth-of-type(1)>details:nth-of-type(1)>ol:nth-of-type(1)>li:nth-of-type(1)>button:nth-of-type(1)",
+            "tag": "BUTTON",
+            "text": "1. En-tête MarianneVotre service",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>section:nth-of-type(1)>div:nth-of-type(1)>details:nth-of-type(1)>ol:nth-of-type(1)>li:nth-of-type(2)>button:nth-of-type(1)",
+            "tag": "BUTTON",
+            "text": "2. Titre principalTitre",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>section:nth-of-type(1)>div:nth-of-type(1)>details:nth-of-type(1)>ol:nth-of-type(1)>li:nth-of-type(3)>button:nth-of-type(1)",
+            "tag": "BUTTON",
+            "text": "3. Paragraphe · blancTexte",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>section:nth-of-type(1)>div:nth-of-type(1)>details:nth-of-type(1)>ol:nth-of-type(1)>li:nth-of-type(4)>button:nth-of-type(1)",
+            "tag": "BUTTON",
+            "text": "4. Bouton primaireBouton primaire",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>section:nth-of-type(1)>div:nth-of-type(1)>details:nth-of-type(1)>ol:nth-of-type(1)>li:nth-of-type(5)>button:nth-of-type(1)",
+            "tag": "BUTTON",
+            "text": "5. Pied de page MarianneVous recevez ce message car vous êtes abonné à la liste de diffu",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>section:nth-of-type(1)>div:nth-of-type(1)>details:nth-of-type(1)>ol:nth-of-type(1)>li:nth-of-type(6)>button:nth-of-type(1)",
+            "tag": "BUTTON",
+            "text": "6. Lien de désabonnementSi vous désirez vous désabonner,",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>section:nth-of-type(1)>div:nth-of-type(1)>details:nth-of-type(2)>summary:nth-of-type(1)",
+            "tag": "SUMMARY",
+            "text": "Ajouter un composant",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "none"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "#catalogue-search",
+            "tag": "INPUT",
+            "text": "",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(58, 58, 58) 0px -2px 0px 0px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "#catalogue",
+            "tag": "SELECT",
+            "text": "En-têtes — Pré-en-tête masquéEn-têtes — Lien vers la version en ligneEn-têtes — En-tête MarianneEn-t",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(58, 58, 58) 0px -2px 0px 0px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>section:nth-of-type(1)>div:nth-of-type(1)>details:nth-of-type(2)>button:nth-of-type(1)",
+            "tag": "BUTTON",
+            "text": "Ajouter après le bloc sélectionné",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "#field-f0",
+            "tag": "INPUT",
+            "text": "",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "none"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "#field-f1",
+            "tag": "INPUT",
+            "text": "",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(58, 58, 58) 0px -2px 0px 0px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "#field-f2",
+            "tag": "INPUT",
+            "text": "",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "none"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "#field-f3",
+            "tag": "INPUT",
+            "text": "",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(58, 58, 58) 0px -2px 0px 0px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "#field-f4",
+            "tag": "TEXTAREA",
+            "text": "Votre service",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(58, 58, 58) 0px -2px 0px 0px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "#article-source",
+            "tag": "INPUT",
+            "text": "",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(58, 58, 58) 0px -2px 0px 0px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "#article-source-label",
+            "tag": "INPUT",
+            "text": "",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(58, 58, 58) 0px -2px 0px 0px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>section:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(1)>div:nth-of-type(3)>button:nth-of-type(2)",
+            "tag": "BUTTON",
+            "text": "Descendre",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>section:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(1)>div:nth-of-type(3)>button:nth-of-type(3)",
+            "tag": "BUTTON",
+            "text": "Dupliquer",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>section:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(1)>div:nth-of-type(3)>button:nth-of-type(4)",
+            "tag": "BUTTON",
+            "text": "Retirer le bloc",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>section:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(1)>div:nth-of-type(3)>button:nth-of-type(5)",
+            "tag": "BUTTON",
+            "text": "Annuler les champs invalides",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>div:nth-of-type(1)>button:nth-of-type(1)",
+            "tag": "BUTTON",
+            "text": "Copier le courriel",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "none"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>div:nth-of-type(1)>button:nth-of-type(2)",
+            "tag": "BUTTON",
+            "text": "Télécharger le HTML",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "blob:null/dc12fcec-5724-44c7-a55f-de1efa847233",
+            "focused": true,
+            "selector": "body>table:nth-of-type(4)>tbody:nth-of-type(1)>tr:nth-of-type(1)>td:nth-of-type(1)>table:nth-of-type(1)>tbody:nth-of-type(1)>tr:nth-of-type(1)>td:nth-of-type(1)>table:nth-of-type(1)>tbody:nth-of-type(1)>tr:nth-of-type(1)>td:nth-of-type(1)>table:nth-of-type(1)>tbody:nth-of-type(1)>tr:nth-of-type(2)>td:nth-of-type(1)>table:nth-of-type(1)>tbody:nth-of-type(1)>tr:nth-of-type(1)>td:nth-of-type(1)>a:nth-of-type(1)",
+            "tag": "A",
+            "text": "Bouton primaire",
+            "hidden": false,
+            "outline": [
+              "auto",
+              "1px",
+              "rgb(0, 95, 204)"
+            ],
+            "boxShadow": "none"
+          },
+          {
+            "frame": "blob:null/dc12fcec-5724-44c7-a55f-de1efa847233",
+            "focused": true,
+            "selector": "body>table:nth-of-type(5)>tbody:nth-of-type(1)>tr:nth-of-type(1)>td:nth-of-type(1)>table:nth-of-type(1)>tbody:nth-of-type(1)>tr:nth-of-type(1)>td:nth-of-type(1)>table:nth-of-type(1)>tbody:nth-of-type(1)>tr:nth-of-type(1)>td:nth-of-type(1)>table:nth-of-type(1)>tbody:nth-of-type(1)>tr:nth-of-type(2)>td:nth-of-type(1)>a:nth-of-type(1)",
+            "tag": "A",
+            "text": "Consulter notre politique des données personnelles",
+            "hidden": false,
+            "outline": [
+              "auto",
+              "1px",
+              "rgb(0, 95, 204)"
+            ],
+            "boxShadow": "none"
+          },
+          {
+            "frame": "blob:null/dc12fcec-5724-44c7-a55f-de1efa847233",
+            "focused": true,
+            "selector": "body>table:nth-of-type(6)>tbody:nth-of-type(1)>tr:nth-of-type(1)>td:nth-of-type(1)>table:nth-of-type(1)>tbody:nth-of-type(1)>tr:nth-of-type(1)>td:nth-of-type(1)>table:nth-of-type(1)>tbody:nth-of-type(1)>tr:nth-of-type(2)>td:nth-of-type(1)>span:nth-of-type(1)>a:nth-of-type(1)",
+            "tag": "A",
+            "text": "cliquez-ici.",
+            "hidden": false,
+            "outline": [
+              "auto",
+              "1px",
+              "rgb(0, 95, 204)"
+            ],
+            "boxShadow": "none"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(3)>details:nth-of-type(1)>summary:nth-of-type(1)",
+            "tag": "SUMMARY",
+            "text": "Fichiers et récupération",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "none"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "#project-input",
+            "tag": "INPUT",
+            "text": "",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "none"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(3)>details:nth-of-type(1)>div:nth-of-type(1)>button:nth-of-type(1)",
+            "tag": "BUTTON",
+            "text": "Exporter la composition active",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(3)>details:nth-of-type(1)>div:nth-of-type(1)>button:nth-of-type(2)",
+            "tag": "BUTTON",
+            "text": "Exporter la bibliothèque",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(3)>details:nth-of-type(1)>div:nth-of-type(1)>button:nth-of-type(3)",
+            "tag": "BUTTON",
+            "text": "Sauvegarder maintenant",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(3)>details:nth-of-type(1)>div:nth-of-type(1)>button:nth-of-type(4)",
+            "tag": "BUTTON",
+            "text": "Exporter les données enregistrées brutes",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(3)>details:nth-of-type(1)>div:nth-of-type(1)>button:nth-of-type(5)",
+            "tag": "BUTTON",
+            "text": "Restaurer l’état précédent",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(3)>details:nth-of-type(2)>summary:nth-of-type(1)",
+            "tag": "SUMMARY",
+            "text": "Importer du JSON",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "none"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "#json-input",
+            "tag": "TEXTAREA",
+            "text": "",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(58, 58, 58) 0px -2px 0px 0px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(3)>details:nth-of-type(2)>div:nth-of-type(1)>button:nth-of-type(1)",
+            "tag": "BUTTON",
+            "text": "Ajouter à la bibliothèque",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(3)>details:nth-of-type(2)>div:nth-of-type(1)>button:nth-of-type(2)",
+            "tag": "BUTTON",
+            "text": "Télécharger un exemple JSON",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "focused": false,
+            "reason": "Aucun élément focalisé dans les frames observées"
+          }
+        ],
+        "limitReached": false,
+        "qualification": "Trace instrumentée ; ordre pertinent et visibilité du focus à qualifier visuellement."
+      },
+      {
+        "id": "expanded",
+        "direction": "Shift+Tab",
+        "trace": [
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>a:nth-of-type(1)",
+            "tag": "A",
+            "text": "Aller au contenu",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "none"
+          },
+          {
+            "focused": false,
+            "reason": "Aucun élément focalisé dans les frames observées"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(3)>details:nth-of-type(2)>div:nth-of-type(1)>button:nth-of-type(2)",
+            "tag": "BUTTON",
+            "text": "Télécharger un exemple JSON",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(3)>details:nth-of-type(2)>div:nth-of-type(1)>button:nth-of-type(1)",
+            "tag": "BUTTON",
+            "text": "Ajouter à la bibliothèque",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "#json-input",
+            "tag": "TEXTAREA",
+            "text": "",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(58, 58, 58) 0px -2px 0px 0px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(3)>details:nth-of-type(2)>summary:nth-of-type(1)",
+            "tag": "SUMMARY",
+            "text": "Importer du JSON",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "none"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(3)>details:nth-of-type(1)>div:nth-of-type(1)>button:nth-of-type(5)",
+            "tag": "BUTTON",
+            "text": "Restaurer l’état précédent",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(3)>details:nth-of-type(1)>div:nth-of-type(1)>button:nth-of-type(4)",
+            "tag": "BUTTON",
+            "text": "Exporter les données enregistrées brutes",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(3)>details:nth-of-type(1)>div:nth-of-type(1)>button:nth-of-type(3)",
+            "tag": "BUTTON",
+            "text": "Sauvegarder maintenant",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(3)>details:nth-of-type(1)>div:nth-of-type(1)>button:nth-of-type(2)",
+            "tag": "BUTTON",
+            "text": "Exporter la bibliothèque",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(3)>details:nth-of-type(1)>div:nth-of-type(1)>button:nth-of-type(1)",
+            "tag": "BUTTON",
+            "text": "Exporter la composition active",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "#project-input",
+            "tag": "INPUT",
+            "text": "",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "none"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(3)>details:nth-of-type(1)>summary:nth-of-type(1)",
+            "tag": "SUMMARY",
+            "text": "Fichiers et récupération",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "none"
+          },
+          {
+            "frame": "blob:null/dc12fcec-5724-44c7-a55f-de1efa847233",
+            "focused": true,
+            "selector": "body>table:nth-of-type(6)>tbody:nth-of-type(1)>tr:nth-of-type(1)>td:nth-of-type(1)>table:nth-of-type(1)>tbody:nth-of-type(1)>tr:nth-of-type(1)>td:nth-of-type(1)>table:nth-of-type(1)>tbody:nth-of-type(1)>tr:nth-of-type(2)>td:nth-of-type(1)>span:nth-of-type(1)>a:nth-of-type(1)",
+            "tag": "A",
+            "text": "cliquez-ici.",
+            "hidden": false,
+            "outline": [
+              "auto",
+              "1px",
+              "rgb(0, 95, 204)"
+            ],
+            "boxShadow": "none"
+          },
+          {
+            "frame": "blob:null/dc12fcec-5724-44c7-a55f-de1efa847233",
+            "focused": true,
+            "selector": "body>table:nth-of-type(5)>tbody:nth-of-type(1)>tr:nth-of-type(1)>td:nth-of-type(1)>table:nth-of-type(1)>tbody:nth-of-type(1)>tr:nth-of-type(1)>td:nth-of-type(1)>table:nth-of-type(1)>tbody:nth-of-type(1)>tr:nth-of-type(1)>td:nth-of-type(1)>table:nth-of-type(1)>tbody:nth-of-type(1)>tr:nth-of-type(2)>td:nth-of-type(1)>a:nth-of-type(1)",
+            "tag": "A",
+            "text": "Consulter notre politique des données personnelles",
+            "hidden": false,
+            "outline": [
+              "auto",
+              "1px",
+              "rgb(0, 95, 204)"
+            ],
+            "boxShadow": "none"
+          },
+          {
+            "frame": "blob:null/dc12fcec-5724-44c7-a55f-de1efa847233",
+            "focused": true,
+            "selector": "body>table:nth-of-type(4)>tbody:nth-of-type(1)>tr:nth-of-type(1)>td:nth-of-type(1)>table:nth-of-type(1)>tbody:nth-of-type(1)>tr:nth-of-type(1)>td:nth-of-type(1)>table:nth-of-type(1)>tbody:nth-of-type(1)>tr:nth-of-type(1)>td:nth-of-type(1)>table:nth-of-type(1)>tbody:nth-of-type(1)>tr:nth-of-type(2)>td:nth-of-type(1)>table:nth-of-type(1)>tbody:nth-of-type(1)>tr:nth-of-type(1)>td:nth-of-type(1)>a:nth-of-type(1)",
+            "tag": "A",
+            "text": "Bouton primaire",
+            "hidden": false,
+            "outline": [
+              "auto",
+              "1px",
+              "rgb(0, 95, 204)"
+            ],
+            "boxShadow": "none"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>div:nth-of-type(1)>button:nth-of-type(2)",
+            "tag": "BUTTON",
+            "text": "Télécharger le HTML",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>div:nth-of-type(1)>button:nth-of-type(1)",
+            "tag": "BUTTON",
+            "text": "Copier le courriel",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "none"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>section:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(1)>div:nth-of-type(3)>button:nth-of-type(5)",
+            "tag": "BUTTON",
+            "text": "Annuler les champs invalides",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>section:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(1)>div:nth-of-type(3)>button:nth-of-type(4)",
+            "tag": "BUTTON",
+            "text": "Retirer le bloc",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>section:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(1)>div:nth-of-type(3)>button:nth-of-type(3)",
+            "tag": "BUTTON",
+            "text": "Dupliquer",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>section:nth-of-type(1)>div:nth-of-type(1)>section:nth-of-type(1)>div:nth-of-type(3)>button:nth-of-type(2)",
+            "tag": "BUTTON",
+            "text": "Descendre",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "#article-source-label",
+            "tag": "INPUT",
+            "text": "",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(58, 58, 58) 0px -2px 0px 0px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "#article-source",
+            "tag": "INPUT",
+            "text": "",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(58, 58, 58) 0px -2px 0px 0px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "#field-f4",
+            "tag": "TEXTAREA",
+            "text": "Votre service",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(58, 58, 58) 0px -2px 0px 0px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "#field-f3",
+            "tag": "INPUT",
+            "text": "",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(58, 58, 58) 0px -2px 0px 0px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "#field-f2",
+            "tag": "INPUT",
+            "text": "",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "none"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "#field-f1",
+            "tag": "INPUT",
+            "text": "",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(58, 58, 58) 0px -2px 0px 0px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "#field-f0",
+            "tag": "INPUT",
+            "text": "",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "none"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>section:nth-of-type(1)>div:nth-of-type(1)>details:nth-of-type(2)>button:nth-of-type(1)",
+            "tag": "BUTTON",
+            "text": "Ajouter après le bloc sélectionné",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "#catalogue",
+            "tag": "SELECT",
+            "text": "En-têtes — Pré-en-tête masquéEn-têtes — Lien vers la version en ligneEn-têtes — En-tête MarianneEn-t",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(58, 58, 58) 0px -2px 0px 0px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "#catalogue-search",
+            "tag": "INPUT",
+            "text": "",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(58, 58, 58) 0px -2px 0px 0px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>section:nth-of-type(1)>div:nth-of-type(1)>details:nth-of-type(2)>summary:nth-of-type(1)",
+            "tag": "SUMMARY",
+            "text": "Ajouter un composant",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "none"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>section:nth-of-type(1)>div:nth-of-type(1)>details:nth-of-type(1)>ol:nth-of-type(1)>li:nth-of-type(6)>button:nth-of-type(1)",
+            "tag": "BUTTON",
+            "text": "6. Lien de désabonnementSi vous désirez vous désabonner,",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>section:nth-of-type(1)>div:nth-of-type(1)>details:nth-of-type(1)>ol:nth-of-type(1)>li:nth-of-type(5)>button:nth-of-type(1)",
+            "tag": "BUTTON",
+            "text": "5. Pied de page MarianneVous recevez ce message car vous êtes abonné à la liste de diffu",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>section:nth-of-type(1)>div:nth-of-type(1)>details:nth-of-type(1)>ol:nth-of-type(1)>li:nth-of-type(4)>button:nth-of-type(1)",
+            "tag": "BUTTON",
+            "text": "4. Bouton primaireBouton primaire",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>section:nth-of-type(1)>div:nth-of-type(1)>details:nth-of-type(1)>ol:nth-of-type(1)>li:nth-of-type(3)>button:nth-of-type(1)",
+            "tag": "BUTTON",
+            "text": "3. Paragraphe · blancTexte",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>section:nth-of-type(1)>div:nth-of-type(1)>details:nth-of-type(1)>ol:nth-of-type(1)>li:nth-of-type(2)>button:nth-of-type(1)",
+            "tag": "BUTTON",
+            "text": "2. Titre principalTitre",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>section:nth-of-type(1)>div:nth-of-type(1)>details:nth-of-type(1)>ol:nth-of-type(1)>li:nth-of-type(1)>button:nth-of-type(1)",
+            "tag": "BUTTON",
+            "text": "1. En-tête MarianneVotre service",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>section:nth-of-type(1)>div:nth-of-type(1)>details:nth-of-type(1)>summary:nth-of-type(1)",
+            "tag": "SUMMARY",
+            "text": "Composants du courriel",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "none"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "#subject",
+            "tag": "INPUT",
+            "text": "",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(58, 58, 58) 0px -2px 0px 0px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "#document-name",
+            "tag": "INPUT",
+            "text": "",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(58, 58, 58) 0px -2px 0px 0px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>aside:nth-of-type(1)>div:nth-of-type(1)>details:nth-of-type(2)>div:nth-of-type(1)>button:nth-of-type(2)",
+            "tag": "BUTTON",
+            "text": "Retirer l’identité",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>aside:nth-of-type(1)>div:nth-of-type(1)>details:nth-of-type(2)>div:nth-of-type(1)>button:nth-of-type(1)",
+            "tag": "BUTTON",
+            "text": "Appliquer",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "#identities",
+            "tag": "SELECT",
+            "text": "Choisir une identité enregistrée",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(58, 58, 58) 0px -2px 0px 0px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>aside:nth-of-type(1)>div:nth-of-type(1)>details:nth-of-type(2)>button:nth-of-type(1)",
+            "tag": "BUTTON",
+            "text": "Enregistrer l’identité",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "#identity-name",
+            "tag": "INPUT",
+            "text": "",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(58, 58, 58) 0px -2px 0px 0px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>aside:nth-of-type(1)>div:nth-of-type(1)>details:nth-of-type(2)>summary:nth-of-type(1)",
+            "tag": "SUMMARY",
+            "text": "Identités de service",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "none"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>aside:nth-of-type(1)>div:nth-of-type(1)>details:nth-of-type(1)>div:nth-of-type(1)>button:nth-of-type(2)",
+            "tag": "BUTTON",
+            "text": "Retirer le modèle",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>aside:nth-of-type(1)>div:nth-of-type(1)>details:nth-of-type(1)>div:nth-of-type(1)>button:nth-of-type(1)",
+            "tag": "BUTTON",
+            "text": "Créer depuis ce modèle",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "#saved-templates",
+            "tag": "SELECT",
+            "text": "Choisir un modèle enregistré",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(58, 58, 58) 0px -2px 0px 0px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>aside:nth-of-type(1)>div:nth-of-type(1)>details:nth-of-type(1)>button:nth-of-type(1)",
+            "tag": "BUTTON",
+            "text": "Enregistrer cette composition comme modèle",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "#template-name",
+            "tag": "INPUT",
+            "text": "",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(58, 58, 58) 0px -2px 0px 0px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>aside:nth-of-type(1)>div:nth-of-type(1)>details:nth-of-type(1)>summary:nth-of-type(1)",
+            "tag": "SUMMARY",
+            "text": "Mes modèles",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "none"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>aside:nth-of-type(1)>div:nth-of-type(1)>div:nth-of-type(1)>div:nth-of-type(1)>button:nth-of-type(2)",
+            "tag": "BUTTON",
+            "text": "Retirer",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>main:nth-of-type(1)>fieldset:nth-of-type(1)>section:nth-of-type(2)>div:nth-of-type(1)>aside:nth-of-type(1)>div:nth-of-type(1)>div:nth-of-type(1)>div:nth-of-type(1)>button:nth-of-type(1)",
+            "tag": "BUTTON",
+            "text": "Dupliquer",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "#documents",
+            "tag": "SELECT",
+            "text": "Mon premier courriel",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(58, 58, 58) 0px -2px 0px 0px inset"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "#library-back",
+            "tag": "BUTTON",
+            "text": "Retour à Mes newsletters",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "2px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "rgb(0, 0, 145) 0px 0px 0px 1px inset"
+          }
+        ],
+        "limitReached": false,
+        "qualification": "Trace instrumentée ; ordre pertinent et visibilité du focus à qualifier visuellement."
+      },
+      {
+        "id": "snum",
+        "direction": "Tab",
+        "trace": [
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "#snum-input",
+            "tag": "TEXTAREA",
+            "text": "",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "3px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "none"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "#convert",
+            "tag": "BUTTON",
+            "text": "Convertir et afficher l’aperçu",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "3px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "none"
+          },
+          {
+            "focused": false,
+            "reason": "Aucun élément focalisé dans les frames observées"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>a:nth-of-type(1)",
+            "tag": "A",
+            "text": "Aller à la collecte",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "3px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "none"
+          }
+        ],
+        "limitReached": false,
+        "qualification": "Trace instrumentée ; ordre pertinent et visibilité du focus à qualifier visuellement."
+      },
+      {
+        "id": "snum",
+        "direction": "Shift+Tab",
+        "trace": [
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "#snum-input",
+            "tag": "TEXTAREA",
+            "text": "",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "3px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "none"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "body>a:nth-of-type(1)",
+            "tag": "A",
+            "text": "Aller à la collecte",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "3px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "none"
+          },
+          {
+            "focused": false,
+            "reason": "Aucun élément focalisé dans les frames observées"
+          },
+          {
+            "frame": "main",
+            "focused": true,
+            "selector": "#convert",
+            "tag": "BUTTON",
+            "text": "Convertir et afficher l’aperçu",
+            "hidden": false,
+            "outline": [
+              "solid",
+              "3px",
+              "rgb(10, 118, 246)"
+            ],
+            "boxShadow": "none"
+          }
+        ],
+        "limitReached": false,
+        "qualification": "Trace instrumentée ; ordre pertinent et visibilité du focus à qualifier visuellement."
+      }
+    ]
+  },
+  "layout": {
+    "actualBrowserZoom": false,
+    "observations": [
+      {
+        "id": "editor",
+        "protocol": "reflow",
+        "width": 320,
+        "height": 256,
+        "scrollWidth": 320,
+        "clippingCandidates": [
+          {
+            "tag": "LEGEND",
+            "id": "",
+            "text": "Atelier de composition"
+          }
+        ],
+        "scrollContainers": [],
+        "viewportMeta": "width=device-width,initial-scale=1"
+      },
+      {
+        "id": "editor",
+        "protocol": "simulation-zoom-200",
+        "width": 640,
+        "height": 360,
+        "scrollWidth": 640,
+        "clippingCandidates": [
+          {
+            "tag": "LEGEND",
+            "id": "",
+            "text": "Atelier de composition"
+          }
+        ],
+        "scrollContainers": [],
+        "viewportMeta": "width=device-width,initial-scale=1"
+      },
+      {
+        "id": "editor",
+        "protocol": "portrait",
+        "width": 375,
+        "height": 812,
+        "scrollWidth": 375,
+        "clippingCandidates": [
+          {
+            "tag": "LEGEND",
+            "id": "",
+            "text": "Atelier de composition"
+          }
+        ],
+        "scrollContainers": [],
+        "viewportMeta": "width=device-width,initial-scale=1"
+      },
+      {
+        "id": "editor",
+        "protocol": "paysage",
+        "width": 812,
+        "height": 375,
+        "scrollWidth": 812,
+        "clippingCandidates": [
+          {
+            "tag": "LEGEND",
+            "id": "",
+            "text": "Atelier de composition"
+          }
+        ],
+        "scrollContainers": [],
+        "viewportMeta": "width=device-width,initial-scale=1"
+      },
+      {
+        "id": "editor",
+        "protocol": "espacements",
+        "width": 320,
+        "height": 1000,
+        "scrollWidth": 320,
+        "clippingCandidates": [
+          {
+            "tag": "LEGEND",
+            "id": "",
+            "text": "Atelier de composition"
+          }
+        ],
+        "scrollContainers": [],
+        "viewportMeta": "width=device-width,initial-scale=1"
+      },
+      {
+        "id": "snum",
+        "protocol": "reflow",
+        "width": 320,
+        "height": 256,
+        "scrollWidth": 320,
+        "clippingCandidates": [],
+        "scrollContainers": [],
+        "viewportMeta": "width=device-width,initial-scale=1"
+      },
+      {
+        "id": "snum",
+        "protocol": "simulation-zoom-200",
+        "width": 640,
+        "height": 360,
+        "scrollWidth": 640,
+        "clippingCandidates": [],
+        "scrollContainers": [],
+        "viewportMeta": "width=device-width,initial-scale=1"
+      },
+      {
+        "id": "snum",
+        "protocol": "portrait",
+        "width": 375,
+        "height": 812,
+        "scrollWidth": 375,
+        "clippingCandidates": [],
+        "scrollContainers": [],
+        "viewportMeta": "width=device-width,initial-scale=1"
+      },
+      {
+        "id": "snum",
+        "protocol": "paysage",
+        "width": 812,
+        "height": 375,
+        "scrollWidth": 812,
+        "clippingCandidates": [],
+        "scrollContainers": [],
+        "viewportMeta": "width=device-width,initial-scale=1"
+      },
+      {
+        "id": "snum",
+        "protocol": "espacements",
+        "width": 320,
+        "height": 1000,
+        "scrollWidth": 320,
+        "clippingCandidates": [],
+        "scrollContainers": [],
+        "viewportMeta": "width=device-width,initial-scale=1"
+      }
+    ]
+  },
+  "contrast_selects": {
+    "method": "Luminance sRGB des couleurs CSS opaques ; flèche SVG et rendu à qualifier séparément",
+    "producesConformity": false,
+    "observations": [
+      {
+        "state": "home",
+        "selects": [
+          {
+            "id": "starter",
+            "color": "rgb(58, 58, 58)",
+            "background": "rgb(238, 238, 238)",
+            "ratio": 9.803691678396063,
+            "backgroundImage": "url(\"data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23161616' d='m12 13.1 5-4.9 1.4 1.4-6.4 6.3-6.4-6.4L7 8.1l5 5z'/%3E%3C/svg%3E\")",
+            "backgroundPosition": "calc(100% - 16px) 50%",
+            "backgroundSize": "16px 16px",
+            "paddingRight": "40px",
+            "fontSize": "16px"
+          }
+        ]
+      },
+      {
+        "state": "editor",
+        "selects": [
+          {
+            "id": "documents",
+            "color": "rgb(58, 58, 58)",
+            "background": "rgb(238, 238, 238)",
+            "ratio": 9.803691678396063,
+            "backgroundImage": "url(\"data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23161616' d='m12 13.1 5-4.9 1.4 1.4-6.4 6.3-6.4-6.4L7 8.1l5 5z'/%3E%3C/svg%3E\")",
+            "backgroundPosition": "calc(100% - 16px) 50%",
+            "backgroundSize": "16px 16px",
+            "paddingRight": "40px",
+            "fontSize": "16px"
+          }
+        ]
+      }
+    ]
+  },
+  "semantic_retest": {
+    "visual": {
+      "browser": "156.0.8078.4",
+      "method": "Comparaison des captures PNG dans le même moteur ; HTML canonique contre rendu adapté",
+      "observations": [
+        {
+          "family": "Recette : En-têtes",
+          "blocks": [
+            "mail-00",
+            "mail-01",
+            "mail-02",
+            "mail-03"
+          ],
+          "scheme": "light",
+          "width": 1024,
+          "before": "4c5b7dcf38eaa016a6a1ba5388c3b6417e377af84f9c6d8de09cc9801ed7576b",
+          "after": "4c5b7dcf38eaa016a6a1ba5388c3b6417e377af84f9c6d8de09cc9801ed7576b",
+          "pixelEquivalent": true
+        },
+        {
+          "family": "Recette : Titres",
+          "blocks": [
+            "mail-04",
+            "mail-05",
+            "mail-06",
+            "mail-10",
+            "mail-11",
+            "mail-12",
+            "mail-13",
+            "mail-14",
+            "mail-15",
+            "mail-16",
+            "mail-17"
+          ],
+          "scheme": "light",
+          "width": 1024,
+          "before": "11c14355bc635dd56a45a92b89c795cc9c7d16085b97441c6dfa0f7d696073d4",
+          "after": "11c14355bc635dd56a45a92b89c795cc9c7d16085b97441c6dfa0f7d696073d4",
+          "pixelEquivalent": true
+        },
+        {
+          "family": "Recette : Textes",
+          "blocks": [
+            "mail-07",
+            "mail-08",
+            "mail-09",
+            "mail-18",
+            "mail-19",
+            "mail-20",
+            "mail-21",
+            "mail-22",
+            "mail-23",
+            "mail-24",
+            "mail-25"
+          ],
+          "scheme": "light",
+          "width": 1024,
+          "before": "21261e4ca1d3f2ccf472e40665aab7714e114bdd77bffb9367c7d457cef939b6",
+          "after": "21261e4ca1d3f2ccf472e40665aab7714e114bdd77bffb9367c7d457cef939b6",
+          "pixelEquivalent": true
+        },
+        {
+          "family": "Recette : Images",
+          "blocks": [
+            "mail-26",
+            "mail-27",
+            "mail-28",
+            "mail-29",
+            "mail-37",
+            "mail-38"
+          ],
+          "scheme": "light",
+          "width": 1024,
+          "before": "d92ed389aad73e0ccea36355084743919ca1051a8b40577e7eef2f0c64aec22c",
+          "after": "d92ed389aad73e0ccea36355084743919ca1051a8b40577e7eef2f0c64aec22c",
+          "pixelEquivalent": true
+        },
+        {
+          "family": "Recette : Cartes",
+          "blocks": [
+            "mail-30",
+            "mail-31",
+            "mail-32",
+            "mail-33",
+            "mail-46"
+          ],
+          "scheme": "light",
+          "width": 1024,
+          "before": "09ececde1c9aa297c74b8a205b3129963aea4e37fc8b0826dfc712d50f90a2d2",
+          "after": "09ececde1c9aa297c74b8a205b3129963aea4e37fc8b0826dfc712d50f90a2d2",
+          "pixelEquivalent": true
+        },
+        {
+          "family": "Recette : Mises en avant",
+          "blocks": [
+            "mail-34",
+            "mail-35",
+            "mail-36",
+            "mail-44"
+          ],
+          "scheme": "light",
+          "width": 1024,
+          "before": "71d9e0f213d04a9ca7454ae73f6e6cad9b96266bbf2aa60fe12d2c4e63768c1d",
+          "after": "71d9e0f213d04a9ca7454ae73f6e6cad9b96266bbf2aa60fe12d2c4e63768c1d",
+          "pixelEquivalent": true
+        },
+        {
+          "family": "Recette : Contacts",
+          "blocks": [
+            "mail-39"
+          ],
+          "scheme": "light",
+          "width": 1024,
+          "before": "42e823fb20844ba7cbda32468e6b89317713f79145b106de0d43a8087978216c",
+          "after": "42e823fb20844ba7cbda32468e6b89317713f79145b106de0d43a8087978216c",
+          "pixelEquivalent": true
+        },
+        {
+          "family": "Recette : Actions",
+          "blocks": [
+            "mail-40",
+            "mail-41",
+            "mail-42",
+            "mail-43",
+            "mail-45"
+          ],
+          "scheme": "light",
+          "width": 1024,
+          "before": "1e4eec55f2f810fff496bacd3fd5d617b62760bc9b3d3b8ce6431057df488489",
+          "after": "1e4eec55f2f810fff496bacd3fd5d617b62760bc9b3d3b8ce6431057df488489",
+          "pixelEquivalent": true
+        },
+        {
+          "family": "Recette : Pieds de page",
+          "blocks": [
+            "mail-47",
+            "mail-48",
+            "mail-49",
+            "mail-50",
+            "mail-51"
+          ],
+          "scheme": "light",
+          "width": 1024,
+          "before": "a8f13925f0af8bdc9c0762da6033a6b0f0d779d3918f95e66cfa2ae3cd2cf028",
+          "after": "a8f13925f0af8bdc9c0762da6033a6b0f0d779d3918f95e66cfa2ae3cd2cf028",
+          "pixelEquivalent": true
+        },
+        {
+          "family": "Recette : En-têtes",
+          "blocks": [
+            "mail-00",
+            "mail-01",
+            "mail-02",
+            "mail-03"
+          ],
+          "scheme": "light",
+          "width": 600,
+          "before": "9c15a1ea956b32d03f52b0ac433166632a7640341578ea5a580ccdced5ce9a8e",
+          "after": "9c15a1ea956b32d03f52b0ac433166632a7640341578ea5a580ccdced5ce9a8e",
+          "pixelEquivalent": true
+        },
+        {
+          "family": "Recette : Titres",
+          "blocks": [
+            "mail-04",
+            "mail-05",
+            "mail-06",
+            "mail-10",
+            "mail-11",
+            "mail-12",
+            "mail-13",
+            "mail-14",
+            "mail-15",
+            "mail-16",
+            "mail-17"
+          ],
+          "scheme": "light",
+          "width": 600,
+          "before": "7dd581def296a820ce401f1f5ec141878f8799d0813b4fe4312c4594a56c9b42",
+          "after": "7dd581def296a820ce401f1f5ec141878f8799d0813b4fe4312c4594a56c9b42",
+          "pixelEquivalent": true
+        },
+        {
+          "family": "Recette : Textes",
+          "blocks": [
+            "mail-07",
+            "mail-08",
+            "mail-09",
+            "mail-18",
+            "mail-19",
+            "mail-20",
+            "mail-21",
+            "mail-22",
+            "mail-23",
+            "mail-24",
+            "mail-25"
+          ],
+          "scheme": "light",
+          "width": 600,
+          "before": "6dd4fe8c92de9cd3b32d795f38e7dc5b9668cc97241b59e94fd4302dc358ccc2",
+          "after": "6dd4fe8c92de9cd3b32d795f38e7dc5b9668cc97241b59e94fd4302dc358ccc2",
+          "pixelEquivalent": true
+        },
+        {
+          "family": "Recette : Images",
+          "blocks": [
+            "mail-26",
+            "mail-27",
+            "mail-28",
+            "mail-29",
+            "mail-37",
+            "mail-38"
+          ],
+          "scheme": "light",
+          "width": 600,
+          "before": "b53a848e44848c9db20688d2c0f2da87315a8040c4c174830443312b85b12b6d",
+          "after": "b53a848e44848c9db20688d2c0f2da87315a8040c4c174830443312b85b12b6d",
+          "pixelEquivalent": true
+        },
+        {
+          "family": "Recette : Cartes",
+          "blocks": [
+            "mail-30",
+            "mail-31",
+            "mail-32",
+            "mail-33",
+            "mail-46"
+          ],
+          "scheme": "light",
+          "width": 600,
+          "before": "f87d8801ff32fce553e68f91152332bfcd3ca26b069952ca827bca0462f2b739",
+          "after": "f87d8801ff32fce553e68f91152332bfcd3ca26b069952ca827bca0462f2b739",
+          "pixelEquivalent": true
+        },
+        {
+          "family": "Recette : Mises en avant",
+          "blocks": [
+            "mail-34",
+            "mail-35",
+            "mail-36",
+            "mail-44"
+          ],
+          "scheme": "light",
+          "width": 600,
+          "before": "d527ed4852a441109b79b79fb3b25353055747ddbdb93be4d51080e19583e13c",
+          "after": "d527ed4852a441109b79b79fb3b25353055747ddbdb93be4d51080e19583e13c",
+          "pixelEquivalent": true
+        },
+        {
+          "family": "Recette : Contacts",
+          "blocks": [
+            "mail-39"
+          ],
+          "scheme": "light",
+          "width": 600,
+          "before": "f7c418f39b2e9f2b29f931c3814b0e9da1dcb2442f84851576b42294847016dc",
+          "after": "f7c418f39b2e9f2b29f931c3814b0e9da1dcb2442f84851576b42294847016dc",
+          "pixelEquivalent": true
+        },
+        {
+          "family": "Recette : Actions",
+          "blocks": [
+            "mail-40",
+            "mail-41",
+            "mail-42",
+            "mail-43",
+            "mail-45"
+          ],
+          "scheme": "light",
+          "width": 600,
+          "before": "b3926435ed83ed04df824c7fd404e198222ff97edf5ddc587926e92acf2e4b65",
+          "after": "b3926435ed83ed04df824c7fd404e198222ff97edf5ddc587926e92acf2e4b65",
+          "pixelEquivalent": true
+        },
+        {
+          "family": "Recette : Pieds de page",
+          "blocks": [
+            "mail-47",
+            "mail-48",
+            "mail-49",
+            "mail-50",
+            "mail-51"
+          ],
+          "scheme": "light",
+          "width": 600,
+          "before": "650cbbfbf1332909dc6fc38ec0a03488a526c233858001797edd0a59e5fdbd28",
+          "after": "650cbbfbf1332909dc6fc38ec0a03488a526c233858001797edd0a59e5fdbd28",
+          "pixelEquivalent": true
+        },
+        {
+          "family": "Recette : En-têtes",
+          "blocks": [
+            "mail-00",
+            "mail-01",
+            "mail-02",
+            "mail-03"
+          ],
+          "scheme": "light",
+          "width": 390,
+          "before": "510f82734a3ba9da8ba90ef25305ba30bbf6f47af06d5415b75c9f022e01bd06",
+          "after": "510f82734a3ba9da8ba90ef25305ba30bbf6f47af06d5415b75c9f022e01bd06",
+          "pixelEquivalent": true
+        },
+        {
+          "family": "Recette : Titres",
+          "blocks": [
+            "mail-04",
+            "mail-05",
+            "mail-06",
+            "mail-10",
+            "mail-11",
+            "mail-12",
+            "mail-13",
+            "mail-14",
+            "mail-15",
+            "mail-16",
+            "mail-17"
+          ],
+          "scheme": "light",
+          "width": 390,
+          "before": "0740b86312def426eaa7e93c0a1965fc44fa2a2ec5ec3323a16b47f9396a340e",
+          "after": "0740b86312def426eaa7e93c0a1965fc44fa2a2ec5ec3323a16b47f9396a340e",
+          "pixelEquivalent": true
+        },
+        {
+          "family": "Recette : Textes",
+          "blocks": [
+            "mail-07",
+            "mail-08",
+            "mail-09",
+            "mail-18",
+            "mail-19",
+            "mail-20",
+            "mail-21",
+            "mail-22",
+            "mail-23",
+            "mail-24",
+            "mail-25"
+          ],
+          "scheme": "light",
+          "width": 390,
+          "before": "ad1b9eae0b6f464e1678a6e0b137eda3b3e274278dd40c42dde824ce8c0197c5",
+          "after": "ad1b9eae0b6f464e1678a6e0b137eda3b3e274278dd40c42dde824ce8c0197c5",
+          "pixelEquivalent": true
+        },
+        {
+          "family": "Recette : Images",
+          "blocks": [
+            "mail-26",
+            "mail-27",
+            "mail-28",
+            "mail-29",
+            "mail-37",
+            "mail-38"
+          ],
+          "scheme": "light",
+          "width": 390,
+          "before": "9f52f91ccd3793c219a8641732f1145a7d2e1f194c1397b6030d81e49be7bc72",
+          "after": "9f52f91ccd3793c219a8641732f1145a7d2e1f194c1397b6030d81e49be7bc72",
+          "pixelEquivalent": true
+        },
+        {
+          "family": "Recette : Cartes",
+          "blocks": [
+            "mail-30",
+            "mail-31",
+            "mail-32",
+            "mail-33",
+            "mail-46"
+          ],
+          "scheme": "light",
+          "width": 390,
+          "before": "e58222f56803c4ad76d944f0dd05ec10314e2d33041a1acf77198ec4b9420541",
+          "after": "e58222f56803c4ad76d944f0dd05ec10314e2d33041a1acf77198ec4b9420541",
+          "pixelEquivalent": true
+        },
+        {
+          "family": "Recette : Mises en avant",
+          "blocks": [
+            "mail-34",
+            "mail-35",
+            "mail-36",
+            "mail-44"
+          ],
+          "scheme": "light",
+          "width": 390,
+          "before": "b9604a10b7d8988ae21a937393ba887bdd030c5b38a720c3131276b8e2c5eea5",
+          "after": "b9604a10b7d8988ae21a937393ba887bdd030c5b38a720c3131276b8e2c5eea5",
+          "pixelEquivalent": true
+        },
+        {
+          "family": "Recette : Contacts",
+          "blocks": [
+            "mail-39"
+          ],
+          "scheme": "light",
+          "width": 390,
+          "before": "4b9f5a6f431ecdc0b6daeb5356eece51baf0ba07eb7fc1bff683469508401039",
+          "after": "4b9f5a6f431ecdc0b6daeb5356eece51baf0ba07eb7fc1bff683469508401039",
+          "pixelEquivalent": true
+        },
+        {
+          "family": "Recette : Actions",
+          "blocks": [
+            "mail-40",
+            "mail-41",
+            "mail-42",
+            "mail-43",
+            "mail-45"
+          ],
+          "scheme": "light",
+          "width": 390,
+          "before": "168ca1781adccf4aaaa3f98f4e7c3758d8eee72299c347e8e712c661581c917b",
+          "after": "168ca1781adccf4aaaa3f98f4e7c3758d8eee72299c347e8e712c661581c917b",
+          "pixelEquivalent": true
+        },
+        {
+          "family": "Recette : Pieds de page",
+          "blocks": [
+            "mail-47",
+            "mail-48",
+            "mail-49",
+            "mail-50",
+            "mail-51"
+          ],
+          "scheme": "light",
+          "width": 390,
+          "before": "ec0f3733d95fb5902764405ba91b0220f97e6ee51b4cf47b6e6148484faa8e5d",
+          "after": "ec0f3733d95fb5902764405ba91b0220f97e6ee51b4cf47b6e6148484faa8e5d",
+          "pixelEquivalent": true
+        },
+        {
+          "family": "Recette : En-têtes",
+          "blocks": [
+            "mail-00",
+            "mail-01",
+            "mail-02",
+            "mail-03"
+          ],
+          "scheme": "dark",
+          "width": 1024,
+          "before": "5f1571852750e0b415c41cb27e399b03d0919e56d440bdf30ac89783493a2849",
+          "after": "5f1571852750e0b415c41cb27e399b03d0919e56d440bdf30ac89783493a2849",
+          "pixelEquivalent": true
+        },
+        {
+          "family": "Recette : Titres",
+          "blocks": [
+            "mail-04",
+            "mail-05",
+            "mail-06",
+            "mail-10",
+            "mail-11",
+            "mail-12",
+            "mail-13",
+            "mail-14",
+            "mail-15",
+            "mail-16",
+            "mail-17"
+          ],
+          "scheme": "dark",
+          "width": 1024,
+          "before": "6e8e418fefeb3e0e4c3d6f38c284a985811bb6246679dd783f9a34e5a7d4df8b",
+          "after": "6e8e418fefeb3e0e4c3d6f38c284a985811bb6246679dd783f9a34e5a7d4df8b",
+          "pixelEquivalent": true
+        },
+        {
+          "family": "Recette : Textes",
+          "blocks": [
+            "mail-07",
+            "mail-08",
+            "mail-09",
+            "mail-18",
+            "mail-19",
+            "mail-20",
+            "mail-21",
+            "mail-22",
+            "mail-23",
+            "mail-24",
+            "mail-25"
+          ],
+          "scheme": "dark",
+          "width": 1024,
+          "before": "95f9136969be728fb4eeaa09ff2e44c506a43df94bf971d31d422ae793f2dd1c",
+          "after": "95f9136969be728fb4eeaa09ff2e44c506a43df94bf971d31d422ae793f2dd1c",
+          "pixelEquivalent": true
+        },
+        {
+          "family": "Recette : Images",
+          "blocks": [
+            "mail-26",
+            "mail-27",
+            "mail-28",
+            "mail-29",
+            "mail-37",
+            "mail-38"
+          ],
+          "scheme": "dark",
+          "width": 1024,
+          "before": "bbc331ed336f098dd3c1e546bbd8705872ec24b0021c40fc2f5ead4c6ff382ed",
+          "after": "bbc331ed336f098dd3c1e546bbd8705872ec24b0021c40fc2f5ead4c6ff382ed",
+          "pixelEquivalent": true
+        },
+        {
+          "family": "Recette : Cartes",
+          "blocks": [
+            "mail-30",
+            "mail-31",
+            "mail-32",
+            "mail-33",
+            "mail-46"
+          ],
+          "scheme": "dark",
+          "width": 1024,
+          "before": "a08de03a3f3d5ae1c7b7ad1e5ae836ccc098500f8a5810cdc4f33dcb8ebd0a4a",
+          "after": "a08de03a3f3d5ae1c7b7ad1e5ae836ccc098500f8a5810cdc4f33dcb8ebd0a4a",
+          "pixelEquivalent": true
+        },
+        {
+          "family": "Recette : Mises en avant",
+          "blocks": [
+            "mail-34",
+            "mail-35",
+            "mail-36",
+            "mail-44"
+          ],
+          "scheme": "dark",
+          "width": 1024,
+          "before": "b5942a622d6805a5e446ff572b7a3ccc4b248ba5bbdb3ec10e96a0c17afea430",
+          "after": "b5942a622d6805a5e446ff572b7a3ccc4b248ba5bbdb3ec10e96a0c17afea430",
+          "pixelEquivalent": true
+        },
+        {
+          "family": "Recette : Contacts",
+          "blocks": [
+            "mail-39"
+          ],
+          "scheme": "dark",
+          "width": 1024,
+          "before": "9e841be09d06460404f4db45a632840c27fedb78a593e0705763f0c774c5d3f0",
+          "after": "9e841be09d06460404f4db45a632840c27fedb78a593e0705763f0c774c5d3f0",
+          "pixelEquivalent": true
+        },
+        {
+          "family": "Recette : Actions",
+          "blocks": [
+            "mail-40",
+            "mail-41",
+            "mail-42",
+            "mail-43",
+            "mail-45"
+          ],
+          "scheme": "dark",
+          "width": 1024,
+          "before": "f87013cf6fee5194a41d1dfbd5adb7cd8fa31f4a574d629caa4061a16e7501a8",
+          "after": "f87013cf6fee5194a41d1dfbd5adb7cd8fa31f4a574d629caa4061a16e7501a8",
+          "pixelEquivalent": true
+        },
+        {
+          "family": "Recette : Pieds de page",
+          "blocks": [
+            "mail-47",
+            "mail-48",
+            "mail-49",
+            "mail-50",
+            "mail-51"
+          ],
+          "scheme": "dark",
+          "width": 1024,
+          "before": "fb3c668e62b280a16c0cb265f1bbc47bf73085bc7e6a6f49b5f4c13cc0f30be5",
+          "after": "fb3c668e62b280a16c0cb265f1bbc47bf73085bc7e6a6f49b5f4c13cc0f30be5",
+          "pixelEquivalent": true
+        },
+        {
+          "family": "Recette : En-têtes",
+          "blocks": [
+            "mail-00",
+            "mail-01",
+            "mail-02",
+            "mail-03"
+          ],
+          "scheme": "dark",
+          "width": 600,
+          "before": "bb0ddb7e3dfe0a61fbd5cc5c16525076e7defeb00f5072531362e9b4dc1cdf0a",
+          "after": "bb0ddb7e3dfe0a61fbd5cc5c16525076e7defeb00f5072531362e9b4dc1cdf0a",
+          "pixelEquivalent": true
+        },
+        {
+          "family": "Recette : Titres",
+          "blocks": [
+            "mail-04",
+            "mail-05",
+            "mail-06",
+            "mail-10",
+            "mail-11",
+            "mail-12",
+            "mail-13",
+            "mail-14",
+            "mail-15",
+            "mail-16",
+            "mail-17"
+          ],
+          "scheme": "dark",
+          "width": 600,
+          "before": "887cc9eb0d0441dc61d4cb895b9f87d624860c19595337fc7af74ef0455949c5",
+          "after": "887cc9eb0d0441dc61d4cb895b9f87d624860c19595337fc7af74ef0455949c5",
+          "pixelEquivalent": true
+        },
+        {
+          "family": "Recette : Textes",
+          "blocks": [
+            "mail-07",
+            "mail-08",
+            "mail-09",
+            "mail-18",
+            "mail-19",
+            "mail-20",
+            "mail-21",
+            "mail-22",
+            "mail-23",
+            "mail-24",
+            "mail-25"
+          ],
+          "scheme": "dark",
+          "width": 600,
+          "before": "0b1f3be71d151a1803790a59b7f9347dae06e31e0f56275b3a78d9d026d43fe2",
+          "after": "0b1f3be71d151a1803790a59b7f9347dae06e31e0f56275b3a78d9d026d43fe2",
+          "pixelEquivalent": true
+        },
+        {
+          "family": "Recette : Images",
+          "blocks": [
+            "mail-26",
+            "mail-27",
+            "mail-28",
+            "mail-29",
+            "mail-37",
+            "mail-38"
+          ],
+          "scheme": "dark",
+          "width": 600,
+          "before": "4a0372f455868938d0c5d75fff18aff28b840c6ac38e8e04c6812acdb2cad36a",
+          "after": "4a0372f455868938d0c5d75fff18aff28b840c6ac38e8e04c6812acdb2cad36a",
+          "pixelEquivalent": true
+        },
+        {
+          "family": "Recette : Cartes",
+          "blocks": [
+            "mail-30",
+            "mail-31",
+            "mail-32",
+            "mail-33",
+            "mail-46"
+          ],
+          "scheme": "dark",
+          "width": 600,
+          "before": "34736ceae8f8544cba51817a4523bfc23d3990c3436813b422d5b05e128314f6",
+          "after": "34736ceae8f8544cba51817a4523bfc23d3990c3436813b422d5b05e128314f6",
+          "pixelEquivalent": true
+        },
+        {
+          "family": "Recette : Mises en avant",
+          "blocks": [
+            "mail-34",
+            "mail-35",
+            "mail-36",
+            "mail-44"
+          ],
+          "scheme": "dark",
+          "width": 600,
+          "before": "bcd70ed4d15b4201a324f53d58438203a22caa098b6c666b1c39d83326221527",
+          "after": "bcd70ed4d15b4201a324f53d58438203a22caa098b6c666b1c39d83326221527",
+          "pixelEquivalent": true
+        },
+        {
+          "family": "Recette : Contacts",
+          "blocks": [
+            "mail-39"
+          ],
+          "scheme": "dark",
+          "width": 600,
+          "before": "4c3b542b6eb3666a807c276dbf9634e6d0733ae1828cc8eda9765164320408fc",
+          "after": "4c3b542b6eb3666a807c276dbf9634e6d0733ae1828cc8eda9765164320408fc",
+          "pixelEquivalent": true
+        },
+        {
+          "family": "Recette : Actions",
+          "blocks": [
+            "mail-40",
+            "mail-41",
+            "mail-42",
+            "mail-43",
+            "mail-45"
+          ],
+          "scheme": "dark",
+          "width": 600,
+          "before": "b05e2dd32a54a24c4913c4008f192f1e212a7acd0581c63b9face6719c6e75a2",
+          "after": "b05e2dd32a54a24c4913c4008f192f1e212a7acd0581c63b9face6719c6e75a2",
+          "pixelEquivalent": true
+        },
+        {
+          "family": "Recette : Pieds de page",
+          "blocks": [
+            "mail-47",
+            "mail-48",
+            "mail-49",
+            "mail-50",
+            "mail-51"
+          ],
+          "scheme": "dark",
+          "width": 600,
+          "before": "2fb087c9e09908d0ac78c6a4c9658e157e231d342beed503c73880e0ec0d3852",
+          "after": "2fb087c9e09908d0ac78c6a4c9658e157e231d342beed503c73880e0ec0d3852",
+          "pixelEquivalent": true
+        },
+        {
+          "family": "Recette : En-têtes",
+          "blocks": [
+            "mail-00",
+            "mail-01",
+            "mail-02",
+            "mail-03"
+          ],
+          "scheme": "dark",
+          "width": 390,
+          "before": "342da580aa97edf039df2891d844dac8c354c05d04fe2308b25912d6b50ea855",
+          "after": "342da580aa97edf039df2891d844dac8c354c05d04fe2308b25912d6b50ea855",
+          "pixelEquivalent": true
+        },
+        {
+          "family": "Recette : Titres",
+          "blocks": [
+            "mail-04",
+            "mail-05",
+            "mail-06",
+            "mail-10",
+            "mail-11",
+            "mail-12",
+            "mail-13",
+            "mail-14",
+            "mail-15",
+            "mail-16",
+            "mail-17"
+          ],
+          "scheme": "dark",
+          "width": 390,
+          "before": "b25466f87aa1dc14ff95dabdff1318e45197ac159a8157a0d0d17b80aff5102f",
+          "after": "b25466f87aa1dc14ff95dabdff1318e45197ac159a8157a0d0d17b80aff5102f",
+          "pixelEquivalent": true
+        },
+        {
+          "family": "Recette : Textes",
+          "blocks": [
+            "mail-07",
+            "mail-08",
+            "mail-09",
+            "mail-18",
+            "mail-19",
+            "mail-20",
+            "mail-21",
+            "mail-22",
+            "mail-23",
+            "mail-24",
+            "mail-25"
+          ],
+          "scheme": "dark",
+          "width": 390,
+          "before": "71306df96ae4c4c4b8c98ef37af11b04eb0055b8d9ad39bc3d73e6bc442f1a3b",
+          "after": "71306df96ae4c4c4b8c98ef37af11b04eb0055b8d9ad39bc3d73e6bc442f1a3b",
+          "pixelEquivalent": true
+        },
+        {
+          "family": "Recette : Images",
+          "blocks": [
+            "mail-26",
+            "mail-27",
+            "mail-28",
+            "mail-29",
+            "mail-37",
+            "mail-38"
+          ],
+          "scheme": "dark",
+          "width": 390,
+          "before": "b46b7bd7c50acd026edf3d58ad6fe1dec7786e1ee114cccfd4b75b378ce3a7a1",
+          "after": "b46b7bd7c50acd026edf3d58ad6fe1dec7786e1ee114cccfd4b75b378ce3a7a1",
+          "pixelEquivalent": true
+        },
+        {
+          "family": "Recette : Cartes",
+          "blocks": [
+            "mail-30",
+            "mail-31",
+            "mail-32",
+            "mail-33",
+            "mail-46"
+          ],
+          "scheme": "dark",
+          "width": 390,
+          "before": "56178d9bd265a5be14d1de2be0e107451430f88edde25c92cc29eb1609ec6947",
+          "after": "56178d9bd265a5be14d1de2be0e107451430f88edde25c92cc29eb1609ec6947",
+          "pixelEquivalent": true
+        },
+        {
+          "family": "Recette : Mises en avant",
+          "blocks": [
+            "mail-34",
+            "mail-35",
+            "mail-36",
+            "mail-44"
+          ],
+          "scheme": "dark",
+          "width": 390,
+          "before": "a53dfaae51210e1f824f740c5ce39d0323e9543f0c993147d15833558f3c4bd8",
+          "after": "a53dfaae51210e1f824f740c5ce39d0323e9543f0c993147d15833558f3c4bd8",
+          "pixelEquivalent": true
+        },
+        {
+          "family": "Recette : Contacts",
+          "blocks": [
+            "mail-39"
+          ],
+          "scheme": "dark",
+          "width": 390,
+          "before": "8076bf1e564cbd89d3d1ca05ead1ee4002a710934f23bc760f66696febfa09a1",
+          "after": "8076bf1e564cbd89d3d1ca05ead1ee4002a710934f23bc760f66696febfa09a1",
+          "pixelEquivalent": true
+        },
+        {
+          "family": "Recette : Actions",
+          "blocks": [
+            "mail-40",
+            "mail-41",
+            "mail-42",
+            "mail-43",
+            "mail-45"
+          ],
+          "scheme": "dark",
+          "width": 390,
+          "before": "d547ec8c677838e031aaa1fda63945d460442241c84b1665d4bcff20486d7713",
+          "after": "d547ec8c677838e031aaa1fda63945d460442241c84b1665d4bcff20486d7713",
+          "pixelEquivalent": true
+        },
+        {
+          "family": "Recette : Pieds de page",
+          "blocks": [
+            "mail-47",
+            "mail-48",
+            "mail-49",
+            "mail-50",
+            "mail-51"
+          ],
+          "scheme": "dark",
+          "width": 390,
+          "before": "9449e954e37742806d8fb1ec0671e16e621774d302010cc075bfc5e4f463de6f",
+          "after": "9449e954e37742806d8fb1ec0671e16e621774d302010cc075bfc5e4f463de6f",
+          "pixelEquivalent": true
+        }
+      ]
+    },
+    "outputs": {
+      "nativeHeadings": true,
+      "download": {
+        "name": "courriel.html",
+        "sha256": "4a088b9c257b73f980535af31f435d6357edad73730bc043ba1df19a2aaf4a5d"
+      },
+      "expected": [
+        {
+          "level": 1,
+          "text": "Titre"
+        },
+        {
+          "level": 2,
+          "text": "Titre de la section"
+        },
+        {
+          "level": 3,
+          "text": "Titre de la partie"
+        },
+        {
+          "level": 4,
+          "text": "Titre"
+        },
+        {
+          "level": 4,
+          "text": "Titre"
+        },
+        {
+          "level": 4,
+          "text": "Titre cliquable"
+        },
+        {
+          "level": 2,
+          "text": "Titre de la section"
+        },
+        {
+          "level": 3,
+          "text": "Titre"
+        },
+        {
+          "level": 3,
+          "text": "Titre"
+        }
+      ],
+      "accessibleTree": [
+        {
+          "level": 1,
+          "text": "Titre"
+        },
+        {
+          "level": 2,
+          "text": "Titre de la section"
+        },
+        {
+          "level": 3,
+          "text": "Titre de la partie"
+        },
+        {
+          "level": 4,
+          "text": "Titre"
+        },
+        {
+          "level": 4,
+          "text": "Titre"
+        },
+        {
+          "level": 4,
+          "text": "Titre cliquable"
+        },
+        {
+          "level": 2,
+          "text": "Titre de la section"
+        },
+        {
+          "level": 3,
+          "text": "Titre"
+        },
+        {
+          "level": 3,
+          "text": "Titre"
+        }
+      ],
+      "copied": [
+        {
+          "level": 1,
+          "text": "Titre"
+        },
+        {
+          "level": 2,
+          "text": "Titre de la section"
+        },
+        {
+          "level": 3,
+          "text": "Titre de la partie"
+        },
+        {
+          "level": 4,
+          "text": "Titre"
+        },
+        {
+          "level": 4,
+          "text": "Titre"
+        },
+        {
+          "level": 4,
+          "text": "Titre cliquable"
+        },
+        {
+          "level": 2,
+          "text": "Titre de la section"
+        },
+        {
+          "level": 3,
+          "text": "Titre"
+        },
+        {
+          "level": 3,
+          "text": "Titre"
+        }
+      ],
+      "screenReaderExecuted": false,
+      "mailClientsVerified": false
+    },
+    "unit_regressions": {
+      "passed": 4,
+      "red_failures_before_patch": 3,
+      "old_contract_compatibility_passed_before_patch": 1
+    }
+  },
+  "mail_layout": {
+    "actualBrowserZoom": false,
+    "observations": [
+      {
+        "index": 1,
+        "width": 320,
+        "protocol": "normal",
+        "scrollWidth": 320,
+        "clippingCandidates": []
+      },
+      {
+        "index": 1,
+        "width": 320,
+        "protocol": "espacements",
+        "scrollWidth": 320,
+        "clippingCandidates": []
+      },
+      {
+        "index": 1,
+        "width": 320,
+        "protocol": "texte-200-css",
+        "scrollWidth": 320,
+        "clippingCandidates": []
+      },
+      {
+        "index": 1,
+        "width": 640,
+        "protocol": "normal",
+        "scrollWidth": 640,
+        "clippingCandidates": []
+      },
+      {
+        "index": 1,
+        "width": 640,
+        "protocol": "espacements",
+        "scrollWidth": 640,
+        "clippingCandidates": []
+      },
+      {
+        "index": 1,
+        "width": 640,
+        "protocol": "texte-200-css",
+        "scrollWidth": 640,
+        "clippingCandidates": []
+      },
+      {
+        "index": 2,
+        "width": 320,
+        "protocol": "normal",
+        "scrollWidth": 320,
+        "clippingCandidates": []
+      },
+      {
+        "index": 2,
+        "width": 320,
+        "protocol": "espacements",
+        "scrollWidth": 320,
+        "clippingCandidates": []
+      },
+      {
+        "index": 2,
+        "width": 320,
+        "protocol": "texte-200-css",
+        "scrollWidth": 320,
+        "clippingCandidates": []
+      },
+      {
+        "index": 2,
+        "width": 640,
+        "protocol": "normal",
+        "scrollWidth": 640,
+        "clippingCandidates": []
+      },
+      {
+        "index": 2,
+        "width": 640,
+        "protocol": "espacements",
+        "scrollWidth": 640,
+        "clippingCandidates": []
+      },
+      {
+        "index": 2,
+        "width": 640,
+        "protocol": "texte-200-css",
+        "scrollWidth": 640,
+        "clippingCandidates": []
+      },
+      {
+        "index": 3,
+        "width": 320,
+        "protocol": "normal",
+        "scrollWidth": 320,
+        "clippingCandidates": []
+      },
+      {
+        "index": 3,
+        "width": 320,
+        "protocol": "espacements",
+        "scrollWidth": 320,
+        "clippingCandidates": []
+      },
+      {
+        "index": 3,
+        "width": 320,
+        "protocol": "texte-200-css",
+        "scrollWidth": 320,
+        "clippingCandidates": []
+      },
+      {
+        "index": 3,
+        "width": 640,
+        "protocol": "normal",
+        "scrollWidth": 640,
+        "clippingCandidates": []
+      },
+      {
+        "index": 3,
+        "width": 640,
+        "protocol": "espacements",
+        "scrollWidth": 640,
+        "clippingCandidates": []
+      },
+      {
+        "index": 3,
+        "width": 640,
+        "protocol": "texte-200-css",
+        "scrollWidth": 640,
+        "clippingCandidates": []
+      },
+      {
+        "index": 4,
+        "width": 320,
+        "protocol": "normal",
+        "scrollWidth": 320,
+        "clippingCandidates": []
+      },
+      {
+        "index": 4,
+        "width": 320,
+        "protocol": "espacements",
+        "scrollWidth": 320,
+        "clippingCandidates": []
+      },
+      {
+        "index": 4,
+        "width": 320,
+        "protocol": "texte-200-css",
+        "scrollWidth": 320,
+        "clippingCandidates": []
+      },
+      {
+        "index": 4,
+        "width": 640,
+        "protocol": "normal",
+        "scrollWidth": 640,
+        "clippingCandidates": []
+      },
+      {
+        "index": 4,
+        "width": 640,
+        "protocol": "espacements",
+        "scrollWidth": 640,
+        "clippingCandidates": []
+      },
+      {
+        "index": 4,
+        "width": 640,
+        "protocol": "texte-200-css",
+        "scrollWidth": 640,
+        "clippingCandidates": []
+      },
+      {
+        "index": 5,
+        "width": 320,
+        "protocol": "normal",
+        "scrollWidth": 320,
+        "clippingCandidates": []
+      },
+      {
+        "index": 5,
+        "width": 320,
+        "protocol": "espacements",
+        "scrollWidth": 320,
+        "clippingCandidates": []
+      },
+      {
+        "index": 5,
+        "width": 320,
+        "protocol": "texte-200-css",
+        "scrollWidth": 320,
+        "clippingCandidates": []
+      },
+      {
+        "index": 5,
+        "width": 640,
+        "protocol": "normal",
+        "scrollWidth": 640,
+        "clippingCandidates": []
+      },
+      {
+        "index": 5,
+        "width": 640,
+        "protocol": "espacements",
+        "scrollWidth": 640,
+        "clippingCandidates": []
+      },
+      {
+        "index": 5,
+        "width": 640,
+        "protocol": "texte-200-css",
+        "scrollWidth": 640,
+        "clippingCandidates": []
+      },
+      {
+        "index": 6,
+        "width": 320,
+        "protocol": "normal",
+        "scrollWidth": 320,
+        "clippingCandidates": []
+      },
+      {
+        "index": 6,
+        "width": 320,
+        "protocol": "espacements",
+        "scrollWidth": 320,
+        "clippingCandidates": []
+      },
+      {
+        "index": 6,
+        "width": 320,
+        "protocol": "texte-200-css",
+        "scrollWidth": 320,
+        "clippingCandidates": []
+      },
+      {
+        "index": 6,
+        "width": 640,
+        "protocol": "normal",
+        "scrollWidth": 640,
+        "clippingCandidates": []
+      },
+      {
+        "index": 6,
+        "width": 640,
+        "protocol": "espacements",
+        "scrollWidth": 640,
+        "clippingCandidates": []
+      },
+      {
+        "index": 6,
+        "width": 640,
+        "protocol": "texte-200-css",
+        "scrollWidth": 640,
+        "clippingCandidates": []
+      },
+      {
+        "index": 7,
+        "width": 320,
+        "protocol": "normal",
+        "scrollWidth": 320,
+        "clippingCandidates": []
+      },
+      {
+        "index": 7,
+        "width": 320,
+        "protocol": "espacements",
+        "scrollWidth": 320,
+        "clippingCandidates": []
+      },
+      {
+        "index": 7,
+        "width": 320,
+        "protocol": "texte-200-css",
+        "scrollWidth": 320,
+        "clippingCandidates": []
+      },
+      {
+        "index": 7,
+        "width": 640,
+        "protocol": "normal",
+        "scrollWidth": 640,
+        "clippingCandidates": []
+      },
+      {
+        "index": 7,
+        "width": 640,
+        "protocol": "espacements",
+        "scrollWidth": 640,
+        "clippingCandidates": []
+      },
+      {
+        "index": 7,
+        "width": 640,
+        "protocol": "texte-200-css",
+        "scrollWidth": 640,
+        "clippingCandidates": []
+      },
+      {
+        "index": 8,
+        "width": 320,
+        "protocol": "normal",
+        "scrollWidth": 320,
+        "clippingCandidates": []
+      },
+      {
+        "index": 8,
+        "width": 320,
+        "protocol": "espacements",
+        "scrollWidth": 320,
+        "clippingCandidates": []
+      },
+      {
+        "index": 8,
+        "width": 320,
+        "protocol": "texte-200-css",
+        "scrollWidth": 320,
+        "clippingCandidates": []
+      },
+      {
+        "index": 8,
+        "width": 640,
+        "protocol": "normal",
+        "scrollWidth": 640,
+        "clippingCandidates": []
+      },
+      {
+        "index": 8,
+        "width": 640,
+        "protocol": "espacements",
+        "scrollWidth": 640,
+        "clippingCandidates": []
+      },
+      {
+        "index": 8,
+        "width": 640,
+        "protocol": "texte-200-css",
+        "scrollWidth": 640,
+        "clippingCandidates": []
+      },
+      {
+        "index": 9,
+        "width": 320,
+        "protocol": "normal",
+        "scrollWidth": 320,
+        "clippingCandidates": []
+      },
+      {
+        "index": 9,
+        "width": 320,
+        "protocol": "espacements",
+        "scrollWidth": 320,
+        "clippingCandidates": []
+      },
+      {
+        "index": 9,
+        "width": 320,
+        "protocol": "texte-200-css",
+        "scrollWidth": 320,
+        "clippingCandidates": []
+      },
+      {
+        "index": 9,
+        "width": 640,
+        "protocol": "normal",
+        "scrollWidth": 640,
+        "clippingCandidates": []
+      },
+      {
+        "index": 9,
+        "width": 640,
+        "protocol": "espacements",
+        "scrollWidth": 640,
+        "clippingCandidates": []
+      },
+      {
+        "index": 9,
+        "width": 640,
+        "protocol": "texte-200-css",
+        "scrollWidth": 640,
+        "clippingCandidates": []
+      },
+      {
+        "index": 10,
+        "width": 320,
+        "protocol": "normal",
+        "scrollWidth": 320,
+        "clippingCandidates": []
+      },
+      {
+        "index": 10,
+        "width": 320,
+        "protocol": "espacements",
+        "scrollWidth": 320,
+        "clippingCandidates": []
+      },
+      {
+        "index": 10,
+        "width": 320,
+        "protocol": "texte-200-css",
+        "scrollWidth": 320,
+        "clippingCandidates": []
+      },
+      {
+        "index": 10,
+        "width": 640,
+        "protocol": "normal",
+        "scrollWidth": 640,
+        "clippingCandidates": []
+      },
+      {
+        "index": 10,
+        "width": 640,
+        "protocol": "espacements",
+        "scrollWidth": 640,
+        "clippingCandidates": []
+      },
+      {
+        "index": 10,
+        "width": 640,
+        "protocol": "texte-200-css",
+        "scrollWidth": 640,
+        "clippingCandidates": []
+      }
+    ]
+  },
+  "collection_retries": {
+    "attempts": [
+      {
+        "manifest": "evidence/accessibilite-titres-20261022/courant/supplements-attempt-001/manifest.json",
+        "failed_commands": 13
+      },
+      {
+        "manifest": "evidence/accessibilite-titres-20261022/courant/supplements-attempt-002/manifest.json",
+        "failed_commands": 13
+      }
+    ],
+    "reasons": [
+      "Premier appel statique refusé : parcours sans action.",
+      "Deuxième appel statique refusé : --expect nécessite un parcours.",
+      "Appel corrigé sans ces options pour les pages statiques ; P01 exécutée séparément avant les douze autres."
+    ]
+  },
+  "report_review": {
+    "method": "Inspecteur du kit ; sélection limitée aux rapports réellement activés dans campaign.yaml",
+    "inspector_sha256": "bf3e5a9d1a99500a30eaf96a326f9aeddd931bf48b808dcec2376501107e512a",
+    "reports": {
+      "portal-1440": {
+        "title": "Portail de l’audit RGAA",
+        "h1": "Portail de l’audit RGAA",
+        "builder": true,
+        "innerWidth": 1440,
+        "scrollWidth": 1440,
+        "horizontalOverflow": false,
+        "urlFirst": true,
+        "findings": 0,
+        "separators": 0,
+        "details": 0,
+        "tables": [
+          {
+            "clientWidth": 1185,
+            "scrollWidth": 1185,
+            "scrollable": false
+          }
+        ],
+        "interactions": {},
+        "errors": [],
+        "source_sha256": "16b2b0a082802c2b02f3e5089d1cbdb65546a79986e7b2ddba15b86089c0b72b"
+      },
+      "portal-390": {
+        "title": "Portail de l’audit RGAA",
+        "h1": "Portail de l’audit RGAA",
+        "builder": true,
+        "innerWidth": 390,
+        "scrollWidth": 390,
+        "horizontalOverflow": false,
+        "urlFirst": true,
+        "findings": 0,
+        "separators": 0,
+        "details": 0,
+        "tables": [
+          {
+            "clientWidth": 343,
+            "scrollWidth": 768,
+            "scrollable": true
+          }
+        ],
+        "interactions": {},
+        "errors": [],
+        "source_sha256": "16b2b0a082802c2b02f3e5089d1cbdb65546a79986e7b2ddba15b86089c0b72b"
+      },
+      "rgaa-P01-1440": {
+        "title": "P01 - Webapp accueil - audit RGAA",
+        "h1": "P01 - Webapp accueil - audit RGAA",
+        "builder": true,
+        "innerWidth": 1440,
+        "scrollWidth": 1440,
+        "horizontalOverflow": false,
+        "urlFirst": true,
+        "findings": 0,
+        "separators": 0,
+        "details": 0,
+        "tables": [
+          {
+            "clientWidth": 1185,
+            "scrollWidth": 1185,
+            "scrollable": false
+          }
+        ],
+        "interactions": {},
+        "errors": [],
+        "source_sha256": "6e7749bad885f3f321e1f18a49a2aa8ddeb19f0a893b53607b5faae0954871f7"
+      },
+      "rgaa-P02-1440": {
+        "title": "P02 - Atelier portable - audit RGAA",
+        "h1": "P02 - Atelier portable - audit RGAA",
+        "builder": true,
+        "innerWidth": 1440,
+        "scrollWidth": 1440,
+        "horizontalOverflow": false,
+        "urlFirst": true,
+        "findings": 0,
+        "separators": 0,
+        "details": 0,
+        "tables": [
+          {
+            "clientWidth": 1185,
+            "scrollWidth": 1185,
+            "scrollable": false
+          }
+        ],
+        "interactions": {},
+        "errors": [],
+        "source_sha256": "41fff8a78dbed9e57446c9468e6828e47772a27a1ba98e6b9c1f8e9980e3a494"
+      },
+      "rgaa-P03-1440": {
+        "title": "P03 - Conversion SNUM - audit RGAA",
+        "h1": "P03 - Conversion SNUM - audit RGAA",
+        "builder": true,
+        "innerWidth": 1440,
+        "scrollWidth": 1440,
+        "horizontalOverflow": false,
+        "urlFirst": true,
+        "findings": 0,
+        "separators": 0,
+        "details": 0,
+        "tables": [
+          {
+            "clientWidth": 1185,
+            "scrollWidth": 1185,
+            "scrollable": false
+          }
+        ],
+        "interactions": {},
+        "errors": [],
+        "source_sha256": "1e114686afa2dc5cd107379f0cdae00cee353aee3e5b9377a74f52c1c4f8bf49"
+      },
+      "rgaa-P04-1440": {
+        "title": "P04 - Courriel En-têtes - audit RGAA",
+        "h1": "P04 - Courriel En-têtes - audit RGAA",
+        "builder": true,
+        "innerWidth": 1440,
+        "scrollWidth": 1440,
+        "horizontalOverflow": false,
+        "urlFirst": true,
+        "findings": 67,
+        "separators": 1,
+        "details": 67,
+        "tables": [
+          {
+            "clientWidth": 1185,
+            "scrollWidth": 1185,
+            "scrollable": false
+          }
+        ],
+        "interactions": {
+          "allVisible": 67,
+          "reviewVisible": 67,
+          "detailsOpenByKeyboard": true
+        },
+        "errors": [],
+        "source_sha256": "02522bca1d40e358576a57f822e758eb301777f4909eb9d14c2a4e778367535d"
+      },
+      "rgaa-P05-1440": {
+        "title": "P05 - Courriel Titres - audit RGAA",
+        "h1": "P05 - Courriel Titres - audit RGAA",
+        "builder": true,
+        "innerWidth": 1440,
+        "scrollWidth": 1440,
+        "horizontalOverflow": false,
+        "urlFirst": true,
+        "findings": 87,
+        "separators": 0,
+        "details": 87,
+        "tables": [
+          {
+            "clientWidth": 1185,
+            "scrollWidth": 1185,
+            "scrollable": false
+          }
+        ],
+        "interactions": {
+          "allVisible": 87,
+          "reviewVisible": 87,
+          "detailsOpenByKeyboard": true
+        },
+        "errors": [],
+        "source_sha256": "02467fb21ca3e8f5ca73495a2175229654b07ca9141fa1252a94502d1ab2d879"
+      },
+      "rgaa-P06-1440": {
+        "title": "P06 - Courriel Textes - audit RGAA",
+        "h1": "P06 - Courriel Textes - audit RGAA",
+        "builder": true,
+        "innerWidth": 1440,
+        "scrollWidth": 1440,
+        "horizontalOverflow": false,
+        "urlFirst": true,
+        "findings": 82,
+        "separators": 0,
+        "details": 82,
+        "tables": [
+          {
+            "clientWidth": 1185,
+            "scrollWidth": 1185,
+            "scrollable": false
+          }
+        ],
+        "interactions": {
+          "allVisible": 82,
+          "reviewVisible": 82,
+          "detailsOpenByKeyboard": true
+        },
+        "errors": [],
+        "source_sha256": "a3660067b204cf212d4086f4b9d146cd9a365076dd257a48ea1561a9ea4de3e9"
+      },
+      "rgaa-P07-1440": {
+        "title": "P07 - Courriel Images - audit RGAA",
+        "h1": "P07 - Courriel Images - audit RGAA",
+        "builder": true,
+        "innerWidth": 1440,
+        "scrollWidth": 1440,
+        "horizontalOverflow": false,
+        "urlFirst": true,
+        "findings": 62,
+        "separators": 0,
+        "details": 62,
+        "tables": [
+          {
+            "clientWidth": 1185,
+            "scrollWidth": 1185,
+            "scrollable": false
+          }
+        ],
+        "interactions": {
+          "allVisible": 62,
+          "reviewVisible": 62,
+          "detailsOpenByKeyboard": true
+        },
+        "errors": [],
+        "source_sha256": "a7435eac1deb8024672d9c46fe6b5c85d7f99874c5c4f088dc6e1bd4f89279f0"
+      },
+      "rgaa-P08-1440": {
+        "title": "P08 - Courriel Cartes - audit RGAA",
+        "h1": "P08 - Courriel Cartes - audit RGAA",
+        "builder": true,
+        "innerWidth": 1440,
+        "scrollWidth": 1440,
+        "horizontalOverflow": false,
+        "urlFirst": true,
+        "findings": 83,
+        "separators": 0,
+        "details": 83,
+        "tables": [
+          {
+            "clientWidth": 1185,
+            "scrollWidth": 1185,
+            "scrollable": false
+          }
+        ],
+        "interactions": {
+          "allVisible": 83,
+          "reviewVisible": 83,
+          "detailsOpenByKeyboard": true
+        },
+        "errors": [],
+        "source_sha256": "1f5a0b9024325efd9e56c4b1a62de509b66d71f9fbe44d8068c6c78314211227"
+      },
+      "rgaa-P09-1440": {
+        "title": "P09 - Courriel Mises en avant - audit RGAA",
+        "h1": "P09 - Courriel Mises en avant - audit RGAA",
+        "builder": true,
+        "innerWidth": 1440,
+        "scrollWidth": 1440,
+        "horizontalOverflow": false,
+        "urlFirst": true,
+        "findings": 43,
+        "separators": 0,
+        "details": 43,
+        "tables": [
+          {
+            "clientWidth": 1185,
+            "scrollWidth": 1185,
+            "scrollable": false
+          }
+        ],
+        "interactions": {
+          "allVisible": 43,
+          "reviewVisible": 43,
+          "detailsOpenByKeyboard": true
+        },
+        "errors": [],
+        "source_sha256": "2c811487bfb9979761cf37887be84a54d0cd65517e6addb62125576a747ac629"
+      },
+      "rgaa-P10-1440": {
+        "title": "P10 - Courriel Contacts - audit RGAA",
+        "h1": "P10 - Courriel Contacts - audit RGAA",
+        "builder": true,
+        "innerWidth": 1440,
+        "scrollWidth": 1440,
+        "horizontalOverflow": false,
+        "urlFirst": true,
+        "findings": 8,
+        "separators": 0,
+        "details": 8,
+        "tables": [
+          {
+            "clientWidth": 1185,
+            "scrollWidth": 1185,
+            "scrollable": false
+          }
+        ],
+        "interactions": {
+          "allVisible": 8,
+          "reviewVisible": 8,
+          "detailsOpenByKeyboard": true
+        },
+        "errors": [],
+        "source_sha256": "7e3172fc1c4b8f5468eeaa87fa8179353193f85f2710299afa33e8447dc56c0c"
+      },
+      "rgaa-P11-1440": {
+        "title": "P11 - Courriel Actions - audit RGAA",
+        "h1": "P11 - Courriel Actions - audit RGAA",
+        "builder": true,
+        "innerWidth": 1440,
+        "scrollWidth": 1440,
+        "horizontalOverflow": false,
+        "urlFirst": true,
+        "findings": 47,
+        "separators": 0,
+        "details": 47,
+        "tables": [
+          {
+            "clientWidth": 1185,
+            "scrollWidth": 1185,
+            "scrollable": false
+          }
+        ],
+        "interactions": {
+          "allVisible": 47,
+          "reviewVisible": 47,
+          "detailsOpenByKeyboard": true
+        },
+        "errors": [],
+        "source_sha256": "3ca4f3468b4fa34193993e02cf79a852d47edfdff1d650b577e25def19e0a7a9"
+      },
+      "rgaa-P12-1440": {
+        "title": "P12 - Courriel Pieds de page - audit RGAA",
+        "h1": "P12 - Courriel Pieds de page - audit RGAA",
+        "builder": true,
+        "innerWidth": 1440,
+        "scrollWidth": 1440,
+        "horizontalOverflow": false,
+        "urlFirst": true,
+        "findings": 72,
+        "separators": 1,
+        "details": 72,
+        "tables": [
+          {
+            "clientWidth": 1185,
+            "scrollWidth": 1185,
+            "scrollable": false
+          }
+        ],
+        "interactions": {
+          "allVisible": 72,
+          "reviewVisible": 72,
+          "detailsOpenByKeyboard": true
+        },
+        "errors": [],
+        "source_sha256": "4c7ec4967c399caa136d380405f637e7b2b965df5d7b8afd5db5e30a331e1e07"
+      },
+      "rgaa-P13-1440": {
+        "title": "P13 - Courriel SNUM assemblé - audit RGAA",
+        "h1": "P13 - Courriel SNUM assemblé - audit RGAA",
+        "builder": true,
+        "innerWidth": 1440,
+        "scrollWidth": 1440,
+        "horizontalOverflow": false,
+        "urlFirst": true,
+        "findings": 300,
+        "separators": 0,
+        "details": 300,
+        "tables": [
+          {
+            "clientWidth": 1185,
+            "scrollWidth": 1185,
+            "scrollable": false
+          }
+        ],
+        "interactions": {
+          "allVisible": 300,
+          "reviewVisible": 300,
+          "detailsOpenByKeyboard": true
+        },
+        "errors": [],
+        "source_sha256": "1c17b07ca640e9fe641f9bcc2e1cc82a4f412d2e50848d2cbf2d48c331451eb0"
+      }
+    },
+    "errors": [],
+    "valid": true
+  },
+  "raw_evidence_files": 3769,
+  "raw_inventory_sha256": "3bbca8d20c03d2a362dc2691456b4c0e8a23c4f4280c166a1d157c5161ec664f",
+  "limits": [
+    "Les statuts Creator et ceux de la capture des rapports sont séparés ; ils ne qualifient aucun critère humain.",
+    "Les qualifications NON_TESTE ne sont ni des conformités ni des non-applicabilités.",
+    "Les tests de saisie Firefox utilisent des événements input ; ils ne prouvent aucune restitution vocale.",
+    "Les exports mail ont des candidats de structure et de présentation à instruire ; aucune compatibilité Outlook nouvelle n’est affirmée."
+  ]
+}

@@ -6,7 +6,7 @@ Application locale pour composer des courriels à partir des **52 sections et va
 
 ## Ouvrir l’atelier
 
-La [campagne RGAA en cours](docs/accessibilite/RAPPORT.md) publie les matrices des 106 critères et 258 tests, deux corrections vérifiées et les lacunes restantes. Les 72 tests applicatifs passent ; **la conformité RGAA à 100 % reste à démontrer**, notamment pour la structure des courriels et les qualifications humaines.
+La [campagne RGAA en cours](docs/accessibilite/titres-20261022/RAPPORT.md) publie les matrices des 106 critères et 258 tests, les corrections vérifiées et les lacunes restantes. Les titres des courriels sont désormais structurés ; les 78 tests applicatifs passent. **La conformité RGAA à 100 % reste à démontrer** : attributs de présentation à corriger et qualifications humaines manquantes, notamment.
 
 **[Ouvrir l’atelier en ligne](https://alexandra-guiderdoni.github.io/builder-mail-dsfr/)**. La publication HTTPS et le rechargement hors connexion après préparation du cache ont été vérifiés le 22 octobre 2026 ; [reçu de publication](docs/recette-pages.json).
 

@@ -11,6 +11,51 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 REF = ROOT / "reference/dsfr-mail"
 
+# Champs éditoriaux qualifiés dans la référence : le gras seul n’est pas un titre.
+HEADING_FIELDS = {
+    5: [("f0", "principal")],
+    6: [("f0", "principal")],
+    10: [("f0", "section")],
+    11: [("f0", "section")],
+    12: [("f0", "section")],
+    13: [("f0", "section")],
+    14: [("f0", "partie")],
+    15: [("f0", "partie")],
+    16: [("f0", "partie")],
+    17: [("f0", "partie")],
+    24: [("f0", "local")],
+    25: [("f0", "local")],
+    30: [("f3", "local")],
+    31: [("f4", "local")],
+    32: [("f0", "local")],
+    33: [("f0", "local")],
+    34: [(key, "local") for key in ["f0", "f3", "f5", "f7", "f9"]],
+    35: [("f0", "local")],
+    36: [("f0", "local")],
+    37: [("f0", "partie"), ("f4", "local"), ("f6", "local")],
+    38: [("f0", "partie")],
+    39: [("f0", "local")],
+    45: [("f0", "local")],
+    46: [("f0", "section"), ("f3", "local"), ("f8", "local")],
+}
+
+
+def semantic_template(index, template):
+    headings = [
+        {"field": key, "role": role} for key, role in HEADING_FIELDS.get(index, [])
+    ]
+    for heading in headings:
+        key = heading["field"]
+        pattern = rf"(<(span|a)\b[^>]*>\s*<strong>\s*\{{\{{{key}\}}\}}\s*(?:<br>\s*)?</strong>\s*</\2>)"
+        template, count = re.subn(
+            pattern,
+            "{{heading_open_" + key + r"}}\g<0>{{heading_close_" + key + "}}",
+            template,
+        )
+        if count != 1:
+            raise ValueError(f"Titre non reconnu dans mail-{index:02}, champ {key}.")
+    return template, headings
+
 
 class Sections(HTMLParser):
     def __init__(self, source):
@@ -163,12 +208,16 @@ def compile_catalogue():
         fields = Fields()
         fields.feed(raw)
         fields.flush()
+        template = "".join(fields.parts)
+        semantic, headings = semantic_template(index, template)
         components.append(
             {
                 "id": f"mail-{index:02}",
                 "label": label,
                 "family": family,
-                "template": "".join(fields.parts),
+                "template": template,
+                "semanticTemplate": semantic,
+                "headings": headings,
                 "fields": fields.fields,
                 "source": {
                     "file": "template-generique.html",

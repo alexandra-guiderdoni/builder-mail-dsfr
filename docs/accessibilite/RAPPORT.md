@@ -1,5 +1,7 @@
 # Accessibilité — campagne du 22 octobre 2026
 
+**Dossier historique des corrections d’interface.** La [tranche suivante sur les titres](titres-20261022/RAPPORT.md) contient les preuves de la version courante ; les observations ci-dessous restent celles de leur collecte initiale.
+
 **Objectif : 100 % de conformité aux critères RGAA applicables. Objectif non atteint et aucun taux publié.** Les corrections locales passent leurs régressions ; la qualification exhaustive reste ouverte, avec des constats sur les sorties mail, des limites d’outillage et des essais humains manquants.
 
 Le mandat couvre le builder, ses distributions, le convertisseur SNUM, les aperçus et les courriels produits. Les amonts et AY11 sont restés en lecture seule. Aucun envoi ni installation nouvelle pendant cette campagne. Aucun opérateur humain ni poste Windows n’est disponible, selon les réponses de l’utilisateur.

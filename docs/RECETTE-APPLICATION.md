@@ -1,6 +1,6 @@
 # Recette de l’application autonome
 
-La [campagne d’accessibilité du 22 octobre](accessibilite/RAPPORT.md) complète cette recette : **72 tests applicatifs réussis sans saut**, deux régressions corrigées, contrôles Firefox ciblés, matrices 106/258 et limites explicites. Les campagnes antérieures ci-dessous restent historiques. Aucun taux RGAA validé.
+La [campagne d’accessibilité du 22 octobre](accessibilite/titres-20261022/RAPPORT.md) complète cette recette : **78 tests applicatifs réussis sans saut**, titres natifs éprouvés dans les sorties réelles, 54 comparaisons visuelles identiques, parcours complet Firefox, matrices 106/258 et limites explicites. Les campagnes antérieures ci-dessous restent historiques. Attributs de présentation et qualifications humaines restent ouverts ; aucun taux RGAA validé.
 
 **Application publiée, qualification métier incomplète.** Observations des 21 et 22 octobre 2026 sur macOS 26.5.2, Firefox natif 156.0 et Chromium 156.0.8078.4. Les campagnes couvrent l’accueil « Mes newsletters », le builder générique et la page SNUM séparée, puis l’origine HTTPS publique. La recette du [prototype](RECETTE.md) reste historique et distincte.
 
@@ -8,7 +8,7 @@ Le [reçu initial](recette-application-observee.json) identifie la campagne hist
 
 ## État de livraison du 22 octobre
 
-La dernière campagne, après personnalisation des intitulés, intégration du DSFR web et correction de la mise à jour face au cache HTTP, donne **70 tests réussis, 0 échec, 0 saut**, en 26,764 s. `npm run check` renvoie `APPLICATION_DISTRIBUTIONS_OK` et `DISTRIBUTIONS_OK`. Le [reçu de livraison](recette-publication.json) conserve les empreintes des sources, distributions et journal ; le journal brut courant est `evidence/pages-20261022/suite-liens-dsfr-cache.log`. La campagne initiale de cette tranche donnait 70 réussites en 27,252 s. La campagne précédente de focus comptait 65 tests en 24,161 s, dans `evidence/ay11-20261022/suite-65.log`, après une campagne de 64 tests en 23,666 s. Les observations historiques plus bas gardent leurs nombres et limites propres.
+La campagne historique après personnalisation des intitulés, intégration du DSFR web et correction de la mise à jour face au cache HTTP donnait **70 tests réussis, 0 échec, 0 saut**, en 26,764 s. `npm run check` renvoyait `APPLICATION_DISTRIBUTIONS_OK` et `DISTRIBUTIONS_OK`. Le [reçu de livraison](recette-publication.json) conserve ses empreintes des sources, distributions et journal ; son journal brut est `evidence/pages-20261022/suite-liens-dsfr-cache.log`. La campagne initiale de cette tranche donnait 70 réussites en 27,252 s. La campagne précédente de focus comptait 65 tests en 24,161 s, dans `evidence/ay11-20261022/suite-65.log`, après une campagne de 64 tests en 23,666 s. Les observations historiques plus bas gardent leurs nombres et limites propres.
 
 Les essais réels sur macOS 26.5.2, Firefox 156.0 et Chrome 155.0.8059.85 ont constaté :
 

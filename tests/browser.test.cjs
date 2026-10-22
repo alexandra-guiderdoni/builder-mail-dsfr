@@ -2,7 +2,7 @@ const test = require('node:test');
 const path = require('node:path');
 const {root, evidence, click, open, enterEditor, saved, expand, download, selectBlock, state, chromium, fs, assert} = require('./browser-support.cjs');
 
-test('les 52 gabarits conservent indépendamment la structure et les styles du DOM officiel', async () => {
+test('les 52 gabarits conservent le DOM officiel hors enveloppes de titres accessibles', async () => {
   const browser = await chromium.launch({headless: true});
   try {
     const {page} = await open(browser);
@@ -13,10 +13,12 @@ test('les 52 gabarits conservent indépendamment la structure et les styles du D
       const shape = node => ({tag: node.tagName, attrs: [...node.attributes].filter(a => !['src', 'href', 'alt'].includes(a.name)).map(a => [a.name, a.value]).sort(), children: [...node.children].map(shape)});
       return {count: sections.length, css: original.querySelector('style').textContent === MailBuilder.catalog.css, comparisons: sections.map((section, i) => {
         const block = MailBuilder.Model.createBlock(i), rendered = new DOMParser().parseFromString(MailBuilder.Render.block(block), 'text/html').body.firstElementChild;
-        return {id: block.component, identical: JSON.stringify(shape(section)) === JSON.stringify(shape(rendered))};
+        const headings = [...rendered.querySelectorAll('h1,h2,h3,h4,h5,h6')], expected = MailBuilder.Model.component(block.component).headings.length;
+        for (const heading of headings) heading.replaceWith(...heading.childNodes);
+        return {id: block.component, headings: headings.length, expected, identical: JSON.stringify(shape(section)) === JSON.stringify(shape(rendered))};
       })};
     }, official);
-    assert.equal(check.count, 52); assert(check.css); assert(check.comparisons.every(c => c.identical), JSON.stringify(check.comparisons.filter(c => !c.identical)));
+    assert.equal(check.count, 52); assert(check.css); assert(check.comparisons.every(c => c.identical && c.headings === c.expected), JSON.stringify(check.comparisons.filter(c => !c.identical || c.headings !== c.expected)));
     await fs.mkdir(evidence, {recursive: true}); await fs.writeFile(path.join(evidence, 'catalogue-dom.json'), JSON.stringify(check, null, 2));
   } finally { await browser.close(); }
 });

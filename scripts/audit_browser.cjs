@@ -3,7 +3,7 @@ const {chromium} = require('playwright');
 const fs = require('node:fs/promises');
 const path = require('node:path');
 const crypto = require('node:crypto');
-const root = path.resolve(__dirname, '..'), output = path.join(root, 'evidence/accessibilite-20261022');
+const root = path.resolve(__dirname, '..'), output = path.resolve(root, process.env.BUILDER_AUDIT_OUTPUT || 'evidence/accessibilite-20261022');
 const axePath = '/Users/alex/Claude/git-hors-workflow/ay11-pre-audit/node_modules/axe-core/axe.min.js';
 const snapshots = [], interactions = [], errors = [];
 let measuredFilesSha256 = {};
@@ -76,7 +76,7 @@ async function capture(page, id, state) {
 }
 (async () => {
   await fs.mkdir(path.join(output, 'exports'), {recursive: true});
-  const measuredFiles = ['app/distribution/portable.html','app/distribution/web/index.html','app/distribution/web/sw.js','app/distribution/snum.html'];
+  const measuredFiles = ['app/distribution/portable.html','app/distribution/web/index.html','app/distribution/web/sw.js','app/distribution/snum.html','scripts/catalogue.py'];
   for (const directory of ['app/source','app/snum']) for (const name of await fs.readdir(path.join(root,directory))) measuredFiles.push(directory+'/'+name);
   measuredFilesSha256 = Object.fromEntries(await Promise.all(measuredFiles.map(async name => [name,hash(await fs.readFile(path.join(root,name)))])));
   const browser = await chromium.launch({headless: true});

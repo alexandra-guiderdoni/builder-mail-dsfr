@@ -10,12 +10,24 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 AY11 = Path("/Users/alex/Claude/git-hors-workflow/ay11-pre-audit")
-OUT = ROOT / "evidence/accessibilite-20261022/supplements"
+OUT = (
+    ROOT / os.environ.get("BUILDER_AUDIT_OUTPUT", "evidence/accessibilite-20261022")
+) / "supplements"
 sys.path.insert(0, str(AY11 / "src"))
 from ay11.cli import build_parser
 
 ENV = {**os.environ, "PYTHONDONTWRITEBYTECODE": "1", "PYTHONPATH": str(AY11 / "src")}
 manifest = []
+
+
+def variant_criteria(probe):
+    options = [a for a in probe._actions if a.dest not in ["help", "json"]]
+    if any(a.required and a.choices is not None and not a.choices for a in options):
+        return []
+    choice = next(
+        (a for a in options if a.dest == "criterion" and a.choices is not None), None
+    )
+    return list(choice.choices) if choice else [None]
 
 
 def call(name, args):
@@ -112,12 +124,50 @@ scenes = [
         "Exporter la composition JSON",
     ),
 ]
+if os.environ.get("BUILDER_AUDIT_ALL_PAGES") == "1":
+    scenes += [
+        ("P01", "", [], "Mes newsletters"),
+        ("P02", "portable.html", [], "Mes newsletters"),
+        ("P03", "snum.html", [], "Convertir"),
+    ]
+    for index, expectation in enumerate(
+        [
+            "Votre service",
+            "Titre",
+            "Texte",
+            "Description",
+            "Titre",
+            "Description",
+            "Contact",
+            "Bouton",
+            "Vous recevez",
+            "Revue de presse",
+        ],
+        start=1,
+    ):
+        scenes.append((f"P{index + 3:02}", f"mail/{index:02}.html", [], expectation))
+if os.environ.get("BUILDER_AUDIT_SCENES"):
+    selected = set(os.environ["BUILDER_AUDIT_SCENES"].split(","))
+    assert selected <= {scene[0] for scene in scenes}
+    scenes = [scene for scene in scenes if scene[0] in selected]
 parser = build_parser()
 commands = next(a for a in parser._actions if isinstance(a, argparse._SubParsersAction))
 probes = next(
     a
     for a in commands.choices["probes"]._actions
     if isinstance(a, argparse._SubParsersAction)
+)
+(OUT / "variants.json").write_text(
+    json.dumps(
+        [
+            {"family": family, "criterion": criterion}
+            for family, probe in probes.choices.items()
+            for criterion in variant_criteria(probe)
+        ],
+        ensure_ascii=False,
+        indent=2,
+    )
+    + "\n"
 )
 inventory = []
 for scene, page, actions, expectation in scenes:
@@ -140,13 +190,13 @@ for scene, page, actions, expectation in scenes:
         [
             "preaudit",
             "capture-browser",
-            "http://127.0.0.1:4187/" + page,
+            "http://127.0.0.1:"
+            + os.environ.get("BUILDER_AUDIT_PORT", "4187")
+            + "/"
+            + page,
             "--output-dir",
             str(directory),
-            "--journey",
-            str(journey),
-            "--expect",
-            expectation,
+            *(["--journey", str(journey), "--expect", expectation] if actions else []),
             "--profile",
             "rgaa-106",
             "--axe",
@@ -167,7 +217,7 @@ for scene, page, actions, expectation in scenes:
     html = Path(json.loads(collection.read_text())["rendered_html_path"])
     for family, probe in probes.choices.items():
         options = [a for a in probe._actions if a.dest not in ["help", "json"]]
-        if any(a.required and a.choices is not None and not a.choices for a in options):
+        if not variant_criteria(probe):
             inventory.append(
                 {
                     "scene": scene,
@@ -177,11 +227,7 @@ for scene, page, actions, expectation in scenes:
                 }
             )
             continue
-        choice = next(
-            (a for a in options if a.dest == "criterion" and a.choices is not None),
-            None,
-        )
-        for criterion in choice.choices if choice else [None]:
+        for criterion in variant_criteria(probe):
             args = ["probes", family]
             for option in options:
                 if not option.option_strings:

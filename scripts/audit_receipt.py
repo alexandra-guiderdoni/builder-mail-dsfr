@@ -3,15 +3,17 @@
 import collections
 import hashlib
 import json
+import os
 import re
 import subprocess
 import unicodedata
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-RAW = ROOT / "evidence/accessibilite-20261022"
+RAW = ROOT / os.environ.get("BUILDER_AUDIT_OUTPUT", "evidence/accessibilite-20261022")
 CAMPAIGN = RAW / "campagne"
-OUT = ROOT / "docs/accessibilite"
+OUT = ROOT / os.environ.get("BUILDER_AUDIT_DOCS", "docs/accessibilite")
+EXPECTED_TESTS = int(os.environ.get("BUILDER_AUDIT_TESTS", "72"))
 REFERENCE = Path(
     "/Users/alex/Claude/.claude/skills/audit-rgaa-complet/references/rgaa-4.1.2.json"
 )
@@ -44,7 +46,60 @@ state = read(CAMPAIGN / ".creator/state.json")
 manifest = read(RAW / "supplements/manifest.json")
 inventory = read(RAW / "supplements/inventory.json")
 catalog = read(CAMPAIGN / "collectes-ay11/catalogue-sondes.json")
-assert len(manifest) == 406 and len(inventory) == 406
+scenes = {
+    "editor",
+    "expanded",
+    "invalid",
+    "dialog",
+    "dialog-invalid",
+    "snum-invalid",
+    "snum-converted",
+}
+if os.environ.get("BUILDER_AUDIT_ALL_PAGES") == "1":
+    scenes.update(f"P{index:02}" for index in range(1, 14))
+assert {item["scene"] for item in inventory} == scenes
+variants_path = RAW / "supplements/variants.json"
+variants = (
+    read(variants_path)
+    if variants_path.exists()
+    else [
+        item
+        for item in inventory
+        if item["scene"] == "editor" and item["status"] == "executed"
+    ]
+)
+expected_variants = {(item["family"], item.get("criterion")) for item in variants}
+assert {family for family, _ in expected_variants} == {
+    probe["probe"] for probe in catalog["probes"]
+}
+commands = {item["name"]: item for item in manifest}
+assert len(commands) == len(manifest), "Commande dupliquée dans le manifeste"
+expected_commands = set()
+for scene in scenes:
+    executed = [
+        item
+        for item in inventory
+        if item["scene"] == scene and item["status"] == "executed"
+    ]
+    assert len(executed) == len(expected_variants), f"Variantes dupliquées : {scene}"
+    assert {(x["family"], x.get("criterion")) for x in executed} == expected_variants
+    capture = scene + "-capture"
+    expected_commands.add(capture)
+    args = commands[capture]["args"]
+    assert args[:2] == ["preaudit", "capture-browser"]
+    assert args[args.index("--profile") + 1] == "rgaa-106"
+    assert {"--axe", "--form-interactions", "--temporal-probes"} <= set(args)
+    for item in executed:
+        name = "-".join(filter(None, [scene, item["family"], item.get("criterion")]))
+        expected_commands.add(name)
+        assert item["output"] == name + ".json"
+        args = commands[name]["args"]
+        assert args[:2] == ["probes", item["family"]]
+        if item.get("criterion"):
+            assert args[args.index("--criterion") + 1] == item["criterion"]
+        else:
+            assert "--criterion" not in args
+assert set(commands) == expected_commands
 assert not any(item["exit_code"] for item in manifest)
 exports = read(RAW / "exports/index.json")
 assert len({block for item in exports for block in item["blocks"]}) == 52
@@ -54,7 +109,7 @@ assert browser["measuredFilesSha256"]
 for name, digest in browser["measuredFilesSha256"].items():
     assert sha(ROOT / name) == digest, f"Source différente de la collecte : {name}"
 suite = (RAW / "suite.log").read_text()
-assert re.search(r"(?:ℹ|#) pass 72\b", suite)
+assert re.search(rf"(?:ℹ|#) pass {EXPECTED_TESTS}\b", suite)
 assert re.search(r"(?:ℹ|#) fail 0\b", suite)
 assert re.search(r"(?:ℹ|#) skipped 0\b", suite)
 OUT.mkdir(parents=True, exist_ok=True)
@@ -154,6 +209,55 @@ confirmed = {
     ],
     "source": "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#9.1.3",
 }
+semantic = (
+    read(RAW / "semantic-retest.json")
+    if (RAW / "semantic-retest.json").exists()
+    else None
+)
+if semantic:
+    assert len(semantic["visual"]["observations"]) == 54
+    assert all(item["pixelEquivalent"] for item in semantic["visual"]["observations"])
+    assert (
+        semantic["outputs"]["accessibleTree"]
+        == semantic["outputs"]["expected"]
+        == semantic["outputs"]["copied"]
+    )
+    assert all(
+        re.search(r"<h[1-6]\b", (RAW / "exports" / name).read_text())
+        for name in ["02.html", "10.html"]
+    )
+    confirmed.update(
+        qualification="A_RETESTER",
+        previous_qualification="NC_CONFIRMEE",
+        observation="32 champs de titres adaptés ; titres natifs vérifiés dans aperçu, téléchargement, copie et arbre AX. Qualification éditoriale et restitution vocale encore manquantes.",
+        review="Astra : GO structurel local ; aucune conformité RGAA globale ni compatibilité Outlook nouvelle affirmée.",
+        evidence=[str((RAW / "semantic-retest.json").relative_to(ROOT))],
+    )
+other_findings = []
+presentation_path = RAW / "presentation-attributes.json"
+presentation = read(presentation_path) if presentation_path.exists() else None
+if presentation:
+    other_findings.append(
+        {
+            "id": "MAIL-PRESENTATION-002",
+            "criterion": "10.1",
+            "test": "10.1.2",
+            "qualification": "NC_CONFIRMEE",
+            "pages": [page["page"] for page in presentation["pages"]],
+            "observation": "Attributs de présentation interdits présents dans les dix HTML autonomes ; exceptions img/objets et select appliquées.",
+            "scope": presentation["scope"],
+            "source": presentation["source"],
+            "evidence": str(presentation_path.relative_to(ROOT)),
+            "element_counts": {
+                page["page"]: page["count"] for page in presentation["pages"]
+            },
+            "attribute_counts": {
+                page["page"]: sum(len(item["attrs"]) for item in page["instances"])
+                for page in presentation["pages"]
+            },
+            "review": "Astra : rattachement et non-conformité confirmés pour les HTML examinés comme pages web ; aucun verdict sur le message reçu.",
+        }
+    )
 matrix = {
     "referential": "RGAA 4.1.2",
     "source": reference["source"],
@@ -186,15 +290,27 @@ matrix = {
         for t in reference["tests"]
     ],
     "criterion_observations": observations,
-    "confirmed_findings": [confirmed],
+    "confirmed_findings": [confirmed, *other_findings],
 }
 next(c for c in matrix["criteria"] if c["id"] == "9.1").update(
-    qualification="NC_CONFIRMEE", confirmed_pages=confirmed["pages"]
+    qualification=confirmed["qualification"], confirmed_pages=confirmed["pages"]
 )
 next(t for t in matrix["tests"] if t["id"] == "9.1.3").update(
-    qualification_all_pages_and_states="NON_TESTE sauf P05 et P13 : NC_CONFIRMEE",
+    qualification_all_pages_and_states="NON_TESTE sauf P05 et P13 : "
+    + confirmed["qualification"],
     confirmed_pages=confirmed["pages"],
 )
+for finding in other_findings:
+    next(c for c in matrix["criteria"] if c["id"] == finding["criterion"]).update(
+        qualification=finding["qualification"], confirmed_pages=finding["pages"]
+    )
+    next(t for t in matrix["tests"] if t["id"] == finding["test"]).update(
+        qualification_all_pages_and_states="NON_TESTE sauf "
+        + ", ".join(finding["pages"])
+        + " : "
+        + finding["qualification"],
+        confirmed_pages=finding["pages"],
+    )
 write("matrice-rgaa.json", matrix)
 for key, name, title in [
     ("criteria", "MATRICE-106.md", "106 critères"),
@@ -250,22 +366,24 @@ receipt = {
     "pages": pages,
     "mail_components": 52,
     "mail_exports": exports,
-    "confirmed_findings": [confirmed],
+    "confirmed_findings": [confirmed, *other_findings],
     "browser_states": browser["snapshots"],
     "browser_errors": browser["errors"],
     "tests": {
-        "passed": 72,
+        "passed": EXPECTED_TESTS,
         "failed": 0,
         "skipped": 0,
-        "log": "evidence/accessibilite-20261022/suite.log",
+        "log": str((RAW / "suite.log").relative_to(ROOT)),
         "log_sha256": sha(RAW / "suite.log"),
     },
     "ay11": {
         "families": catalog["probe_count"],
         "criteria_in_probe_catalogue": catalog["criteria_count"],
         "main_calls": main_calls,
-        "supplement_probe_calls": 399,
-        "supplement_captures": 7,
+        "supplement_probe_calls": sum(
+            item["status"] == "executed" for item in inventory
+        ),
+        "supplement_captures": len(scenes),
         "supplement_command_failures": 0,
         "supplement_collection_statuses": dict(supplement_statuses),
         "unavailable": catalog["skipped"],
@@ -278,12 +396,37 @@ receipt = {
     "keyboard": read(RAW / "keyboard.json"),
     "layout": read(RAW / "layout-protocols.json"),
     "contrast_selects": read(RAW / "contrast-selects.json"),
+    "semantic_retest": semantic,
+    "mail_layout": read(RAW / "mail-layout-full.json")
+    if (RAW / "mail-layout-full.json").exists()
+    else None,
+    "collection_retries": {
+        "attempts": [
+            {
+                "manifest": str(path.relative_to(ROOT)),
+                "failed_commands": sum(item["exit_code"] != 0 for item in read(path)),
+            }
+            for path in sorted(RAW.glob("supplements-attempt-*/manifest.json"))
+        ],
+        "reasons": [
+            "Premier appel statique refusé : parcours sans action.",
+            "Deuxième appel statique refusé : --expect nécessite un parcours.",
+            "Appel corrigé sans ces options pour les pages statiques ; P01 exécutée séparément avant les douze autres.",
+        ],
+    }
+    if (RAW / "supplements-attempt-001/manifest.json").exists()
+    else None,
+    "report_review": read(
+        CAMPAIGN / "rapport-dsfr/captures-validation/REPORT-REVIEW.json"
+    )
+    if (CAMPAIGN / "rapport-dsfr/captures-validation/REPORT-REVIEW.json").exists()
+    else None,
     "raw_evidence_files": len(artifacts),
     "raw_inventory_sha256": hashlib.sha256(
         "\n".join(f"{p.relative_to(RAW)} {sha(p)}" for p in sorted(artifacts)).encode()
     ).hexdigest(),
     "limits": [
-        "Le verdict Creator global n’est pas OK ; échecs navigateur instrumenté et capture de rapport conservés.",
+        "Les statuts Creator et ceux de la capture des rapports sont séparés ; ils ne qualifient aucun critère humain.",
         "Les qualifications NON_TESTE ne sont ni des conformités ni des non-applicabilités.",
         "Les tests de saisie Firefox utilisent des événements input ; ils ne prouvent aucune restitution vocale.",
         "Les exports mail ont des candidats de structure et de présentation à instruire ; aucune compatibilité Outlook nouvelle n’est affirmée.",

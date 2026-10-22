@@ -1,6 +1,6 @@
 # Maintenir l’application
 
-Le [dossier d’accessibilité](accessibilite/RAPPORT.md) conserve la campagne courante, ses matrices, les scripts et leurs limites. Les fichiers sous `evidence/` sont locaux ; les reçus partageables et matrices figurent sous `docs/accessibilite/`. Aucun script d’audit ne produit une conformité humaine.
+Le [dossier d’accessibilité](accessibilite/titres-20261022/RAPPORT.md) conserve la campagne courante, ses matrices, les scripts et leurs limites. Les fichiers sous `evidence/` sont locaux ; les reçus partageables et matrices figurent sous `docs/accessibilite/`. Aucun script d’audit ne produit une conformité humaine.
 
 L’application livrée est statique et autonome. Python et Node.js sont des outils de développement ; aucun serveur métier, compte ou paquet distant n’est requis à l’exécution. Le [cadrage](cadrage-source.md) conserve les limites d’autorité : amonts en lecture seule, publication et accès aux messageries séparément autorisés.
 
@@ -23,6 +23,8 @@ L’application livrée est statique et autonome. Python et Node.js sont des out
 | `tests/`, `scripts/recipe_firefox.mjs`, `scripts/recipe_installation.cjs` | Vérifications automatiques, recette Firefox et installation PWA de recette. |
 
 Le parseur SNUM utilisé est la copie conservée sous `prototype/reference/snum-packet.js` ; seule sa fonction `parse` est appelée dans la page SNUM dédiée. Cette copie locale contrôle maintenant la cohérence du jour de semaine avec la date (#24) ; le projet SNUM source reste intact. Le parseur n’est pas assemblé dans le builder générique. L’ancien prototype et ses distributions restent indépendants. Ne pas éditer les HTML générés pour corriger le produit.
+
+Les gabarits canoniques du catalogue restent inchangés. `scripts/catalogue.py` produit aussi une adaptation sémantique et les 32 champs de titre qualifiés ; `render.js` calcule leurs niveaux selon le contexte de la composition. Modifier ces champs exige de vérifier la référence, les titres frères, les parents absents ou vides, les sorties réelles, le contrat v1 et les comparaisons visuelles des 52 composants. L’empreinte du catalogue reste celle du contrat canonique.
 
 Le DSFR web est incorporé dans le builder uniquement, avec Marianne 400/500/700 et les modules CSS inventoriés dans sa provenance. Aucun accès réseau ni JavaScript DSFR n’est requis. Le convertisseur SNUM garde `app/snum/base.css`, copie de son ancien socle visuel ; le modèle et le rendu génériques restent partagés. Une mise à jour de ces ressources web se fait séparément d’une mise à jour du catalogue de courriels.
 
