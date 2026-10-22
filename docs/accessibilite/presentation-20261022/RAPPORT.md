@@ -60,6 +60,10 @@ Astra a relu les sources, reproduit le mutant de côté en mémoire, recompté l
 
 Restent à qualifier les tests applicables par instance, les contrôles éditoriaux et visuels manquants, les contrastes indéterminés, les annonces vocales, Windows/Firefox/Outlook et la réception après transformation par les messageries. L’accès HTTPS depuis le parc et son installation restent distincts de la publication GitHub Pages. Les recettes historiques #2 et #13 restent ouvertes.
 
+## Publication vérifiée
+
+Le [déploiement de cette correction](https://github.com/alexandra-guiderdoni/builder-mail-dsfr/actions/runs/39855831750) termine avec succès. Les huit fichiers publics ont les mêmes octets que les distributions contrôlées. Dans un profil Chromium neuf, une composition synthétique exerce cinq groupes natifs, huit titres de niveaux attendus, un lien source personnalisé et une erreur associée à son champ. Aucun attribut interdit ni débordement dans l’aperçu mesuré ; aucune erreur JavaScript. Bibliothèque et aperçu sont retrouvés après coupure réseau et rechargement. Le [reçu public](publication.json) conserve les empreintes et observations. Cela ne prouve ni une installation sur le parc ni la réception dans une messagerie.
+
 ## Reproduire
 
 Depuis la racine, avec les dépendances déjà présentes :

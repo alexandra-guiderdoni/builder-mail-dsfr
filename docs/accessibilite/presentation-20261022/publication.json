@@ -1,0 +1,80 @@
+{
+  "commit": "a1a488992b91a7e85a463521bc5e41b082e6eae2",
+  "files": [
+    {
+      "name": "index.html",
+      "status": 200,
+      "sha256": "c3cc015d02ac27e54839274079013b118b9663a4293cde3c1e298282a91fd814"
+    },
+    {
+      "name": "sw.js",
+      "status": 200,
+      "sha256": "fa1a1262146ff2265ed4ccf7c76bfb7a128a1b79d1035a0584cba658b5c72ad4"
+    },
+    {
+      "name": "manifest.webmanifest",
+      "status": 200,
+      "sha256": "8714de33ac81701d61efab69403d603626c0b03373ecb652b2ddcf760cb35da9"
+    },
+    {
+      "name": "icon.svg",
+      "status": 200,
+      "sha256": "5505b460c862ebb01858dd50199029259b1f7a6aa3764f219f4ab83405181a23"
+    },
+    {
+      "name": "icon-192.png",
+      "status": 200,
+      "sha256": "aadd19a40c58106b744454719023d88db1173eb9d37244c00b58e2c5263cab4f"
+    },
+    {
+      "name": "icon-512.png",
+      "status": 200,
+      "sha256": "62744b0258125bd90992841da6127622aa038f501099c0bd7a917b4bc76bfee1"
+    },
+    {
+      "name": "snum.html",
+      "status": 200,
+      "sha256": "5cea4834b3d27089ffd81d2f366a4f80c9f7eb4c6123f410913645cd7bd8d0c9"
+    },
+    {
+      "name": "atelier-portable.html",
+      "status": 200,
+      "sha256": "b63eb14a7414f12fa6f092fd4c110a930263a95cc8ba1e8004430905035e3f50"
+    }
+  ],
+  "errors": [],
+  "screenReaderExecuted": false,
+  "mailClientVerified": false,
+  "headings": [
+    1,
+    2,
+    3,
+    4,
+    4,
+    2,
+    3,
+    3
+  ],
+  "presentation": {
+    "attributes": [],
+    "nativeGroups": 5,
+    "viewportWidth": 638,
+    "scrollWidth": 638
+  },
+  "worker": {
+    "controller": "https://alexandra-guiderdoni.github.io/builder-mail-dsfr/sw.js",
+    "caches": [
+      "atelier-courriels-https%3A%2F%2Falexandra-guiderdoni.github.io%2Fbuilder-mail-dsfr%2F-f913315a36649a4c"
+    ]
+  },
+  "offlineReload": true,
+  "browser": "156.0.8078.4",
+  "errorAssociationObserved": true,
+  "deployment": {
+    "id": 39855831750,
+    "conclusion": "success",
+    "head_sha": "a1a488992b91a7e85a463521bc5e41b082e6eae2",
+    "url": "https://github.com/alexandra-guiderdoni/builder-mail-dsfr/actions/runs/39855831750"
+  },
+  "raw_receipt_sha256": "89abb7ca921168d53c68f6e53aafa18966d859a99f3f857b8e4714f1923b0533"
+}
