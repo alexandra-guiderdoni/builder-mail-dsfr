@@ -1,0 +1,181 @@
+{
+  "deployment": {
+    "conclusion": "success",
+    "databaseId": 39858410729,
+    "headSha": "fd5e14db4661eee44b1fe5044b374a18634c7923",
+    "status": "completed",
+    "url": "https://github.com/alexandra-guiderdoni/builder-mail-dsfr/actions/runs/39858410729"
+  },
+  "runtime": {
+    "commit": "fd5e14db4661eee44b1fe5044b374a18634c7923",
+    "files": [
+      {
+        "name": "index.html",
+        "status": 200,
+        "sha256": "da479f79106566ac7822725cfe82f72be669df77fcc7cd3eb09d5bc9cd603761"
+      },
+      {
+        "name": "sw.js",
+        "status": 200,
+        "sha256": "4b4169f80a51c3211868d6657889b9d63f5fc02f154a50ea765d11679225837e"
+      },
+      {
+        "name": "manifest.webmanifest",
+        "status": 200,
+        "sha256": "8714de33ac81701d61efab69403d603626c0b03373ecb652b2ddcf760cb35da9"
+      },
+      {
+        "name": "icon.svg",
+        "status": 200,
+        "sha256": "5505b460c862ebb01858dd50199029259b1f7a6aa3764f219f4ab83405181a23"
+      },
+      {
+        "name": "icon-192.png",
+        "status": 200,
+        "sha256": "aadd19a40c58106b744454719023d88db1173eb9d37244c00b58e2c5263cab4f"
+      },
+      {
+        "name": "icon-512.png",
+        "status": 200,
+        "sha256": "62744b0258125bd90992841da6127622aa038f501099c0bd7a917b4bc76bfee1"
+      },
+      {
+        "name": "snum.html",
+        "status": 200,
+        "sha256": "5cea4834b3d27089ffd81d2f366a4f80c9f7eb4c6123f410913645cd7bd8d0c9"
+      },
+      {
+        "name": "atelier-portable.html",
+        "status": 200,
+        "sha256": "f2e75bed5721b60aeee1bd3f3d59e0331343d7524d3d56edeac3f52323f8fd8a"
+      }
+    ],
+    "controls": [
+      {
+        "scope": "document-name",
+        "id": "document-name",
+        "required": "true",
+        "labels": [
+          "Nom dans la bibliothèque (obligatoire)"
+        ]
+      },
+      {
+        "scope": "mail-01/f1",
+        "id": "field-f1",
+        "required": "true",
+        "labels": [
+          "Lien HTTPS (obligatoire)"
+        ]
+      },
+      {
+        "scope": "mail-31/f3",
+        "id": "field-f3",
+        "required": "true",
+        "labels": [
+          "Lien HTTPS (obligatoire)"
+        ]
+      },
+      {
+        "scope": "mail-33/f2",
+        "id": "field-f2",
+        "required": "true",
+        "labels": [
+          "Lien HTTPS (obligatoire)"
+        ]
+      },
+      {
+        "scope": "mail-40/f0",
+        "id": "field-f0",
+        "required": "true",
+        "labels": [
+          "Lien HTTPS (obligatoire)"
+        ]
+      },
+      {
+        "scope": "mail-41/f0",
+        "id": "field-f0",
+        "required": "true",
+        "labels": [
+          "Lien HTTPS (obligatoire)"
+        ]
+      },
+      {
+        "scope": "mail-42/f0",
+        "id": "field-f0",
+        "required": "true",
+        "labels": [
+          "Lien HTTPS (obligatoire)"
+        ]
+      },
+      {
+        "scope": "mail-43/f0",
+        "id": "field-f0",
+        "required": "true",
+        "labels": [
+          "Lien HTTPS (obligatoire)"
+        ]
+      },
+      {
+        "scope": "mail-43/f2",
+        "id": "field-f2",
+        "required": "true",
+        "labels": [
+          "Lien HTTPS (obligatoire)"
+        ]
+      },
+      {
+        "scope": "mail-45/f2",
+        "id": "field-f2",
+        "required": "true",
+        "labels": [
+          "Lien HTTPS (obligatoire)"
+        ]
+      },
+      {
+        "scope": "mail-47/f1",
+        "id": "field-f1",
+        "required": "true",
+        "labels": [
+          "Lien HTTPS (obligatoire)"
+        ]
+      },
+      {
+        "scope": "mail-48/f1",
+        "id": "field-f1",
+        "required": "true",
+        "labels": [
+          "Lien HTTPS (obligatoire)"
+        ]
+      },
+      {
+        "scope": "mail-49/f1",
+        "id": "field-f1",
+        "required": "true",
+        "labels": [
+          "Lien HTTPS (obligatoire)"
+        ]
+      },
+      {
+        "scope": "mail-50/f1",
+        "id": "field-f1",
+        "required": "true",
+        "labels": [
+          "Lien HTTPS (obligatoire)"
+        ]
+      },
+      {
+        "scope": "document-name/offline",
+        "id": "document-name",
+        "required": "true",
+        "labels": [
+          "Nom dans la bibliothèque (obligatoire)"
+        ]
+      }
+    ],
+    "errors": [],
+    "screenReaderExecuted": false,
+    "humanQualification": false,
+    "offlineReload": true,
+    "browser": "156.0.8078.4"
+  }
+}

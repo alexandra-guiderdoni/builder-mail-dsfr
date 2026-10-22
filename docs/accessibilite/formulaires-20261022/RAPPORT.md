@@ -44,6 +44,14 @@ La contre-revue finale d’Astra donne **GO local et GO PDV** : delta, journaux,
 
 Personne n’est actuellement disponible pour la qualification manuelle et les essais écoutés ; aucun poste Windows n’est disponible. Ces moyens restent nécessaires pour terminer, ainsi que la qualification éditoriale et visuelle par instance, les contrastes indéterminés, la base navigateurs/lecteurs d’écran et les clients de messagerie. Les issues #2 et #13 restent ouvertes. Aucun envoi de message ni installation n’a été effectué dans cette tranche.
 
+## Publication et correction du scénario de recette
+
+Le [déploiement Pages](https://github.com/alexandra-guiderdoni/builder-mail-dsfr/actions/runs/39858410729) termine avec succès. La recette publique constate huit fichiers identiques aux distributions, les 14 indications obligatoires, une erreur source associée à son champ et la bibliothèque conservée après rechargement hors connexion. Aucune erreur JavaScript ; le libellé contrôlé tient à 320 px sans débordement de la page. Le [reçu public](publication.json) distingue déploiement et observations navigateur. Il ne prouve ni une installation ni une restitution vocale ou une réception en messagerie.
+
+La première recette publique a échoué sur une étape superflue : elle attendait le bouton de reprise masqué après un import ayant déjà ouvert l’éditeur. L’ancien helper du test utilisait lui aussi une pression inutile sur ce bouton. Les deux utilisent désormais `enterEditor`, qui active seulement un contrôle visible ou attend l’éditeur déjà ouvert. Le produit est inchangé par cette correction de scénario. L’échec et le script initial restent dans `evidence/formulaires-pages-20261022/`.
+
+Les preuves finales utilisent `final-v2/` et `evidence/formulaires-suite-v2-20261022.log` : **88 réussites, aucun échec, annulation ou saut**, en 89,739 secondes. Les journaux et reçus précédents restent historiques. Astra a approuvé en lecture seule le retrait de cette étape sans affaiblissement des assertions ; la contre-revue technique ne vaut pas nouvelle exécution navigateur indépendante.
+
 ## Reproduire
 
 Depuis la racine, avec les dépendances déjà présentes :

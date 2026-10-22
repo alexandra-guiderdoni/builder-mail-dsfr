@@ -1,7 +1,7 @@
 const test = require('node:test');
 const path = require('node:path');
 const {createHash} = require('node:crypto');
-const {root, evidence, open, click, expand, saved, state, chromium, fs, assert} = require('./browser-support.cjs');
+const {root, evidence, open, click, enterEditor, expand, saved, state, chromium, fs, assert} = require('./browser-support.cjs');
 const directory = path.join(evidence, 'form-interactions');
 const doc = page => page.evaluate(() => JSON.parse(JSON.stringify(MailBuilder.doc())));
 
@@ -36,7 +36,7 @@ async function catalogue(page) {
   const fixture = await page.evaluate(() => MailBuilder.Model.create('Recette des champs', MailBuilder.catalog.components.map(c => c.id)));
   await expand(page, 'Importer du JSON');
   await page.locator('#json-input').fill(JSON.stringify(fixture)); await click(page, '[data-action=json-import]'); await saved(page);
-  await page.locator('[data-action=resume-document]').press('Enter');
+  await enterEditor(page);
   return (await doc(page)).blocks;
 }
 
