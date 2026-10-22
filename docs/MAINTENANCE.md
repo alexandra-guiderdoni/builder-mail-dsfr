@@ -1,6 +1,8 @@
 # Maintenir l’application
 
-Le [dossier d’accessibilité](accessibilite/liens-20261023/RAPPORT.md) conserve la campagne courante, ses matrices, les scripts et leurs limites. Les fichiers sous `evidence/` sont locaux ; les reçus partageables et matrices figurent sous `docs/accessibilite/`. Aucun script d’audit ne produit une conformité humaine.
+Le [dossier d’accessibilité](accessibilite/titre-page-20261023/RAPPORT.md) conserve la campagne courante, ses matrices, les scripts et leurs limites. Les fichiers sous `evidence/` sont locaux ; les reçus partageables et matrices figurent sous `docs/accessibilite/`. Aucun script d’audit ne produit une conformité humaine.
+
+`Render.html` utilise l’objet renseigné pour le titre de page, sinon le nom obligatoire de composition ; les données restent intactes. L’aide du champ Objet annonce ce repli. `page-title.test.cjs` et `page-title-browser.test.cjs` vérifient échappement, anciens JSON, aperçu isolé et téléchargements ouverts. La lecture brute du presse-papiers conserve ce titre ; la lecture filtrée Chromium le retire dans les cas mesurés. Aucun résultat de collage en messagerie n’en est déduit.
 
 L’application livrée est statique et autonome. Python et Node.js sont des outils de développement ; aucun serveur métier, compte ou paquet distant n’est requis à l’exécution. Le [cadrage](cadrage-source.md) conserve les limites d’autorité : amonts en lecture seule, publication et accès aux messageries séparément autorisés.
 

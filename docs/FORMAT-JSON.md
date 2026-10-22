@@ -2,6 +2,8 @@
 
 Le builder importe des **compositions de courriel**, indépendamment de l’outil qui a préparé leur contenu. Le format existant `dsfr-mail/document`, version 1, est conservé : les fichiers de travail déjà exportés restent acceptés. Le format de bibliothèque `dsfr-mail/library` transporte aussi modèles et identités.
 
+`subject` accepte toujours une chaîne vide ou blanche ; `name` reste obligatoire et non blanc. Le rendu utilise `name` comme titre de page HTML quand `subject` est vide après suppression des espaces. Ce repli laisse les champs JSON inchangés. Un objet renseigné reste le titre prioritaire ; le nom de travail peut donc devenir visible dans les métadonnées de l’export si l’objet est vide.
+
 Fichiers prêts à utiliser : [exemple importable](../app/distribution/exemple.courriel.json), [schéma JSON](../app/distribution/courriels.schema.json) et [exemples des 52 composants](../app/distribution/qualification.courriels.json). Dans le builder, « Importer du JSON » accepte le texte collé ; « Fichiers et récupération » accepte le fichier. L’import ajoute les compositions et conserve la bibliothèque existante.
 
 ## Une composition

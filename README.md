@@ -6,7 +6,7 @@ Application locale pour composer des courriels à partir des **52 sections et va
 
 ## Ouvrir l’atelier
 
-La [campagne RGAA en cours](docs/accessibilite/liens-20261023/RAPPORT.md) publie les matrices des 106 critères et 258 tests, les corrections vérifiées et les lacunes restantes. Les **97 tests applicatifs passent**. Les 13 intitulés des liens intégrés aux composants sont obligatoires avant copie ou téléchargement HTML ; les anciens JSON restent récupérables et leur aperçu indique les liens à compléter sans les activer. Le nom de composition et les 13 champs URL annoncent aussi leur contrainte. **La conformité RGAA à 100 % reste à démontrer**, avec qualification de chaque test applicable et essais humains manquants.
+La [campagne RGAA en cours](docs/accessibilite/titre-page-20261023/RAPPORT.md) publie les matrices des 106 critères et 258 tests, les corrections vérifiées et les lacunes restantes. Les **102 tests applicatifs passent**. Un objet vide utilise désormais le nom de composition comme titre de l’export HTML, avec une aide associée au champ Objet. Les 13 intitulés des liens intégrés aux composants sont obligatoires avant copie ou téléchargement HTML ; les anciens JSON restent récupérables et leur aperçu indique les liens à compléter sans les activer. Le nom de composition et les 13 champs URL annoncent aussi leur contrainte. **La conformité RGAA à 100 % reste à démontrer**, avec qualification de chaque test applicable et essais humains manquants.
 
 Le [protocole de contraste](docs/accessibilite/contrastes-20261022/RAPPORT.md) décrit 80 observations ciblées et cinq contrôles négatifs. Leur renouvellement sur cette version figure dans la campagne courante ; il ne qualifie pas globalement les critères de couleur.
 

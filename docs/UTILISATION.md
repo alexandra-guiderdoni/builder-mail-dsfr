@@ -5,7 +5,7 @@ Ouvrir `app/distribution/portable.html` dans Firefox ou un navigateur compatible
 ## Composer
 
 1. L’accueil « Mes newsletters » présente les éditions déjà conservées. Ouvrir une entrée, ou choisir un point de départ puis « Créer une composition ». Plusieurs compositions peuvent coexister.
-2. Modifier le nom dans la bibliothèque et l’objet du courriel. L’objet est conservé dans le fichier de travail ; le reporter dans la messagerie lors de la reprise.
+2. Modifier le nom dans la bibliothèque et l’objet du courriel. L’objet est conservé dans le fichier de travail ; le reporter dans la messagerie lors de la reprise. Si l’objet reste vide, le nom de la composition devient le titre du HTML exporté et apparaît dans son onglet ; aucun objet de messagerie n’est rempli automatiquement.
 3. Sélectionner un bloc dans la liste, puis modifier ses textes, liens et alternatives. Les liens doivent être des URL HTTPS complètes.
 4. Dans « Ajouter un composant », rechercher une famille ou une variante puis l’ajouter. Les boutons du bloc permettent de le déplacer, de le dupliquer ou de le retirer au clavier.
 5. Contrôler l’aperçu et l’indication « Bibliothèque sauvegardée dans ce navigateur ».

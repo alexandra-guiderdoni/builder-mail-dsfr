@@ -1,6 +1,6 @@
 # Corrections des 27 issues
 
-La [campagne RGAA courante](accessibilite/liens-20261023/RAPPORT.md) ajoute la protection des 13 intitulés de liens, avec 97 tests réussis, 1 248 cas de rendu et copie et les preuves renouvelées, sans clôturer les recettes #2 et #13 ni revendiquer une conformité exhaustive. Le tableau ci-dessous conserve le suivi des 27 issues historiques.
+La [campagne RGAA courante](accessibilite/titre-page-20261023/RAPPORT.md) vérifie le repli du titre HTML quand l’objet est vide et conserve la protection des 13 intitulés de liens, avec 102 tests réussis, 1 248 cas de rendu et copie et les preuves renouvelées, sans clôturer les recettes #2 et #13 ni revendiquer une conformité exhaustive. Le tableau ci-dessous conserve le suivi des 27 issues historiques.
 
 Les [mesures complémentaires de contraste](accessibilite/contrastes-20261022/RAPPORT.md) couvrent les cibles auparavant indéterminées, avec leurs limites. Elles corrigent une faiblesse du collecteur éprouvée par masque sans interception du pointeur ; aucun nouveau défaut produit ni clôture de critère n’en découle.
 
@@ -81,6 +81,6 @@ Les **25 issues #1, #3 à #12 et #14 à #27 ont été fermées sur GitHub**, ave
 
 ## Tranche d’accessibilité du 23 octobre
 
-Les 13 liens intégrés au catalogue exigent un intitulé avant diffusion. Les anciens JSON restent importables et récupérables ; l’aperçu signale les liens vides sans activation, et les erreurs de sortie sélectionnent puis focalisent le champ à réparer. Les **97 tests passent sans échec ni saut**, avec GO technique et structurel d’Astra. Le [dossier courant](accessibilite/liens-20261023/RAPPORT.md) renouvelle les preuves et conserve les limites.
+Les 13 liens intégrés au catalogue exigent un intitulé avant diffusion. Les anciens JSON restent importables et récupérables ; l’aperçu signale les liens vides sans activation, et les erreurs de sortie sélectionnent puis focalisent le champ à réparer. Les **97 tests de cette tranche historique passent sans échec ni saut**, avec GO technique et structurel d’Astra. Son [dossier figé](accessibilite/liens-20261023/RAPPORT.md) conserve les preuves et les limites.
 
-Un [défaut distinct reste à corriger](accessibilite/liens-20261023/candidats-restants.json) : un objet vide ou blanc produit un titre de page vide dans l’export HTML. Il est candidat pour 8.6.1 ; le repli sur le nom obligatoire de composition est à vérifier dans la tranche suivante. Les qualifications humaines et les décisions exhaustives d’applicabilité restent également ouvertes. Le traitement des anciens tickets ne clôture pas l’objectif RGAA à 100 %.
+Le [défaut de titre précédemment reproduit](accessibilite/liens-20261023/candidats-restants.json) possède désormais une correction technique vérifiée : quand l’objet est vide ou blanc, le titre HTML utilise le nom obligatoire de composition, avec une aide associée au champ. La [nouvelle campagne](accessibilite/titre-page-20261023/RAPPORT.md) compte 102 tests réussis sans saut, 156 comparaisons historiques et des exports ouverts dans Chromium et Firefox. La pertinence éditoriale du titre (8.6.1), les qualifications humaines et les décisions exhaustives d’applicabilité restent ouvertes. Le traitement des anciens tickets ne clôture pas l’objectif RGAA à 100 %.
