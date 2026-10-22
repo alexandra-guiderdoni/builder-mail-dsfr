@@ -1,0 +1,81 @@
+{
+  "deployment": {
+    "conclusion": "success",
+    "databaseId": 39865109436,
+    "headSha": "c89e1197c7f41bf9d0d52283f99f9eb41a2139df",
+    "status": "completed",
+    "url": "https://github.com/alexandra-guiderdoni/builder-mail-dsfr/actions/runs/39865109436"
+  },
+  "runtime": {
+    "commit": "c89e1197c7f41bf9d0d52283f99f9eb41a2139df",
+    "files": [
+      {
+        "name": "index.html",
+        "status": 200,
+        "sha256": "b8de25826d40a6b8d34f1a4d0df3c48d5ec9cdb8c9607e91b43a7140b8156d56"
+      },
+      {
+        "name": "sw.js",
+        "status": 200,
+        "sha256": "7df0e4c86aa62f7baec1c83a3a27601eab02512ffff6fdf1ea9b08efa2362c4a"
+      },
+      {
+        "name": "manifest.webmanifest",
+        "status": 200,
+        "sha256": "8714de33ac81701d61efab69403d603626c0b03373ecb652b2ddcf760cb35da9"
+      },
+      {
+        "name": "icon.svg",
+        "status": 200,
+        "sha256": "5505b460c862ebb01858dd50199029259b1f7a6aa3764f219f4ab83405181a23"
+      },
+      {
+        "name": "icon-192.png",
+        "status": 200,
+        "sha256": "aadd19a40c58106b744454719023d88db1173eb9d37244c00b58e2c5263cab4f"
+      },
+      {
+        "name": "icon-512.png",
+        "status": 200,
+        "sha256": "62744b0258125bd90992841da6127622aa038f501099c0bd7a917b4bc76bfee1"
+      },
+      {
+        "name": "snum.html",
+        "status": 200,
+        "sha256": "92ba9b9487f61e4941984e5aa8ef00411452c8815826fbe5d3e4bd61582febfd"
+      },
+      {
+        "name": "atelier-portable.html",
+        "status": 200,
+        "sha256": "0865d9a861b17fd639a1c12972b6ef382dd9939e6efc3e35f9db1f053fbb90f0"
+      }
+    ],
+    "checks": [
+      "Ancien JSON vide importé ; aperçu neutralisé ; HTML bloqué avec erreur associée, obligation et focus ; données récupérables.",
+      "Correction enregistrée puis téléchargement HTML réel.",
+      "Origine HTTPS rechargée hors connexion ; composition et intitulé restaurés."
+    ],
+    "errors": [],
+    "completed": true,
+    "humanQualification": false,
+    "screenReaderExecuted": false
+  },
+  "verificationSourceSha256": {
+    "evidence/liens-vides-20261023/verifier-public.cjs": "435507e29254a283a2914e28f216df5b1e12190ed04aa093c54a7560e4e97486"
+  },
+  "artifactSha256": {
+    "evidence/liens-vides-20261023/publication-1792708088031/runtime.json": "ae2f2a6d70d73a0c66841a968cdab34658de247ab136dfbf76f85ea2445d3692",
+    "evidence/liens-vides-20261023/publication-1792708088031/champ-a-corriger.png": "0684c34ffc6b7277e183f9f9f1402193fa34b0035f566f19dc7e8723d3bc572e",
+    "evidence/liens-vides-20261023/publication-1792708088031/courriel.html": "6572183dc30a0233b047e34b6818cd6740b4df402accecf349d76c966a5e0899"
+  },
+  "runtimeCheckQualifications": [
+    "Dans runtime.checks[0], la mention erreur associée doit être bornée aux vérifications publiques de aria-invalid, aria-required et du focus. L’association aria-describedby n’est pas contrôlée dans cette recette publique ; elle possède une preuve locale distincte.",
+    "Dans runtime.checks[0], la mention données récupérables ne démontre pas un export JSON public. Cette recette vérifie l’import ancien puis la restauration hors connexion après correction ; l’export JSON de récupération est testé localement. Le reçu brut reste conservé sans réécriture."
+  ],
+  "notVerified": [
+    "Lecture d’écran réellement écoutée",
+    "Windows/Outlook",
+    "Installation sur le parc",
+    "Autorisation métier de l’origine HTTPS"
+  ]
+}

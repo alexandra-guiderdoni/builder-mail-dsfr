@@ -2,6 +2,8 @@
 
 **Les 13 liens intégrés au catalogue exigent un intitulé avant copie ou téléchargement HTML. Les 97 tests passent sans échec ni saut.** Les anciens JSON restent récupérables ; leur aperçu signale les liens à compléter sans les activer. L’objectif reste 100 % des critères RGAA applicables. Aucun taux officiel ni conformité globale n’est déclaré.
 
+La [publication HTTPS vérifiée](publication.json) sert huit fichiers identiques aux distributions locales. Un profil Chromium neuf y exerce l’import ancien, l’aperçu neutralisé, l’erreur et le focus, la correction, le téléchargement HTML puis la restauration de la composition hors connexion. Cette recette publique ne qualifie ni le lecteur d’écran ni le parc Windows.
+
 Les [106 critères](MATRICE-106.md), les [258 tests](MATRICE-258.md) et la [matrice structurée](matrice-rgaa.json) rassemblent **490 observations par instance** : 365 de formulaires, 80 de contraste renouvelées et [45 liées aux intitulés](observations.json). Les 1 220 observations AY11 de critères restent distinctes des observations de test. Aucun conforme ni non applicable nouveau n’est confirmé. Les critères 6.2, 9.1 et 10.1 restent à retester ; les 103 autres restent non qualifiés globalement.
 
 ## Défaut et correction
