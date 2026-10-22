@@ -76,7 +76,7 @@ async function capture(page, id, state) {
 }
 (async () => {
   await fs.mkdir(path.join(output, 'exports'), {recursive: true});
-  const measuredFiles = ['app/distribution/portable.html','app/distribution/web/index.html','app/distribution/web/sw.js','app/distribution/snum.html','scripts/catalogue.py'];
+  const measuredFiles = ['app/distribution/portable.html','app/distribution/web/index.html','app/distribution/web/sw.js','app/distribution/snum.html','scripts/catalogue.py','scripts/mail_layout.py'];
   for (const directory of ['app/source','app/snum']) for (const name of await fs.readdir(path.join(root,directory))) measuredFiles.push(directory+'/'+name);
   measuredFilesSha256 = Object.fromEntries(await Promise.all(measuredFiles.map(async name => [name,hash(await fs.readFile(path.join(root,name)))])));
   const browser = await chromium.launch({headless: true});

@@ -69,7 +69,7 @@ Les remarques de collecte restent dans le paquet source, hors du courriel. Conse
 
 Dans Gmail ou Mélissa, utiliser la rédaction enrichie du nouveau message. Cliquer dans le corps puis coller avec `⌘V` sur Mac ou `Ctrl+V` sur Windows. La copie sans mise en forme retire les tableaux, couleurs et images. Il faut copier depuis le bouton du builder, sans coller le code source HTML comme du texte. Ajouter le pied de page dans la composition avant la copie.
 
-La copie ajoute des bornes de largeur inline et libère les cellules de contenu pour les clients qui retirent les styles de tête ou figent les tableaux en pixels. Les filets décoratifs gardent leur épaisseur. L’export HTML conserve le gabarit canonique et ses règles de modes clair/sombre ; les logos masqués peuvent être éliminés par le presse-papiers de Chromium en mode clair. Contrôler le message reçu dans le client réellement utilisé.
+La copie ajoute des bornes de largeur pour les clients qui retirent les styles de tête ou figent les tableaux en pixels. Les groupes de contenu à deux colonnes utilisent alors des largeurs égales et gardent leur gouttière ; les filets décoratifs gardent leur épaisseur. L’export HTML et l’aperçu conservent les proportions du gabarit et ses modes clair/sombre, avec une adaptation accessible dérivée. Les logos masqués peuvent être éliminés par le presse-papiers de Chromium en mode clair. Contrôler le message reçu dans le client réellement utilisé.
 
 Les images sont incorporées ; leur présence dans le fichier ne démontre pas leur conservation par Outlook ou Mélissa. La [recette opérateur](RECETTE-APPLICATION.md#recette-sur-le-poste-métier) vérifie le message reçu. Aucune connexion à une messagerie ni aucun envoi n’est automatisé.
 

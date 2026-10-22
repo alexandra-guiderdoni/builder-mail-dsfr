@@ -1,8 +1,8 @@
 const test=require('node:test');
 const path=require('node:path');
 const {createHash}=require('node:crypto');
-const {root,open,chromium,fs,assert}=require('./browser-support.cjs');
-const output=path.join(root,'evidence/accessibilite-titres-20261022');
+const {root,evidence,open,chromium,fs,assert}=require('./browser-support.cjs');
+const output=path.join(evidence,'mail-semantics');
 const digest=value=>createHash('sha256').update(value).digest('hex');
 const outline=page=>page.locator('h1,h2,h3,h4,h5,h6').evaluateAll(nodes=>nodes.map(e=>({level:Number(e.tagName[1]),text:e.textContent.trim()})));
 

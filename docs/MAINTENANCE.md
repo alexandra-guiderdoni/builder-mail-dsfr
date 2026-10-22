@@ -1,6 +1,6 @@
 # Maintenir l’application
 
-Le [dossier d’accessibilité](accessibilite/titres-20261022/RAPPORT.md) conserve la campagne courante, ses matrices, les scripts et leurs limites. Les fichiers sous `evidence/` sont locaux ; les reçus partageables et matrices figurent sous `docs/accessibilite/`. Aucun script d’audit ne produit une conformité humaine.
+Le [dossier d’accessibilité](accessibilite/presentation-20261022/RAPPORT.md) conserve la campagne courante, ses matrices, les scripts et leurs limites. Les fichiers sous `evidence/` sont locaux ; les reçus partageables et matrices figurent sous `docs/accessibilite/`. Aucun script d’audit ne produit une conformité humaine.
 
 L’application livrée est statique et autonome. Python et Node.js sont des outils de développement ; aucun serveur métier, compte ou paquet distant n’est requis à l’exécution. Le [cadrage](cadrage-source.md) conserve les limites d’autorité : amonts en lecture seule, publication et accès aux messageries séparément autorisés.
 
@@ -12,6 +12,7 @@ L’application livrée est statique et autonome. Python et Node.js sont des out
 | `reference/catalogue.json` | Noms et familles des 52 sections, dans l’ordre de la référence. |
 | `reference/dsfr-web/`, `scripts/dsfr_assets.py` | Sous-ensemble officiel DSFR 1.15.4, empreintes et incorporation locale des CSS, icônes et fontes pour l’interface du builder. |
 | `scripts/catalogue.py` | Compilation des tables en champs typés, CSS et empreinte du contrat. |
+| `scripts/mail_layout.py` | Adaptation CSS dérivée et colonnes natives ; arrêt sur dérive de la référence, sans modification du contrat canonique. |
 | `app/source/model.js`, `render.js`, `imports.js` | Validation, rendu commun et import des compositions et bibliothèques génériques. |
 | `app/snum/` | Page autonome et adaptation métier SNUM vers le contrat générique, sans stockage automatique. |
 | `app/source/storage.js`, `state.js` | Transaction locale, conflits, mémoire et sauvegardes. |
@@ -46,7 +47,7 @@ Les scénarios navigateur créent des contextes isolés, téléchargent des fich
 
 Les installations et résultats locaux ShipGuard sous `visual-tests/` restent aussi ignorés : ils contiennent une copie de l’outillage et des chemins propres à la campagne. La suite produit reproductible et versionnée est sous `tests/`. Le compte rendu d’audit conserve les erreurs du plugin et faux liens du crawler ; ils ne sont pas transformés en défauts produit.
 
-`Render.html` conserve la sortie canonique ; `Render.clipboardHtml` prépare seulement la copie, y compris celle de la page SNUM. Cette adaptation du rendu n’altère ni le catalogue ni les fichiers JSON existants. `tests/mail-layout-browser.test.cjs` contrôle le vrai presse-papiers Chromium, le retrait des styles de tête, les largeurs réécrites, les 52 composants, leurs contenus et les deux filets décoratifs. Le rendu dans les clients réels reste une recette distincte.
+`Render.html` produit l’adaptation accessible dérivée ; le champ `template` conserve le gabarit canonique. `Render.clipboardHtml` prépare la copie, y compris SNUM : colonnes de contenu égales et gouttières conservées, proportions d’origine dans l’export et l’aperçu. Les styles Office sont modifiés par chaînes brutes ; une réécriture CSSOM les retirerait. Le contrat et les fichiers JSON existants restent inchangés. `tests/mail-presentation-browser.test.cjs` couvre les seuils responsive, les textes longs, l’espacement, la copie réelle et ses lectures brute et filtrée. `tests/mail-layout-browser.test.cjs` conserve aussi les contrôles de largeurs réécrites et de filets décoratifs. Le rendu dans les clients réels reste une recette distincte.
 
 La même commande `npm test` inclut désormais le prototype : erreurs de saisie et sorties, clavier, import et décodage différés, restauration, concurrence de fenêtres, images, sources et réduction des données inutilisées. Les tests de compilation exercent aussi une locale ASCII, les octets UTF-8/LF et chaque icône précachée. Les observations d’erreur et de requête sont branchées avant la navigation ; un scénario négatif injecte un vrai défaut de démarrage dans un profil isolé. Les garde-fous d’import sont décrits dans [le contrat JSON](FORMAT-JSON.md).
 

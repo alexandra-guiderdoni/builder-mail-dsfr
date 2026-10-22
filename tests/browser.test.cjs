@@ -2,7 +2,7 @@ const test = require('node:test');
 const path = require('node:path');
 const {root, evidence, click, open, enterEditor, saved, expand, download, selectBlock, state, chromium, fs, assert} = require('./browser-support.cjs');
 
-test('les 52 gabarits conservent le DOM officiel hors enveloppes de titres accessibles', async () => {
+test('les 52 gabarits canoniques conservent le DOM officiel et le rendu dérivé porte les titres attendus', async () => {
   const browser = await chromium.launch({headless: true});
   try {
     const {page} = await open(browser);
@@ -12,10 +12,12 @@ test('les 52 gabarits conservent le DOM officiel hors enveloppes de titres acces
       const sections = [...original.body.children].filter(e => e.tagName === 'TABLE');
       const shape = node => ({tag: node.tagName, attrs: [...node.attributes].filter(a => !['src', 'href', 'alt'].includes(a.name)).map(a => [a.name, a.value]).sort(), children: [...node.children].map(shape)});
       return {count: sections.length, css: original.querySelector('style').textContent === MailBuilder.catalog.css, comparisons: sections.map((section, i) => {
-        const block = MailBuilder.Model.createBlock(i), rendered = new DOMParser().parseFromString(MailBuilder.Render.block(block), 'text/html').body.firstElementChild;
-        const headings = [...rendered.querySelectorAll('h1,h2,h3,h4,h5,h6')], expected = MailBuilder.Model.component(block.component).headings.length;
-        for (const heading of headings) heading.replaceWith(...heading.childNodes);
-        return {id: block.component, headings: headings.length, expected, identical: JSON.stringify(shape(section)) === JSON.stringify(shape(rendered))};
+        const block = MailBuilder.Model.createBlock(i), definition = MailBuilder.Model.component(block.component);
+        const canonical = definition.template.replace(/\{\{(f\d+)\}\}/g, (_, key) => MailBuilder.Render.escape(block.values[key]));
+        const canonicalDOM = new DOMParser().parseFromString(canonical, 'text/html').body.firstElementChild;
+        const rendered = new DOMParser().parseFromString(MailBuilder.Render.block(block), 'text/html').body.firstElementChild;
+        const headings = [...rendered.querySelectorAll('h1,h2,h3,h4,h5,h6')], expected = definition.headings.length;
+        return {id: block.component, headings: headings.length, expected, identical: JSON.stringify(shape(section)) === JSON.stringify(shape(canonicalDOM))};
       })};
     }, official);
     assert.equal(check.count, 52); assert(check.css); assert(check.comparisons.every(c => c.identical && c.headings === c.expected), JSON.stringify(check.comparisons.filter(c => !c.identical || c.headings !== c.expected)));

@@ -1,6 +1,6 @@
 # Recette de l’application autonome
 
-La [campagne d’accessibilité du 22 octobre](accessibilite/titres-20261022/RAPPORT.md) complète cette recette : **78 tests applicatifs réussis sans saut**, titres natifs éprouvés dans les sorties réelles, 54 comparaisons visuelles identiques, parcours complet Firefox, matrices 106/258 et limites explicites. Les campagnes antérieures ci-dessous restent historiques. Attributs de présentation et qualifications humaines restent ouverts ; aucun taux RGAA validé.
+La [campagne d’accessibilité du 22 octobre](accessibilite/presentation-20261022/RAPPORT.md) complète cette recette : **85 tests applicatifs réussis sans saut**, titres natifs et présentation CSS, 1 248 cas de rendu et copie, parcours complet Firefox, matrices 106/258 et limites explicites. La copie conserve les gouttières avec des colonnes égales ; l’export garde les proportions d’origine. Les campagnes antérieures ci-dessous restent historiques. Qualifications humaines et clients restent ouvertes ; aucun taux RGAA validé.
 
 **Application publiée, qualification métier incomplète.** Observations des 21 et 22 octobre 2026 sur macOS 26.5.2, Firefox natif 156.0 et Chromium 156.0.8078.4. Les campagnes couvrent l’accueil « Mes newsletters », le builder générique et la page SNUM séparée, puis l’origine HTTPS publique. La recette du [prototype](RECETTE.md) reste historique et distincte.
 

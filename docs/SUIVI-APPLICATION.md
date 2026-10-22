@@ -1,6 +1,6 @@
 # Réalisation de l’atelier autonome
 
-Actualisation accessibilité : [campagne RGAA](accessibilite/titres-20261022/RAPPORT.md), **78 tests applicatifs réussis**, titres natifs dans les courriels après les corrections d’espacement et d’association des erreurs. Les matrices exhaustives sont produites ; attributs de présentation et qualifications humaines restent ouverts. Les chiffres antérieurs décrivent leurs campagnes historiques.
+Actualisation accessibilité : [campagne RGAA](accessibilite/presentation-20261022/RAPPORT.md), **85 tests applicatifs réussis**, titres natifs et présentation CSS dans les courriels. Les 52 composants passent 1 248 cas de rendu et copie ; les matrices exhaustives restent à qualifier par instance. Aucune conformité RGAA globale ni recette Outlook annoncée. Les chiffres antérieurs décrivent leurs campagnes historiques.
 
 Objectif : application complète du cadrage confirmé, depuis le prototype `c329339`. Le mandat de livraison du 22 octobre autorise la publication sur `main` dans le dépôt personnel et la clôture des issues satisfaites. Les essais de messagerie sur Mac ont été autorisés séparément ; le site public est livré, l’accès et l’installation depuis le parc restent à qualifier.
 

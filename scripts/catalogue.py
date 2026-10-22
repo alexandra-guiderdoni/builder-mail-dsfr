@@ -8,6 +8,11 @@ import re
 from html.parser import HTMLParser
 from pathlib import Path
 
+if __package__:
+    from .mail_layout import LAYOUT_CSS, css_template
+else:
+    from mail_layout import LAYOUT_CSS, css_template
+
 ROOT = Path(__file__).resolve().parents[1]
 REF = ROOT / "reference/dsfr-mail"
 
@@ -216,7 +221,7 @@ def compile_catalogue():
                 "label": label,
                 "family": family,
                 "template": template,
-                "semanticTemplate": semantic,
+                "semanticTemplate": css_template(index, semantic),
                 "headings": headings,
                 "fields": fields.fields,
                 "source": {
@@ -239,5 +244,6 @@ def compile_catalogue():
         "id": fingerprint,
         "components": components,
         "css": css,
+        "layoutCss": LAYOUT_CSS,
         "reference_sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
     }

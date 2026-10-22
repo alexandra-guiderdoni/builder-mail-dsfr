@@ -23,12 +23,12 @@
       const encoded = escape(value.values[key]);
       return fields.get(key).type === "text" ? encoded.replace(/\n/g, "<br>") : encoded;
     });
-    if (value.source) result += `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td align="center"><table role="presentation" width="600" style="width:100%;max-width:600px"><tr><td style="padding:8px 52px 20px;font-family:Tahoma,Geneva,sans-serif;font-size:14px;"><a href="${escape(value.source)}" style="color:#000091">${escape(value.sourceLabel?.trim() || "Consulter la source")}</a></td></tr></table></td></tr></table>`;
+    if (value.source) result += `<table role="presentation" style="text-align:left;text-align:start;width:100%;border-spacing:0;border:0"><tr><td style="padding:0;text-align:center;overflow-wrap:anywhere;word-break:break-word"><table role="presentation" style="text-align:left;text-align:start;width:100%;max-width:600px;margin-left:auto;margin-right:auto"><tr><td style="padding:8px 52px 20px;font-family:Tahoma,Geneva,sans-serif;font-size:14px;overflow-wrap:anywhere;word-break:break-word"><a href="${escape(value.source)}" style="color:#000091">${escape(value.sourceLabel?.trim() || "Consulter la source")}</a></td></tr></table></td></tr></table>`;
     return result;
   }
   function body(value) { M.document(value); const context = []; return value.blocks.map(b => block(b, context)).join("\n"); }
   function html(value, preview = false) {
-    return `<!doctype html><html lang="fr" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escape(value.subject)}</title>${preview ? '<meta http-equiv="Content-Security-Policy" content="default-src &#39;none&#39;;style-src &#39;unsafe-inline&#39;;img-src data:;base-uri &#39;none&#39;;form-action &#39;none&#39;">' : ""}<style>${A.catalog.css}</style></head><body style="font-family:Tahoma,Geneva,sans-serif;">${body(value)}</body></html>`;
+    return `<!doctype html><html lang="fr" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escape(value.subject)}</title>${preview ? '<meta http-equiv="Content-Security-Policy" content="default-src &#39;none&#39;;style-src &#39;unsafe-inline&#39;;img-src data:;base-uri &#39;none&#39;;form-action &#39;none&#39;">' : ""}<style>${A.catalog.css}\n${A.catalog.layoutCss}</style></head><body style="font-family:Tahoma,Geneva,sans-serif;">${body(value)}</body></html>`;
   }
   function plain(value) {
     M.document(value);
@@ -36,37 +36,48 @@
   }
   function clipboardHtml(value) {
     const doc = new DOMParser().parseFromString(html(value), "text/html");
+    const add = (element, css) => element.setAttribute("style", (element.getAttribute("style") || "") + ";" + css);
+    const remove = (element, property) => element.setAttribute("style", (element.getAttribute("style") || "").replace(new RegExp("(^|;)\\s*" + property + "\\s*:[^;]*(?=;|$)", "gi"), "$1"));
+    const gutters = new Map();
+    for (const table of doc.querySelectorAll("table.mail-columns-stack")) {
+      const widths = [...table.querySelectorAll(":scope>tbody>tr>td[data-mail-column]")].map(cell => Number.parseFloat(cell.style.width));
+      const gutter = Number(table.dataset.mailBasis) - widths.reduce((sum, width) => sum + width, 0);
+      if (!widths.every(width => Number.isFinite(width) && width > 0) || !Number.isFinite(gutter) || gutter < 0) throw new Error("Largeur de colonne non reconnue.");
+      gutters.set(table, gutter);
+    }
     // Les messageries retirent les règles de tête et peuvent figer les largeurs.
     // Les bornes inline doivent rester efficaces sans ces règles, sans masquer de contenu.
+    // Conserver les chaînes brutes : leur sérialisation CSSOM retirerait les styles Office.
     for (const table of doc.querySelectorAll("table")) {
-      table.style.setProperty("min-width", "0", "important");
-      table.style.setProperty("max-width", "100%", "important");
-      table.style.borderCollapse = "collapse";
-      table.style.tableLayout = "fixed";
+      const layout = table.hasAttribute("data-mail-columns") && !table.classList.contains("mail-columns-stack") ? "auto" : "fixed";
+      add(table, "min-width:0!important;max-width:100%!important;border-collapse:collapse;table-layout:" + layout + ";");
       if (table.parentElement === doc.body) {
-        table.removeAttribute("align");
-        table.setAttribute("width", "620");
-        table.style.width = "620px";
-        table.style.margin = "0";
+        add(table, "width:620px;margin:0;");
       }
     }
     for (const cell of doc.querySelectorAll("td")) {
-      cell.style.overflowWrap = "anywhere";
-      cell.style.wordBreak = "break-word";
-      cell.style.maxWidth = "100%";
+      add(cell, "overflow-wrap:anywhere;word-break:break-word;max-width:100%;");
+      if (cell.hasAttribute("data-mail-column")) {
+        const table = cell.closest("[data-mail-columns]");
+        // Une lecture filtrée peut figer les pourcentages en pixels.
+        // Laisser les deux colonnes se partager l’espace ; garder la gouttière.
+        if (gutters.has(table)) remove(cell, "width");
+      }
+      if (cell.hasAttribute("data-mail-gap")) {
+        const table = cell.closest("[data-mail-columns]");
+        if (gutters.has(table)) add(cell, "width:" + gutters.get(table) + "px;");
+      }
       // Une largeur de cellule figée force son tableau malgré max-width.
       // Les cellules vides colorées gardent l’épaisseur de leur filet décoratif.
-      if (cell.textContent.trim() || cell.children.length || !cell.style.backgroundColor) {
-        cell.removeAttribute("width");
-        cell.style.removeProperty("width");
+      if (!cell.hasAttribute("data-mail-column") && !cell.hasAttribute("data-mail-gap") && (cell.textContent.trim() || cell.children.length || !cell.style.backgroundColor)) {
+        remove(cell, "width");
       }
     }
     for (const image of doc.images) {
-      image.style.setProperty("max-width", "100%", "important");
-      image.style.height = "auto";
+      add(image, "max-width:100%!important;height:auto;");
     }
-    for (const element of doc.querySelectorAll(".hide-white")) element.style.display = "none";
-    for (const element of doc.querySelectorAll(".hide-black")) element.style.display = "block";
+    for (const element of doc.querySelectorAll(".hide-white")) add(element, "display:none;");
+    for (const element of doc.querySelectorAll(".hide-black")) add(element, "display:block;");
     return "<!doctype html>" + doc.documentElement.outerHTML;
   }
   A.Render = Object.freeze({escape, block, body, html, plain, clipboardHtml});
