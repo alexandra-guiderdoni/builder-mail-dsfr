@@ -1,0 +1,92 @@
+{
+  "schema": "builder-mail-dsfr/pages-recipe-v1",
+  "date": "2026-10-22",
+  "url": "https://alexandra-guiderdoni.github.io/builder-mail-dsfr/",
+  "deployed_commit": "4e0b9ab7a1b7b433d5e0b4db877c2fb6443a9514",
+  "workflow_run": "https://github.com/alexandra-guiderdoni/builder-mail-dsfr/actions/runs/39822607625",
+  "workflow_conclusion": "success",
+  "default_branch": "main",
+  "source": "GitHub Actions",
+  "https_enforced": true,
+  "root_http_status": 200,
+  "isolated_browser_profile": true,
+  "resources": [
+    {
+      "path": "icon-192.png",
+      "status": 200,
+      "sha256": "aadd19a40c58106b744454719023d88db1173eb9d37244c00b58e2c5263cab4f",
+      "sourceIdentical": true
+    },
+    {
+      "path": "icon-512.png",
+      "status": 200,
+      "sha256": "62744b0258125bd90992841da6127622aa038f501099c0bd7a917b4bc76bfee1",
+      "sourceIdentical": true
+    },
+    {
+      "path": "icon.svg",
+      "status": 200,
+      "sha256": "5505b460c862ebb01858dd50199029259b1f7a6aa3764f219f4ab83405181a23",
+      "sourceIdentical": true
+    },
+    {
+      "path": "index.html",
+      "status": 200,
+      "sha256": "de38b8d3bfe6e6ff6de0431c83043efae7adb1e0cc549d429a66d848c4461196",
+      "sourceIdentical": true
+    },
+    {
+      "path": "manifest.webmanifest",
+      "status": 200,
+      "sha256": "8714de33ac81701d61efab69403d603626c0b03373ecb652b2ddcf760cb35da9",
+      "sourceIdentical": true
+    },
+    {
+      "path": "sw.js",
+      "status": 200,
+      "sha256": "08fae5893d450098b8a8e8e58d8ee303d0ddf20a9c96203aafd40f97c5a8d7db",
+      "sourceIdentical": true
+    },
+    {
+      "path": "snum.html",
+      "status": 200,
+      "sha256": "1d3186720a5b4c36d52c8007e140b6213d1184f4662ceed2a81d8e663727e414",
+      "sourceIdentical": true
+    },
+    {
+      "path": "atelier-portable.html",
+      "status": 200,
+      "sha256": "8d5536c6bdcd78ef3769949665510e7962ce9b25397fcfbf19c2a51f4841905f",
+      "sourceIdentical": true
+    }
+  ],
+  "service_worker": {
+    "scope": "https://alexandra-guiderdoni.github.io/builder-mail-dsfr/",
+    "script": "https://alexandra-guiderdoni.github.io/builder-mail-dsfr/sw.js",
+    "state": "activated",
+    "controlled": true
+  },
+  "catalogue_components": 52,
+  "snum_page_opened": true,
+  "offline_uncached_request_blocked": true,
+  "offline_reload_with_query": true,
+  "library_preserved_offline": true,
+  "javascript_errors": [],
+  "external_requests": [],
+  "native_chrome_opened_for_user": true,
+  "not_verified": [
+    "native installation from public origin",
+    "public-origin version update",
+    "managed-device installation and access approval",
+    "Windows/Outlook and screen-reader qualification"
+  ],
+  "local_evidence_sha256": {
+    "runtime-receipt.json": "72ba5d7b5a392114ab05139aa04489c5e780029a7aca408418eeebf1bbc794f4",
+    "verify-live.cjs": "4c187b2575047ae8c2274e034002516aa58f1a450fb11d0143c3533c9da0be66",
+    "deployment.json": "22bf35ade7f374756c39385d11f3399fb80b6ec94ce5ee1f829e8f5f1096f264",
+    "pages-api.json": "25157fc7a11eaad3be84a5dd39f08b711e335a0b36ae2df6966587f7fa02773b",
+    "accueil-public.png": "149a3f996d2ce331b26c43a9e750e042d20b9d9cb5ce39ed0303a05109bc9657",
+    "editeur-public.png": "0ea3a4dcf0199d43ed014aaac1ce9e0e7cda13b14d8f8e7ea844561073aeed4a",
+    "editeur-public-hors-connexion.png": "889cb95b48f6024823e22843e64d7fe73010890f0fbdd65ee806b053e49f883c"
+  }
+}

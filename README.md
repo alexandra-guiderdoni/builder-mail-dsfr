@@ -2,9 +2,11 @@
 
 Application locale pour composer des courriels à partir des **52 sections et variantes du modèle officiel épinglé**, conserver plusieurs compositions, réutiliser des modèles et des identités de service, puis récupérer le courriel dans sa messagerie.
 
-**Version en qualification.** Édition, bibliothèque, copie et installation avec relance hors connexion ont été exercées sur Mac. Des messages envoyés depuis Gmail et Mélissa ont été reçus avec les images PNG/JPEG conservées. Le débordement horizontal découvert dans le message Mélissa possède une correction et des tests dédiés. Windows/Outlook, le lecteur d’écran retenu, l’installation sur le parc et son origine HTTPS restent à qualifier. Le [dossier de recette](docs/RECETTE-APPLICATION.md) distingue chaque preuve et ses limites.
+**Version en qualification.** Édition, bibliothèque, copie et installation avec relance hors connexion ont été exercées sur Mac. Des messages envoyés depuis Gmail et Mélissa ont été reçus avec les images PNG/JPEG conservées. Le débordement horizontal découvert dans le message Mélissa possède une correction et des tests dédiés. Windows/Outlook, le lecteur d’écran retenu, l’installation sur le parc et l’autorisation de son accès au site restent à qualifier. Le [dossier de recette](docs/RECETTE-APPLICATION.md) distingue chaque preuve et ses limites.
 
 ## Ouvrir l’atelier
+
+**[Ouvrir l’atelier en ligne](https://alexandra-guiderdoni.github.io/builder-mail-dsfr/)**. La publication HTTPS et le rechargement hors connexion après préparation du cache ont été vérifiés le 22 octobre 2026 ; [reçu de publication](docs/recette-pages.json).
 
 Télécharger puis ouvrir [le fichier portable](app/distribution/portable.html) par double-clic. Il contient l’interface, les composants et les images de départ ; il fonctionne dès la première ouverture sans réseau. Aucun Python, Node.js, compte ou service d’IA n’est nécessaire sur le poste métier.
 
@@ -16,7 +18,7 @@ Le [guide d’utilisation](docs/UTILISATION.md) explique modèles, identités, i
 
 La collecte SNUM a sa [page HTML autonome dédiée](app/distribution/snum.html) : elle convertit le paquet métier en composition JSON, à importer ensuite dans le builder. Elle organise les rubriques et les articles avec le même moteur de rendu. Le builder ne contient plus d’import spécifique SNUM.
 
-La [variante web](app/distribution/web/index.html) partage le moteur du portable ; elle doit être servie depuis une origine HTTPS autorisée pour son usage installé. Son cache et sa relance après installation ont été exercés en boucle locale sur le Mac ; l’installation sur le parc reste à qualifier.
+La [variante web](app/distribution/web/index.html) partage le moteur du portable et est publiée sur GitHub Pages. Son cache a été exercé sur l’origine publique ; sa relance après installation a été observée en boucle locale sur le Mac. L’installation sur le parc reste à qualifier. Pour retrouver ses compositions sur l’origine web, importer un export JSON de sa bibliothèque portable.
 
 Pour la recette métier, importer [la bibliothèque des neuf familles](app/distribution/qualification.courriels.json) : elle contient les 52 sections à examiner dans les messages reçus.
 

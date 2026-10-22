@@ -1,6 +1,6 @@
 # Recette de l’application autonome
 
-**Application réalisée localement, qualification métier incomplète.** Observations des 21 et 22 octobre 2026 sur macOS 26.5.2, Firefox natif 156.0 et Chromium 156.0.8078.4. La dernière campagne couvre l’accueil « Mes newsletters », le builder générique et la page SNUM séparée. La recette du [prototype](RECETTE.md) reste historique et distincte.
+**Application publiée, qualification métier incomplète.** Observations des 21 et 22 octobre 2026 sur macOS 26.5.2, Firefox natif 156.0 et Chromium 156.0.8078.4. Les campagnes couvrent l’accueil « Mes newsletters », le builder générique et la page SNUM séparée, puis l’origine HTTPS publique. La recette du [prototype](RECETTE.md) reste historique et distincte.
 
 Le [reçu initial](recette-application-observee.json) identifie la campagne historique. Les profils isolés, captures et téléchargements restent sous `evidence/`, ignorés par Git. Les essais automatisés n’utilisent aucun compte ; les recettes Gmail et Mélissa ci-dessous utilisent uniquement les sessions et le destinataire autorisés. Les preuves publiées ne reproduisent aucune donnée personnelle.
 
@@ -17,6 +17,14 @@ Les essais réels sur macOS 26.5.2, Firefox 156.0 et Chrome 155.0.8059.85 ont co
 - La revue a trouvé une régression visuelle des filets de `mail-35` et `mail-36`, passée de 3 px à environ 299,5 px. Les cellules décoratives gardent désormais leur largeur ; le test après copie mesure 3,5 px avec la demi-bordure fusionnée.
 
 Les reçus privés sont dans `evidence/gmail-mac-20261022/`, `evidence/melissa-mac-20261022/` et `evidence/qualification-finale-20261022/`. Un nouveau message texte avec footer a été envoyé depuis le bouton natif Mélissa après correction ; sa réception et sa largeur restent à contrôler. Ces recettes ne qualifient ni Outlook, ni Windows, ni les images bloquées, ni toutes les familles en clair/sombre. Le [suivi des critères](SUIVI-CORRECTIONS.md) garde #2 et #13 ouvertes.
+
+## Publication HTTPS sur GitHub Pages
+
+Le [déploiement du commit vérifié](https://github.com/alexandra-guiderdoni/builder-mail-dsfr/actions/runs/39822607625) est terminé avec succès. L’[atelier public](https://alexandra-guiderdoni.github.io/builder-mail-dsfr/) répond en HTTP 200 sur HTTPS ; `main` est la branche par défaut et Pages utilise le workflow existant. L’activation a été réalisée dans la session Chrome autorisée du propriétaire, après les refus 404 du compte de contribution.
+
+Dans un profil Chromium isolé : les huit fichiers publiés sont identiques octet pour octet aux distributions locales ; accueil, catalogue de 52 variantes, éditeur et page SNUM s’ouvrent. Le worker est activé et contrôle la page. Une composition synthétique modifiée reste présente après passage hors connexion et rechargement d’un favori avec paramètre ; une requête non cachée échoue effectivement. Aucune erreur JavaScript ni requête vers une origine externe n’a été observée dans ce parcours. L’atelier a aussi été ouvert dans un nouvel onglet de la session Chrome de l’utilisateur, sans y importer la composition de recette.
+
+Le [reçu Pages](recette-pages.json) conserve les empreintes et limites ; preuves locales dans `evidence/pages-20261022/`. Cette recette vérifie le site public et son cache, pas une installation native depuis ce site, une mise à jour de version sur ce site, l’autorisation d’accès depuis le parc ni Windows/Outlook. Le portable et l’origine web conservent des bibliothèques distinctes ; transférer ses compositions par export/import JSON.
 
 ## Sondes AY11 et focus (#2)
 
@@ -121,7 +129,7 @@ Le helper clavier de recette pouvait donner le focus à un contrôle encore masq
 
 ## Recette sur le poste métier
 
-Accès restant : Windows/Firefox, Outlook installé, lecteur d’écran du parc et origine HTTPS autorisée. Mélissa a été utilisé sur Mac avec un mandat d’envoi distinct. Aucun accès supplémentaire ni autorisation de déploiement ne découle de ce dossier. Une recette Windows et une URL approuvée restent nécessaires.
+Accès restant : Windows/Firefox, Outlook installé, lecteur d’écran du parc et accord pour utiliser l’origine HTTPS publiée depuis ce parc. Mélissa a été utilisé sur Mac avec un mandat d’envoi distinct. Aucun accès supplémentaire ni autorisation de déploiement sur le parc ne découle de ce dossier. La recette Windows et cette autorisation organisationnelle restent nécessaires ; l’URL publique existe déjà.
 
 Fichiers préparés : [atelier portable](../app/distribution/portable.html) et [bibliothèque de qualification](../app/distribution/qualification.courriels.json). Importer cette bibliothèque par « Fichiers et récupération » : elle ajoute neuf compositions, couvrant chacune une famille et ensemble les 52 sections une fois. Remplacer les valeurs de démonstration et les liens réservés par des données de recette autorisées.
 
@@ -156,7 +164,7 @@ Les sources applicatives et les compilateurs restent sous 200 lignes par fichier
 
 PDV, tranche accueil : `library.js` possède les deux vues et les actions par identifiant ; les contrôles communs de fichiers restent hors des vues masquées. Aucun nouveau stockage, format ou état de navigation persistant. Les dépendants et recettes ont été adaptés ; aucun bloqueur structurel relevé, **GO**. Les empreintes du modèle, du stockage, de l’état, des imports, du rendu et du HTML SNUM sont identiques à celles de la recette précédant cet accueil. Ce résultat ne démontre pas une conformité DSFR/RGAA complète.
 
-**GO local pour la livraison des corrections vérifiées ; qualification métier complète non atteinte.** Restent non vérifiés : Windows/Outlook, fidélité reçue après correction de largeur et par famille, images bloquées, lecteur d’écran, parcours humain d’installation sur le parc, raccourci du système et HTTPS approuvé. L’installation via DevTools reste bornée au Mac. Le contrôle structurel ne couvre pas les effets de tous les CSS dans chaque moteur mail, les restrictions d’entreprise, la pérennité après effacement de profil ni une migration de schéma. Aucun audit RGAA complet n’est revendiqué.
+**GO pour la livraison des corrections vérifiées et la publication HTTPS ; qualification métier complète non atteinte.** Restent non vérifiés : Windows/Outlook, fidélité reçue après correction de largeur et par famille, images bloquées, lecteur d’écran, parcours humain d’installation sur le parc, raccourci du système et autorisation du parc pour accéder au site. L’installation via DevTools reste bornée au Mac. Le contrôle structurel ne couvre pas les effets de tous les CSS dans chaque moteur mail, les restrictions d’entreprise, la pérennité après effacement de profil ni une migration de schéma. Aucun audit RGAA complet n’est revendiqué.
 
 Le mandat courant autorise la publication sur `main` dans le seul dépôt personnel et la clôture des 25 issues techniquement satisfaites. #2 et #13 restent ouvertes. Les amonts et l’historique du prototype restent préservés.
 

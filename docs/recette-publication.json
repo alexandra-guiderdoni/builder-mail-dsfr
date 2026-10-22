@@ -112,7 +112,7 @@
     "screen-reader recipes",
     "blocked images and complete mail-client matrix",
     "managed-device installation",
-    "approved HTTPS origin"
+    "organizational approval for HTTPS origin"
   ],
   "sources_sha256": {
     "app/snum/adapter.js": "6be8f9c801df8069e57b8ccc952434278e3ef4b03db396d8a9f92c37801e0395",
@@ -189,8 +189,11 @@
   "ay11_receipt": "recette-ay11.json",
   "pages": {
     "workflow_published_on_main": true,
-    "activation": "BLOCKED_HTTP_404_INSUFFICIENT_ADMIN_RIGHTS",
-    "default_branch_main": false,
-    "live_url_verified": false
+    "activation": "ACTIVE",
+    "default_branch_main": true,
+    "live_url_verified": true,
+    "url": "https://alexandra-guiderdoni.github.io/builder-mail-dsfr/",
+    "workflow_run": "https://github.com/alexandra-guiderdoni/builder-mail-dsfr/actions/runs/39822607625",
+    "receipt": "recette-pages.json"
   }
 }
