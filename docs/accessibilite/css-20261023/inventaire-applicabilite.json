@@ -1,0 +1,950 @@
+{
+  "official_compliance_rate": null,
+  "produces_conformity": false,
+  "humanQualification": false,
+  "method": "Analyse HTML des captures réelles et lecture du modèle, du rendu et des sorties ; aucune récupération des destinations externes.",
+  "observations": [
+    {
+      "file": "evidence/css-20261023/audit-final/delete-dialog-dom.html",
+      "sha256": "2742ba5ca5021e5b81e69b7f2983445c2f450cebc80f436bb19f5b49d9b00e03",
+      "tags": {
+        "html": 1,
+        "head": 1,
+        "meta": 4,
+        "title": 1,
+        "style": 1,
+        "body": 1,
+        "a": 1,
+        "header": 1,
+        "div": 26,
+        "p": 21,
+        "h1": 1,
+        "span": 7,
+        "button": 41,
+        "main": 1,
+        "fieldset": 1,
+        "legend": 1,
+        "nav": 1,
+        "section": 6,
+        "h2": 5,
+        "label": 20,
+        "select": 5,
+        "option": 58,
+        "ul": 1,
+        "li": 7,
+        "h3": 2,
+        "aside": 1,
+        "details": 6,
+        "summary": 6,
+        "input": 13,
+        "ol": 1,
+        "small": 6,
+        "img": 2,
+        "textarea": 2,
+        "iframe": 1,
+        "dialog": 1,
+        "form": 1,
+        "noscript": 1,
+        "footer": 1,
+        "script": 1
+      },
+      "table_roles": {},
+      "frames": [
+        {
+          "title": "Aperçu du courriel composé",
+          "sandbox": "",
+          "hidden": null,
+          "source_kind": "blob"
+        }
+      ],
+      "image_types": {
+        "data:image/png": 2
+      },
+      "link_inventory": {
+        "autre_destination": 1
+      }
+    },
+    {
+      "file": "evidence/css-20261023/audit-final/editor-dom.html",
+      "sha256": "c70d533b40f241ac428f3513c8c37f92b19c7f436321627a709a128ccd6f7c85",
+      "tags": {
+        "html": 1,
+        "head": 1,
+        "meta": 4,
+        "title": 1,
+        "style": 1,
+        "body": 1,
+        "a": 1,
+        "header": 1,
+        "div": 26,
+        "p": 21,
+        "h1": 1,
+        "span": 7,
+        "button": 41,
+        "main": 1,
+        "fieldset": 1,
+        "legend": 1,
+        "nav": 1,
+        "section": 6,
+        "h2": 5,
+        "label": 20,
+        "select": 5,
+        "option": 58,
+        "ul": 1,
+        "li": 7,
+        "h3": 2,
+        "aside": 1,
+        "details": 6,
+        "summary": 6,
+        "input": 13,
+        "ol": 1,
+        "small": 6,
+        "img": 2,
+        "textarea": 2,
+        "iframe": 1,
+        "dialog": 1,
+        "form": 1,
+        "noscript": 1,
+        "footer": 1,
+        "script": 1
+      },
+      "table_roles": {},
+      "frames": [
+        {
+          "title": "Aperçu du courriel composé",
+          "sandbox": "",
+          "hidden": null,
+          "source_kind": "blob"
+        }
+      ],
+      "image_types": {
+        "data:image/png": 2
+      },
+      "link_inventory": {
+        "autre_destination": 1
+      }
+    },
+    {
+      "file": "evidence/css-20261023/audit-final/editor-expanded-dom.html",
+      "sha256": "c53c8fa48a2bcbe76d9ceb2eac141062a7ac16c9b54ed4640ac70611998b0004",
+      "tags": {
+        "html": 1,
+        "head": 1,
+        "meta": 4,
+        "title": 1,
+        "style": 1,
+        "body": 1,
+        "a": 1,
+        "header": 1,
+        "div": 26,
+        "p": 21,
+        "h1": 1,
+        "span": 7,
+        "button": 41,
+        "main": 1,
+        "fieldset": 1,
+        "legend": 1,
+        "nav": 1,
+        "section": 6,
+        "h2": 5,
+        "label": 20,
+        "select": 5,
+        "option": 58,
+        "ul": 1,
+        "li": 7,
+        "h3": 2,
+        "aside": 1,
+        "details": 6,
+        "summary": 6,
+        "input": 13,
+        "ol": 1,
+        "small": 6,
+        "img": 2,
+        "textarea": 2,
+        "iframe": 1,
+        "dialog": 1,
+        "form": 1,
+        "noscript": 1,
+        "footer": 1,
+        "script": 1
+      },
+      "table_roles": {},
+      "frames": [
+        {
+          "title": "Aperçu du courriel composé",
+          "sandbox": "",
+          "hidden": null,
+          "source_kind": "blob"
+        }
+      ],
+      "image_types": {
+        "data:image/png": 2
+      },
+      "link_inventory": {
+        "autre_destination": 1
+      }
+    },
+    {
+      "file": "evidence/css-20261023/audit-final/editor-invalid-dom.html",
+      "sha256": "ad04f47a5f4d60cdf85941002731149d3e832bb72d665a73ffb5ac698de0284e",
+      "tags": {
+        "html": 1,
+        "head": 1,
+        "meta": 4,
+        "title": 1,
+        "style": 1,
+        "body": 1,
+        "a": 1,
+        "header": 1,
+        "div": 26,
+        "p": 22,
+        "h1": 1,
+        "span": 7,
+        "button": 41,
+        "main": 1,
+        "fieldset": 1,
+        "legend": 1,
+        "nav": 1,
+        "section": 6,
+        "h2": 5,
+        "label": 20,
+        "select": 5,
+        "option": 58,
+        "ul": 1,
+        "li": 7,
+        "h3": 2,
+        "aside": 1,
+        "details": 6,
+        "summary": 6,
+        "input": 13,
+        "ol": 1,
+        "small": 6,
+        "img": 2,
+        "textarea": 2,
+        "iframe": 1,
+        "dialog": 1,
+        "form": 1,
+        "noscript": 1,
+        "footer": 1,
+        "script": 1
+      },
+      "table_roles": {},
+      "frames": [
+        {
+          "title": "Aperçu du courriel composé",
+          "sandbox": "",
+          "hidden": null,
+          "source_kind": "blob"
+        }
+      ],
+      "image_types": {
+        "data:image/png": 2
+      },
+      "link_inventory": {
+        "autre_destination": 1
+      }
+    },
+    {
+      "file": "evidence/css-20261023/audit-final/home-dom.html",
+      "sha256": "3593310495081e3d0f1926f67869b606f87a0f1d10f83572f2b325ed5c270856",
+      "tags": {
+        "html": 1,
+        "head": 1,
+        "meta": 4,
+        "title": 1,
+        "style": 1,
+        "body": 1,
+        "a": 1,
+        "header": 1,
+        "div": 26,
+        "p": 21,
+        "h1": 1,
+        "span": 7,
+        "button": 41,
+        "main": 1,
+        "fieldset": 1,
+        "legend": 1,
+        "nav": 1,
+        "section": 6,
+        "h2": 5,
+        "label": 20,
+        "select": 5,
+        "option": 58,
+        "ul": 1,
+        "li": 7,
+        "h3": 2,
+        "aside": 1,
+        "details": 6,
+        "summary": 6,
+        "input": 13,
+        "ol": 1,
+        "small": 6,
+        "img": 2,
+        "textarea": 2,
+        "iframe": 1,
+        "dialog": 1,
+        "form": 1,
+        "noscript": 1,
+        "footer": 1,
+        "script": 1
+      },
+      "table_roles": {},
+      "frames": [
+        {
+          "title": "Aperçu du courriel composé",
+          "sandbox": "",
+          "hidden": null,
+          "source_kind": "blob"
+        }
+      ],
+      "image_types": {
+        "data:image/png": 2
+      },
+      "link_inventory": {
+        "autre_destination": 1
+      }
+    },
+    {
+      "file": "evidence/css-20261023/audit-final/rename-dialog-dom.html",
+      "sha256": "8b9243879bc88e1750c84381190babce6ea8f9bdd8250e009f246ba37c24e477",
+      "tags": {
+        "html": 1,
+        "head": 1,
+        "meta": 4,
+        "title": 1,
+        "style": 1,
+        "body": 1,
+        "a": 1,
+        "header": 1,
+        "div": 26,
+        "p": 21,
+        "h1": 1,
+        "span": 7,
+        "button": 41,
+        "main": 1,
+        "fieldset": 1,
+        "legend": 1,
+        "nav": 1,
+        "section": 6,
+        "h2": 5,
+        "label": 20,
+        "select": 5,
+        "option": 58,
+        "ul": 1,
+        "li": 7,
+        "h3": 2,
+        "aside": 1,
+        "details": 6,
+        "summary": 6,
+        "input": 13,
+        "ol": 1,
+        "small": 6,
+        "img": 2,
+        "textarea": 2,
+        "iframe": 1,
+        "dialog": 1,
+        "form": 1,
+        "noscript": 1,
+        "footer": 1,
+        "script": 1
+      },
+      "table_roles": {},
+      "frames": [
+        {
+          "title": "Aperçu du courriel composé",
+          "sandbox": "",
+          "hidden": null,
+          "source_kind": "blob"
+        }
+      ],
+      "image_types": {
+        "data:image/png": 2
+      },
+      "link_inventory": {
+        "autre_destination": 1
+      }
+    },
+    {
+      "file": "evidence/css-20261023/audit-final/rename-invalid-dom.html",
+      "sha256": "cf090f543d81a83c3ae12c93a85844458cb72cac0a8872f54a1ca77a17396cc9",
+      "tags": {
+        "html": 1,
+        "head": 1,
+        "meta": 4,
+        "title": 1,
+        "style": 1,
+        "body": 1,
+        "a": 1,
+        "header": 1,
+        "div": 26,
+        "p": 21,
+        "h1": 1,
+        "span": 7,
+        "button": 41,
+        "main": 1,
+        "fieldset": 1,
+        "legend": 1,
+        "nav": 1,
+        "section": 6,
+        "h2": 5,
+        "label": 20,
+        "select": 5,
+        "option": 58,
+        "ul": 1,
+        "li": 7,
+        "h3": 2,
+        "aside": 1,
+        "details": 6,
+        "summary": 6,
+        "input": 13,
+        "ol": 1,
+        "small": 6,
+        "img": 2,
+        "textarea": 2,
+        "iframe": 1,
+        "dialog": 1,
+        "form": 1,
+        "noscript": 1,
+        "footer": 1,
+        "script": 1
+      },
+      "table_roles": {},
+      "frames": [
+        {
+          "title": "Aperçu du courriel composé",
+          "sandbox": "",
+          "hidden": null,
+          "source_kind": "blob"
+        }
+      ],
+      "image_types": {
+        "data:image/png": 2
+      },
+      "link_inventory": {
+        "autre_destination": 1
+      }
+    },
+    {
+      "file": "evidence/css-20261023/audit-final/snum-converted-dom.html",
+      "sha256": "d1ed9466fdd1293dbc61ef8abb488fc016c5fd2b86b405af9b76731a69cfe39c",
+      "tags": {
+        "html": 1,
+        "head": 1,
+        "meta": 3,
+        "title": 1,
+        "style": 1,
+        "body": 1,
+        "a": 1,
+        "header": 1,
+        "div": 4,
+        "p": 10,
+        "h1": 1,
+        "main": 1,
+        "section": 2,
+        "h2": 2,
+        "label": 1,
+        "textarea": 1,
+        "button": 4,
+        "iframe": 1,
+        "noscript": 1,
+        "footer": 1,
+        "script": 1
+      },
+      "table_roles": {},
+      "frames": [
+        {
+          "title": "Aperçu de la revue de presse convertie",
+          "sandbox": "",
+          "hidden": null,
+          "source_kind": "blob"
+        }
+      ],
+      "image_types": {},
+      "link_inventory": {
+        "autre_destination": 1
+      }
+    },
+    {
+      "file": "evidence/css-20261023/audit-final/snum-initial-dom.html",
+      "sha256": "884b6cac8ce488c817433c1ab9bdde2849599db54f0996b404ca7b78a8f6198d",
+      "tags": {
+        "html": 1,
+        "head": 1,
+        "meta": 3,
+        "title": 1,
+        "style": 1,
+        "body": 1,
+        "a": 1,
+        "header": 1,
+        "div": 4,
+        "p": 10,
+        "h1": 1,
+        "main": 1,
+        "section": 2,
+        "h2": 2,
+        "label": 1,
+        "textarea": 1,
+        "button": 4,
+        "iframe": 1,
+        "noscript": 1,
+        "footer": 1,
+        "script": 1
+      },
+      "table_roles": {},
+      "frames": [
+        {
+          "title": "Aperçu de la revue de presse convertie",
+          "sandbox": "",
+          "hidden": "",
+          "source_kind": "absente"
+        }
+      ],
+      "image_types": {},
+      "link_inventory": {
+        "autre_destination": 1
+      }
+    },
+    {
+      "file": "evidence/css-20261023/audit-final/snum-invalid-dom.html",
+      "sha256": "eab15d8a449ad463b7b72d011ba885c010d2a1f6b9272b7901c950e7e98ac2df",
+      "tags": {
+        "html": 1,
+        "head": 1,
+        "meta": 3,
+        "title": 1,
+        "style": 1,
+        "body": 1,
+        "a": 1,
+        "header": 1,
+        "div": 4,
+        "p": 10,
+        "h1": 1,
+        "main": 1,
+        "section": 2,
+        "h2": 2,
+        "label": 1,
+        "textarea": 1,
+        "button": 4,
+        "iframe": 1,
+        "noscript": 1,
+        "footer": 1,
+        "script": 1
+      },
+      "table_roles": {},
+      "frames": [
+        {
+          "title": "Aperçu de la revue de presse convertie",
+          "sandbox": "",
+          "hidden": "",
+          "source_kind": "absente"
+        }
+      ],
+      "image_types": {},
+      "link_inventory": {
+        "autre_destination": 1
+      }
+    },
+    {
+      "file": "evidence/css-20261023/audit-final/source-label-dom.html",
+      "sha256": "d5b594a91e60f436c93a395b7aba3b438de974d15019976aa7c970e45c57d229",
+      "tags": {
+        "html": 1,
+        "head": 1,
+        "meta": 4,
+        "title": 1,
+        "style": 1,
+        "body": 1,
+        "a": 1,
+        "header": 1,
+        "div": 24,
+        "p": 21,
+        "h1": 1,
+        "span": 7,
+        "button": 41,
+        "main": 1,
+        "fieldset": 1,
+        "legend": 1,
+        "nav": 1,
+        "section": 6,
+        "h2": 5,
+        "label": 16,
+        "select": 5,
+        "option": 58,
+        "ul": 1,
+        "li": 7,
+        "h3": 2,
+        "aside": 1,
+        "details": 6,
+        "summary": 6,
+        "input": 9,
+        "ol": 1,
+        "small": 6,
+        "textarea": 2,
+        "iframe": 1,
+        "dialog": 1,
+        "form": 1,
+        "noscript": 1,
+        "footer": 1,
+        "script": 1
+      },
+      "table_roles": {},
+      "frames": [
+        {
+          "title": "Aperçu du courriel composé",
+          "sandbox": "",
+          "hidden": null,
+          "source_kind": "blob"
+        }
+      ],
+      "image_types": {},
+      "link_inventory": {
+        "autre_destination": 1
+      }
+    },
+    {
+      "file": "evidence/css-20261023/audit-final/exports/01.html",
+      "sha256": "c3530d13729d70904361ca71a145926c52e9d4dcab2913d2c153f430e6e5efa4",
+      "tags": {
+        "html": 1,
+        "head": 1,
+        "meta": 2,
+        "title": 1,
+        "style": 1,
+        "body": 1,
+        "table": 31,
+        "tr": 44,
+        "td": 49,
+        "span": 4,
+        "br": 1,
+        "a": 1,
+        "tbody": 4,
+        "img": 5,
+        "strong": 2
+      },
+      "table_roles": {
+        "presentation": 31
+      },
+      "frames": [],
+      "image_types": {
+        "data:image/png": 5
+      },
+      "link_inventory": {
+        "destination_https": 1
+      }
+    },
+    {
+      "file": "evidence/css-20261023/audit-final/exports/02.html",
+      "sha256": "8e28ce601a06901e6972709eb7f5b19d91e1fb3d6637645e090b8c6631f4f327",
+      "tags": {
+        "html": 1,
+        "head": 1,
+        "meta": 2,
+        "title": 1,
+        "style": 1,
+        "body": 1,
+        "table": 46,
+        "tr": 51,
+        "td": 53,
+        "img": 2,
+        "span": 15,
+        "h1": 2,
+        "strong": 14,
+        "tbody": 1,
+        "h2": 4,
+        "h3": 4
+      },
+      "table_roles": {
+        "presentation": 46
+      },
+      "frames": [],
+      "image_types": {
+        "data:image/png": 2
+      },
+      "link_inventory": {}
+    },
+    {
+      "file": "evidence/css-20261023/audit-final/exports/03.html",
+      "sha256": "539718146315e6a83b45f66cb8828d1359c45dedd843ad5227d18cc60f772073",
+      "tags": {
+        "html": 1,
+        "head": 1,
+        "meta": 2,
+        "title": 1,
+        "style": 1,
+        "body": 1,
+        "table": 43,
+        "tr": 50,
+        "td": 50,
+        "span": 24,
+        "strong": 4,
+        "em": 1,
+        "ul": 4,
+        "li": 10,
+        "h1": 2
+      },
+      "table_roles": {
+        "presentation": 43
+      },
+      "frames": [],
+      "image_types": {},
+      "link_inventory": {}
+    },
+    {
+      "file": "evidence/css-20261023/audit-final/exports/04.html",
+      "sha256": "869ef27655aa2f5a0b4bea3c3759fad59abe011f78bb42d1164fdade45766389",
+      "tags": {
+        "html": 1,
+        "head": 1,
+        "meta": 2,
+        "title": 1,
+        "style": 1,
+        "body": 1,
+        "table": 28,
+        "tr": 40,
+        "td": 40,
+        "img": 6,
+        "span": 13,
+        "h1": 2,
+        "strong": 4,
+        "h2": 2
+      },
+      "table_roles": {
+        "presentation": 28
+      },
+      "frames": [],
+      "image_types": {
+        "data:image/png": 6
+      },
+      "link_inventory": {}
+    },
+    {
+      "file": "evidence/css-20261023/audit-final/exports/05.html",
+      "sha256": "32a175a9f92d30261e674094528e1e29eb6e8cd9d355f05e681bee09786c7cc8",
+      "tags": {
+        "html": 1,
+        "head": 1,
+        "meta": 2,
+        "title": 1,
+        "style": 1,
+        "body": 1,
+        "table": 39,
+        "tr": 59,
+        "td": 69,
+        "tbody": 5,
+        "img": 6,
+        "span": 19,
+        "h1": 5,
+        "strong": 11,
+        "br": 2,
+        "a": 2,
+        "h2": 2
+      },
+      "table_roles": {
+        "presentation": 39
+      },
+      "frames": [],
+      "image_types": {
+        "data:image/png": 6
+      },
+      "link_inventory": {
+        "destination_https": 2
+      }
+    },
+    {
+      "file": "evidence/css-20261023/audit-final/exports/06.html",
+      "sha256": "9ef10f443a71c8456a14c1720ed8bdc203a9bf435ae0dc1ee7bc353159d7d136",
+      "tags": {
+        "html": 1,
+        "head": 1,
+        "meta": 2,
+        "title": 1,
+        "style": 1,
+        "body": 1,
+        "table": 16,
+        "tr": 29,
+        "td": 31,
+        "h1": 7,
+        "span": 17,
+        "strong": 8,
+        "ul": 1,
+        "li": 2
+      },
+      "table_roles": {
+        "presentation": 16
+      },
+      "frames": [],
+      "image_types": {},
+      "link_inventory": {}
+    },
+    {
+      "file": "evidence/css-20261023/audit-final/exports/07.html",
+      "sha256": "abcd203c5819b021d0b834a53a7b8a77574007836543c4c4b14adea49f146f92",
+      "tags": {
+        "html": 1,
+        "head": 1,
+        "meta": 2,
+        "title": 1,
+        "style": 1,
+        "body": 1,
+        "table": 4,
+        "tr": 5,
+        "td": 5,
+        "h1": 1,
+        "span": 2,
+        "strong": 1,
+        "br": 2
+      },
+      "table_roles": {
+        "presentation": 4
+      },
+      "frames": [],
+      "image_types": {},
+      "link_inventory": {}
+    },
+    {
+      "file": "evidence/css-20261023/audit-final/exports/08.html",
+      "sha256": "ea0fda500842bc7acfd1ee2078db25909fd03c714f513b0970cbdffeb7a471a8",
+      "tags": {
+        "html": 1,
+        "head": 1,
+        "meta": 2,
+        "title": 1,
+        "style": 1,
+        "body": 1,
+        "table": 23,
+        "tbody": 5,
+        "tr": 32,
+        "td": 32,
+        "a": 6,
+        "span": 8,
+        "h1": 1,
+        "strong": 1
+      },
+      "table_roles": {
+        "presentation": 23
+      },
+      "frames": [],
+      "image_types": {},
+      "link_inventory": {
+        "destination_https": 6
+      }
+    },
+    {
+      "file": "evidence/css-20261023/audit-final/exports/09.html",
+      "sha256": "8f2d6ed956c893481d93745c00e16ed6162fde5b5dbb20a20e1e5a41ca4b56e2",
+      "tags": {
+        "html": 1,
+        "head": 1,
+        "meta": 2,
+        "title": 1,
+        "style": 1,
+        "body": 1,
+        "table": 31,
+        "tr": 53,
+        "td": 58,
+        "a": 4,
+        "span": 9,
+        "tbody": 4,
+        "img": 5,
+        "strong": 2
+      },
+      "table_roles": {
+        "presentation": 31
+      },
+      "frames": [],
+      "image_types": {
+        "data:image/png": 5
+      },
+      "link_inventory": {
+        "destination_https": 4
+      }
+    },
+    {
+      "file": "evidence/css-20261023/audit-final/exports/10.html",
+      "sha256": "281d6f92c8ebac60f91f8f93df598998a188c4f902eff63acb7c90eb0874e055",
+      "tags": {
+        "html": 1,
+        "head": 1,
+        "meta": 2,
+        "title": 1,
+        "style": 1,
+        "body": 1,
+        "table": 159,
+        "tr": 188,
+        "td": 192,
+        "tbody": 2,
+        "img": 4,
+        "span": 50,
+        "strong": 28,
+        "h1": 1,
+        "h2": 5,
+        "h3": 5,
+        "a": 6,
+        "h4": 10
+      },
+      "table_roles": {
+        "presentation": 159
+      },
+      "frames": [],
+      "image_types": {
+        "data:image/png": 4
+      },
+      "link_inventory": {
+        "destination_https": 6
+      }
+    }
+  ],
+  "sourceSha256": {
+    "app/source/model.js": "24ef413e4e6e050e34547ec8c96b6f42ca0cc10d270dd279a0fa9fa0bf8799f9",
+    "app/source/render.js": "541e6c5a7a329cf89277aaa43278d482fc8a7ef773b5146ebabf5a7fe3f3f6d2",
+    "app/source/files.js": "a12193111760960e211e32b4e7defc293a389099aa9228b90822bc89742fe0cb",
+    "app/source/shell.html": "e00f7502ee00d1597ad10c5790970684b0a532a112f294f3b6e434f5f51f0a0f",
+    "app/snum/adapter.js": "6be8f9c801df8069e57b8ccc952434278e3ef4b03db396d8a9f92c37801e0395",
+    "app/snum/page.js": "745479ba76b5f9b82c3f54ac6f68b1505dc05d3da64b1b6601990c6d20457ea7",
+    "scripts/catalogue.py": "b317168d9c7c70e1f3e865d5291dd1e2b0281f02682acabfc5756f5bf7d415f4"
+  },
+  "capabilities": [
+    {
+      "subject": "multimedia",
+      "observed": "Aucun audio, video, object ou embed dans les 21 documents mesurés ; seuls texte, URL et image sont des types de champ canoniques.",
+      "limit": "SVG et images importées ne sont pas qualifiés par leur seule balise ; destinations HTTPS externes non examinées.",
+      "decision": "APPLICABILITE_A_QUALIFIER"
+    },
+    {
+      "subject": "captcha",
+      "observed": "Aucun mécanisme de défi ni de réponse CAPTCHA dans les sources d’interface consultées ; les fichiers JSON ne peuvent pas fournir de balisage actif.",
+      "limit": "Le rôle éditorial des images importées n’est pas déterminé par cette analyse et une destination externe peut posséder un autre contenu.",
+      "decision": "APPLICABILITE_A_QUALIFIER"
+    },
+    {
+      "subject": "documents",
+      "observed": "Les sorties de l’application sont HTML et JSON ; ces parcours sont exercés par la suite. Une absence d’attribut download au repos ne signifie pas absence de téléchargement : les ancres sont créées puis retirées par Files.download.",
+      "limit": "Le modèle accepte des destinations HTTPS arbitraires, sans garantir le format ni l’accessibilité des documents visés.",
+      "decision": "APPLICABILITE_A_QUALIFIER"
+    },
+    {
+      "subject": "tableaux",
+      "observed": "Rôles des tableaux et présence de th/caption inventoriés par document.",
+      "limit": "role=presentation ne prouve pas la compréhension du contenu linéarisé ni l’absence de données tabulaires.",
+      "decision": "APPLICABILITE_A_QUALIFIER"
+    },
+    {
+      "subject": "cadres",
+      "observed": "Les cadres d’aperçu existent et leurs attributs sont inventoriés ; l’état invalide est testé dans le cadre isolé.",
+      "limit": "La pertinence de chaque titre et la restitution par les technologies d’assistance restent à qualifier.",
+      "decision": "APPLICABILITE_A_QUALIFIER"
+    },
+    {
+      "subject": "animations",
+      "observed": "Le modèle accepte PNG, JPEG, GIF et WebP ; les contrôles de format et de décodage n’excluent pas les images animées.",
+      "limit": "Aucune non-applicabilité générale des critères de mouvement ou de clignotement n’est déduite des images par défaut.",
+      "decision": "APPLICABILITE_A_QUALIFIER"
+    }
+  ],
+  "notExecuted": [
+    "Qualification humaine de la nature et de la fonction des images",
+    "Examen des contenus des destinations HTTPS",
+    "Décisions finales pour les 258 tests",
+    "Écoute d’un lecteur d’écran"
+  ]
+}

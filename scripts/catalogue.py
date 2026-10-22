@@ -9,9 +9,9 @@ from html.parser import HTMLParser
 from pathlib import Path
 
 if __package__:
-    from .mail_layout import LAYOUT_CSS, Element, Fragment, css_template
+    from .mail_layout import LAYOUT_CSS, Element, Fragment, css_template, render_css
 else:
-    from mail_layout import LAYOUT_CSS, Element, Fragment, css_template
+    from mail_layout import LAYOUT_CSS, Element, Fragment, css_template, render_css
 
 ROOT = Path(__file__).resolve().parents[1]
 REF = ROOT / "reference/dsfr-mail"
@@ -281,6 +281,7 @@ def compile_catalogue():
         "id": fingerprint,
         "components": components,
         "css": css,
+        "renderCss": render_css(css),
         "layoutCss": LAYOUT_CSS,
         "reference_sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
     }

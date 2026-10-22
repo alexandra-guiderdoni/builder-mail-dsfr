@@ -22,6 +22,42 @@ LAYOUT_CSS = """
 }
 """
 
+
+def render_css(source):
+    # Retirer une propriété inconnue sans activer de nouvelle couleur héritée.
+    # La signature est bornée à la référence épinglée ; les styles Office restent bruts.
+    expected = [
+        ("body", "#ffffff"),
+        (".darkmode", "#ffffff"),
+        (".darkmode-1", "#CECECE"),
+        (".darkmode-2", "#ffffff"),
+        (".darkmode-3", "#ffffff"),
+        (".darkmode-4", "#CECECE"),
+        (".darkmode-5", "#ffffff"),
+        (".darkmode-6", "#ffffff"),
+        ("a.darkmode-button-color-primary[href]", "#000091"),
+        (".darkmode-button-primary", "#000091"),
+        (".darkmode-button-secondary", "#8585F6"),
+        (".darkmode-button-tertiary", "#8585F6"),
+        (".darkmode-button-color-primary", "#000091"),
+        (".darkmode-button-color-secondary", "#8585F6"),
+        (".darkmode-button-color-tertiary", "#8585F6"),
+    ]
+    pattern = r"(?m)^[ \t]*font-color: (#[0-9a-fA-F]{6}) !important;\r?\n"
+    matches = list(re.finditer(pattern, source))
+    observed = []
+    for match in matches:
+        opening = source.rfind("{", 0, match.start())
+        boundary = max(source.rfind("{", 0, opening), source.rfind("}", 0, opening))
+        observed.append((source[boundary + 1 : opening].strip(), match[1]))
+    if (
+        observed != expected
+        or len(re.findall(r"\bfont-color\s*:", source, re.IGNORECASE)) != 15
+    ):
+        raise ValueError("Déclarations de couleur non qualifiées dans le CSS mail.")
+    return re.sub(pattern, "", source)
+
+
 # Largeurs qualifiées dans la référence épinglée : une dérive arrête la compilation.
 COLUMNS = {
     2: [76, 130],
