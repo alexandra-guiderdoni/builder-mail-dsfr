@@ -21,7 +21,7 @@ Les deux parcours métier annoncés sont Windows avec Firefox vers Outlook insta
 | Images | Fichiers locaux, conservés avec la composition et le fichier de travail. |
 | Conservation | Bibliothèque locale, sauvegarde automatique, modèles et identités réutilisables ; export/import de fichiers de travail. |
 | Sorties | Copier le mail mis en forme et télécharger le HTML autonome. |
-| Accessibilité | Atteindre et démontrer 100 % des critères RGAA applicables sur l’échantillon audité ; aucun taux favorable déduit des seules sondes. Le [dossier courant](docs/accessibilite/presentation-20261022/RAPPORT.md) conserve preuves et qualifications manquantes. |
+| Accessibilité | Atteindre et démontrer 100 % des critères RGAA applicables sur l’échantillon audité ; aucun taux favorable déduit des seules sondes. Le [dossier courant](docs/accessibilite/formulaires-20261022/RAPPORT.md) conserve preuves et qualifications manquantes. |
 | Dépôt | Application séparée dans le dépôt existant ; provenance et version amont explicites. |
 
 ## Frontières impératives

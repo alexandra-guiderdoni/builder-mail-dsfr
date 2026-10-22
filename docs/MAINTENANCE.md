@@ -1,6 +1,6 @@
 # Maintenir l’application
 
-Le [dossier d’accessibilité](accessibilite/presentation-20261022/RAPPORT.md) conserve la campagne courante, ses matrices, les scripts et leurs limites. Les fichiers sous `evidence/` sont locaux ; les reçus partageables et matrices figurent sous `docs/accessibilite/`. Aucun script d’audit ne produit une conformité humaine.
+Le [dossier d’accessibilité](accessibilite/formulaires-20261022/RAPPORT.md) conserve la campagne courante, ses matrices, les scripts et leurs limites. Les fichiers sous `evidence/` sont locaux ; les reçus partageables et matrices figurent sous `docs/accessibilite/`. Aucun script d’audit ne produit une conformité humaine.
 
 L’application livrée est statique et autonome. Python et Node.js sont des outils de développement ; aucun serveur métier, compte ou paquet distant n’est requis à l’exécution. Le [cadrage](cadrage-source.md) conserve les limites d’autorité : amonts en lecture seule, publication et accès aux messageries séparément autorisés.
 
@@ -52,6 +52,8 @@ Les installations et résultats locaux ShipGuard sous `visual-tests/` restent au
 La même commande `npm test` inclut désormais le prototype : erreurs de saisie et sorties, clavier, import et décodage différés, restauration, concurrence de fenêtres, images, sources et réduction des données inutilisées. Les tests de compilation exercent aussi une locale ASCII, les octets UTF-8/LF et chaque icône précachée. Les observations d’erreur et de requête sont branchées avant la navigation ; un scénario négatif injecte un vrai défaut de démarrage dans un profil isolé. Les garde-fous d’import sont décrits dans [le contrat JSON](FORMAT-JSON.md).
 
 Les parcours d’édition ouvrent d’abord une composition depuis l’accueil, par un contrôle visible. Le test `library-browser.test.cjs` exerce aussi l’accueil directement, les actions sur une entrée non active, l’annulation et le retour de focus, la dernière suppression, une fenêtre de 390 px et les refus de navigation sans perte. Le helper clavier attend la visibilité du contrôle avant de lui donner le focus : `focus()` seul ne prouve pas qu’un utilisateur puisse activer le bouton.
+
+`tests/form-interactions-browser.test.cjs` contrôle les 178 champs rendus, les contraintes du nom et des 13 URL, les rejets sans mutation, les corrections, les annulations et le focus DOM/AX. Les reçus portent un indicateur de fin ; les rapprocher du journal terminal. La collecte générique AY11 découvre aussi le formulaire du dialogue masqué et ne vide pas les champs avant sa première soumission. Préparer son état explicitement et distinguer ses noms de scénario du comportement observé. Les mentions obligatoires de l’interface dérivent des contraintes existantes du modèle ; `aria-required` conserve la validation applicative actuelle.
 
 Sur le Mac de développement avec Firefox installé :
 

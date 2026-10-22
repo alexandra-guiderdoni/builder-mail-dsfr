@@ -1,6 +1,6 @@
 # Corrections des 27 issues
 
-La [campagne RGAA courante](accessibilite/presentation-20261022/RAPPORT.md) ajoute les corrections des titres et de la présentation, avec 85 tests réussis et 1 248 cas de rendu et copie, sans clôturer les recettes #2 et #13 ni revendiquer une conformité exhaustive. Le tableau ci-dessous conserve le suivi des 27 issues historiques.
+La [campagne RGAA courante](accessibilite/formulaires-20261022/RAPPORT.md) ajoute les corrections des titres, de la présentation et de l’indication obligatoire, avec 88 tests réussis et 1 248 cas de rendu et copie, sans clôturer les recettes #2 et #13 ni revendiquer une conformité exhaustive. Le tableau ci-dessous conserve le suivi des 27 issues historiques.
 
 Mandat de livraison du 22 octobre 2026 : corriger, documenter, commiter et pousser sur `main` dans le seul dépôt personnel, puis fermer les issues dont les critères sont satisfaits. Les essais Gmail et Mélissa sur Mac ont reçu leur autorisation distincte. Les critères sont ceux des corps GitHub ; les validations absentes restent ouvertes. Aucun déploiement sur le parc n’est autorisé implicitement.
 
