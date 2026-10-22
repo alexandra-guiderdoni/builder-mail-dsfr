@@ -2,6 +2,8 @@
 
 La [campagne d’accessibilité du 22 octobre](accessibilite/formulaires-20261022/RAPPORT.md) complète cette recette : **88 tests applicatifs réussis sans saut**, titres natifs et présentation CSS, 1 248 cas de rendu et copie, contraintes obligatoires et transitions d’erreur, parcours complet Firefox rejoué, matrices 106/258 et limites explicites. La copie conserve les gouttières avec des colonnes égales ; l’export garde les proportions d’origine. Les campagnes antérieures ci-dessous restent historiques. Qualifications humaines et clients restent ouvertes ; aucun taux RGAA validé.
 
+Le [complément de contraste](accessibilite/contrastes-20261022/RAPPORT.md) ajoute 74 mesures et six constats d’inactivité modale, avec cinq contrôles négatifs. Il porte sur les mêmes octets du produit et conserve les résultats axe incomplets ; la qualification globale des couleurs reste ouverte.
+
 **Application publiée, qualification métier incomplète.** Observations des 21 et 22 octobre 2026 sur macOS 26.5.2, Firefox natif 156.0 et Chromium 156.0.8078.4. Les campagnes couvrent l’accueil « Mes newsletters », le builder générique et la page SNUM séparée, puis l’origine HTTPS publique. La recette du [prototype](RECETTE.md) reste historique et distincte.
 
 Le [reçu initial](recette-application-observee.json) identifie la campagne historique. Les profils isolés, captures et téléchargements restent sous `evidence/`, ignorés par Git. Les essais automatisés n’utilisent aucun compte ; les recettes Gmail et Mélissa ci-dessous utilisent uniquement les sessions et le destinataire autorisés. Les preuves publiées ne reproduisent aucune donnée personnelle.

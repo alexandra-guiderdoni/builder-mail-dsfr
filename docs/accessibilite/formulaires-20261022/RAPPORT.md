@@ -2,6 +2,8 @@
 
 **Qualification RGAA toujours incomplète.** Ce complément vérifie une correction ciblée : le nom de composition et les 13 champs URL du catalogue annoncent désormais leur caractère obligatoire, visuellement et avec `aria-required="true"`. Trois tests nouveaux passent après un échec discriminant avant correction ; la suite complète compte **88 réussites, aucun échec ni saut**. Le contrat, les règles de validation, les rôles des conteneurs et la source facultative sont conservés.
 
+Le [complément de contraste](../contrastes-20261022/RAPPORT.md) ajoute ensuite 80 observations sur les mêmes octets du produit, sans effacer les indéterminés axe. La matrice réunit désormais 445 observations par instance ; aucune qualification RGAA favorable n’est déduite de ces mesures.
+
 ## Preuves et matrices
 
 Les [106 critères](MATRICE-106.md), les [258 tests](MATRICE-258.md) et la [matrice structurée](matrice-rgaa.json) conservent l’objectif de 100 %. Aucun critère n’est nouvellement déclaré conforme ou non applicable. Les deux corrections antérieures, titres et présentation, restent à qualifier. Le taux officiel demeure absent.

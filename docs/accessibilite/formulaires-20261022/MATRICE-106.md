@@ -2,6 +2,8 @@
 
 Objectif : 100 % des critères applicables. Aucun taux validé. Les observations par instance figurent dans [la matrice structurée](matrice-rgaa.json) ; leur collecte ne qualifie pas les tests.
 
+Les 365 observations de formulaires sont complétées par [80 observations de contraste](../contrastes-20261022/RAPPORT.md), sur les mêmes octets du produit.
+
 | Référence | Attendu | Qualification | Observations locales |
 |---|---|---|---|
 | [1.1](https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#1.1) | Chaque image porteuse d’information a-t-elle une alternative textuelle ? | NON_TESTE | 0 |
@@ -16,8 +18,8 @@ Objectif : 100 % des critères applicables. Aucun taux validé. Les observations
 | [2.1](https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#2.1) | Chaque cadre a-t-il un titre de cadre ? | NON_TESTE | 0 |
 | [2.2](https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#2.2) | Pour chaque cadre ayant un titre de cadre, ce titre de cadre est-il pertinent ? | NON_TESTE | 0 |
 | [3.1](https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#3.1) | Dans chaque page web, l’information ne doit pas être donnée uniquement par la couleur. Cette règle est-elle respectée ? | NON_TESTE | 0 |
-| [3.2](https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#3.2) | Dans chaque page web, le contraste entre la couleur du texte et la couleur de son arrière-plan est-il suffisamment élevé (hors cas particuliers) ? | NON_TESTE | 0 |
-| [3.3](https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#3.3) | Dans chaque page web, les couleurs utilisées dans les composants d’interface ou les éléments graphiques porteurs d’informations sont-elles suffisamment contrastées (hors cas particuliers) ? | NON_TESTE | 0 |
+| [3.2](https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#3.2) | Dans chaque page web, le contraste entre la couleur du texte et la couleur de son arrière-plan est-il suffisamment élevé (hors cas particuliers) ? | NON_TESTE | 80 |
+| [3.3](https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#3.3) | Dans chaque page web, les couleurs utilisées dans les composants d’interface ou les éléments graphiques porteurs d’informations sont-elles suffisamment contrastées (hors cas particuliers) ? | NON_TESTE | 72 |
 | [4.1](https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#4.1) | Chaque média temporel pré-enregistré a-t-il, si nécessaire, une transcription textuelle ou une audiodescription (hors cas particuliers) ? | NON_TESTE | 0 |
 | [4.2](https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#4.2) | Pour chaque média temporel pré-enregistré ayant une transcription textuelle ou une audiodescription synchronisée, celles-ci sont-elles pertinentes (hors cas particuliers) ? | NON_TESTE | 0 |
 | [4.3](https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#4.3) | Chaque média temporel synchronisé pré-enregistré a-t-il, si nécessaire, des sous-titres synchronisés (hors cas particuliers) ? | NON_TESTE | 0 |

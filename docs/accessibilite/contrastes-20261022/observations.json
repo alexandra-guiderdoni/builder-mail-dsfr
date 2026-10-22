@@ -1,0 +1,2258 @@
+[
+  {
+    "id": "CONTRASTE-0001",
+    "scene": "P02/home",
+    "instance": "#starter",
+    "state": "default",
+    "viewport": 1280,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "starter",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/0",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0002",
+    "scene": "P02/home",
+    "instance": "#starter",
+    "state": "hover",
+    "viewport": 1280,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "starter",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/1",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0003",
+    "scene": "P02/home",
+    "instance": "#starter",
+    "state": "keyboard-focus",
+    "viewport": 1280,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "starter",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/2",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0004",
+    "scene": "P02/editor",
+    "instance": "#documents",
+    "state": "default",
+    "viewport": 1280,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "documents",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/3",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0005",
+    "scene": "P02/editor",
+    "instance": "#documents",
+    "state": "hover",
+    "viewport": 1280,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "documents",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/4",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0006",
+    "scene": "P02/editor",
+    "instance": "#documents",
+    "state": "keyboard-focus",
+    "viewport": 1280,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "documents",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/5",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0007",
+    "scene": "P02/editor-expanded",
+    "instance": "#documents",
+    "state": "default",
+    "viewport": 1280,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "documents",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/6",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0008",
+    "scene": "P02/editor-expanded",
+    "instance": "#documents",
+    "state": "hover",
+    "viewport": 1280,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "documents",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/7",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0009",
+    "scene": "P02/editor-expanded",
+    "instance": "#documents",
+    "state": "keyboard-focus",
+    "viewport": 1280,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "documents",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/8",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0010",
+    "scene": "P02/editor-expanded",
+    "instance": "#saved-templates",
+    "state": "default",
+    "viewport": 1280,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "saved-templates",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/9",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0011",
+    "scene": "P02/editor-expanded",
+    "instance": "#saved-templates",
+    "state": "hover",
+    "viewport": 1280,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "saved-templates",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/10",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0012",
+    "scene": "P02/editor-expanded",
+    "instance": "#saved-templates",
+    "state": "keyboard-focus",
+    "viewport": 1280,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "saved-templates",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/11",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0013",
+    "scene": "P02/editor-expanded",
+    "instance": "#identities",
+    "state": "default",
+    "viewport": 1280,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "identities",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/12",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0014",
+    "scene": "P02/editor-expanded",
+    "instance": "#identities",
+    "state": "hover",
+    "viewport": 1280,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "identities",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/13",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0015",
+    "scene": "P02/editor-expanded",
+    "instance": "#identities",
+    "state": "keyboard-focus",
+    "viewport": 1280,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "identities",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/14",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0016",
+    "scene": "P02/editor-invalid",
+    "instance": "#documents",
+    "state": "default",
+    "viewport": 1280,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "documents",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/15",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0017",
+    "scene": "P02/editor-invalid",
+    "instance": "#documents",
+    "state": "hover",
+    "viewport": 1280,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "documents",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/16",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0018",
+    "scene": "P02/editor-invalid",
+    "instance": "#documents",
+    "state": "keyboard-focus",
+    "viewport": 1280,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "documents",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/17",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0019",
+    "scene": "P02/editor-invalid",
+    "instance": "#saved-templates",
+    "state": "default",
+    "viewport": 1280,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "saved-templates",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/18",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0020",
+    "scene": "P02/editor-invalid",
+    "instance": "#saved-templates",
+    "state": "hover",
+    "viewport": 1280,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "saved-templates",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/19",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0021",
+    "scene": "P02/editor-invalid",
+    "instance": "#saved-templates",
+    "state": "keyboard-focus",
+    "viewport": 1280,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "saved-templates",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/20",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0022",
+    "scene": "P02/editor-invalid",
+    "instance": "#identities",
+    "state": "default",
+    "viewport": 1280,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "identities",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/21",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0023",
+    "scene": "P02/editor-invalid",
+    "instance": "#identities",
+    "state": "hover",
+    "viewport": 1280,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "identities",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/22",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0024",
+    "scene": "P02/editor-invalid",
+    "instance": "#identities",
+    "state": "keyboard-focus",
+    "viewport": 1280,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "identities",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/23",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0025",
+    "scene": "P02/rename-dialog",
+    "instance": "#starter",
+    "state": "modal-background",
+    "viewport": 1280,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Déterminer l’activité du contrôle dans cet état ; ne pas extrapoler une exemption à l’accueil.",
+    "observation": {
+      "activeBefore": "library-name",
+      "activeAfter": "library-name",
+      "ignoredReasons": [
+        {
+          "name": "activeModalDialog",
+          "value": {
+            "type": "idref",
+            "relatedNodes": [
+              {
+                "backendDOMNodeId": 461,
+                "idref": "library-dialog"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/24",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "INACTIVITE_OBSERVEE",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0026",
+    "scene": "P02/rename-dialog",
+    "instance": "#library-dialog-description",
+    "state": "default",
+    "viewport": 1280,
+    "tests": [
+      "3.2.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1 ; fond opaque et texte peint dans les boîtes de caractères contrôlés.",
+    "observation": {
+      "textRatio": 11.374541813829671,
+      "textThreshold": 4.5,
+      "backgroundOwner": "library-dialog",
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/25",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0027",
+    "scene": "P02/rename-invalid",
+    "instance": "#starter",
+    "state": "modal-background",
+    "viewport": 1280,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Déterminer l’activité du contrôle dans cet état ; ne pas extrapoler une exemption à l’accueil.",
+    "observation": {
+      "activeBefore": "library-name",
+      "activeAfter": "library-name",
+      "ignoredReasons": [
+        {
+          "name": "activeModalDialog",
+          "value": {
+            "type": "idref",
+            "relatedNodes": [
+              {
+                "backendDOMNodeId": 461,
+                "idref": "library-dialog"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/26",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "INACTIVITE_OBSERVEE",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0028",
+    "scene": "P02/rename-invalid",
+    "instance": "#library-dialog-description",
+    "state": "default",
+    "viewport": 1280,
+    "tests": [
+      "3.2.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1 ; fond opaque et texte peint dans les boîtes de caractères contrôlés.",
+    "observation": {
+      "textRatio": 11.374541813829671,
+      "textThreshold": 4.5,
+      "backgroundOwner": "library-dialog",
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/27",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0029",
+    "scene": "P02/delete-dialog",
+    "instance": "#starter",
+    "state": "modal-background",
+    "viewport": 1280,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Déterminer l’activité du contrôle dans cet état ; ne pas extrapoler une exemption à l’accueil.",
+    "observation": {
+      "activeBefore": "library-cancel",
+      "activeAfter": "library-cancel",
+      "ignoredReasons": [
+        {
+          "name": "activeModalDialog",
+          "value": {
+            "type": "idref",
+            "relatedNodes": [
+              {
+                "backendDOMNodeId": 461,
+                "idref": "library-dialog"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/28",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "INACTIVITE_OBSERVEE",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0030",
+    "scene": "P02/delete-dialog",
+    "instance": "#library-dialog-title",
+    "state": "default",
+    "viewport": 1280,
+    "tests": [
+      "3.2.4"
+    ],
+    "expected": "Contraste du texte au moins égal à 3:1 ; fond opaque et texte peint dans les boîtes de caractères contrôlés.",
+    "observation": {
+      "textRatio": 18.096211979655724,
+      "textThreshold": 3,
+      "backgroundOwner": "library-dialog",
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/29",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0031",
+    "scene": "P02/delete-dialog",
+    "instance": "#library-dialog-description",
+    "state": "default",
+    "viewport": 1280,
+    "tests": [
+      "3.2.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1 ; fond opaque et texte peint dans les boîtes de caractères contrôlés.",
+    "observation": {
+      "textRatio": 11.374541813829671,
+      "textThreshold": 4.5,
+      "backgroundOwner": "library-dialog",
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/30",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0032",
+    "scene": "P02/source-label",
+    "instance": "#documents",
+    "state": "default",
+    "viewport": 1280,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "documents",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/31",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0033",
+    "scene": "P02/source-label",
+    "instance": "#documents",
+    "state": "hover",
+    "viewport": 1280,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "documents",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/32",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0034",
+    "scene": "P02/source-label",
+    "instance": "#documents",
+    "state": "keyboard-focus",
+    "viewport": 1280,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "documents",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/33",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0035",
+    "scene": "P02/source-label",
+    "instance": "#saved-templates",
+    "state": "default",
+    "viewport": 1280,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "saved-templates",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/34",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0036",
+    "scene": "P02/source-label",
+    "instance": "#saved-templates",
+    "state": "hover",
+    "viewport": 1280,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "saved-templates",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/35",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0037",
+    "scene": "P02/source-label",
+    "instance": "#saved-templates",
+    "state": "keyboard-focus",
+    "viewport": 1280,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "saved-templates",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/36",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0038",
+    "scene": "P02/source-label",
+    "instance": "#identities",
+    "state": "default",
+    "viewport": 1280,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "identities",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/37",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0039",
+    "scene": "P02/source-label",
+    "instance": "#identities",
+    "state": "hover",
+    "viewport": 1280,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "identities",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/38",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0040",
+    "scene": "P02/source-label",
+    "instance": "#identities",
+    "state": "keyboard-focus",
+    "viewport": 1280,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "identities",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/39",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0041",
+    "scene": "P02/home",
+    "instance": "#starter",
+    "state": "default",
+    "viewport": 320,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "starter",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/40",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0042",
+    "scene": "P02/home",
+    "instance": "#starter",
+    "state": "hover",
+    "viewport": 320,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "starter",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/41",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0043",
+    "scene": "P02/home",
+    "instance": "#starter",
+    "state": "keyboard-focus",
+    "viewport": 320,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "starter",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/42",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0044",
+    "scene": "P02/editor",
+    "instance": "#documents",
+    "state": "default",
+    "viewport": 320,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "documents",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/43",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0045",
+    "scene": "P02/editor",
+    "instance": "#documents",
+    "state": "hover",
+    "viewport": 320,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "documents",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/44",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0046",
+    "scene": "P02/editor",
+    "instance": "#documents",
+    "state": "keyboard-focus",
+    "viewport": 320,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "documents",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/45",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0047",
+    "scene": "P02/editor-expanded",
+    "instance": "#documents",
+    "state": "default",
+    "viewport": 320,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "documents",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/46",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0048",
+    "scene": "P02/editor-expanded",
+    "instance": "#documents",
+    "state": "hover",
+    "viewport": 320,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "documents",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/47",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0049",
+    "scene": "P02/editor-expanded",
+    "instance": "#documents",
+    "state": "keyboard-focus",
+    "viewport": 320,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "documents",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/48",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0050",
+    "scene": "P02/editor-expanded",
+    "instance": "#saved-templates",
+    "state": "default",
+    "viewport": 320,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "saved-templates",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/49",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0051",
+    "scene": "P02/editor-expanded",
+    "instance": "#saved-templates",
+    "state": "hover",
+    "viewport": 320,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "saved-templates",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/50",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0052",
+    "scene": "P02/editor-expanded",
+    "instance": "#saved-templates",
+    "state": "keyboard-focus",
+    "viewport": 320,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "saved-templates",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/51",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0053",
+    "scene": "P02/editor-expanded",
+    "instance": "#identities",
+    "state": "default",
+    "viewport": 320,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "identities",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/52",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0054",
+    "scene": "P02/editor-expanded",
+    "instance": "#identities",
+    "state": "hover",
+    "viewport": 320,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "identities",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/53",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0055",
+    "scene": "P02/editor-expanded",
+    "instance": "#identities",
+    "state": "keyboard-focus",
+    "viewport": 320,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "identities",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/54",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0056",
+    "scene": "P02/editor-invalid",
+    "instance": "#documents",
+    "state": "default",
+    "viewport": 320,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "documents",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/55",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0057",
+    "scene": "P02/editor-invalid",
+    "instance": "#documents",
+    "state": "hover",
+    "viewport": 320,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "documents",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/56",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0058",
+    "scene": "P02/editor-invalid",
+    "instance": "#documents",
+    "state": "keyboard-focus",
+    "viewport": 320,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "documents",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/57",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0059",
+    "scene": "P02/editor-invalid",
+    "instance": "#saved-templates",
+    "state": "default",
+    "viewport": 320,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "saved-templates",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/58",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0060",
+    "scene": "P02/editor-invalid",
+    "instance": "#saved-templates",
+    "state": "hover",
+    "viewport": 320,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "saved-templates",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/59",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0061",
+    "scene": "P02/editor-invalid",
+    "instance": "#saved-templates",
+    "state": "keyboard-focus",
+    "viewport": 320,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "saved-templates",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/60",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0062",
+    "scene": "P02/editor-invalid",
+    "instance": "#identities",
+    "state": "default",
+    "viewport": 320,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "identities",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/61",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0063",
+    "scene": "P02/editor-invalid",
+    "instance": "#identities",
+    "state": "hover",
+    "viewport": 320,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "identities",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/62",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0064",
+    "scene": "P02/editor-invalid",
+    "instance": "#identities",
+    "state": "keyboard-focus",
+    "viewport": 320,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "identities",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/63",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0065",
+    "scene": "P02/rename-dialog",
+    "instance": "#starter",
+    "state": "modal-background",
+    "viewport": 320,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Déterminer l’activité du contrôle dans cet état ; ne pas extrapoler une exemption à l’accueil.",
+    "observation": {
+      "activeBefore": "library-name",
+      "activeAfter": "library-name",
+      "ignoredReasons": [
+        {
+          "name": "activeModalDialog",
+          "value": {
+            "type": "idref",
+            "relatedNodes": [
+              {
+                "backendDOMNodeId": 459,
+                "idref": "library-dialog"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/64",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "INACTIVITE_OBSERVEE",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0066",
+    "scene": "P02/rename-dialog",
+    "instance": "#library-dialog-description",
+    "state": "default",
+    "viewport": 320,
+    "tests": [
+      "3.2.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1 ; fond opaque et texte peint dans les boîtes de caractères contrôlés.",
+    "observation": {
+      "textRatio": 11.374541813829671,
+      "textThreshold": 4.5,
+      "backgroundOwner": "library-dialog",
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/65",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0067",
+    "scene": "P02/rename-invalid",
+    "instance": "#starter",
+    "state": "modal-background",
+    "viewport": 320,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Déterminer l’activité du contrôle dans cet état ; ne pas extrapoler une exemption à l’accueil.",
+    "observation": {
+      "activeBefore": "library-name",
+      "activeAfter": "library-name",
+      "ignoredReasons": [
+        {
+          "name": "activeModalDialog",
+          "value": {
+            "type": "idref",
+            "relatedNodes": [
+              {
+                "backendDOMNodeId": 459,
+                "idref": "library-dialog"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/66",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "INACTIVITE_OBSERVEE",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0068",
+    "scene": "P02/rename-invalid",
+    "instance": "#library-dialog-description",
+    "state": "default",
+    "viewport": 320,
+    "tests": [
+      "3.2.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1 ; fond opaque et texte peint dans les boîtes de caractères contrôlés.",
+    "observation": {
+      "textRatio": 11.374541813829671,
+      "textThreshold": 4.5,
+      "backgroundOwner": "library-dialog",
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/67",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0069",
+    "scene": "P02/delete-dialog",
+    "instance": "#starter",
+    "state": "modal-background",
+    "viewport": 320,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Déterminer l’activité du contrôle dans cet état ; ne pas extrapoler une exemption à l’accueil.",
+    "observation": {
+      "activeBefore": "library-cancel",
+      "activeAfter": "library-cancel",
+      "ignoredReasons": [
+        {
+          "name": "activeModalDialog",
+          "value": {
+            "type": "idref",
+            "relatedNodes": [
+              {
+                "backendDOMNodeId": 459,
+                "idref": "library-dialog"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/68",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "INACTIVITE_OBSERVEE",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0070",
+    "scene": "P02/delete-dialog",
+    "instance": "#library-dialog-title",
+    "state": "default",
+    "viewport": 320,
+    "tests": [
+      "3.2.4"
+    ],
+    "expected": "Contraste du texte au moins égal à 3:1 ; fond opaque et texte peint dans les boîtes de caractères contrôlés.",
+    "observation": {
+      "textRatio": 18.096211979655724,
+      "textThreshold": 3,
+      "backgroundOwner": "library-dialog",
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/69",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0071",
+    "scene": "P02/delete-dialog",
+    "instance": "#library-dialog-description",
+    "state": "default",
+    "viewport": 320,
+    "tests": [
+      "3.2.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1 ; fond opaque et texte peint dans les boîtes de caractères contrôlés.",
+    "observation": {
+      "textRatio": 11.374541813829671,
+      "textThreshold": 4.5,
+      "backgroundOwner": "library-dialog",
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/70",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0072",
+    "scene": "P02/source-label",
+    "instance": "#documents",
+    "state": "default",
+    "viewport": 320,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "documents",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/71",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0073",
+    "scene": "P02/source-label",
+    "instance": "#documents",
+    "state": "hover",
+    "viewport": 320,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "documents",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/72",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0074",
+    "scene": "P02/source-label",
+    "instance": "#documents",
+    "state": "keyboard-focus",
+    "viewport": 320,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "documents",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/73",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0075",
+    "scene": "P02/source-label",
+    "instance": "#saved-templates",
+    "state": "default",
+    "viewport": 320,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "saved-templates",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/74",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0076",
+    "scene": "P02/source-label",
+    "instance": "#saved-templates",
+    "state": "hover",
+    "viewport": 320,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "saved-templates",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/75",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0077",
+    "scene": "P02/source-label",
+    "instance": "#saved-templates",
+    "state": "keyboard-focus",
+    "viewport": 320,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "saved-templates",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/76",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0078",
+    "scene": "P02/source-label",
+    "instance": "#identities",
+    "state": "default",
+    "viewport": 320,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "identities",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/77",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0079",
+    "scene": "P02/source-label",
+    "instance": "#identities",
+    "state": "hover",
+    "viewport": 320,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "identities",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/78",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  },
+  {
+    "id": "CONTRASTE-0080",
+    "scene": "P02/source-label",
+    "instance": "#identities",
+    "state": "keyboard-focus",
+    "viewport": 320,
+    "tests": [
+      "3.2.1",
+      "3.3.1"
+    ],
+    "expected": "Contraste du texte au moins égal à 4.5:1, du chevron à 3:1 ; réserves et peinture contrôlées.",
+    "observation": {
+      "textRatio": 9.803691678396063,
+      "textThreshold": 4.5,
+      "imageRatio": 15.597083882512038,
+      "imageThreshold": 3,
+      "backgroundOwner": "identities",
+      "imageOutsideText": true,
+      "textPaintObserved": true,
+      "coveredGlyphs": 0
+    },
+    "method": "DOM, couleurs nominales, géométrie, capture PNG et contrôles négatifs ; AX natif pour les états modaux",
+    "evidence": "evidence/contrastes-20261022/final/receipt.json#/observations/79",
+    "result": "OBSERVE_A_QUALIFIER",
+    "technical_result": "SEUIL_MESURE_ATTEINT",
+    "applicability": "À qualifier par test et par état ; aucune non-applicabilité automatique",
+    "human_validation_required": true
+  }
+]

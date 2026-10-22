@@ -55,6 +55,8 @@ Les parcours d’édition ouvrent d’abord une composition depuis l’accueil, 
 
 `tests/form-interactions-browser.test.cjs` contrôle les 178 champs rendus, les contraintes du nom et des 13 URL, les rejets sans mutation, les corrections, les annulations et le focus DOM/AX. Les reçus portent un indicateur de fin ; les rapprocher du journal terminal. La collecte générique AY11 découvre aussi le formulaire du dialogue masqué et ne vide pas les champs avant sa première soumission. Préparer son état explicitement et distinguer ses noms de scénario du comportement observé. Les mentions obligatoires de l’interface dérivent des contraintes existantes du modèle ; `aria-required` conserve la validation applicative actuelle.
 
+`scripts/audit_contrasts.cjs` complète les indéterminés des sélecteurs et dialogues par les couleurs nominales, la géométrie et les captures. Le [protocole](accessibilite/contrastes-20261022/RAPPORT.md) décrit ses 80 observations et cinq contrôles négatifs, dont un masque laissant passer le pointeur. Il exige une capture de référence sur les mêmes sources, refuse les compositions qu’il ne sait pas mesurer et contrôle les empreintes avant/après. Ce collecteur ciblé ne qualifie pas tous les contrastes ni toute occultation.
+
 Sur le Mac de développement avec Firefox installé :
 
 ```sh
