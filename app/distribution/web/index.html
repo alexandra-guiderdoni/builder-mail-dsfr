@@ -1,7 +1,7 @@
 <!doctype html>
 <!-- PDG-LARGE-FILE-JUSTIFICATION: distribution autonome générée ; gabarits, ressources et scripts incorporés depuis des sources modulaires pour le premier démarrage hors connexion. -->
 <html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none';script-src 'sha256-asBvYAkt3PauM2qywt7/wgvr1p1NEoPn8SGRJGjsS1s=';style-src 'unsafe-inline';img-src 'self' data: blob:;frame-src blob:;base-uri 'none';form-action 'none';connect-src 'self';worker-src 'self';manifest-src 'self'"><meta name="theme-color" content="#000091">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none';script-src 'sha256-lkEnU87rnSGRCQjsKDmdUY7pPpTeEec5xaDps643evk=';style-src 'unsafe-inline';img-src 'self' data: blob:;frame-src blob:;base-uri 'none';form-action 'none';connect-src 'self';worker-src 'self';manifest-src 'self'"><meta name="theme-color" content="#000091">
 <title>Atelier de courriels DSFR</title><link rel="manifest" href="./manifest.webmanifest"><style>:root { color-scheme:light; font:100%/1.5 Arial,Helvetica,sans-serif; color:#161616; background:#f6f6f6; }
 * { box-sizing:border-box; } body { margin:0; } button,input,select,textarea { font:inherit; }
 header { display:flex; justify-content:space-between; gap:24px; background:#fff; border-top:6px solid #000091; border-bottom:1px solid #ddd; padding:24px 3vw; }
@@ -665,7 +665,8 @@ window.MailBuilder.catalog = {"id":"6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278
         if (actionName === "remove") { blocks.splice(index, 1); A.selected = blocks[Math.min(index, blocks.length - 1)]?.id || null; }
         if (["up", "down"].includes(actionName)) { const destination = index + (actionName === "up" ? -1 : 1); if (destination >= 0 && destination < blocks.length) [blocks[index], blocks[destination]] = [blocks[destination], blocks[index]]; }
       });
-      get("block-editor").querySelector("textarea,input")?.focus();
+      const target = get("block-editor").querySelector("textarea,input") || get("catalogue").closest("details").querySelector("summary");
+      target.focus();
     });
   });
   function edit(input, mutator) {

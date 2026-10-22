@@ -9,13 +9,20 @@
       "DISTRIBUTIONS_OK"
     ],
     "npm_test": {
+      "tests": 65,
+      "pass": 65,
+      "fail": 0,
+      "skipped": 0
+    },
+    "log_sha256": "ffa673f76ac28deef0d53e74935a0f8349192529147a9f585b661c2d730e1a06",
+    "reference_sha256": "5ba14f67952bc10d1356abf8bdcbd7f3d6028a8b45f0ce968927c6444e4c3dd5",
+    "previous_npm_test": {
       "tests": 64,
       "pass": 64,
       "fail": 0,
       "skipped": 0
     },
-    "log_sha256": "c74bf479db25cf6d2e7b70bd22a26b0acbd1388c9943d5017e88ca7a27c64ebf",
-    "reference_sha256": "5ba14f67952bc10d1356abf8bdcbd7f3d6028a8b45f0ce968927c6444e4c3dd5"
+    "previous_log_sha256": "c74bf479db25cf6d2e7b70bd22a26b0acbd1388c9943d5017e88ca7a27c64ebf"
   },
   "mail": {
     "gmail_and_melissa_mac_received": true,
@@ -71,6 +78,33 @@
     "keep_open": [
       2,
       13
+    ],
+    "closed_on_github": [
+      1,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27
     ]
   },
   "external_not_verified": [
@@ -85,7 +119,7 @@
     "app/snum/page.js": "302509ee83446cea4583cb9348976c683609e3d32cfa3df46a091efc9d6cf575",
     "app/snum/shell.html": "bd8ed9473b264b0e6d36507f970384f033629938c79908dcb772ec706111dce5",
     "app/snum/style.css": "47de42bb9f9c8815b1de196453a0a8f7bfc6aee85e1371f78488683067ba19a2",
-    "app/source/editor.js": "80e4ce2fdcdb286a4ecffb4e618e3e1ccb3004b69f0623d60e2503b0611da700",
+    "app/source/editor.js": "eec5b3505d566505b5ddf04cbf8273f58435fe58326a47083d2772d98299f91d",
     "app/source/files.js": "2bbd880b71562be34904dbe6c82e029867c2310e34a04597841c4f768ad9dd69",
     "app/source/imports.js": "e18940238107c72238dfba37f01e8ac4894bf76656e60ceda860bc35e5d14cfe",
     "app/source/library-actions.js": "ee0c06822a3fd5866ec96cc04f2480115cca6ddb7e23f13f7165ae158c309940",
@@ -131,24 +165,32 @@
     "tests/pwa-contract.test.cjs": "b09d55be3f625bc774aad3fed3388318078f91833ef9e5e137ecc08ed93cc326",
     "tests/reference-browser.test.cjs": "2cf8c655d03d301cefb819aef57973f90ff44e12e6276491f09a056e045511e3",
     "tests/storage-browser.test.cjs": "32563020a3223374055ee2120172c061ce72292e59f9406b13c9d1b731cdcd2b",
-    "tests/storage-resilience-browser.test.cjs": "4341d9caea4f7a88cde4d191268ac58bc61b343952c9f83806af3a853a229ab1"
+    "tests/storage-resilience-browser.test.cjs": "4341d9caea4f7a88cde4d191268ac58bc61b343952c9f83806af3a853a229ab1",
+    "tests/focus-browser.test.cjs": "28bccafbaf1a56eca856792c97c1826acae8ad7e39dcc0ecfc59e14df6caf1f2"
   },
   "distributions_sha256": {
     "app/distribution/courriels.schema.json": "935f69e462547bfe49c01958d057be9f5d672e0270fcde8ca6d7f8b9d35fe532",
     "app/distribution/exemple.courriel.json": "ffbb458d7ca89fc18a5362aa0aa7ebe75607bc4835b5be177344eb5dce4fb510",
-    "app/distribution/portable.html": "b226da5ccb3943e87c00a462ec64933bf4b39c89e48dc7a2f802e001abe2de93",
+    "app/distribution/portable.html": "8d5536c6bdcd78ef3769949665510e7962ce9b25397fcfbf19c2a51f4841905f",
     "app/distribution/qualification.courriels.json": "aeec3d48135da06dfddb8d23ed632e3df4db30dbe21fd76a2e7527c071906882",
     "app/distribution/snum.html": "1d3186720a5b4c36d52c8007e140b6213d1184f4662ceed2a81d8e663727e414",
     "app/distribution/web/icon-192.png": "aadd19a40c58106b744454719023d88db1173eb9d37244c00b58e2c5263cab4f",
     "app/distribution/web/icon-512.png": "62744b0258125bd90992841da6127622aa038f501099c0bd7a917b4bc76bfee1",
     "app/distribution/web/icon.svg": "5505b460c862ebb01858dd50199029259b1f7a6aa3764f219f4ab83405181a23",
-    "app/distribution/web/index.html": "59b2dbe9feab3b89ad8f3560a3b7e62c983333405634b9dc0a1e63301311a43d",
+    "app/distribution/web/index.html": "de38b8d3bfe6e6ff6de0431c83043efae7adb1e0cc549d429a66d848c4461196",
     "app/distribution/web/manifest.webmanifest": "8714de33ac81701d61efab69403d603626c0b03373ecb652b2ddcf760cb35da9",
-    "app/distribution/web/sw.js": "7f619020daa3f2c0badbb324274c8eff8ba6034b30fa3dd81f44f6cd92be35b9",
+    "app/distribution/web/sw.js": "08fae5893d450098b8a8e8e58d8ee303d0ddf20a9c96203aafd40f97c5a8d7db",
     "prototype/distribution/portable.html": "fa94c7141de44b021f3a4e9f2508d850b0fa41f110e1848531b727554dc580ec",
     "prototype/distribution/web/icon.svg": "5505b460c862ebb01858dd50199029259b1f7a6aa3764f219f4ab83405181a23",
     "prototype/distribution/web/index.html": "2aed8f28105fc6326465f315ff5065b5d571b8abf92cc810a20e9f5398a1815a",
     "prototype/distribution/web/manifest.webmanifest": "4c3bcf2a7c0d7b742467d05f0d7f410092407962aa45cc02128c432afa354509",
     "prototype/distribution/web/sw.js": "051b9d5763c18dc4251913e8c874863b98cb952f05cd94ef14fab33cee033796"
+  },
+  "ay11_receipt": "recette-ay11.json",
+  "pages": {
+    "workflow_published_on_main": true,
+    "activation": "BLOCKED_HTTP_404_INSUFFICIENT_ADMIN_RIGHTS",
+    "default_branch_main": false,
+    "live_url_verified": false
   }
 }

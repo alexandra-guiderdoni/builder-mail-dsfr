@@ -1,0 +1,156 @@
+{
+  "schema": "builder-mail-dsfr/ay11-recipe-v1",
+  "date": "2026-10-22",
+  "builder_baseline_commit": "6a3390f4b6c932d1ea9cedcb7702ee9c3558f5ad",
+  "ay11_head_initial": "5fdd8d9f11b0a92376571e94dd85e38fc3263433",
+  "ay11_head_final": "f553e80c26efc92bfe4a6b6b38a67913f4b70d43",
+  "ay11_concurrent_change": "documentation and orchestration receipt only; runtime unchanged",
+  "ay11_source_modified_by_campaign": false,
+  "database_persistence_requested": false,
+  "profile": "rgaa-106",
+  "axe_version": "4.14.0",
+  "active_families": [
+    "accessible-name",
+    "captcha-images",
+    "color-information",
+    "consultation",
+    "contrast",
+    "css-background",
+    "external-media",
+    "focus-visible",
+    "image-text",
+    "layout",
+    "promoted-browser",
+    "promoted-css-dynamic",
+    "promoted-dynamic",
+    "promoted-static",
+    "semantic-text",
+    "sensitive-form-signals",
+    "sensitive-forms",
+    "shape-size-position"
+  ],
+  "unavailable_family": "candidate-static: no supported criterion",
+  "variants_per_scene": 57,
+  "executed_probe_variants": 228,
+  "command_attempts_main_campaign_including_initial_capture": 233,
+  "command_exit_counts_including_initial_capture": {
+    "0": 232,
+    "1": 1
+  },
+  "scenes": {
+    "app": {
+      "probe_variants": 57,
+      "axe": {
+        "violations": 0,
+        "passes": 42,
+        "incomplete": 0,
+        "inapplicable": 50
+      },
+      "focus_coverage": "11/20",
+      "focus_collection": "partially_collected",
+      "contrast_3_3_candidates": 1,
+      "form_runs": [
+        "failed_target_unresolved"
+      ]
+    },
+    "editor": {
+      "probe_variants": 57,
+      "axe": {
+        "violations": 0,
+        "passes": 48,
+        "incomplete": 1,
+        "inapplicable": 43
+      },
+      "focus_coverage": "23/53",
+      "focus_collection": "partially_collected",
+      "contrast_3_3_candidates": 7,
+      "form_runs": [
+        "failed_target_unresolved"
+      ]
+    },
+    "prototype": {
+      "probe_variants": 57,
+      "axe": {
+        "violations": 0,
+        "passes": 45,
+        "incomplete": 1,
+        "inapplicable": 46
+      },
+      "focus_coverage": "36/37",
+      "focus_collection": "partially_collected",
+      "contrast_3_3_candidates": 1,
+      "form_runs": []
+    },
+    "snum": {
+      "probe_variants": 57,
+      "axe": {
+        "violations": 0,
+        "passes": 35,
+        "incomplete": 0,
+        "inapplicable": 57
+      },
+      "focus_coverage": "3/3",
+      "focus_collection": "partially_collected",
+      "contrast_3_3_candidates": 1,
+      "form_runs": []
+    }
+  },
+  "supplementary_dialog_capture": {
+    "journey_expectation_verified": true,
+    "axe_violations": 0,
+    "axe_incomplete": 1,
+    "form_runs": [
+      "failed_target_unresolved"
+    ]
+  },
+  "limits": [
+    "CSSOM optional binding rejected on SHA-256 mismatch; static fallback executed successfully; original failure retained",
+    "Form collector target unresolved including after dialog-opening journey",
+    "Focus traces partially collected and focus contrast often undetermined",
+    "Preview iframe content not covered by axe in editor and prototype",
+    "Background and border contrast candidates require human assessment"
+  ],
+  "focus_after_fix": {
+    "observation_count": 10,
+    "all_active_nodes_match_dom_identity": true,
+    "all_focused_named_and_not_ignored": true,
+    "targets": {
+      "prototype: déplacement": "3. Image",
+      "prototype: Tab après déplacement": "Image PNG ou JPEG locale",
+      "prototype: Maj+Tab après déplacement": "Retirer le bloc 2",
+      "prototype: duplication": "4. Image",
+      "prototype: retrait du duplicata": "3. Image",
+      "prototype: dernier retrait": "Ajouter un paragraphe",
+      "application: down": "Texte",
+      "application: duplicate": "Texte",
+      "application: remove": "Texte 1",
+      "application: dernier retrait": "Ajouter un composant"
+    },
+    "last_removal_before_fix": "BODY",
+    "last_removal_after_fix": "SUMMARY: Ajouter un composant",
+    "regression_test": "tests/focus-browser.test.cjs",
+    "suite": {
+      "tests": 65,
+      "pass": 65,
+      "fail": 0,
+      "skipped": 0
+    }
+  },
+  "screen_reader_executed": false,
+  "human_screen_reader_validation_required": true,
+  "produces_conformity": false,
+  "keep_issue_2_open": true,
+  "local_artifacts_sha256": {
+    "campaign-manifest.json": "4fa9841c6ec3f623db1464b4d793d333a0d7ad2f812aa37bda1620392da412e0",
+    "probe-inventory.json": "0083ac6b4348854a61abe16be0a052e2b0feda90b26b7aae6070f0e7f06572c6",
+    "focus-accessibilite.json": "b7cc51e9ada2c561d3c92ae54bd534e5df765c6d065ea541af3291cb55a7940e",
+    "dernier-retrait-red.log": "b167b80f354d390c2e113f67a9cc5437b3ef50723f3a56624116e7ec479f79a5",
+    "suite-65.log": "ffa673f76ac28deef0d53e74935a0f8349192529147a9f585b661c2d730e1a06",
+    "library-dialog-capture.json": "76124bddd37d77e387a9f9effab667a5f6c8e2967c4e5007cb0007279f5adcc6"
+  },
+  "postfix_source_sha256": {
+    "app/source/editor.js": "eec5b3505d566505b5ddf04cbf8273f58435fe58326a47083d2772d98299f91d",
+    "tests/focus-browser.test.cjs": "28bccafbaf1a56eca856792c97c1826acae8ad7e39dcc0ecfc59e14df6caf1f2",
+    "app/distribution/portable.html": "8d5536c6bdcd78ef3769949665510e7962ce9b25397fcfbf19c2a51f4841905f"
+  }
+}

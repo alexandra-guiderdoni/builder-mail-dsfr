@@ -97,6 +97,8 @@ Servir uniquement le contenu de `app/distribution/web/` sur l’origine HTTPS au
 
 GitHub Pages est l’hébergement choisi par l’utilisateur. `.github/workflows/pages.yml` vérifie les octets générés puis publie seulement la variante web, `snum.html` et `atelier-portable.html`. Les Actions officielles sont épinglées par SHA ; aucun secret personnel n’est requis. Activer Pages avec la source « GitHub Actions » dans les paramètres du dépôt et utiliser `main` comme branche par défaut. Cette activation exige les droits d’administration ou de gestion de Pages ; un accès Git en écriture ne suffit pas. Voir la [procédure GitHub](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages).
 
+État constaté le 22 octobre : le workflow est publié sur `main`, mais le compte connecté a seulement l’accès Git en écriture. Les deux appels de réglage et la page de paramètres Pages renvoient HTTP 404. La branche par défaut reste celle du prototype ; aucun déploiement ni URL publique n’est attesté. Le propriétaire doit choisir `main` par défaut et « GitHub Actions » pour Pages avant de lancer le workflow.
+
 Après publication, contrôler l’URL HTTPS renvoyée par le déploiement, l’ouverture de l’atelier et du convertisseur, le manifeste, le worker et la réouverture hors connexion dans un profil de recette. L’origine web possède sa propre bibliothèque : importer un export JSON du portable pour y retrouver ses compositions. Un site accessible sur Internet ne prouve pas que le parc administratif en autorise l’accès ou l’installation.
 
 ## Limites à conserver visibles

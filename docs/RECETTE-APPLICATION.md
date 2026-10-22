@@ -6,7 +6,7 @@ Le [reçu initial](recette-application-observee.json) identifie la campagne hist
 
 ## État de livraison du 22 octobre
 
-La campagne après corrections donne **64 tests réussis, 0 échec, 0 saut**, en 23,666 s. `npm run check` renvoie `APPLICATION_DISTRIBUTIONS_OK` et `DISTRIBUTIONS_OK`. Le [reçu de livraison](recette-publication.json) conserve les empreintes des sources, distributions et journal ; le journal brut local est `evidence/suite-publication-20261022.log`. Les observations historiques plus bas gardent leurs nombres et limites propres.
+La dernière campagne, après correction du focus du dernier retrait, donne **65 tests réussis, 0 échec, 0 saut**, en 24,161 s. `npm run check` renvoie `APPLICATION_DISTRIBUTIONS_OK` et `DISTRIBUTIONS_OK`. Le [reçu de livraison](recette-publication.json) conserve les empreintes des sources, distributions et journal ; le journal brut courant est `evidence/ay11-20261022/suite-65.log`. La livraison précédente comptait 64 tests en 23,666 s, dans `evidence/suite-publication-20261022.log`. Les observations historiques plus bas gardent leurs nombres et limites propres.
 
 Les essais réels sur macOS 26.5.2, Firefox 156.0 et Chrome 155.0.8059.85 ont constaté :
 
@@ -17,6 +17,29 @@ Les essais réels sur macOS 26.5.2, Firefox 156.0 et Chrome 155.0.8059.85 ont co
 - La revue a trouvé une régression visuelle des filets de `mail-35` et `mail-36`, passée de 3 px à environ 299,5 px. Les cellules décoratives gardent désormais leur largeur ; le test après copie mesure 3,5 px avec la demi-bordure fusionnée.
 
 Les reçus privés sont dans `evidence/gmail-mac-20261022/`, `evidence/melissa-mac-20261022/` et `evidence/qualification-finale-20261022/`. Un nouveau message texte avec footer a été envoyé depuis le bouton natif Mélissa après correction ; sa réception et sa largeur restent à contrôler. Ces recettes ne qualifient ni Outlook, ni Windows, ni les images bloquées, ni toutes les familles en clair/sombre. Le [suivi des critères](SUIVI-CORRECTIONS.md) garde #2 et #13 ouvertes.
+
+## Sondes AY11 et focus (#2)
+
+**Préqualification via arbre d'accessibilité - validation humaine avec NVDA, JAWS ou VoiceOver requise.** Aucun lecteur d’écran n’a été exécuté. Le [reçu AY11](recette-ay11.json) donne l’inventaire, les résultats et les empreintes des preuves locales.
+
+Les 18 familles actives du CLI AY11 ont été exécutées dans leurs 57 variantes sur quatre états : accueil, éditeur générique, prototype et convertisseur SNUM, soit **228 exécutions de sondes**. `candidate-static` n’expose aucun critère exécutable dans cette version. Trois dossiers complets et la capture de l’éditeur utilisent le profil `rgaa-106`, avec axe, interactions de formulaires et sondes temporelles. Les sources AY11 n’ont pas été modifiées par cette recette ; une mise à jour concurrente n’a touché que sa documentation et un reçu d’orchestration.
+
+| État | Violations axe | Règles incomplètes | Parcours de focus AY11 collecté |
+| --- | --- | --- | --- |
+| Accueil | 0 | 0 | 11/20 |
+| Éditeur générique | 0 | 1 | 23/53 |
+| Prototype | 0 | 1 | 36/37 |
+| SNUM | 0 | 0 | 3/3 |
+
+Les deux règles incomplètes concernent les aperçus en iframe : leur contenu n’a pas été analysé par axe dans cette capture. Les parcours de focus restent déclarés partiels par AY11, y compris lorsque le nombre de cibles atteint 3/3. Les contrastes d’indicateur restent souvent indéterminés. La sonde 3.3 signale un fond de lien à 1,08:1 dans les quatre états et six bordures de boutons à 1,36:1 dans l’éditeur : signaux candidats à examiner visuellement, sans verdict de non-conformité. Le texte ou d’autres repères peuvent identifier ces contrôles ; leur suffisance n’a pas été jugée.
+
+Un essai de liaison CSSOM a été refusé pour identité SHA-256 incompatible ; cet échec est conservé. La sonde statique de fond CSS a ensuite réussi. Le collecteur de formulaires termine en `failed_target_unresolved` sur `library-form`, y compris lors d’une capture supplémentaire après ouverture du dialogue de renommage. Cette cinquième capture a zéro violation axe et une règle incomplète ; elle ne résout pas la limite du collecteur. Ces résultats ne sont pas présentés comme des tests réussis de validation de formulaire.
+
+Un parcours complémentaire relie `document.activeElement` au même nœud de l’arbre d’accessibilité Chromium, par son identifiant natif. **Dix observations** couvrent déplacement, duplication, retrait, dernier retrait et reprise au clavier dans les deux éditeurs. Après correction, les dix cibles sont nommées, non ignorées et marquées comme ayant le focus. Le prototype rend le focus au titre du bloc ou au bouton d’ajout. L’éditeur générique le rend au champ du bloc ou, après le dernier retrait, à « Ajouter un composant ».
+
+Le dernier retrait générique rendait auparavant le focus au `BODY`. Le test de régression a d’abord échoué (`BODY` au lieu de `SUMMARY`), puis réussi : activation par Entrée de la section fermée, puis Tab vers la recherche du catalogue. Sources : `app/source/editor.js` et `tests/focus-browser.test.cjs`. Les 228 sondes portent sur la livraison précédant cette correction ; le parcours ciblé et les 65 tests portent sur la distribution corrigée. Les preuves brutes restent dans `evidence/ay11-20261022/`, sans persistance dans la base AY11.
+
+**#2 reste ouverte** pour vérifier les annonces réellement prononcées avec VoiceOver puis le lecteur du poste Windows. Zéro violation axe et un nœud nommé ne prouvent ni ces annonces ni la conformité RGAA.
 
 ## Observations exécutées
 
@@ -66,7 +89,7 @@ ruff check scripts/build_app.py scripts/catalogue.py scripts/interchange.py
 
 - Installation de développement : deux paquets ajoutés, audit npm sans vulnérabilité signalée. Aucun navigateur nouvellement téléchargé ; Chromium existant utilisé.
 - Génération et comparaison : `APPLICATION_DISTRIBUTIONS_OK` et `DISTRIBUTIONS_OK`.
-- Campagne historique de l’accueil : **28 réussites, 0 échec, 0 test sauté**, en 11,233 s ; journal `accueil-suite-finale.log`. La campagne courante de 64 tests figure en tête de cette fiche.
+- Campagne historique de l’accueil : **28 réussites, 0 échec, 0 test sauté**, en 11,233 s ; journal `accueil-suite-finale.log`. La campagne courante de 65 tests figure en tête de cette fiche.
 - Accueil : **3 tests ciblés réussis**, journal `accueil-parcours-cibles-final.log`. La distribution sans accueil avait d’abord échoué sur l’absence de cet écran : `accueil-test-rouge.log`.
 - Parcours ciblés de séparation : **4 tests réussis**, journal `separation-parcours-cibles.log`.
 - Firefox : **PARCOURS_FIREFOX_OBSERVE**, cinq groupes de contrôles incluant accueil, conversion séparée puis import générique, aucune erreur enregistrée ; reçu `firefox-1792657967435/receipt.json`.

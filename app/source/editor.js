@@ -17,7 +17,8 @@
         if (actionName === "remove") { blocks.splice(index, 1); A.selected = blocks[Math.min(index, blocks.length - 1)]?.id || null; }
         if (["up", "down"].includes(actionName)) { const destination = index + (actionName === "up" ? -1 : 1); if (destination >= 0 && destination < blocks.length) [blocks[index], blocks[destination]] = [blocks[destination], blocks[index]]; }
       });
-      get("block-editor").querySelector("textarea,input")?.focus();
+      const target = get("block-editor").querySelector("textarea,input") || get("catalogue").closest("details").querySelector("summary");
+      target.focus();
     });
   });
   function edit(input, mutator) {
