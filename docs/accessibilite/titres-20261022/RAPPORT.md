@@ -61,6 +61,16 @@ Le [test officiel 10.1.2](https://accessibilite.numerique.gouv.fr/methode/criter
 
 Une adaptation CSS dérivée doit préserver cascade, dimensions, alignements, espacements, modes clair/sombre et filets décoratifs. La référence et son contrat restent à conserver. L’absence de poste Windows interdit de promettre le résultat Outlook après transformation ; le courriel reçu reste un périmètre de qualification distinct.
 
+### Recherche de correction, encore hors produit
+
+Trois essais isolés remplacent les attributs par du CSS : **42, puis 54, puis 60 comparaisons PNG identiques sur 60**. Les échecs précédents sont conservés. Les PNG divergents sont enregistrés ; les PNG identiques sont comparés pendant l’exécution puis seuls leurs couples d’empreintes sont conservés. Il faut garder les chaînes de styles brutes pour préserver les propriétés Office inconnues du navigateur, reproduire le centrage des descendants en bloc et éviter de propager l’alignement du conteneur au texte des tableaux imbriqués. Le [diagnostic reproductible](presentation-diagnostic.json) identifie les scripts, sources, empreintes, résultats et limites.
+
+L’essai final utilise encore `float` pour 32 tableaux dans treize composants. [Can I Email](https://www.caniemail.com/features/css-float/) documente son non-support dans Outlook Windows 2007–2019 et Windows Mail 2019, lors de tests du 8 mai 2024. **Ce résultat navigateur n’est donc pas une correction livrable telle quelle.** Le défaut reste `NC_CONFIRMEE` dans la version publiée.
+
+Astra propose d’éprouver des cellules natives pour **dix groupes de colonnes, soit 22 tableaux** ; six tableaux internes pleine largeur et quatre boutons isolés n’exigent pas cette enveloppe. La [documentation Microsoft historique](https://learn.microsoft.com/en-us/previous-versions/office/developer/office-2007/aa338201%28v%3Doffice.12%29) étaye les tableaux/cellules et leurs dimensions CSS ; elle ne qualifie aucune version ni aucun collage actuels.
+
+Premiers représentants à exercer : composants 03, 30, 33 et 46. Points discriminants : logo de 76 px dans un tableau déclaré à 70 px, signature avec largeur calculée, empilement mobile et suppression des largeurs de cellules par `clipboardHtml()`. Les essais doivent aussi couvrir les styles de tête retirés, les contenus longs et les seuils responsive. La structure proposée reste à expérimenter avant son intégration ; aucune troisième copie de catalogue ni duplication générale MSO n’est décidée.
+
 ## Contre-audit et travaux restants
 
 Astra confirme en lecture seule la correction structurelle des titres et la conservation du contrat canonique : **GO local**, aucun GO RGAA global. Sa revue porte sur sources, tests, journaux et reçus ; elle n’est pas une nouvelle exécution navigateur ni une écoute de lecteur d’écran. Astra confirme aussi le rattachement et le défaut de présentation du test 10.1.2.
