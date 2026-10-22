@@ -1,5 +1,7 @@
 # Réalisation de l’atelier autonome
 
+Actualisation accessibilité : [campagne RGAA](accessibilite/RAPPORT.md), **72 tests applicatifs réussis**, corrections d’espacement et d’association des erreurs. Les matrices exhaustives sont produites ; qualifications humaines, collectes et structure des courriels restent ouvertes. Les chiffres antérieurs décrivent leurs campagnes historiques.
+
 Objectif : application complète du cadrage confirmé, depuis le prototype `c329339`. Le mandat de livraison du 22 octobre autorise la publication sur `main` dans le dépôt personnel et la clôture des issues satisfaites. Les essais de messagerie sur Mac ont été autorisés séparément ; le site public est livré, l’accès et l’installation depuis le parc restent à qualifier.
 
 ## État vérifié au démarrage

@@ -24,9 +24,9 @@
   function edit(input, mutator) {
     const next = M.copy(A.library);
     try {
-      mutator(next); M.library(next); A.invalid.delete(input.id); input.removeAttribute("aria-invalid");
+      mutator(next); M.library(next); A.invalid.delete(input.id); A.UI.fieldError(input, "");
       A.State.change(mutator, false, true); A.UI.selections(); A.UI.blockList();
-    } catch (cause) { A.invalid.add(input.id); input.setAttribute("aria-invalid", "true"); A.error(`${cause.message} Ce champ n’est pas sauvegardé.`); }
+    } catch (cause) { A.invalid.add(input.id); A.UI.fieldError(input, cause.message); A.error(`${cause.message} Ce champ n’est pas sauvegardé.`); }
   }
   get("document-name").addEventListener("input", event => edit(event.target, lib => { lib.documents.find(d => d.id === lib.activeId).name = event.target.value; }));
   get("subject").addEventListener("input", event => edit(event.target, lib => { lib.documents.find(d => d.id === lib.activeId).subject = event.target.value; }));

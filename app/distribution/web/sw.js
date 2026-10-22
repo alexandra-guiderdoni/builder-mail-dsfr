@@ -1,5 +1,5 @@
 const PREFIX = "atelier-courriels-" + encodeURIComponent(self.registration.scope) + "-";
-const CACHE = PREFIX + "b3a92ae860d30bcc";
+const CACHE = PREFIX + "bd2f5a9459a29290";
 const FILES = ["./", "./index.html", "./manifest.webmanifest", "./icon.svg", "./icon-192.png", "./icon-512.png"];
 self.addEventListener("install", event => event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(FILES.map(url => new Request(url, {cache: "reload"}))))));
 self.addEventListener("message", event => { if (event.data?.type === "ACTIVATE_UPDATE") self.skipWaiting(); });

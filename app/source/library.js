@@ -3,6 +3,7 @@
   "use strict";
   const A = window.MailBuilder, M = A.Model, get = id => document.getElementById(id), esc = A.Render.escape;
   let currentDialog, busy = false;
+  get("library-name").setAttribute("aria-describedby", "library-dialog-error");
   const find = id => { const doc = A.library.documents.find(d => d.id === id); if (!doc) throw new Error("Cette composition n’est plus disponible."); return doc; };
   const attempt = async action => { try { await action(); } catch (cause) { A.error(cause.message); } };
   function show(editor) {

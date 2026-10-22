@@ -6,6 +6,8 @@ Application locale pour composer des courriels à partir des **52 sections et va
 
 ## Ouvrir l’atelier
 
+La [campagne RGAA en cours](docs/accessibilite/RAPPORT.md) publie les matrices des 106 critères et 258 tests, deux corrections vérifiées et les lacunes restantes. Les 72 tests applicatifs passent ; **la conformité RGAA à 100 % reste à démontrer**, notamment pour la structure des courriels et les qualifications humaines.
+
 **[Ouvrir l’atelier en ligne](https://alexandra-guiderdoni.github.io/builder-mail-dsfr/)**. La publication HTTPS et le rechargement hors connexion après préparation du cache ont été vérifiés le 22 octobre 2026 ; [reçu de publication](docs/recette-pages.json).
 
 Télécharger puis ouvrir [le fichier portable](app/distribution/portable.html) par double-clic. Il contient l’interface, les composants et les images de départ ; il fonctionne dès la première ouverture sans réseau. Aucun Python, Node.js, compte ou service d’IA n’est nécessaire sur le poste métier.

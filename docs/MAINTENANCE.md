@@ -1,5 +1,7 @@
 # Maintenir l’application
 
+Le [dossier d’accessibilité](accessibilite/RAPPORT.md) conserve la campagne courante, ses matrices, les scripts et leurs limites. Les fichiers sous `evidence/` sont locaux ; les reçus partageables et matrices figurent sous `docs/accessibilite/`. Aucun script d’audit ne produit une conformité humaine.
+
 L’application livrée est statique et autonome. Python et Node.js sont des outils de développement ; aucun serveur métier, compte ou paquet distant n’est requis à l’exécution. Le [cadrage](cadrage-source.md) conserve les limites d’autorité : amonts en lecture seule, publication et accès aux messageries séparément autorisés.
 
 ## Sources de vérité

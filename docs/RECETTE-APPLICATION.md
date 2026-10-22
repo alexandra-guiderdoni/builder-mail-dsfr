@@ -1,5 +1,7 @@
 # Recette de l’application autonome
 
+La [campagne d’accessibilité du 22 octobre](accessibilite/RAPPORT.md) complète cette recette : **72 tests applicatifs réussis sans saut**, deux régressions corrigées, contrôles Firefox ciblés, matrices 106/258 et limites explicites. Les campagnes antérieures ci-dessous restent historiques. Aucun taux RGAA validé.
+
 **Application publiée, qualification métier incomplète.** Observations des 21 et 22 octobre 2026 sur macOS 26.5.2, Firefox natif 156.0 et Chromium 156.0.8078.4. Les campagnes couvrent l’accueil « Mes newsletters », le builder générique et la page SNUM séparée, puis l’origine HTTPS publique. La recette du [prototype](RECETTE.md) reste historique et distincte.
 
 Le [reçu initial](recette-application-observee.json) identifie la campagne historique. Les profils isolés, captures et téléchargements restent sous `evidence/`, ignorés par Git. Les essais automatisés n’utilisent aucun compte ; les recettes Gmail et Mélissa ci-dessous utilisent uniquement les sessions et le destinataire autorisés. Les preuves publiées ne reproduisent aucune donnée personnelle.

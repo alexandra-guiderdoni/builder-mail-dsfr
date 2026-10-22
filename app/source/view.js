@@ -3,6 +3,16 @@
   "use strict";
   const A = window.MailBuilder, M = A.Model, esc = A.Render.escape, get = id => document.getElementById(id);
   let previewURL;
+  function fieldError(input, message) {
+    const id = `error-${input.id}`, descriptions = new Set((input.getAttribute("aria-describedby") || "").split(/\s+/).filter(Boolean));
+    let hint = get(id);
+    if (message) {
+      if (!hint) { hint = document.createElement("p"); hint.id = id; hint.className = "field-error"; hint.dataset.fieldError = input.id; input.insertAdjacentElement("afterend", hint); }
+      hint.textContent = `Erreur : ${message}`; descriptions.add(id); input.setAttribute("aria-invalid", "true");
+    } else { hint?.remove(); descriptions.delete(id); input.removeAttribute("aria-invalid"); }
+    if (descriptions.size) input.setAttribute("aria-describedby", [...descriptions].join(" ")); else input.removeAttribute("aria-describedby");
+  }
+  function clearFieldErrors() { for (const hint of document.querySelectorAll("[data-field-error]")) { const input = get(hint.dataset.fieldError); if (input) fieldError(input, ""); else hint.remove(); } }
   function option(value, label, selected = false) { return `<option value="${esc(value)}" ${selected ? "selected" : ""}>${esc(label)}</option>`; }
   function selections() {
     const doc = A.doc();
@@ -44,5 +54,5 @@
     get("catalogue").innerHTML = visible.map(c => option(c.id, `${c.family} — ${c.label}`)).join("");
     get("catalogue-count").textContent = `${visible.length} composants sur ${A.catalog.components.length}`;
   }
-  A.UI = Object.freeze({refresh, preview, fields, blockList, selections, catalogue});
+  A.UI = Object.freeze({refresh, preview, fields, blockList, selections, catalogue, fieldError, clearFieldErrors});
 })();
