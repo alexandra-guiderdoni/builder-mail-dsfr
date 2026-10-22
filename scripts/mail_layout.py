@@ -257,10 +257,30 @@ def native_columns(root, index):
 def css_template(index, source):
     root = Fragment(source).root
     native_columns(root, index)
+    normalized = []
     for node in root.elements():
         defaults = (
             ["text-align:left", "text-align:start"] if node.tag == "table" else []
         )
+        for dimension in ["width", "height"]:
+            if dimension not in node.attrs:
+                continue
+            value = node.attrs[dimension]
+            if node.tag == "img" and dimension == "height" and value == "auto":
+                normalized.append((node.tag, dimension, value))
+                defaults.append("height:auto")
+                del node.attrs[dimension]
+            elif value == "":
+                normalized.append((node.tag, dimension, value))
+                del node.attrs[dimension]
+            elif not re.fullmatch(r"[0-9]+(?:%)?", value or "") or (
+                node.tag == "img" and not value.isdigit()
+            ):
+                raise ValueError(
+                    f"Dimension mail non qualifiée : {node.tag}[{dimension}]."
+                )
+        if "colpos" in node.attrs:
+            normalized.append((node.tag, "colpos", node.attrs.pop("colpos")))
         if node.tag == "td":
             defaults += ["overflow-wrap:anywhere", "word-break:break-word"]
         if node.tag == "td" and node.attrs.get("align") == "center":
@@ -316,4 +336,11 @@ def css_template(index, source):
             del node.attrs[key]
         if defaults:
             node.style(";".join(defaults), prepend=True)
+    expected = {
+        6: [("img", "height", "auto")],
+        33: [("table", "width", "")],
+        46: [("table", "colpos", "left"), ("table", "colpos", "right")],
+    }
+    if normalized != expected.get(index, []):
+        raise ValueError(f"Signature HTML mail non qualifiée dans mail-{index:02}.")
     return root.source()

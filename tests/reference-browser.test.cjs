@@ -18,15 +18,15 @@ test('la référence épinglée reste intacte ; couleurs, images et règles mobi
       const result = await rendered.evaluate(selectors => {
         const probes = document.createElement('div'); probes.style.cssText = 'position:absolute;left:-9999px';
         const colors = selectors.map(selector => { const a = document.createElement('a'); a.className = selector.replace(/^a/, '').replace('[href]', '').replace('.', ''); if (selector.includes('[href]')) a.href = 'https://exemple.invalid/'; a.textContent = 'Couleur'; probes.append(a); document.body.append(probes); return getComputedStyle(a).color; });
-        const images = [...document.images].map(i => ({naturalWidth: i.naturalWidth, naturalHeight: i.naturalHeight, width: i.width, height: i.height, heightAttribute: i.getAttribute('height')}));
+        const images = [...document.images].map(i => ({naturalWidth: i.naturalWidth, naturalHeight: i.naturalHeight, width: i.width, height: i.height, widthAttribute: i.getAttribute('width'), heightAttribute: i.getAttribute('height'), heightStyle: i.style.height}));
         return {colors, images, bodyColor: getComputedStyle(document.body).color, bodyBackground: getComputedStyle(document.body).backgroundColor, tableWidth: document.querySelector('table.wlkm-mw').getBoundingClientRect().width, viewport: innerWidth, scrollWidth: document.documentElement.scrollWidth};
       }, selectors);
       if (colorScheme === 'dark') assert.deepEqual(result.colors, expected.map(rgb => `rgb(${rgb})`));
-      const auto = result.images.find(i => i.heightAttribute === 'auto'); assert(auto); assert(Math.abs(auto.width / auto.height - auto.naturalWidth / auto.naturalHeight) < 0.05);
+      const auto = result.images.find(i => i.widthAttribute === '140'); assert(auto); assert.equal(auto.heightAttribute, null); assert.equal(auto.heightStyle, 'auto'); assert(Math.abs(auto.width / auto.height - auto.naturalWidth / auto.naturalHeight) < 0.05);
       assert(result.images.every(i => i.naturalWidth > 0 && i.naturalHeight > 0));
       observations.push({colorScheme, width, ...result});
       await fs.mkdir(evidence, {recursive: true}); await rendered.screenshot({path: path.join(evidence, `gabarit-${colorScheme}-${width}.png`), fullPage: true});
     }
-    await fs.writeFile(path.join(evidence, 'reference-observee.json'), JSON.stringify({adaptation: false, browsers: [browser.version()], selectors, observations, mailClientsVerified: false}, null, 2));
+    await fs.writeFile(path.join(evidence, 'reference-observee.json'), JSON.stringify({adaptation: true, adaptationScope: 'Rendu CSS dérivé ; référence canonique conservée par empreinte.', browsers: [browser.version()], selectors, observations, mailClientsVerified: false}, null, 2));
   } finally { await browser.close(); }
 });
