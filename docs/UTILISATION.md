@@ -18,7 +18,7 @@ Pour personnaliser « Consulter la source », sélectionner le bloc, renseigner 
 
 Pour les liens intégrés aux composants, le champ **« Intitulé du lien (obligatoire) »** doit contenir du texte. Une saisie vide est signalée et ne remplace pas la valeur enregistrée. Si un ancien fichier contient déjà des intitulés vides, son aperçu affiche les liens à renseigner sans les activer. La copie et le téléchargement HTML sélectionnent le premier champ à corriger. Corriger les champs progressivement ; l’export JSON de sauvegarde reste possible. Dans SNUM, le message indique le bloc et le champ : exporter le JSON puis l’importer dans le builder pour le corriger.
 
-Dans cette copie prototype, **« Article avec vignette et lien »** peut devenir
+Dans l’atelier, **« Article avec vignette et lien »** peut devenir
 **« Article sans image »** avec le bouton « Retirer l’image ». Le titre porte
 directement son lien ; les autres textes restent éditables dans ce même bloc.
 Charger une nouvelle image rétablit la présentation avec vignette.
@@ -29,9 +29,9 @@ l’espace le permet et reviennent à la ligne sur petit écran. Les adresses et
 intitulés se règlent séparément ; retirer le dernier lien supplémentaire rétablit
 le rendu initial. Un intitulé vide bloque la copie et le téléchargement HTML.
 
-Ces variantes restent locales à ce prototype. Conserver son fichier portable
-avec les compositions concernées : une ancienne version peut refuser ces
-nouveaux cas à l’import.
+Ces variantes sont prises en charge par cette version de l’atelier. Conserver
+l’export JSON avec les compositions concernées : une ancienne version peut
+refuser ces nouveaux cas à l’import.
 
 ## Gérer Mes newsletters
 
