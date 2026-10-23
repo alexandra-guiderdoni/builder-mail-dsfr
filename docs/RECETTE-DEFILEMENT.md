@@ -20,7 +20,15 @@ Les champs sont mesurés après création, import, saisie, changement de largeur
 - Chromium : une image synthétique chargée tardivement dans le même aperçu le fait grandir puis rétrécir, sans mutation du modèle. Ce scénario force un changement intrinsèque dans le cadre de recette ; il ne qualifie pas un collage en messagerie.
 - Les tests couvrent aussi le retour au premier et au dernier bloc, le champ invalide, la réapparition à largeur identique, le filtrage sans résultat, les messages forgés, l’accès au parent refusé, le script étranger refusé et une tentative réseau bloquée avec compteur serveur témoin.
 
-Les régressions existantes de focus, duplication, déplacement, retrait, récupération, bibliothèque, presse-papiers, cache et espacement augmenté passent dans la suite complète. Les sources du moteur, du modèle et du stockage restent identiques à la base, ainsi que les octets de SNUM. Le [reçu local partageable](recette-defilement.json) contient les empreintes, versions, dimensions et limites. La publication HTTPS possède un reçu distinct lorsqu’elle est vérifiée.
+Les régressions existantes de focus, duplication, déplacement, retrait, récupération, bibliothèque, presse-papiers, cache et espacement augmenté passent dans la suite complète. Les sources du moteur, du modèle et du stockage restent identiques à la base, ainsi que les octets de SNUM. Le [reçu local partageable](recette-defilement.json) contient les empreintes, versions, dimensions et limites.
+
+## Publication HTTPS vérifiée
+
+Le correctif `069946fa24412884b682a87003e8d6f753519db0` a été poussé sur `main` puis [déployé avec succès](https://github.com/alexandra-guiderdoni/builder-mail-dsfr/actions/runs/39924997068). Les huit fichiers HTTPS servis sont identiques aux distributions. Dans un profil Chromium neuf, une composition de 52 blocs et 35 lignes est entièrement visible à 1280, 1024, 390 et 320 px ; le pied de page a aussi été inspecté par capture. L’export JSON est identique à la composition et le rechargement hors connexion conserve la bibliothèque et l’aperçu adapté. Le [reçu public](recette-defilement-publication.json) archive ces observations.
+
+L’[issue #28](https://github.com/alexandra-guiderdoni/builder-mail-dsfr/issues/28) a été fermée après cette vérification ; son corps conserve la décision utilisateur, le commit livré, les seize critères cochés et les limites.
+
+Dans une session déjà ouverte, attendre puis activer « Appliquer la mise à jour » pour recevoir la nouvelle interface. Cette action attend une sauvegarde réussie ; garder aussi un export de bibliothèque. Pour le portable, télécharger la nouvelle livraison. Ne pas effacer les données du navigateur pour obtenir le correctif.
 
 ## Rejouer
 

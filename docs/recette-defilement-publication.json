@@ -1,0 +1,191 @@
+{
+  "completed": true,
+  "commit": "069946fa24412884b682a87003e8d6f753519db0",
+  "files": [
+    {
+      "name": "index.html",
+      "status": 200,
+      "sha256": "6765c681d56adb92e6704d8650c0f0dd6f5eb7b19b574bcb1bcc6cef53274cf8"
+    },
+    {
+      "name": "sw.js",
+      "status": 200,
+      "sha256": "40063dee8241ad0f5d0ab9f57b9b5179e1a21cd94ea0f736a679139100cca755"
+    },
+    {
+      "name": "manifest.webmanifest",
+      "status": 200,
+      "sha256": "8714de33ac81701d61efab69403d603626c0b03373ecb652b2ddcf760cb35da9"
+    },
+    {
+      "name": "icon.svg",
+      "status": 200,
+      "sha256": "5505b460c862ebb01858dd50199029259b1f7a6aa3764f219f4ab83405181a23"
+    },
+    {
+      "name": "icon-192.png",
+      "status": 200,
+      "sha256": "aadd19a40c58106b744454719023d88db1173eb9d37244c00b58e2c5263cab4f"
+    },
+    {
+      "name": "icon-512.png",
+      "status": 200,
+      "sha256": "62744b0258125bd90992841da6127622aa038f501099c0bd7a917b4bc76bfee1"
+    },
+    {
+      "name": "snum.html",
+      "status": 200,
+      "sha256": "2361cc528654eb6470f76258708b8d74f36ac04217b847a3f4d771614f6d7af7"
+    },
+    {
+      "name": "atelier-portable.html",
+      "status": 200,
+      "sha256": "5b06b3c9e088476a096a9864cd7933e58985ca91c0acfc6ce33dd22c0426445d"
+    }
+  ],
+  "cases": [
+    {
+      "width": 1280,
+      "preview": {
+        "scroll": 8744,
+        "client": 8744,
+        "width": 638,
+        "last": 8742.125,
+        "scripts": 1
+      },
+      "ui": {
+        "list": {
+          "client": 3736,
+          "scroll": 3736
+        },
+        "catalogue": {
+          "client": 1316,
+          "scroll": 1316
+        },
+        "text": {
+          "client": 856,
+          "scroll": 856
+        },
+        "json": {
+          "client": 184,
+          "scroll": 37840
+        },
+        "pageWidth": 1280,
+        "viewport": 1280
+      }
+    },
+    {
+      "width": 1024,
+      "preview": {
+        "scroll": 9734,
+        "client": 9734,
+        "width": 507,
+        "last": 9732.625,
+        "scripts": 1
+      },
+      "ui": {
+        "list": {
+          "client": 3856,
+          "scroll": 3856
+        },
+        "catalogue": {
+          "client": 1316,
+          "scroll": 1316
+        },
+        "text": {
+          "client": 856,
+          "scroll": 856
+        },
+        "json": {
+          "client": 184,
+          "scroll": 47296
+        },
+        "pageWidth": 1024,
+        "viewport": 1024
+      }
+    },
+    {
+      "width": 390,
+      "preview": {
+        "scroll": 9061,
+        "client": 9061,
+        "width": 322,
+        "last": 9059.09375,
+        "scripts": 1
+      },
+      "ui": {
+        "list": {
+          "client": 3856,
+          "scroll": 3856
+        },
+        "catalogue": {
+          "client": 1316,
+          "scroll": 1316
+        },
+        "text": {
+          "client": 856,
+          "scroll": 856
+        },
+        "json": {
+          "client": 184,
+          "scroll": 154888
+        },
+        "pageWidth": 390,
+        "viewport": 390
+      }
+    },
+    {
+      "width": 320,
+      "preview": {
+        "scroll": 8917,
+        "client": 8917,
+        "width": 252,
+        "last": 8915.09375,
+        "scripts": 1
+      },
+      "ui": {
+        "list": {
+          "client": 4468,
+          "scroll": 4468
+        },
+        "catalogue": {
+          "client": 1316,
+          "scroll": 1316
+        },
+        "text": {
+          "client": 1456,
+          "scroll": 1456
+        },
+        "json": {
+          "client": 184,
+          "scroll": 209944
+        },
+        "pageWidth": 320,
+        "viewport": 320
+      }
+    }
+  ],
+  "errors": [],
+  "screenReaderExecuted": false,
+  "windowsExecuted": false,
+  "browser": "156.0.8078.4",
+  "jsonExportUnchanged": true,
+  "cache": {
+    "worker": "https://alexandra-guiderdoni.github.io/builder-mail-dsfr/sw.js",
+    "caches": [
+      "atelier-courriels-https%3A%2F%2Falexandra-guiderdoni.github.io%2Fbuilder-mail-dsfr%2F-df35f4583fe9c792"
+    ]
+  },
+  "offlinePreview": {
+    "scroll": 8744,
+    "client": 8744,
+    "width": 638,
+    "last": 8742.125,
+    "scripts": 1
+  },
+  "offlineRestored": true,
+  "deployment": "https://github.com/alexandra-guiderdoni/builder-mail-dsfr/actions/runs/39924997068",
+  "method": "Profil Chromium neuf sur HTTPS public, huit fichiers comparés aux distributions, quatre largeurs, export JSON réel puis rechargement sans réseau",
+  "collectorSha256": "ddca0b73dfb83f0a5ee80a6a26c3d2aa49d7672cb91fe741cc0c1fcda384c0bb",
+  "screenshotSha256": "b0ee70cbfdfc3ae780c18f6aafd5901e2f74e5e9021466b251c7e0aefa9f0b3a"
+}
