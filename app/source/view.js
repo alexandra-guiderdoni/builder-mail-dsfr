@@ -28,10 +28,10 @@
   function option(value, label, selected = false) { return `<option value="${esc(value)}" ${selected ? "selected" : ""}>${esc(label)}</option>`; }
   const blockLabel = (b, definition) => b.component === "mail-31" && !b.values.f0 ? "Article sans image" : definition.label;
   function selections() {
-    const doc = A.doc();
+    const doc = A.doc(), template = get("saved-templates").value, identity = get("identities").value;
     get("documents").innerHTML = A.library.documents.map(d => option(d.id, d.name, d.id === doc.id)).join("");
-    get("saved-templates").innerHTML = option("", "Choisir un modèle enregistré") + A.library.templates.map(t => option(t.id, t.name)).join("");
-    get("identities").innerHTML = option("", "Choisir une identité enregistrée") + A.library.identities.map(i => option(i.id, i.name)).join("");
+    get("saved-templates").innerHTML = option("", "Choisir un modèle enregistré") + A.library.templates.map(t => option(t.id, t.name, t.id === template)).join("");
+    get("identities").innerHTML = option("", "Choisir une identité enregistrée") + A.library.identities.map(i => option(i.id, i.name, i.id === identity)).join("");
     get("library-count").textContent = `${A.library.documents.length} compositions · ${A.library.templates.length} modèles · ${A.library.identities.length} identités`;
     A.Library?.refresh();
   }
@@ -47,8 +47,28 @@
     const links = b.additionalLinks || [];
     return `<h4>Autres liens du pied de page</h4>` + links.map((link, i) => `<fieldset><legend>Lien supplémentaire ${i + 1}</legend><label class="fr-label" for="field-footer-url-${i}">Lien HTTPS ou mailto (obligatoire)</label><input class="fr-input" id="field-footer-url-${i}" type="url" data-footer-link-index="${i}" data-footer-link-field="url" aria-required="true" value="${esc(link.url)}"><label class="fr-label" for="field-footer-label-${i}">Intitulé du lien (obligatoire)</label><input class="fr-input" id="field-footer-label-${i}" type="text" data-footer-link-index="${i}" data-footer-link-field="label" data-link-label aria-required="true" value="${esc(link.label)}"><div class="actions"><button class="fr-btn fr-btn--secondary" type="button" data-block-action="remove-footer-link" data-footer-link-index="${i}">Retirer le lien ${i + 1}</button></div></fieldset>`).join("") + `<div class="actions"><button class="fr-btn fr-btn--secondary" type="button" data-block-action="add-footer-link" ${links.length >= 2 ? "disabled" : ""}>Ajouter un lien</button></div>`;
   }
+  // Un redessin du bloc affiché garde le champ actif, son curseur et les saisies invalides.
+  let shownBlock = null, composing = false, deferredFields = false;
+  function capture() {
+    const editor = get("block-editor"), active = editor.contains(document.activeElement) ? document.activeElement : null;
+    return {
+      block: shownBlock,
+      active: active?.id ? {id: active.id, start: active.selectionStart, end: active.selectionEnd, direction: active.selectionDirection} : null,
+      invalid: [...editor.querySelectorAll("[id]")].filter(input => A.invalid.has(input.id)).map(input => ({id: input.id, value: input.value, message: get(`error-${input.id}`)?.textContent.replace(/^Erreur : /, "") || ""}))
+    };
+  }
+  function restore(saved) {
+    if (saved.block !== A.selected) return;
+    for (const item of saved.invalid) { const input = get(item.id); if (input) { input.value = item.value; if (item.message) fieldError(input, item.message); } }
+    const input = saved.active && get(saved.active.id);
+    if (!input || !get("block-editor").contains(input)) return;
+    input.focus({preventScroll: true});
+    if (typeof saved.active.start === "number") { try { input.setSelectionRange(saved.active.start, saved.active.end, saved.active.direction || "none"); } catch { /* type sans sélection */ } }
+  }
   function fields() {
     const b = A.doc().blocks.find(item => item.id === A.selected);
+    if (composing && b && b.id === shownBlock) { deferredFields = true; return; }
+    const saved = capture(); shownBlock = b?.id ?? null;
     if (!b) { get("block-editor").innerHTML = "<p>Ajoutez un composant au courriel pour personnaliser son contenu.</p>"; return; }
     const definition = M.component(b.component), index = A.doc().blocks.indexOf(b);
     get("block-editor").innerHTML = `<h3>${esc(blockLabel(b, definition))}</h3><p class="muted">${esc(definition.family)}</p>` + definition.fields.map(f => {
@@ -58,14 +78,16 @@
       if (f.type === "image") return `<div class="image-field">${v ? `<img src="${esc(v)}" alt="Aperçu de l’image sélectionnée">` : '<p class="muted">Sans image</p>'}<label class="fr-label" for="${id}">${esc(b.component === "mail-31" ? "Image facultative" : label)}</label><input id="${id}" data-image-field="${esc(f.key)}" type="file" accept="image/png,image/jpeg,image/gif,image/webp">${b.component === "mail-31" && v ? '<div class="actions"><button class="fr-btn fr-btn--secondary" type="button" data-block-action="remove-image">Retirer l’image</button></div>' : ""}</div>`;
       return `<label class="fr-label" for="${id}">${esc(label)}</label>${f.type === "text" ? `<textarea class="fr-input" id="${id}" data-field="${f.key}" rows="3"${linkLabel ? ' data-link-label aria-required="true"' : ""}>${esc(v)}</textarea>` : `<input class="fr-input" id="${id}" data-field="${f.key}" type="${f.type === "url" ? "url" : "text"}"${required ? ' aria-required="true"' : ""} value="${esc(v)}">`}`;
     }).join("") + footerLinks(b) + `<label class="fr-label" for="article-source">Lien source facultatif du bloc</label><input class="fr-input" id="article-source" type="url" data-source value="${esc(b.source)}"><label class="fr-label" for="article-source-label">Intitulé du lien source</label><input class="fr-input" id="article-source-label" type="text" data-source-label value="${esc(b.sourceLabel ?? "")}" placeholder="Consulter la source" aria-describedby="source-label-help"><p id="source-label-help" class="muted">Sans intitulé, le lien affiche « Consulter la source ». Sans URL, aucun lien source n’est ajouté.</p><div class="actions"><button class="fr-btn fr-btn--secondary" type="button" data-return-to-block>Revenir au bloc sélectionné</button><button class="fr-btn fr-btn--secondary" data-block-action="up" ${index === 0 ? "disabled" : ""}>Monter</button><button class="fr-btn fr-btn--secondary" data-block-action="down" ${index === A.doc().blocks.length - 1 ? "disabled" : ""}>Descendre</button><button class="fr-btn fr-btn--secondary" data-block-action="duplicate">Dupliquer</button><button class="fr-btn fr-btn--secondary" data-block-action="remove">Retirer le bloc</button><button class="fr-btn fr-btn--secondary" data-action="cancel-fields">Annuler les champs invalides</button></div>`;
-    fitFields();
+    fitFields(); restore(saved);
   }
   function preview() {
     A.Preview.show(A.doc());
     get("composition-summary").textContent = `${A.doc().blocks.length} blocs dans « ${A.doc().name} »`;
   }
   function refresh() {
-    selections(); get("document-name").value = A.doc().name; get("subject").value = A.doc().subject;
+    selections();
+    if (!A.invalid.has("document-name")) get("document-name").value = A.doc().name;
+    if (!A.invalid.has("subject")) get("subject").value = A.doc().subject;
     blockList(); fields(); preview();
   }
   function catalogue() {
@@ -77,6 +99,11 @@
     get("catalogue-count").textContent = `${visible.length} composants sur ${A.catalog.components.length}`;
   }
   get("block-editor").addEventListener("input", event => fitField(event.target));
+  // Pendant une composition IME, le champ n’est pas remplacé ; le redessin attend compositionend.
+  const endComposition = () => { composing = false; if (deferredFields) { deferredFields = false; setTimeout(fields, 0); } };
+  get("block-editor").addEventListener("compositionstart", () => { composing = true; });
+  get("block-editor").addEventListener("compositionend", endComposition);
+  get("block-editor").addEventListener("focusout", endComposition);
   get("catalogue").addEventListener("change", () => get("catalogue").selectedOptions[0]?.scrollIntoView({block: "nearest"}));
   let editorWidth;
   new ResizeObserver(entries => {
