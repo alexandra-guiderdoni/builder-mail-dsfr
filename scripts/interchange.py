@@ -61,9 +61,14 @@ def schema(catalogue):
                 value["pattern"] = (
                     r"^data:image/(?:png|jpeg|gif|webp);base64,[A-Za-z0-9+/]+={0,2}$"
                 )
+                if component["id"] == "mail-31" and field["key"] == "f0":
+                    value = {"title": field["label"], "anyOf": [{"const": ""}, value]}
             if field["type"] == "url":
                 value["description"] = (
-                    "Lien HTTPS ; les règles d’URL complètes sont contrôlées à l’import."
+                    "Lien HTTPS ou mailto vers une adresse ASCII, avec subject facultatif ; "
+                    "les autres paramètres sont refusés à l’import."
+                    if component["family"] == "Pieds de page"
+                    else "Lien HTTPS ; les règles d’URL complètes sont contrôlées à l’import."
                 )
             fields[field["key"]] = value
         key = component["id"]
@@ -81,6 +86,25 @@ def schema(catalogue):
             "type": "string",
             "title": "Intitulé du lien source (facultatif)",
         }
+        if key == "mail-50":
+            definitions[key]["properties"]["additionalLinks"] = {
+                "type": "array",
+                "title": "Liens supplémentaires du pied de page (facultatifs)",
+                "maxItems": 2,
+                "items": object_schema(
+                    {
+                        "url": {
+                            "type": "string",
+                            "description": "Lien HTTPS ou mailto ; la validation complète est appliquée à l’import.",
+                        },
+                        "label": {
+                            "type": "string",
+                            "pattern": r"^[^\x00-\x1f\x7f-\x9f\u2028\u2029]*$",
+                        },
+                    },
+                    "Lien supplémentaire du pied de page",
+                ),
+            }
         all_blocks.append(reference)
         if component["family"] in ["En-têtes", "Pieds de page"]:
             frames.append(reference)

@@ -110,6 +110,15 @@ Les fichiers `dsfr-mail/document` et `dsfr-mail/library` portent `version: 1` et
 
 `sourceLabel` est une propriété facultative de bloc, validée comme chaîne. Le schéma conserve les quatre propriétés obligatoires antérieures ; les autres propriétés inconnues restent refusées. Le rendu fournit le texte par défaut sans l’ajouter aux anciennes données. La compatibilité avec les anciens lecteurs stricts est détaillée dans le contrat JSON.
 
+Les champs de lien des pieds de page `mail-47` à `mail-50` acceptent aussi
+`mailto:` vers une seule adresse ASCII, avec un objet `subject` facultatif
+encodé dans l’URL. Les destinataires multiples, les autres paramètres et les
+caractères de contrôle sont refusés. Les liens source de tous les blocs et
+les champs de lien des autres familles gardent leur contrat HTTPS. Cet ajout
+ne change ni les champs, ni la version, ni l’empreinte du catalogue. Un ancien
+lecteur strict peut refuser une nouvelle composition contenant `mailto:` :
+ouvrir celle-ci avec la livraison qui prend en charge ces pieds de page.
+
 Le schéma JSON Schema 2020-12 vérifie la structure ; les contrôles d’URL, d’unicité et de référence active restent aussi dans le moteur. Il ne crée aucune dépendance d’exécution. Lors de cette recette, le validateur Python local `jsonschema` 4.26.0 a contrôlé le métaschéma et les deux fichiers d’exemple ; il n’est pas requis pour ouvrir l’application.
 
 IndexedDB utilise `builder-mail-dsfr-library`, version 1, magasin `library`. L’enregistrement courant et l’état précédent sont écrits dans la même transaction. Le token courant empêche une fenêtre obsolète d’écraser silencieusement une autre fenêtre. Chaque sauvegarde réussie remplace l’unique état précédent.

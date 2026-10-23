@@ -55,6 +55,30 @@ Pour produire un JSON avec un autre outil, partir d’un modèle exporté du bui
 
 Les textes restent du texte : aucun HTML ni script fourni par le JSON n’est exécuté. Pour plusieurs paragraphes réorganisables, créer plusieurs blocs. Les images sont incorporées en données PNG, JPEG, GIF ou WebP ; un chemin de fichier ou une URL d’image distante ne convient pas. Pour ajouter un visuel manuellement, utiliser le chargement local dans le builder puis exporter la composition.
 
+## Variantes du prototype éditorial
+
+Le seul champ image `mail-31.values.f0` accepte une chaîne vide pour un article
+sans vignette. Son alternative `f1` est vidée par le bouton de retrait. Le titre
+`f4` et sa destination HTTPS `f3` restent dans le même composant ; `f5` peut
+contenir les métadonnées. Les textes facultatifs `f2` et `f6` restent rendus
+lorsqu’ils sont renseignés. Les autres champs image conservent leurs contrôles.
+
+Le seul composant `mail-50` accepte la propriété facultative `additionalLinks`,
+une liste de zéro à deux objets stricts `{ "url": "…", "label": "…" }`.
+Le premier lien reste dans `values.f1` et `values.f2`. Sans propriété ou avec
+une liste vide, le rendu antérieur est conservé. Chaque lien supplémentaire
+doit avoir un intitulé avant une sortie HTML ; les caractères de contrôle sont
+refusés dans cet intitulé.
+
+Les URL des pieds de page `mail-47` à `mail-50` acceptent HTTPS et `mailto:`
+vers une adresse ASCII unique, avec le seul paramètre facultatif `subject`.
+Les liens `source` et les autres composants restent limités à HTTPS.
+
+Cette copie prototype conserve la version 1 et l’empreinte du catalogue. Elle
+lit les compositions anciennes et conserve leur rendu par défaut. Les anciennes
+versions peuvent refuser `additionalLinks`, une image vide dans `mail-31`, ou
+les liens `mailto:` : employer le portable de ce prototype pour ces fichiers.
+
 ## Validation et compatibilité
 
 Le [JSON Schema 2020-12](https://json-schema.org/understanding-json-schema/reference/object) décrit les propriétés requises et refuse les champs inconnus. Il sert aux éditeurs et validateurs ; ne pas ajouter `$schema` au fichier de composition. Le moteur complète ce schéma par les contrôles d’URL, d’identifiants uniques, de composition active et de catalogue.

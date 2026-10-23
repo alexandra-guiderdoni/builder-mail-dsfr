@@ -6,7 +6,7 @@ Ouvrir `app/distribution/portable.html` dans Firefox ou un navigateur compatible
 
 1. L’accueil « Mes newsletters » présente les éditions déjà conservées. Ouvrir une entrée, ou choisir un point de départ puis « Créer une composition ». Plusieurs compositions peuvent coexister.
 2. Modifier le nom dans la bibliothèque et l’objet du courriel. L’objet est conservé dans le fichier de travail ; le reporter dans la messagerie lors de la reprise. Si l’objet reste vide, le nom de la composition devient le titre du HTML exporté et apparaît dans son onglet ; aucun objet de messagerie n’est rempli automatiquement.
-3. Sélectionner un bloc dans la liste, puis modifier ses textes, liens et alternatives. Les liens doivent être des URL HTTPS complètes.
+3. Sélectionner un bloc dans la liste, puis modifier ses textes, liens et alternatives. Les liens doivent être des URL HTTPS complètes ; les pieds de page acceptent aussi une adresse `mailto:` avec un objet facultatif.
 4. Dans « Ajouter un composant », rechercher une famille ou une variante puis l’ajouter. Les boutons du bloc permettent de le déplacer, de le dupliquer ou de le retirer au clavier.
 5. Contrôler l’aperçu et l’indication « Bibliothèque sauvegardée dans ce navigateur ».
 
@@ -17,6 +17,21 @@ La liste des blocs, le catalogue ouvert, les champs de texte et l’aperçu s’
 Pour personnaliser « Consulter la source », sélectionner le bloc, renseigner « Lien source facultatif du bloc », puis **« Intitulé du lien source »**, par exemple « Lire le dossier complet ». Un intitulé vide garde le texte par défaut. Sans URL, le lien est absent du courriel et l’intitulé reste disponible pour la prochaine saisie d’URL. Les liens déjà intégrés aux composants possèdent leurs propres champs de texte et d’adresse.
 
 Pour les liens intégrés aux composants, le champ **« Intitulé du lien (obligatoire) »** doit contenir du texte. Une saisie vide est signalée et ne remplace pas la valeur enregistrée. Si un ancien fichier contient déjà des intitulés vides, son aperçu affiche les liens à renseigner sans les activer. La copie et le téléchargement HTML sélectionnent le premier champ à corriger. Corriger les champs progressivement ; l’export JSON de sauvegarde reste possible. Dans SNUM, le message indique le bloc et le champ : exporter le JSON puis l’importer dans le builder pour le corriger.
+
+Dans cette copie prototype, **« Article avec vignette et lien »** peut devenir
+**« Article sans image »** avec le bouton « Retirer l’image ». Le titre porte
+directement son lien ; les autres textes restent éditables dans ce même bloc.
+Charger une nouvelle image rétablit la présentation avec vignette.
+
+Le composant **« Gestion des abonnements »** accepte deux liens supplémentaires
+avec « Ajouter un lien ». Les actions sont regroupées sur une ligne lorsque
+l’espace le permet et reviennent à la ligne sur petit écran. Les adresses et
+intitulés se règlent séparément ; retirer le dernier lien supplémentaire rétablit
+le rendu initial. Un intitulé vide bloque la copie et le téléchargement HTML.
+
+Ces variantes restent locales à ce prototype. Conserver son fichier portable
+avec les compositions concernées : une ancienne version peut refuser ces
+nouveaux cas à l’import.
 
 ## Gérer Mes newsletters
 

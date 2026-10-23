@@ -1542,9 +1542,17 @@
           "title": "Article avec vignette et lien",
           "properties": {
             "f0": {
-              "type": "string",
               "title": "Image locale",
-              "pattern": "^data:image/(?:png|jpeg|gif|webp);base64,[A-Za-z0-9+/]+={0,2}$"
+              "anyOf": [
+                {
+                  "const": ""
+                },
+                {
+                  "type": "string",
+                  "title": "Image locale",
+                  "pattern": "^data:image/(?:png|jpeg|gif|webp);base64,[A-Za-z0-9+/]+={0,2}$"
+                }
+              ]
             },
             "f1": {
               "type": "string",
@@ -2519,7 +2527,7 @@
             "f1": {
               "type": "string",
               "title": "Lien HTTPS",
-              "description": "Lien HTTPS ; les règles d’URL complètes sont contrôlées à l’import."
+              "description": "Lien HTTPS ou mailto vers une adresse ASCII, avec subject facultatif ; les autres paramètres sont refusés à l’import."
             },
             "f2": {
               "type": "string",
@@ -2598,7 +2606,7 @@
             "f1": {
               "type": "string",
               "title": "Lien HTTPS",
-              "description": "Lien HTTPS ; les règles d’URL complètes sont contrôlées à l’import."
+              "description": "Lien HTTPS ou mailto vers une adresse ASCII, avec subject facultatif ; les autres paramètres sont refusés à l’import."
             },
             "f2": {
               "type": "string",
@@ -2688,7 +2696,7 @@
             "f1": {
               "type": "string",
               "title": "Lien HTTPS",
-              "description": "Lien HTTPS ; les règles d’URL complètes sont contrôlées à l’import."
+              "description": "Lien HTTPS ou mailto vers une adresse ASCII, avec subject facultatif ; les autres paramètres sont refusés à l’import."
             },
             "f2": {
               "type": "string",
@@ -2740,7 +2748,7 @@
             "f1": {
               "type": "string",
               "title": "Lien HTTPS",
-              "description": "Lien HTTPS ; les règles d’URL complètes sont contrôlées à l’import."
+              "description": "Lien HTTPS ou mailto vers une adresse ASCII, avec subject facultatif ; les autres paramètres sont refusés à l’import."
             },
             "f2": {
               "type": "string",
@@ -2760,6 +2768,30 @@
         "sourceLabel": {
           "type": "string",
           "title": "Intitulé du lien source (facultatif)"
+        },
+        "additionalLinks": {
+          "type": "array",
+          "title": "Liens supplémentaires du pied de page (facultatifs)",
+          "maxItems": 2,
+          "items": {
+            "type": "object",
+            "title": "Lien supplémentaire du pied de page",
+            "properties": {
+              "url": {
+                "type": "string",
+                "description": "Lien HTTPS ou mailto ; la validation complète est appliquée à l’import."
+              },
+              "label": {
+                "type": "string",
+                "pattern": "^[^\\x00-\\x1f\\x7f-\\x9f\\u2028\\u2029]*$"
+              }
+            },
+            "required": [
+              "url",
+              "label"
+            ],
+            "additionalProperties": false
+          }
         }
       },
       "required": [

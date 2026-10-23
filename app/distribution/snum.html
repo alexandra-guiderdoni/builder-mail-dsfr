@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- PDG-LARGE-FILE-JUSTIFICATION: page autonome générée ; parseur, moteur et ressources incorporés depuis les sources séparées. -->
-<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none';script-src 'sha256-GnMPVkC/DHIjQiBXUEfIz8wtJ7zhDB+6/ohsYYQDfOY=';style-src 'unsafe-inline';img-src data: blob:;frame-src blob:;base-uri 'none';form-action 'none';connect-src 'none';worker-src 'none'"><title>Collecte SNUM · Convertisseur de courriels</title><style>:root { color-scheme:light; font:100%/1.5 Arial,Helvetica,sans-serif; color:#161616; background:#f6f6f6; }
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none';script-src 'sha256-tiMyLYt4/qGkUqh+83VId9ZRb3yAW1wZGXAf9ETKLrQ=';style-src 'unsafe-inline';img-src data: blob:;frame-src blob:;base-uri 'none';form-action 'none';connect-src 'none';worker-src 'none'"><title>Collecte SNUM · Convertisseur de courriels</title><style>:root { color-scheme:light; font:100%/1.5 Arial,Helvetica,sans-serif; color:#161616; background:#f6f6f6; }
 * { box-sizing:border-box; } body { margin:0; } button,input,select,textarea { font:inherit; }
 header { display:flex; justify-content:space-between; gap:24px; background:#fff; border-top:6px solid #000091; border-bottom:1px solid #ddd; padding:24px 3vw; }
 h1 { margin:0 0 8px; color:#000091; font-size:1.9rem; line-height:1.25; } h2 { font-size:1.25rem; margin:0 0 18px; } h3 { font-size:1.15rem; margin:0 0 8px; }
@@ -80,6 +80,23 @@ window.MailBuilder.catalog = {"id":"6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278
     let parsed; try { parsed = new URL(value); } catch { fail("Lien HTTPS complet requis."); }
     if (parsed.protocol !== "https:" || parsed.username || parsed.password || /[\x00-\x20\x7f]/.test(value)) fail("Lien HTTPS sans identifiant requis.");
   }
+  function footerUrl(value) {
+    if (!/^mailto:/i.test(value)) return url(value);
+    const message = "Lien mailto de pied de page : une adresse ASCII et un objet facultatif, sans autre paramètre.";
+    let mail; try { mail = new URL(value); } catch { fail(message); }
+    const address = /^[A-Za-z0-9_+-]+(?:\.[A-Za-z0-9_+-]+)*@[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*(?:\.[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*)+$/;
+    if (/[\x00-\x20\x7f]/.test(value) || mail.hash || !address.test(mail.pathname) ||
+        [...mail.searchParams.keys()].some(key => key !== "subject") || mail.searchParams.getAll("subject").length > 1) fail(message);
+    let subject = mail.searchParams.get("subject") || "";
+    for (let depth = 0; depth < 8; depth++) {
+      if (/[\x00-\x1f\x7f-\x9f\u2028\u2029]/.test(subject)) fail(message);
+      // Normaliser les encodages imbriqués sans réinterpréter les caractères & et +.
+      const decoded = new URLSearchParams("subject=" + subject.replace(/[&+]/g, c => encodeURIComponent(c))).get("subject");
+      if (decoded === subject) return;
+      subject = decoded;
+    }
+    fail(message);
+  }
   function image(value) {
     const match = /^data:image\/(png|jpeg|gif|webp);base64,([A-Za-z0-9+/]+={0,2})$/.exec(value);
     let bytes;
@@ -96,14 +113,23 @@ window.MailBuilder.catalog = {"id":"6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278
   }
   function component(id) { const result = components.get(id); if (!result) fail("Composant de courriel inconnu."); return result; }
   function block(value) {
-    object(value, ["id", "component", "values", "source"], "Bloc", ["sourceLabel"]);
+    object(value, ["id", "component", "values", "source"], "Bloc", ["sourceLabel", ...(value?.component === "mail-50" ? ["additionalLinks"] : [])]);
     text(value.id, "Identifiant"); if (!value.id) fail("Identifiant de bloc vide.");
     const definition = component(value.component);
     object(value.values, definition.fields.map(f => f.key), definition.label);
     for (const field of definition.fields) {
       const v = value.values[field.key]; text(v, field.label);
-      if (field.type === "image") { try { image(v); } catch (cause) { fail(`${definition.label}, ${field.label} : ${cause.message}`); } }
-      if (field.type === "url") url(v);
+      if (field.type === "image" && !(definition.id === "mail-31" && field.key === "f0" && v === "")) { try { image(v); } catch (cause) { fail(`${definition.label}, ${field.label} : ${cause.message}`); } }
+      if (field.type === "url") (definition.family === "Pieds de page" ? footerUrl : url)(v);
+    }
+    if (Object.hasOwn(value, "additionalLinks")) {
+      if (!Array.isArray(value.additionalLinks) || value.additionalLinks.length > 2) fail("Le pied de page accepte au plus deux liens supplémentaires.");
+      for (const link of value.additionalLinks) {
+        object(link, ["url", "label"], "Lien supplémentaire");
+        text(link.url, "URL du lien supplémentaire"); footerUrl(link.url);
+        text(link.label, "Intitulé du lien supplémentaire");
+        if (/[\x00-\x1f\x7f-\x9f\u2028\u2029]/.test(link.label)) fail("L’intitulé du lien supplémentaire doit tenir sur une ligne sans caractère de contrôle.");
+      }
     }
     text(value.source, "Source"); url(value.source, true);
     if (Object.hasOwn(value, "sourceLabel")) text(value.sourceLabel, "Intitulé du lien source");
@@ -166,11 +192,31 @@ window.MailBuilder.catalog = {"id":"6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278
   A.Model = Object.freeze({copy, document, library, block, blocks, component, image, url, id, createBlock, create, clone, initial, setTexts});
 })();
 
-/* Le catalogue canonique fournit le HTML ; les données ne fournissent aucun balisage. */
+/* Le catalogue et ses variantes contrôlées fournissent le HTML ; les données ne fournissent aucun balisage. */
 (() => {
   "use strict";
   const A = window.MailBuilder, M = A.Model;
   const escape = value => String(value).replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
+  function editorialFrame(content) {
+    return `<table role="presentation" class="darkmode" style="width:100%;border:0;border-spacing:0;background-color:#ffffff"><tr><td style="padding:0;text-align:center"><table role="presentation" class="wlkm-mw darkmode" style="width:620px;margin:0 auto;border:0;border-spacing:0;background:linear-gradient(90deg,#ffffff 0%,#eaeaea 5%,#eaeaea 95%,#ffffff 100%)"><tr><td style="padding:0"><table role="presentation" class="wlkm-mw darkmode" style="width:600px;margin:0 auto;border-left:1px solid #e5e5e5;border-right:1px solid #e5e5e5;border-spacing:0;background-color:#ffffff"><tr><td style="padding:0"><table role="presentation" class="wlkm-cl darkmode" style="width:496px;max-width:496px;margin:0 auto;border:0;border-spacing:0;border-collapse:collapse">${content}</table></td></tr></table></td></tr></table></td></tr></table>`;
+  }
+  function articleTextTemplate(values) {
+    const pretext = values.f2.trim() ? '<div class="darkmode-1" style="font-size:13px;line-height:20px;color:#666666;margin:0 0 4px">{{f2}}</div>' : "";
+    const metadata = values.f5.trim() ? '<div class="darkmode-1" style="font-size:13px;line-height:20px;color:#666666;margin:2px 0 0">{{f5}}</div>' : "";
+    const ending = values.f6.trim() ? '<div class="darkmode-1" style="font-size:13px;line-height:20px;color:#666666;margin:4px 0 0">{{f6}}</div>' : "";
+    return editorialFrame(`<tr><td class="darkmode-1" style="padding:14px 10px 16px;border-bottom:1px solid #e5e5e5;font-family:Arial,Helvetica,sans-serif;text-align:left;overflow-wrap:anywhere;word-break:break-word">${pretext}<div style="font-size:18px;line-height:26px;font-weight:700;margin:0">{{heading_open_f4}}<a href="{{f3}}" style="color:#000091;font-size:18px;line-height:26px;font-weight:700;text-decoration:none">{{f4}}</a>{{heading_close_f4}}</div>${metadata}${ending}</td></tr>`);
+  }
+  function footerLinks(value, preview) {
+    const links = [{url: value.values.f1, label: value.values.f2}, ...value.additionalLinks];
+    const actions = links.map(link => {
+      const incomplete = !link.label.trim();
+      const target = preview && incomplete ? "" : ` href="${escape(link.url)}"`;
+      const label = preview && incomplete ? "Intitulé du lien à renseigner" : link.label;
+      return `<a${target} style="display:inline-block;white-space:nowrap;font-size:13px;line-height:24px;color:#000091;text-decoration:underline;margin:0 8px">${escape(label)}</a>`;
+    }).join(" ");
+    const question = value.values.f0.trim() ? `<div style="margin:0 0 6px">${escape(value.values.f0).replace(/\n/g, "<br>")}</div>` : "";
+    return editorialFrame(`<tr><td class="darkmode-1" style="padding:16px 10px 24px;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:20px;color:#666666;text-align:center">${question}<div style="text-align:center">${actions}</div></td></tr>`);
+  }
   function block(value, context = [], preview = false) {
     M.block(value);
     const definition = M.component(value.component);
@@ -183,7 +229,8 @@ window.MailBuilder.catalog = {"id":"6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278
       levels.set(heading.field, level);
       if (rank && level) context.push({rank, level});
     }
-    let template = definition.semanticTemplate.replace(/\{\{heading_(open|close)_(f\d+)\}\}/g, (_, edge, key) => {
+    const sourceTemplate = value.component === "mail-31" && value.values.f0 === "" ? articleTextTemplate(value.values) : definition.semanticTemplate;
+    let template = sourceTemplate.replace(/\{\{heading_(open|close)_(f\d+)\}\}/g, (_, edge, key) => {
       const level = levels.get(key);
       return !level ? "" : edge === "close" ? `</h${level}>` : `<h${level} style="display:inline;margin:0;font-size:inherit;line-height:inherit;font-weight:inherit;">`;
     });
@@ -196,6 +243,7 @@ window.MailBuilder.catalog = {"id":"6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278
       const encoded = escape(incompleteLabels.has(key) ? "Intitulé du lien à renseigner" : value.values[key]);
       return fields.get(key).type === "text" ? encoded.replace(/\n/g, "<br>") : encoded;
     });
+    if (value.component === "mail-50" && value.additionalLinks?.length) result = footerLinks(value, preview);
     if (value.source) result += `<table role="presentation" style="text-align:left;text-align:start;width:100%;border-spacing:0;border:0"><tr><td style="padding:0;text-align:center;overflow-wrap:anywhere;word-break:break-word"><table role="presentation" style="text-align:left;text-align:start;width:100%;max-width:600px;margin-left:auto;margin-right:auto"><tr><td style="padding:8px 52px 20px;font-family:Tahoma,Geneva,sans-serif;font-size:14px;overflow-wrap:anywhere;word-break:break-word"><a href="${escape(value.source)}" style="color:#000091">${escape(value.sourceLabel?.trim() || "Consulter la source")}</a></td></tr></table></td></tr></table>`;
     return result;
   }
@@ -204,7 +252,9 @@ window.MailBuilder.catalog = {"id":"6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278
     M.document(value);
     return value.blocks.flatMap((b, index) => {
       const definition = M.component(b.component);
-      return definition.links.filter(link => !b.values[link.label].trim()).map(link => ({block: b.id, field: link.label, message: `Renseignez l’intitulé du lien : bloc ${index + 1} « ${definition.label} », champ « ${definition.fields.find(f => f.key === link.label).label} ».`}));
+      const issues = definition.links.filter(link => !b.values[link.label].trim()).map(link => ({block: b.id, field: link.label, message: `Renseignez l’intitulé du lien : bloc ${index + 1} « ${definition.label} », champ « ${definition.fields.find(f => f.key === link.label).label} ».`}));
+      for (const [linkIndex, link] of (b.additionalLinks || []).entries()) if (!link.label.trim()) issues.push({block: b.id, field: `footer-label-${linkIndex}`, message: `Renseignez l’intitulé du lien supplémentaire ${linkIndex + 1} : bloc ${index + 1} « ${definition.label} ».`});
+      return issues;
     });
   }
   function assertOutput(value) {
@@ -218,7 +268,7 @@ window.MailBuilder.catalog = {"id":"6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278
   }
   function plain(value) {
     M.document(value);
-    return [value.subject, ...value.blocks.map(b => [...M.component(b.component).fields.map(f => f.type === "image" ? "" : b.values[f.key]), ...(b.source && b.sourceLabel?.trim() ? [b.sourceLabel.trim()] : []), b.source].filter(Boolean).join("\n"))].join("\n\n");
+    return [value.subject, ...value.blocks.map(b => [...M.component(b.component).fields.map(f => f.type === "image" ? "" : b.values[f.key]), ...(b.additionalLinks || []).flatMap(link => [link.label, link.url]), ...(b.source && b.sourceLabel?.trim() ? [b.sourceLabel.trim()] : []), b.source].filter(Boolean).join("\n"))].join("\n\n");
   }
   function clipboardHtml(value) {
     const markup = html(value), doc = new DOMParser().parseFromString(markup, "text/html");
@@ -450,7 +500,7 @@ window.MailBuilder.catalog = {"id":"6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278
   }
   async function validate(value) {
     const items = value.schema === "dsfr-mail/library" ? [...value.documents, ...value.templates, ...value.identities] : [value];
-    const entries = items.flatMap(item => item.blocks.flatMap((block, i) => A.Model.component(block.component).fields.filter(f => f.type === "image").map(f => ({value: block.values[f.key], label: `${item.name}, bloc ${i + 1}, ${f.label}`}))));
+    const entries = items.flatMap(item => item.blocks.flatMap((block, i) => A.Model.component(block.component).fields.filter(f => f.type === "image" && !(block.component === "mail-31" && f.key === "f0" && block.values.f0 === "")).map(f => ({value: block.values[f.key], label: `${item.name}, bloc ${i + 1}, ${f.label}`}))));
     await MailImages.validate(entries);
   }
   async function copy() {

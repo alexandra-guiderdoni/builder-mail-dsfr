@@ -17,11 +17,22 @@
       await A.State.change(lib => {
         const blocks = lib.documents.find(d => d.id === lib.activeId).blocks, index = blocks.findIndex(b => b.id === id);
         if (index < 0) throw new Error("Le bloc sélectionné a changé.");
+        const block = blocks[index];
+        if (actionName === "remove-image" && block.component === "mail-31") { block.values.f0 = ""; block.values.f1 = ""; }
+        if (actionName === "add-footer-link" && block.component === "mail-50") {
+          if ((block.additionalLinks?.length || 0) >= 2) throw new Error("Le pied de page accepte deux liens supplémentaires au maximum.");
+          (block.additionalLinks ||= []).push({url: "https://exemple.invalid/", label: ""});
+        }
+        if (actionName === "remove-footer-link" && block.component === "mail-50") {
+          block.additionalLinks?.splice(Number(operation.dataset.footerLinkIndex), 1);
+          if (!block.additionalLinks?.length) delete block.additionalLinks;
+        }
         if (actionName === "duplicate") { const clone = {...M.copy(blocks[index]), id: M.id()}; blocks.splice(index + 1, 0, clone); A.selected = clone.id; }
         if (actionName === "remove") { blocks.splice(index, 1); A.selected = blocks[Math.min(index, blocks.length - 1)]?.id || null; }
         if (["up", "down"].includes(actionName)) { const destination = index + (actionName === "up" ? -1 : 1); if (destination >= 0 && destination < blocks.length) [blocks[index], blocks[destination]] = [blocks[destination], blocks[index]]; }
       });
-      const target = get("block-editor").querySelector("textarea,input") || get("catalogue").closest("details").querySelector("summary");
+      const links = A.doc().blocks.find(b => b.id === A.selected)?.additionalLinks;
+      const target = (actionName === "add-footer-link" && get(`field-footer-url-${links.length - 1}`)) || get("block-editor").querySelector("textarea,input") || get("catalogue").closest("details").querySelector("summary");
       target.focus();
     });
   });
@@ -36,9 +47,9 @@
   get("document-name").addEventListener("input", event => edit(event.target, lib => { lib.documents.find(d => d.id === lib.activeId).name = event.target.value; }));
   get("subject").addEventListener("input", event => edit(event.target, lib => { lib.documents.find(d => d.id === lib.activeId).subject = event.target.value; }));
   get("block-editor").addEventListener("input", event => {
-    const input = event.target, key = input.dataset.field, source = input.hasAttribute("data-source"), sourceLabel = input.hasAttribute("data-source-label"), id = A.selected;
-    if (!key && !source && !sourceLabel) return;
-    edit(input, lib => { const b = lib.documents.find(d => d.id === lib.activeId).blocks.find(b => b.id === id); if (source) b.source = input.value; else if (sourceLabel) b.sourceLabel = input.value; else b.values[key] = input.value; });
+    const input = event.target, key = input.dataset.field, source = input.hasAttribute("data-source"), sourceLabel = input.hasAttribute("data-source-label"), footerField = input.dataset.footerLinkField, id = A.selected;
+    if (!key && !source && !sourceLabel && !footerField) return;
+    edit(input, lib => { const b = lib.documents.find(d => d.id === lib.activeId).blocks.find(b => b.id === id); if (source) b.source = input.value; else if (sourceLabel) b.sourceLabel = input.value; else if (footerField) b.additionalLinks[Number(input.dataset.footerLinkIndex)][footerField] = input.value; else b.values[key] = input.value; });
   });
   get("block-editor").addEventListener("change", event => {
     if (!event.target.hasAttribute("data-image-field")) return;

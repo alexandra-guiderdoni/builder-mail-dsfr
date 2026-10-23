@@ -1,8 +1,28 @@
-/* Le catalogue canonique fournit le HTML ; les données ne fournissent aucun balisage. */
+/* Le catalogue et ses variantes contrôlées fournissent le HTML ; les données ne fournissent aucun balisage. */
 (() => {
   "use strict";
   const A = window.MailBuilder, M = A.Model;
   const escape = value => String(value).replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
+  function editorialFrame(content) {
+    return `<table role="presentation" class="darkmode" style="width:100%;border:0;border-spacing:0;background-color:#ffffff"><tr><td style="padding:0;text-align:center"><table role="presentation" class="wlkm-mw darkmode" style="width:620px;margin:0 auto;border:0;border-spacing:0;background:linear-gradient(90deg,#ffffff 0%,#eaeaea 5%,#eaeaea 95%,#ffffff 100%)"><tr><td style="padding:0"><table role="presentation" class="wlkm-mw darkmode" style="width:600px;margin:0 auto;border-left:1px solid #e5e5e5;border-right:1px solid #e5e5e5;border-spacing:0;background-color:#ffffff"><tr><td style="padding:0"><table role="presentation" class="wlkm-cl darkmode" style="width:496px;max-width:496px;margin:0 auto;border:0;border-spacing:0;border-collapse:collapse">${content}</table></td></tr></table></td></tr></table></td></tr></table>`;
+  }
+  function articleTextTemplate(values) {
+    const pretext = values.f2.trim() ? '<div class="darkmode-1" style="font-size:13px;line-height:20px;color:#666666;margin:0 0 4px">{{f2}}</div>' : "";
+    const metadata = values.f5.trim() ? '<div class="darkmode-1" style="font-size:13px;line-height:20px;color:#666666;margin:2px 0 0">{{f5}}</div>' : "";
+    const ending = values.f6.trim() ? '<div class="darkmode-1" style="font-size:13px;line-height:20px;color:#666666;margin:4px 0 0">{{f6}}</div>' : "";
+    return editorialFrame(`<tr><td class="darkmode-1" style="padding:14px 10px 16px;border-bottom:1px solid #e5e5e5;font-family:Arial,Helvetica,sans-serif;text-align:left;overflow-wrap:anywhere;word-break:break-word">${pretext}<div style="font-size:18px;line-height:26px;font-weight:700;margin:0">{{heading_open_f4}}<a href="{{f3}}" style="color:#000091;font-size:18px;line-height:26px;font-weight:700;text-decoration:none">{{f4}}</a>{{heading_close_f4}}</div>${metadata}${ending}</td></tr>`);
+  }
+  function footerLinks(value, preview) {
+    const links = [{url: value.values.f1, label: value.values.f2}, ...value.additionalLinks];
+    const actions = links.map(link => {
+      const incomplete = !link.label.trim();
+      const target = preview && incomplete ? "" : ` href="${escape(link.url)}"`;
+      const label = preview && incomplete ? "Intitulé du lien à renseigner" : link.label;
+      return `<a${target} style="display:inline-block;white-space:nowrap;font-size:13px;line-height:24px;color:#000091;text-decoration:underline;margin:0 8px">${escape(label)}</a>`;
+    }).join(" ");
+    const question = value.values.f0.trim() ? `<div style="margin:0 0 6px">${escape(value.values.f0).replace(/\n/g, "<br>")}</div>` : "";
+    return editorialFrame(`<tr><td class="darkmode-1" style="padding:16px 10px 24px;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:20px;color:#666666;text-align:center">${question}<div style="text-align:center">${actions}</div></td></tr>`);
+  }
   function block(value, context = [], preview = false) {
     M.block(value);
     const definition = M.component(value.component);
@@ -15,7 +35,8 @@
       levels.set(heading.field, level);
       if (rank && level) context.push({rank, level});
     }
-    let template = definition.semanticTemplate.replace(/\{\{heading_(open|close)_(f\d+)\}\}/g, (_, edge, key) => {
+    const sourceTemplate = value.component === "mail-31" && value.values.f0 === "" ? articleTextTemplate(value.values) : definition.semanticTemplate;
+    let template = sourceTemplate.replace(/\{\{heading_(open|close)_(f\d+)\}\}/g, (_, edge, key) => {
       const level = levels.get(key);
       return !level ? "" : edge === "close" ? `</h${level}>` : `<h${level} style="display:inline;margin:0;font-size:inherit;line-height:inherit;font-weight:inherit;">`;
     });
@@ -28,6 +49,7 @@
       const encoded = escape(incompleteLabels.has(key) ? "Intitulé du lien à renseigner" : value.values[key]);
       return fields.get(key).type === "text" ? encoded.replace(/\n/g, "<br>") : encoded;
     });
+    if (value.component === "mail-50" && value.additionalLinks?.length) result = footerLinks(value, preview);
     if (value.source) result += `<table role="presentation" style="text-align:left;text-align:start;width:100%;border-spacing:0;border:0"><tr><td style="padding:0;text-align:center;overflow-wrap:anywhere;word-break:break-word"><table role="presentation" style="text-align:left;text-align:start;width:100%;max-width:600px;margin-left:auto;margin-right:auto"><tr><td style="padding:8px 52px 20px;font-family:Tahoma,Geneva,sans-serif;font-size:14px;overflow-wrap:anywhere;word-break:break-word"><a href="${escape(value.source)}" style="color:#000091">${escape(value.sourceLabel?.trim() || "Consulter la source")}</a></td></tr></table></td></tr></table>`;
     return result;
   }
@@ -36,7 +58,9 @@
     M.document(value);
     return value.blocks.flatMap((b, index) => {
       const definition = M.component(b.component);
-      return definition.links.filter(link => !b.values[link.label].trim()).map(link => ({block: b.id, field: link.label, message: `Renseignez l’intitulé du lien : bloc ${index + 1} « ${definition.label} », champ « ${definition.fields.find(f => f.key === link.label).label} ».`}));
+      const issues = definition.links.filter(link => !b.values[link.label].trim()).map(link => ({block: b.id, field: link.label, message: `Renseignez l’intitulé du lien : bloc ${index + 1} « ${definition.label} », champ « ${definition.fields.find(f => f.key === link.label).label} ».`}));
+      for (const [linkIndex, link] of (b.additionalLinks || []).entries()) if (!link.label.trim()) issues.push({block: b.id, field: `footer-label-${linkIndex}`, message: `Renseignez l’intitulé du lien supplémentaire ${linkIndex + 1} : bloc ${index + 1} « ${definition.label} ».`});
+      return issues;
     });
   }
   function assertOutput(value) {
@@ -50,7 +74,7 @@
   }
   function plain(value) {
     M.document(value);
-    return [value.subject, ...value.blocks.map(b => [...M.component(b.component).fields.map(f => f.type === "image" ? "" : b.values[f.key]), ...(b.source && b.sourceLabel?.trim() ? [b.sourceLabel.trim()] : []), b.source].filter(Boolean).join("\n"))].join("\n\n");
+    return [value.subject, ...value.blocks.map(b => [...M.component(b.component).fields.map(f => f.type === "image" ? "" : b.values[f.key]), ...(b.additionalLinks || []).flatMap(link => [link.label, link.url]), ...(b.source && b.sourceLabel?.trim() ? [b.sourceLabel.trim()] : []), b.source].filter(Boolean).join("\n"))].join("\n\n");
   }
   function clipboardHtml(value) {
     const markup = html(value), doc = new DOMParser().parseFromString(markup, "text/html");

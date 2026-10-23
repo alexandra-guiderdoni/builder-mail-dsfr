@@ -14,6 +14,23 @@
     let parsed; try { parsed = new URL(value); } catch { fail("Lien HTTPS complet requis."); }
     if (parsed.protocol !== "https:" || parsed.username || parsed.password || /[\x00-\x20\x7f]/.test(value)) fail("Lien HTTPS sans identifiant requis.");
   }
+  function footerUrl(value) {
+    if (!/^mailto:/i.test(value)) return url(value);
+    const message = "Lien mailto de pied de page : une adresse ASCII et un objet facultatif, sans autre paramètre.";
+    let mail; try { mail = new URL(value); } catch { fail(message); }
+    const address = /^[A-Za-z0-9_+-]+(?:\.[A-Za-z0-9_+-]+)*@[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*(?:\.[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*)+$/;
+    if (/[\x00-\x20\x7f]/.test(value) || mail.hash || !address.test(mail.pathname) ||
+        [...mail.searchParams.keys()].some(key => key !== "subject") || mail.searchParams.getAll("subject").length > 1) fail(message);
+    let subject = mail.searchParams.get("subject") || "";
+    for (let depth = 0; depth < 8; depth++) {
+      if (/[\x00-\x1f\x7f-\x9f\u2028\u2029]/.test(subject)) fail(message);
+      // Normaliser les encodages imbriqués sans réinterpréter les caractères & et +.
+      const decoded = new URLSearchParams("subject=" + subject.replace(/[&+]/g, c => encodeURIComponent(c))).get("subject");
+      if (decoded === subject) return;
+      subject = decoded;
+    }
+    fail(message);
+  }
   function image(value) {
     const match = /^data:image\/(png|jpeg|gif|webp);base64,([A-Za-z0-9+/]+={0,2})$/.exec(value);
     let bytes;
@@ -30,14 +47,23 @@
   }
   function component(id) { const result = components.get(id); if (!result) fail("Composant de courriel inconnu."); return result; }
   function block(value) {
-    object(value, ["id", "component", "values", "source"], "Bloc", ["sourceLabel"]);
+    object(value, ["id", "component", "values", "source"], "Bloc", ["sourceLabel", ...(value?.component === "mail-50" ? ["additionalLinks"] : [])]);
     text(value.id, "Identifiant"); if (!value.id) fail("Identifiant de bloc vide.");
     const definition = component(value.component);
     object(value.values, definition.fields.map(f => f.key), definition.label);
     for (const field of definition.fields) {
       const v = value.values[field.key]; text(v, field.label);
-      if (field.type === "image") { try { image(v); } catch (cause) { fail(`${definition.label}, ${field.label} : ${cause.message}`); } }
-      if (field.type === "url") url(v);
+      if (field.type === "image" && !(definition.id === "mail-31" && field.key === "f0" && v === "")) { try { image(v); } catch (cause) { fail(`${definition.label}, ${field.label} : ${cause.message}`); } }
+      if (field.type === "url") (definition.family === "Pieds de page" ? footerUrl : url)(v);
+    }
+    if (Object.hasOwn(value, "additionalLinks")) {
+      if (!Array.isArray(value.additionalLinks) || value.additionalLinks.length > 2) fail("Le pied de page accepte au plus deux liens supplémentaires.");
+      for (const link of value.additionalLinks) {
+        object(link, ["url", "label"], "Lien supplémentaire");
+        text(link.url, "URL du lien supplémentaire"); footerUrl(link.url);
+        text(link.label, "Intitulé du lien supplémentaire");
+        if (/[\x00-\x1f\x7f-\x9f\u2028\u2029]/.test(link.label)) fail("L’intitulé du lien supplémentaire doit tenir sur une ligne sans caractère de contrôle.");
+      }
     }
     text(value.source, "Source"); url(value.source, true);
     if (Object.hasOwn(value, "sourceLabel")) text(value.sourceLabel, "Intitulé du lien source");
