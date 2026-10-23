@@ -35,7 +35,7 @@ nouveaux cas à l’import.
 
 ## Gérer Mes newsletters
 
-Chaque entrée de l’accueil est une composition indépendante, par exemple « Lettre du service — octobre ». Son titre ouvre l’éditeur ; « Retour à Mes newsletters » revient à la liste après vérification de la sauvegarde. « Reprendre » ouvre la composition active. Un rechargement du programme revient à l’accueil en conservant la bibliothèque.
+Chaque entrée de l’accueil est une composition indépendante, par exemple « Lettre du service — octobre ». Son titre ouvre l’éditeur ; « Retour à Mes newsletters » revient à la liste après la fin de la sauvegarde en cours ; si elle a échoué, le travail reste en mémoire. « Reprendre » ouvre la composition active. Un rechargement du programme revient à l’accueil en conservant la bibliothèque.
 
 Les actions d’une entrée visent cette entrée, même si une autre composition est active :
 
@@ -96,15 +96,17 @@ Les images sont incorporées ; leur présence dans le fichier ne démontre pas l
 
 Un champ invalide est signalé et sa nouvelle valeur n’est pas enregistrée. Corriger ce champ ou utiliser « Annuler les champs invalides » avant de changer de composition ou d’exporter. Un import refusé conserve les compositions existantes.
 
-Si la sauvegarde échoue, le travail reste en mémoire : exporter la composition ou la bibliothèque avant de fermer. Si une autre fenêtre a enregistré des changements, exporter le travail de la fenêtre en conflit, puis la recharger et réimporter ce fichier pour le fusionner.
+Si la sauvegarde échoue, le travail reste en mémoire : exporter la bibliothèque avant de fermer. Le message nomme la cause (stockage indisponible, bibliothèque locale inaccessible, espace de stockage saturé ou autre fenêtre) et le bouton « Exporter la bibliothèque en mémoire » le suit directement. Si une autre fenêtre a enregistré des changements, exporter le travail de la fenêtre en conflit, puis la recharger et réimporter ce fichier pour le fusionner.
 
-Si un retour à l’accueil est refusé, les champs restent affichés et les exports de secours restent accessibles sous l’éditeur. Corriger le champ signalé, attendre la lecture en cours ou réessayer la sauvegarde ; ne pas effacer les données du navigateur pour changer de newsletter.
+Après un échec, l’accueil et l’éditeur restent accessibles : ces changements de vue conservent le travail en mémoire, sans l’enregistrer. Le rechargement et l’application d’une mise à jour restent refusés jusqu’à une sauvegarde réussie.
+
+Un retour à l’accueil n’est refusé que pour un champ invalide ou un fichier en cours de lecture : les champs restent affichés. Corriger le champ signalé ou attendre la lecture en cours ; ne pas effacer les données du navigateur pour changer de newsletter.
 
 Si le navigateur avertit lors d’une fermeture pendant la sauvegarde, annuler le départ et attendre l’indication de sauvegarde réussie avant de fermer à nouveau.
 
 « Restaurer l’état précédent » relit la sauvegarde précédant la dernière écriture réussie ; ce n’est pas un historique illimité ni une annulation de chaque frappe. Exporter d’abord le travail à conserver. « Exporter les données enregistrées brutes » produit une copie de secours pour le diagnostic ; ce format brut n’est pas un fichier de composition importable.
 
-Une version ou un catalogue inconnu n’est pas réinterprété : conserver le fichier d’origine et demander une migration. Si la bibliothèque stockée ne peut pas être relue, l’atelier préserve le stockage existant ; le travail temporaire doit être exporté jusqu’à une récupération réussie.
+Une version ou un catalogue inconnu n’est pas réinterprété : conserver le fichier d’origine et demander une migration. Si la bibliothèque stockée ne peut pas être relue, l’atelier préserve le stockage existant ; le travail temporaire doit être exporté. Le message ne propose « Restaurer l’état précédent » que si une sauvegarde précédente lisible a été trouvée.
 
 ## Variante web et mises à jour
 
