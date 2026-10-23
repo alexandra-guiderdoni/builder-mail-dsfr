@@ -29,7 +29,7 @@
           "properties": {
             "f0": {
               "type": "string",
-              "title": "Texte 1"
+              "title": "Texte du pré-en-tête masqué"
             }
           },
           "required": [
@@ -70,16 +70,16 @@
           "properties": {
             "f0": {
               "type": "string",
-              "title": "Texte 1"
+              "title": "Phrase précédant le lien vers la version en ligne"
             },
             "f1": {
               "type": "string",
-              "title": "Lien HTTPS",
+              "title": "Adresse HTTPS de la version en ligne",
               "description": "Lien HTTPS ; les règles d’URL complètes sont contrôlées à l’import."
             },
             "f2": {
               "type": "string",
-              "title": "Texte 2"
+              "title": "Texte du lien vers la version en ligne"
             }
           },
           "required": [
@@ -122,21 +122,21 @@
           "properties": {
             "f0": {
               "type": "string",
-              "title": "Image locale",
+              "title": "Logo Marianne, thème clair",
               "pattern": "^data:image/(?:png|jpeg|gif|webp);base64,[A-Za-z0-9+/]+={0,2}$"
             },
             "f1": {
               "type": "string",
-              "title": "Alternative de l’image"
+              "title": "Alternative textuelle du logo Marianne, thème clair"
             },
             "f2": {
               "type": "string",
-              "title": "Image locale",
+              "title": "Logo Marianne, thème sombre",
               "pattern": "^data:image/(?:png|jpeg|gif|webp);base64,[A-Za-z0-9+/]+={0,2}$"
             },
             "f3": {
               "type": "string",
-              "title": "Alternative de l’image"
+              "title": "Alternative textuelle du logo Marianne, thème sombre"
             },
             "f4": {
               "type": "string",
@@ -185,30 +185,30 @@
           "properties": {
             "f0": {
               "type": "string",
-              "title": "Image locale",
+              "title": "Logo Marianne, thème clair",
               "pattern": "^data:image/(?:png|jpeg|gif|webp);base64,[A-Za-z0-9+/]+={0,2}$"
             },
             "f1": {
               "type": "string",
-              "title": "Alternative de l’image"
+              "title": "Alternative textuelle du logo Marianne, thème clair"
             },
             "f2": {
               "type": "string",
-              "title": "Image locale",
+              "title": "Logo Marianne, thème sombre",
               "pattern": "^data:image/(?:png|jpeg|gif|webp);base64,[A-Za-z0-9+/]+={0,2}$"
             },
             "f3": {
               "type": "string",
-              "title": "Alternative de l’image"
+              "title": "Alternative textuelle du logo Marianne, thème sombre"
             },
             "f4": {
               "type": "string",
-              "title": "Image locale",
+              "title": "Logo de l’opérateur",
               "pattern": "^data:image/(?:png|jpeg|gif|webp);base64,[A-Za-z0-9+/]+={0,2}$"
             },
             "f5": {
               "type": "string",
-              "title": "Alternative de l’image"
+              "title": "Alternative textuelle du logo de l’opérateur"
             },
             "f6": {
               "type": "string",
@@ -259,16 +259,16 @@
           "properties": {
             "f0": {
               "type": "string",
-              "title": "Image locale",
+              "title": "Image de la bannière",
               "pattern": "^data:image/(?:png|jpeg|gif|webp);base64,[A-Za-z0-9+/]+={0,2}$"
             },
             "f1": {
               "type": "string",
-              "title": "Alternative de l’image"
+              "title": "Alternative textuelle de la bannière"
             },
             "f2": {
               "type": "string",
-              "title": "Texte 1"
+              "title": "Message de la campagne"
             }
           },
           "required": [
@@ -311,7 +311,7 @@
           "properties": {
             "f0": {
               "type": "string",
-              "title": "Titre"
+              "title": "Titre principal"
             }
           },
           "required": [
@@ -352,16 +352,16 @@
           "properties": {
             "f0": {
               "type": "string",
-              "title": "Titre"
+              "title": "Titre principal"
             },
             "f1": {
               "type": "string",
-              "title": "Image locale",
+              "title": "Image d’illustration",
               "pattern": "^data:image/(?:png|jpeg|gif|webp);base64,[A-Za-z0-9+/]+={0,2}$"
             },
             "f2": {
               "type": "string",
-              "title": "Alternative de l’image"
+              "title": "Alternative textuelle de l’image d’illustration"
             }
           },
           "required": [
@@ -404,7 +404,7 @@
           "properties": {
             "f0": {
               "type": "string",
-              "title": "Texte 1"
+              "title": "Texte de prévisualisation"
             }
           },
           "required": [
@@ -449,11 +449,11 @@
             },
             "f1": {
               "type": "string",
-              "title": "Texte 2"
+              "title": "Prénom et nom du signataire"
             },
             "f2": {
               "type": "string",
-              "title": "Texte 3"
+              "title": "Fonction du signataire"
             }
           },
           "required": [
@@ -500,7 +500,7 @@
             },
             "f1": {
               "type": "string",
-              "title": "Texte 2"
+              "title": "Service signataire"
             }
           },
           "required": [
@@ -542,11 +542,11 @@
           "properties": {
             "f0": {
               "type": "string",
-              "title": "Texte 1"
+              "title": "Titre de la section"
             },
             "f1": {
               "type": "string",
-              "title": "Accroche"
+              "title": "Accroche de la section"
             }
           },
           "required": [
@@ -588,11 +588,11 @@
           "properties": {
             "f0": {
               "type": "string",
-              "title": "Texte 1"
+              "title": "Titre de la section"
             },
             "f1": {
               "type": "string",
-              "title": "Accroche"
+              "title": "Accroche de la section"
             }
           },
           "required": [
@@ -634,7 +634,7 @@
           "properties": {
             "f0": {
               "type": "string",
-              "title": "Texte 1"
+              "title": "Titre de la section"
             }
           },
           "required": [
@@ -675,7 +675,7 @@
           "properties": {
             "f0": {
               "type": "string",
-              "title": "Texte 1"
+              "title": "Titre de la section"
             }
           },
           "required": [
@@ -716,11 +716,11 @@
           "properties": {
             "f0": {
               "type": "string",
-              "title": "Texte 1"
+              "title": "Titre de la partie"
             },
             "f1": {
               "type": "string",
-              "title": "Accroche"
+              "title": "Accroche de la partie"
             }
           },
           "required": [
@@ -762,11 +762,11 @@
           "properties": {
             "f0": {
               "type": "string",
-              "title": "Texte 1"
+              "title": "Titre de la partie"
             },
             "f1": {
               "type": "string",
-              "title": "Accroche"
+              "title": "Accroche de la partie"
             }
           },
           "required": [
@@ -808,7 +808,7 @@
           "properties": {
             "f0": {
               "type": "string",
-              "title": "Texte 1"
+              "title": "Titre de la partie"
             }
           },
           "required": [
@@ -849,7 +849,7 @@
           "properties": {
             "f0": {
               "type": "string",
-              "title": "Texte 1"
+              "title": "Titre de la partie"
             }
           },
           "required": [
@@ -890,7 +890,7 @@
           "properties": {
             "f0": {
               "type": "string",
-              "title": "Texte"
+              "title": "Texte du paragraphe"
             }
           },
           "required": [
@@ -931,7 +931,7 @@
           "properties": {
             "f0": {
               "type": "string",
-              "title": "Texte"
+              "title": "Texte du paragraphe"
             }
           },
           "required": [
@@ -972,19 +972,19 @@
           "properties": {
             "f0": {
               "type": "string",
-              "title": "Texte"
+              "title": "Phrase d’introduction de la liste"
             },
             "f1": {
               "type": "string",
-              "title": "Texte"
+              "title": "Premier élément de la liste"
             },
             "f2": {
               "type": "string",
-              "title": "Texte"
+              "title": "Deuxième élément de la liste"
             },
             "f3": {
               "type": "string",
-              "title": "Texte"
+              "title": "Troisième élément de la liste"
             }
           },
           "required": [
@@ -1028,19 +1028,19 @@
           "properties": {
             "f0": {
               "type": "string",
-              "title": "Texte"
+              "title": "Phrase d’introduction de la liste"
             },
             "f1": {
               "type": "string",
-              "title": "Texte"
+              "title": "Premier élément de la liste"
             },
             "f2": {
               "type": "string",
-              "title": "Texte"
+              "title": "Deuxième élément de la liste"
             },
             "f3": {
               "type": "string",
-              "title": "Texte"
+              "title": "Troisième élément de la liste"
             }
           },
           "required": [
@@ -1084,11 +1084,11 @@
           "properties": {
             "f0": {
               "type": "string",
-              "title": "Texte"
+              "title": "Premier élément de la liste"
             },
             "f1": {
               "type": "string",
-              "title": "Texte"
+              "title": "Deuxième élément de la liste"
             }
           },
           "required": [
@@ -1130,11 +1130,11 @@
           "properties": {
             "f0": {
               "type": "string",
-              "title": "Texte"
+              "title": "Premier élément de la liste"
             },
             "f1": {
               "type": "string",
-              "title": "Texte"
+              "title": "Deuxième élément de la liste"
             }
           },
           "required": [
@@ -1176,11 +1176,11 @@
           "properties": {
             "f0": {
               "type": "string",
-              "title": "Titre"
+              "title": "Titre du bloc"
             },
             "f1": {
               "type": "string",
-              "title": "Description"
+              "title": "Description du bloc"
             }
           },
           "required": [
@@ -1222,11 +1222,11 @@
           "properties": {
             "f0": {
               "type": "string",
-              "title": "Titre"
+              "title": "Titre du bloc"
             },
             "f1": {
               "type": "string",
-              "title": "Description"
+              "title": "Description du bloc"
             }
           },
           "required": [
@@ -1268,16 +1268,16 @@
           "properties": {
             "f0": {
               "type": "string",
-              "title": "Image locale",
+              "title": "Image d’illustration",
               "pattern": "^data:image/(?:png|jpeg|gif|webp);base64,[A-Za-z0-9+/]+={0,2}$"
             },
             "f1": {
               "type": "string",
-              "title": "Alternative de l’image"
+              "title": "Alternative textuelle de l’image d’illustration"
             },
             "f2": {
               "type": "string",
-              "title": "Texte 1"
+              "title": "Légende ou source de l’image"
             }
           },
           "required": [
@@ -1320,16 +1320,16 @@
           "properties": {
             "f0": {
               "type": "string",
-              "title": "Image locale",
+              "title": "Image d’illustration",
               "pattern": "^data:image/(?:png|jpeg|gif|webp);base64,[A-Za-z0-9+/]+={0,2}$"
             },
             "f1": {
               "type": "string",
-              "title": "Alternative de l’image"
+              "title": "Alternative textuelle de l’image d’illustration"
             },
             "f2": {
               "type": "string",
-              "title": "Texte 1"
+              "title": "Légende ou source de l’image"
             }
           },
           "required": [
@@ -1372,16 +1372,16 @@
           "properties": {
             "f0": {
               "type": "string",
-              "title": "Image locale",
+              "title": "Image d’illustration",
               "pattern": "^data:image/(?:png|jpeg|gif|webp);base64,[A-Za-z0-9+/]+={0,2}$"
             },
             "f1": {
               "type": "string",
-              "title": "Alternative de l’image"
+              "title": "Alternative textuelle de l’image d’illustration"
             },
             "f2": {
               "type": "string",
-              "title": "Texte 1"
+              "title": "Légende ou source de l’image"
             }
           },
           "required": [
@@ -1424,16 +1424,16 @@
           "properties": {
             "f0": {
               "type": "string",
-              "title": "Image locale",
+              "title": "Image d’illustration",
               "pattern": "^data:image/(?:png|jpeg|gif|webp);base64,[A-Za-z0-9+/]+={0,2}$"
             },
             "f1": {
               "type": "string",
-              "title": "Alternative de l’image"
+              "title": "Alternative textuelle de l’image d’illustration"
             },
             "f2": {
               "type": "string",
-              "title": "Texte 1"
+              "title": "Légende ou source de l’image"
             }
           },
           "required": [
@@ -1476,28 +1476,28 @@
           "properties": {
             "f0": {
               "type": "string",
-              "title": "Image locale",
+              "title": "Vignette de l’article",
               "pattern": "^data:image/(?:png|jpeg|gif|webp);base64,[A-Za-z0-9+/]+={0,2}$"
             },
             "f1": {
               "type": "string",
-              "title": "Alternative de l’image"
+              "title": "Alternative textuelle de la vignette"
             },
             "f2": {
               "type": "string",
-              "title": "Texte 1"
+              "title": "Surtitre de l’article"
             },
             "f3": {
               "type": "string",
-              "title": "Titre"
+              "title": "Titre de l’article"
             },
             "f4": {
               "type": "string",
-              "title": "Texte 3"
+              "title": "Auteur de l’article"
             },
             "f5": {
               "type": "string",
-              "title": "Texte 4"
+              "title": "Date et durée de lecture"
             }
           },
           "required": [
@@ -1542,42 +1542,42 @@
           "title": "Article avec vignette et lien",
           "properties": {
             "f0": {
-              "title": "Image locale",
+              "title": "Vignette de l’article",
               "anyOf": [
                 {
                   "const": ""
                 },
                 {
                   "type": "string",
-                  "title": "Image locale",
+                  "title": "Vignette de l’article",
                   "pattern": "^data:image/(?:png|jpeg|gif|webp);base64,[A-Za-z0-9+/]+={0,2}$"
                 }
               ]
             },
             "f1": {
               "type": "string",
-              "title": "Alternative de l’image"
+              "title": "Alternative textuelle de la vignette"
             },
             "f2": {
               "type": "string",
-              "title": "Texte 1"
+              "title": "Surtitre de l’article"
             },
             "f3": {
               "type": "string",
-              "title": "Lien HTTPS",
+              "title": "Adresse HTTPS de l’article",
               "description": "Lien HTTPS ; les règles d’URL complètes sont contrôlées à l’import."
             },
             "f4": {
               "type": "string",
-              "title": "Texte 2"
+              "title": "Titre cliquable de l’article"
             },
             "f5": {
               "type": "string",
-              "title": "Texte 3"
+              "title": "Auteur de l’article"
             },
             "f6": {
               "type": "string",
-              "title": "Texte 4"
+              "title": "Date et durée de lecture"
             }
           },
           "required": [
@@ -1624,20 +1624,20 @@
           "properties": {
             "f0": {
               "type": "string",
-              "title": "Texte 1"
+              "title": "Titre de l’appel à contribution"
             },
             "f1": {
               "type": "string",
-              "title": "Texte 2"
+              "title": "Texte de l’appel à contribution"
             },
             "f2": {
               "type": "string",
-              "title": "Image locale",
+              "title": "Image d’illustration",
               "pattern": "^data:image/(?:png|jpeg|gif|webp);base64,[A-Za-z0-9+/]+={0,2}$"
             },
             "f3": {
               "type": "string",
-              "title": "Alternative de l’image"
+              "title": "Alternative textuelle de l’image d’illustration"
             }
           },
           "required": [
@@ -1681,29 +1681,29 @@
           "properties": {
             "f0": {
               "type": "string",
-              "title": "Texte 1"
+              "title": "Titre de l’appel à contribution"
             },
             "f1": {
               "type": "string",
-              "title": "Texte 2"
+              "title": "Texte de l’appel à contribution"
             },
             "f2": {
               "type": "string",
-              "title": "Lien HTTPS",
+              "title": "Adresse HTTPS du bouton",
               "description": "Lien HTTPS ; les règles d’URL complètes sont contrôlées à l’import."
             },
             "f3": {
               "type": "string",
-              "title": "Texte 3"
+              "title": "Texte du bouton"
             },
             "f4": {
               "type": "string",
-              "title": "Image locale",
+              "title": "Image d’illustration",
               "pattern": "^data:image/(?:png|jpeg|gif|webp);base64,[A-Za-z0-9+/]+={0,2}$"
             },
             "f5": {
               "type": "string",
-              "title": "Alternative de l’image"
+              "title": "Alternative textuelle de l’image d’illustration"
             }
           },
           "required": [
@@ -1749,47 +1749,47 @@
           "properties": {
             "f0": {
               "type": "string",
-              "title": "Texte 1"
+              "title": "Titre des chiffres clés"
             },
             "f1": {
               "type": "string",
-              "title": "Texte"
+              "title": "Premier chiffre clé"
             },
             "f2": {
               "type": "string",
-              "title": "Texte"
+              "title": "Deuxième chiffre clé"
             },
             "f3": {
               "type": "string",
-              "title": "Texte 4"
+              "title": "Premier sous-titre"
             },
             "f4": {
               "type": "string",
-              "title": "Description"
+              "title": "Texte du premier sous-titre"
             },
             "f5": {
               "type": "string",
-              "title": "Texte 6"
+              "title": "Deuxième sous-titre"
             },
             "f6": {
               "type": "string",
-              "title": "Description"
+              "title": "Texte du deuxième sous-titre"
             },
             "f7": {
               "type": "string",
-              "title": "Texte 8"
+              "title": "Troisième sous-titre"
             },
             "f8": {
               "type": "string",
-              "title": "Description"
+              "title": "Texte du troisième sous-titre"
             },
             "f9": {
               "type": "string",
-              "title": "Texte 10"
+              "title": "Quatrième sous-titre"
             },
             "f10": {
               "type": "string",
-              "title": "Description"
+              "title": "Texte du quatrième sous-titre"
             }
           },
           "required": [
@@ -1840,11 +1840,11 @@
           "properties": {
             "f0": {
               "type": "string",
-              "title": "Texte 1"
+              "title": "Titre de la mise en avant"
             },
             "f1": {
               "type": "string",
-              "title": "Description"
+              "title": "Texte de la mise en avant"
             }
           },
           "required": [
@@ -1886,11 +1886,11 @@
           "properties": {
             "f0": {
               "type": "string",
-              "title": "Texte 1"
+              "title": "Titre de la mise en avant"
             },
             "f1": {
               "type": "string",
-              "title": "Description"
+              "title": "Texte de la mise en avant"
             }
           },
           "required": [
@@ -1932,36 +1932,36 @@
           "properties": {
             "f0": {
               "type": "string",
-              "title": "Texte 1"
+              "title": "Titre de la partie"
             },
             "f1": {
               "type": "string",
-              "title": "Image locale",
+              "title": "Image d’illustration",
               "pattern": "^data:image/(?:png|jpeg|gif|webp);base64,[A-Za-z0-9+/]+={0,2}$"
             },
             "f2": {
               "type": "string",
-              "title": "Alternative de l’image"
+              "title": "Alternative textuelle de l’image d’illustration"
             },
             "f3": {
               "type": "string",
-              "title": "Texte 2"
+              "title": "Légende ou source de l’image"
             },
             "f4": {
               "type": "string",
-              "title": "Texte 3"
+              "title": "Premier sous-titre"
             },
             "f5": {
               "type": "string",
-              "title": "Description"
+              "title": "Texte du premier sous-titre"
             },
             "f6": {
               "type": "string",
-              "title": "Texte 5"
+              "title": "Deuxième sous-titre"
             },
             "f7": {
               "type": "string",
-              "title": "Description"
+              "title": "Texte du deuxième sous-titre"
             }
           },
           "required": [
@@ -2009,24 +2009,24 @@
           "properties": {
             "f0": {
               "type": "string",
-              "title": "Texte 1"
+              "title": "Titre de la partie"
             },
             "f1": {
               "type": "string",
-              "title": "Image locale",
+              "title": "Image d’illustration",
               "pattern": "^data:image/(?:png|jpeg|gif|webp);base64,[A-Za-z0-9+/]+={0,2}$"
             },
             "f2": {
               "type": "string",
-              "title": "Alternative de l’image"
+              "title": "Alternative textuelle de l’image d’illustration"
             },
             "f3": {
               "type": "string",
-              "title": "Texte 2"
+              "title": "Légende ou source de l’image"
             },
             "f4": {
               "type": "string",
-              "title": "Description"
+              "title": "Texte de la partie"
             }
           },
           "required": [
@@ -2071,7 +2071,7 @@
           "properties": {
             "f0": {
               "type": "string",
-              "title": "Texte 1"
+              "title": "Titre du contact"
             },
             "f1": {
               "type": "string",
@@ -2079,7 +2079,7 @@
             },
             "f2": {
               "type": "string",
-              "title": "Texte 3"
+              "title": "Département ou unité"
             },
             "f3": {
               "type": "string",
@@ -2127,12 +2127,12 @@
           "properties": {
             "f0": {
               "type": "string",
-              "title": "Lien HTTPS",
+              "title": "Adresse HTTPS du bouton",
               "description": "Lien HTTPS ; les règles d’URL complètes sont contrôlées à l’import."
             },
             "f1": {
               "type": "string",
-              "title": "Texte 1"
+              "title": "Texte du bouton"
             }
           },
           "required": [
@@ -2174,12 +2174,12 @@
           "properties": {
             "f0": {
               "type": "string",
-              "title": "Lien HTTPS",
+              "title": "Adresse HTTPS du bouton",
               "description": "Lien HTTPS ; les règles d’URL complètes sont contrôlées à l’import."
             },
             "f1": {
               "type": "string",
-              "title": "Texte 1"
+              "title": "Texte du bouton"
             }
           },
           "required": [
@@ -2221,12 +2221,12 @@
           "properties": {
             "f0": {
               "type": "string",
-              "title": "Lien HTTPS",
+              "title": "Adresse HTTPS du bouton",
               "description": "Lien HTTPS ; les règles d’URL complètes sont contrôlées à l’import."
             },
             "f1": {
               "type": "string",
-              "title": "Texte 1"
+              "title": "Texte du bouton"
             }
           },
           "required": [
@@ -2268,21 +2268,21 @@
           "properties": {
             "f0": {
               "type": "string",
-              "title": "Lien HTTPS",
+              "title": "Adresse HTTPS du lien d’action",
               "description": "Lien HTTPS ; les règles d’URL complètes sont contrôlées à l’import."
             },
             "f1": {
               "type": "string",
-              "title": "Texte 1"
+              "title": "Texte du lien d’action"
             },
             "f2": {
               "type": "string",
-              "title": "Lien HTTPS",
+              "title": "Adresse HTTPS du lien au fil du texte",
               "description": "Lien HTTPS ; les règles d’URL complètes sont contrôlées à l’import."
             },
             "f3": {
               "type": "string",
-              "title": "Texte 2"
+              "title": "Texte du lien au fil du texte"
             }
           },
           "required": [
@@ -2326,11 +2326,11 @@
           "properties": {
             "f0": {
               "type": "string",
-              "title": "Texte 1"
+              "title": "Chiffre clé"
             },
             "f1": {
               "type": "string",
-              "title": "Description"
+              "title": "Description du chiffre clé"
             }
           },
           "required": [
@@ -2372,20 +2372,20 @@
           "properties": {
             "f0": {
               "type": "string",
-              "title": "Texte 1"
+              "title": "Titre de l’invitation"
             },
             "f1": {
               "type": "string",
-              "title": "Texte 2"
+              "title": "Texte de l’invitation"
             },
             "f2": {
               "type": "string",
-              "title": "Lien HTTPS",
+              "title": "Adresse HTTPS du lien d’invitation",
               "description": "Lien HTTPS ; les règles d’URL complètes sont contrôlées à l’import."
             },
             "f3": {
               "type": "string",
-              "title": "Texte 3"
+              "title": "Texte du lien d’invitation"
             }
           },
           "required": [
@@ -2429,49 +2429,49 @@
           "properties": {
             "f0": {
               "type": "string",
-              "title": "Texte 1"
+              "title": "Titre de la section"
             },
             "f1": {
               "type": "string",
-              "title": "Image locale",
+              "title": "Image de la première carte",
               "pattern": "^data:image/(?:png|jpeg|gif|webp);base64,[A-Za-z0-9+/]+={0,2}$"
             },
             "f2": {
               "type": "string",
-              "title": "Alternative de l’image"
+              "title": "Alternative textuelle de l’image de la première carte"
             },
             "f3": {
               "type": "string",
-              "title": "Titre"
+              "title": "Titre de la première carte"
             },
             "f4": {
               "type": "string",
-              "title": "Description"
+              "title": "Description de la première carte"
             },
             "f5": {
               "type": "string",
-              "title": "Texte 4"
+              "title": "Chiffre clé de la première carte"
             },
             "f6": {
               "type": "string",
-              "title": "Image locale",
+              "title": "Image de la deuxième carte",
               "pattern": "^data:image/(?:png|jpeg|gif|webp);base64,[A-Za-z0-9+/]+={0,2}$"
             },
             "f7": {
               "type": "string",
-              "title": "Alternative de l’image"
+              "title": "Alternative textuelle de l’image de la deuxième carte"
             },
             "f8": {
               "type": "string",
-              "title": "Titre"
+              "title": "Titre de la deuxième carte"
             },
             "f9": {
               "type": "string",
-              "title": "Description"
+              "title": "Description de la deuxième carte"
             },
             "f10": {
               "type": "string",
-              "title": "Texte 7"
+              "title": "Chiffre clé de la deuxième carte"
             }
           },
           "required": [
@@ -2522,34 +2522,34 @@
           "properties": {
             "f0": {
               "type": "string",
-              "title": "Texte 1"
+              "title": "Mention d’abonnement"
             },
             "f1": {
               "type": "string",
-              "title": "Lien HTTPS",
+              "title": "Adresse HTTPS ou mailto de la politique de données personnelles",
               "description": "Lien HTTPS ou mailto vers une adresse ASCII, avec subject facultatif ; les autres paramètres sont refusés à l’import."
             },
             "f2": {
               "type": "string",
-              "title": "Texte 2"
+              "title": "Texte du lien vers la politique de données personnelles"
             },
             "f3": {
               "type": "string",
-              "title": "Image locale",
+              "title": "Logo Marianne, thème clair",
               "pattern": "^data:image/(?:png|jpeg|gif|webp);base64,[A-Za-z0-9+/]+={0,2}$"
             },
             "f4": {
               "type": "string",
-              "title": "Alternative de l’image"
+              "title": "Alternative textuelle du logo Marianne, thème clair"
             },
             "f5": {
               "type": "string",
-              "title": "Image locale",
+              "title": "Logo Marianne, thème sombre",
               "pattern": "^data:image/(?:png|jpeg|gif|webp);base64,[A-Za-z0-9+/]+={0,2}$"
             },
             "f6": {
               "type": "string",
-              "title": "Alternative de l’image"
+              "title": "Alternative textuelle du logo Marianne, thème sombre"
             },
             "f7": {
               "type": "string",
@@ -2601,43 +2601,43 @@
           "properties": {
             "f0": {
               "type": "string",
-              "title": "Texte 1"
+              "title": "Mention d’abonnement"
             },
             "f1": {
               "type": "string",
-              "title": "Lien HTTPS",
+              "title": "Adresse HTTPS ou mailto de la politique de données personnelles",
               "description": "Lien HTTPS ou mailto vers une adresse ASCII, avec subject facultatif ; les autres paramètres sont refusés à l’import."
             },
             "f2": {
               "type": "string",
-              "title": "Texte 2"
+              "title": "Texte du lien vers la politique de données personnelles"
             },
             "f3": {
               "type": "string",
-              "title": "Image locale",
+              "title": "Logo Marianne, thème clair",
               "pattern": "^data:image/(?:png|jpeg|gif|webp);base64,[A-Za-z0-9+/]+={0,2}$"
             },
             "f4": {
               "type": "string",
-              "title": "Alternative de l’image"
+              "title": "Alternative textuelle du logo Marianne, thème clair"
             },
             "f5": {
               "type": "string",
-              "title": "Image locale",
+              "title": "Logo Marianne, thème sombre",
               "pattern": "^data:image/(?:png|jpeg|gif|webp);base64,[A-Za-z0-9+/]+={0,2}$"
             },
             "f6": {
               "type": "string",
-              "title": "Alternative de l’image"
+              "title": "Alternative textuelle du logo Marianne, thème sombre"
             },
             "f7": {
               "type": "string",
-              "title": "Image locale",
+              "title": "Logo de l’opérateur",
               "pattern": "^data:image/(?:png|jpeg|gif|webp);base64,[A-Za-z0-9+/]+={0,2}$"
             },
             "f8": {
               "type": "string",
-              "title": "Alternative de l’image"
+              "title": "Alternative textuelle du logo de l’opérateur"
             },
             "f9": {
               "type": "string",
@@ -2691,16 +2691,16 @@
           "properties": {
             "f0": {
               "type": "string",
-              "title": "Texte 1"
+              "title": "Phrase précédant le lien de désabonnement"
             },
             "f1": {
               "type": "string",
-              "title": "Lien HTTPS",
+              "title": "Adresse HTTPS ou mailto de désabonnement",
               "description": "Lien HTTPS ou mailto vers une adresse ASCII, avec subject facultatif ; les autres paramètres sont refusés à l’import."
             },
             "f2": {
               "type": "string",
-              "title": "Texte 2"
+              "title": "Texte du lien de désabonnement"
             }
           },
           "required": [
@@ -2743,16 +2743,16 @@
           "properties": {
             "f0": {
               "type": "string",
-              "title": "Texte 1"
+              "title": "Phrase précédant le lien de gestion des abonnements"
             },
             "f1": {
               "type": "string",
-              "title": "Lien HTTPS",
+              "title": "Adresse HTTPS ou mailto de gestion des abonnements",
               "description": "Lien HTTPS ou mailto vers une adresse ASCII, avec subject facultatif ; les autres paramètres sont refusés à l’import."
             },
             "f2": {
               "type": "string",
-              "title": "Texte 2"
+              "title": "Texte du lien de gestion des abonnements"
             }
           },
           "required": [
@@ -2819,7 +2819,7 @@
           "properties": {
             "f0": {
               "type": "string",
-              "title": "Texte 1"
+              "title": "Texte de clôture"
             }
           },
           "required": [
