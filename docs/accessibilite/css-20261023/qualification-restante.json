@@ -1,0 +1,128 @@
+{
+  "checked_at_utc": "2026-10-23T01:46:23.572482+00:00",
+  "product_reference_commit": "4ce33a5909e5c7498eef8cccc146d4b5a4d72b9c",
+  "goal_percent": 100,
+  "official_compliance_rate": null,
+  "goal_achieved": false,
+  "humanQualification": false,
+  "screenReaderExecuted": false,
+  "windowsExecuted": false,
+  "qualification": "NON_TERMINEE",
+  "evidence_integrity": {
+    "manifest": "recu-20261023.json",
+    "manifest_sha256": "f3bf92ee7f4f6a1049b03055da8c4514759ff2871143b4a93156c9e52e472762",
+    "verified_groups": {
+      "sourceSha256": 26,
+      "verificationSourceSha256": 12,
+      "artifactSha256": 6626
+    },
+    "errors": []
+  },
+  "matrix": {
+    "criteria": 106,
+    "tests": 258,
+    "instances": 1651,
+    "criterion_qualifications": {
+      "NON_TESTE": 101,
+      "A_RETESTER": 5
+    },
+    "test_qualifications": {
+      "NON_TESTE": 253,
+      "A_RETESTER": 3,
+      "A_RETESTER sur les sorties mesurées ; autres instances à qualifier": 2
+    },
+    "sha256": "44b4de8f03353fc4e2dfa624cdbc14f78cd280d5e31ee307b3f2bcd9ee47a602",
+    "human_decisions_added": 0
+  },
+  "ay11_equivalence": {
+    "executed_campaign_commit": "7b8266c697fa115d4bc223e6c2bb6e8b44ace1a6",
+    "current_commit": "3f7d1637a9af632bd00a7545f12c3b1058bd1fc1",
+    "git_objects": {
+      "src": {
+        "campaign_git_object": "52f84253ccad52a0217b8a506e907334c8d845c2",
+        "current_git_object": "52f84253ccad52a0217b8a506e907334c8d845c2",
+        "identical": true
+      },
+      "references": {
+        "campaign_git_object": "f0d1188192cee272c9ab45d445b1836a17edfdc8",
+        "current_git_object": "f0d1188192cee272c9ab45d445b1836a17edfdc8",
+        "identical": true
+      },
+      "scripts": {
+        "campaign_git_object": "76f0221cecd1e6e4d608a31072bbc17726797d73",
+        "current_git_object": "76f0221cecd1e6e4d608a31072bbc17726797d73",
+        "identical": true
+      },
+      "pyproject.toml": {
+        "campaign_git_object": "a91bdc354d25b35c43ff81eda5f18f09ed5ae864",
+        "current_git_object": "a91bdc354d25b35c43ff81eda5f18f09ed5ae864",
+        "identical": true
+      },
+      "requirements.lock.txt": {
+        "campaign_git_object": "8c1dbd8ce823c05ee15988632d72495291df61d5",
+        "current_git_object": "8c1dbd8ce823c05ee15988632d72495291df61d5",
+        "identical": true
+      }
+    },
+    "recollection_required_for_this_versioned_delta": false,
+    "historical_execution_relabelled": false,
+    "limit": "Ne prouve pas l’identité historique des environnements non versionnés ou des navigateurs."
+  },
+  "native_picker": {
+    "cua": {
+      "status": "CONTROLE_EN_ECHEC",
+      "observed_error": "Sky Computer Use native pipe startup failed",
+      "method": "Transcription de la sortie outil de cette tentative, non réexécution."
+    },
+    "ui_elements_enabled_observed": true,
+    "attempts": [
+      {
+        "attempt": "pilote",
+        "browser": "156.0",
+        "completed": false,
+        "failure": "AX_WINDOW_1_UNAVAILABLE",
+        "owned_profile_verified": true,
+        "headless_argument": false,
+        "surviving_owned_processes": 0,
+        "native_selector_open_attempted": false,
+        "selection_attempted": false,
+        "cancellation_attempted": false,
+        "qualification": "CONTROLE_EN_ECHEC_AVANT_INTERACTION_SYSTEME",
+        "evidence": "evidence/selecteur-systeme-20261023/pilote/recu.json"
+      },
+      {
+        "attempt": "pilote-v2",
+        "browser": "156.0",
+        "completed": false,
+        "failure": "APPLESCRIPT_TIMEOUT",
+        "owned_profile_verified": true,
+        "headless_argument": false,
+        "surviving_owned_processes": 0,
+        "native_selector_open_attempted": false,
+        "selection_attempted": false,
+        "cancellation_attempted": false,
+        "qualification": "CONTROLE_EN_ECHEC_AVANT_INTERACTION_SYSTEME",
+        "evidence": "evidence/selecteur-systeme-20261023/pilote-v2/recu.json"
+      }
+    ],
+    "successes": 0,
+    "product_defect_confirmed": false,
+    "first_attempt_source_archived": false
+  },
+  "remaining_means": [
+    "Auditeur pour les décisions des tests et les justifications de non-applicabilité, avec revue éditoriale et visuelle.",
+    "Opérateur utilisant et écoutant réellement les lecteurs d’écran retenus, sur les états de l’échantillon.",
+    "Accès UI fonctionnel pour sélectionner et annuler dans le sélecteur système, puis observer le retour de focus.",
+    "Poste Windows avec Firefox, Outlook et lecteur d’écran du parc ; versions et restrictions relevées.",
+    "Opérateur et mandat d’envoi distinct pour les recettes de courriels après transformation, images bloquées et familles.",
+    "Autorisation métier de l’origine HTTPS et recette d’installation sur le parc."
+  ],
+  "artifacts": {
+    "evidence/selecteur-systeme-20261023/pilote/recu.json": "811057959d81183ae7a6fc66a69bdae3719390df1d2ab3363640aa5437fd9123",
+    "evidence/selecteur-systeme-20261023/pilote-v2/recu.json": "3bc7612b82e3c4cebb82ed638a31c383e364746d6366e35d236c70a734fa1da6",
+    "evidence/selecteur-systeme-20261023/firefox-visible": "8a1d73eea7a97f196089ff7902163a7d547f6328d58efe6402b98254e4f92a7b",
+    "evidence/selecteur-systeme-20261023/pilote.mjs": "29765e11e98fcef563347b08a5354ba823c7589584e75c9b34eeb3a66b9f72b6",
+    "evidence/selecteur-systeme-20261023/pilote-v2/collecteur.mjs": "29765e11e98fcef563347b08a5354ba823c7589584e75c9b34eeb3a66b9f72b6",
+    "evidence/selecteur-systeme-20261023/verifier-etat.py": "b524b8e4ded84ab4aa997fdc3c112695cbd506e6bfc07bc9db15ccd2132a0784"
+  }
+}

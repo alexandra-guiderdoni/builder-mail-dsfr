@@ -48,6 +48,33 @@ Les [106 critères](MATRICE-106.md) et [258 tests](MATRICE-258.md) conservent le
 
 Personne n’est disponible pour les qualifications manuelles et les essais vocaux ; aucun poste Windows n’est disponible. Les issues #2 et #13 restent ouvertes, avec la pertinence éditoriale, les décisions exhaustives d’applicabilité, les recettes de messagerie après transformation, l’installation sur le parc et l’autorisation métier de l’origine publique. Un arbre d’accessibilité, un résultat axe ou un GO technique ne prouvent aucune annonce vocale. L’objectif à 100 % reste ouvert.
 
+Le [bilan des preuves et moyens manquants](qualification-restante.json) recontrôle les 26 sources produit, douze scripts et 6 626 artefacts de la campagne : aucune divergence. La matrice conserve 101 critères `NON_TESTE` et cinq `A_RETESTER` ; les 258 tests gardent 253 qualifications `NON_TESTE` et cinq à retester, dont deux limitées aux sorties mesurées. Ces statuts désignent la qualification réglementaire, pas une absence de collecte instrumentée.
+
+| Exigence du mandat | Preuve disponible | Ce qui empêche de conclure |
+|---|---|---|
+| Échantillon représentatif des surfaces, états, aperçus et 52 composants | Treize pages, vingt scènes AY11, rendus et compléments clavier ci-dessus | Les états collectés ne qualifient pas tous les usages ni le message transformé par une messagerie |
+| Décision pour les 106 critères et 258 tests, par instance applicable | Matrices et 1 651 observations, compléments séparés | Aucune qualification humaine confirmée ; non-applicabilités à justifier |
+| Capacités AY11 actuelles et erreurs conservées | 57 variantes, 1 160 commandes et équivalence de code vérifiée ci-dessous | `candidate-static` reste indisponible ; aucune conformité déduite des sondes muettes ou partielles |
+| Clavier, focus, erreurs, zoom, redistribution, contrastes et annonces | Mesures, parcours Chromium/Firefox et témoins négatifs | Jugement visuel et éditorial, usages assistifs réellement écoutés et sélecteur système encore à qualifier |
+| Corrections et non-régression des données, formats et courriels | 110 tests réussis et comparaisons de rendu, sources inchangées | La fidélité et l’accessibilité après transformation dans les clients mail ne sont pas prouvées par le navigateur |
+| Contre-audit et livraison vérifiable | Revues Astra, reçus et matrices versionnés | Les GO techniques ne remplacent aucune décision RGAA ou recette métier |
+
+### Équivalence avec AY11 courant
+
+La campagne a été exécutée au commit AY11 `7b8266c697fa115d4bc223e6c2bb6e8b44ace1a6`. Le checkout actuel est `3f7d1637a9af632bd00a7545f12c3b1058bd1fc1` : les objets Git de `src`, `references`, `scripts`, `pyproject.toml` et `requirements.lock.txt` sont identiques. Les onze changements concernent documentation et états ou reçus d’ordonnancement. Astra et le fil principal ont vérifié cette identité ; aucune recollecte n’est justifiée par ce seul changement versionné. Le reçu historique reste épinglé à son vrai commit d’exécution. Cette comparaison ne reconstitue pas les environnements installés hors Git.
+
+### Sélecteur système Mac : contrôle non exécuté
+
+Une tentative complémentaire visait la sélection et l’annulation réelles, distinctes de `input.setFiles`. Le canal CUA a échoué au démarrage du pont natif. AppleScript a renvoyé `UI elements enabled=true`, puis deux profils Firefox 156.0 isolés, sans argument headless, ont été essayés : le premier ne fournit pas de fenêtre AX contrôlable ; le second dépasse le délai AppleScript après une tentative de lecture du rôle et une attente bornée de fenêtre unique. L’hypothèse du second essai venait du [code d’accessibilité Mozilla](https://searchfox.org/firefox-main/source/accessible/mac/Platform.mm) ; elle n’établit pas la cause de l’échec.
+
+Aucune touche système destinée au sélecteur n’a été envoyée ; ni sélection, ni annulation ne sont observées. Les deux reçus restent en échec, les profils de recette sont arrêtés et aucun processus correspondant ne subsiste. La source du premier pilote n’a pas été archivée séparément ; celle du second l’est. Aucun réglage TCC, profil personnel, envoi ou installation n’a été effectué. Cette limite d’instrumentation n’est ni un défaut du builder, ni un contrôle réussi.
+
+Pour terminer, il faut un auditeur pour les décisions, non-applicabilités et revues visuelles ou éditoriales ; un opérateur écoutant réellement les lecteurs d’écran retenus ; un accès UI fonctionnel pour le sélecteur et son retour de focus ; puis le poste Windows, les autorisations et les recettes métier décrites dans la [recette applicative](../../RECETTE-APPLICATION.md#recette-sur-le-poste-métier). Aucun de ces moyens manquants n’est remplacé par un taux automatique.
+
+Sur ce bilan, Astra donne **GO documentaire et PDV** après recalcul des 26 sources, douze scripts, 6 626 artefacts, six empreintes du complément et des compteurs de la matrice. Les deux reçus d’échec et l’équivalence AY11 sont relus. L’absence de processus survivant est attestée par le générateur, dont la garde exige le code 1 de `pgrep` ; le réviseur ne réinterroge pas ces processus. Aucun navigateur, sélecteur ou campagne n’est relancé par cette contre-revue. Aucun GO RGAA global n’est prononcé.
+
+## Contre-audit et publication de la campagne CSS
+
 Astra donne **GO technique, documentaire et PDV pour la publication personnelle**. Sa contre-revue recalcule les 26 sources, douze scripts et 6 626 artefacts sans divergence, puis relance le vérificateur : 1 651 pointeurs, 87 liens et vingt ensembles exacts de 57 variantes. Les compteurs VNU bruts, les 104 informations conservées, les profils de capture et les identités des observations sont contrôlés indépendamment. Aucun navigateur ni lecteur d’écran n’est relancé par cette contre-revue ; ce GO ne qualifie pas le RGAA global.
 
 La [recette publique distincte](publication.json) porte sur le commit produit `c1d26830504b96fd304814d95e983ea8c44ea980`, après déploiement Pages terminé avec succès. Les huit fichiers publics répondent en HTTP 200 avec des empreintes identiques aux distributions locales. Un profil Chromium neuf exerce un import synthétique, l’aperçu sandboxé, le téléchargement HTML réellement ouvert, l’export JSON sans changement des données et la restauration hors connexion. La propriété `font-color` est absente des styles de l’aperçu, de l’export ouvert et de l’aperçu restauré ; les déclarations Office restent présentes. Le CSS canonique conserve ses quinze occurrences et la même identité de catalogue.

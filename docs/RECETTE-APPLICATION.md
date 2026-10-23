@@ -4,6 +4,8 @@ La [campagne d’accessibilité du 23 octobre](accessibilite/css-20261023/RAPPOR
 
 Le [protocole de contraste](accessibilite/contrastes-20261022/RAPPORT.md) distingue 74 mesures et six constats d’inactivité modale, avec cinq contrôles négatifs. La campagne courante renouvelle ces observations et conserve les résultats axe incomplets ; la qualification globale des couleurs reste ouverte.
 
+Le [bilan de qualification](accessibilite/css-20261023/RAPPORT.md#qualifications-restantes) rattache le mandat complet aux preuves actuelles : 101 critères non qualifiés et cinq à retester, malgré les collectes instrumentées. Il conserve aussi l’échec de contrôle du sélecteur système Mac avant toute sélection ou annulation. L’équivalence du code AY11 courant avec le code de la campagne est vérifiée séparément ; les anciennes exécutions gardent leur commit réel.
+
 Le [zoom natif Firefox](accessibilite/zoom-20261023/RAPPORT.md) possède sa recette distincte : 245 observations de documents, valeurs complémentaires et accès au dialogue par Tab et molette. Les captures ne qualifient ni la lisibilité globale ni les annonces vocales.
 
 **Application publiée, qualification métier incomplète.** Observations des 21 et 22 octobre 2026 sur macOS 26.5.2, Firefox natif 156.0 et Chromium 156.0.8078.4. Les campagnes couvrent l’accueil « Mes newsletters », le builder générique et la page SNUM séparée, puis l’origine HTTPS publique. La recette du [prototype](RECETTE.md) reste historique et distincte.
