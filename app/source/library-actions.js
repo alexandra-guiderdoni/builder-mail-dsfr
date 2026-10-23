@@ -3,6 +3,11 @@
   const A = window.MailBuilder, M = A.Model, get = id => document.getElementById(id);
   const selected = (list, field) => { const item = list.find(x => x.id === get(field).value); if (!item) throw new Error("Choisissez un élément enregistré."); return item; };
   const name = field => { const result = get(field).value.trim(); if (!result) throw new Error("Renseignez un nom pour cet élément."); return result; };
+  // Deux noms sont homonymes s’ils ne diffèrent que par les espaces périphériques, la casse ou la forme Unicode.
+  const key = value => value.normalize("NFKC").trim().toLowerCase();
+  const unique = (list, label, kind) => { if (list.some(x => key(x.name) === key(label))) throw new Error(`${kind} nommé « ${label} » existe déjà. Choisissez un autre nom.`); };
+  // L’annonce de réussite attend la fin de la sauvegarde ; un échec a déjà affiché son propre message.
+  const announce = async message => { try { await A.State.flush(); } catch (cause) { if (get("error").hidden) throw cause; return; } A.notice(message); };
   const starters = {information: [2, 5, 8, 19, 40, 47, 49], lettre: [2, 5, 10, 31, 35, 46, 47, 49], invitation: [2, 6, 19, 39, 40, 47, 49]};
   A.Actions = {
     "new-document": () => A.State.change(lib => { const doc = M.create("Nouvelle composition", starters[get("starter").value]); lib.documents.push(doc); lib.activeId = doc.id; }),
@@ -10,13 +15,14 @@
     "remove-document": () => A.Library.ask("remove", A.library.activeId),
     "library-home": () => A.Library.home(),
     "resume-document": () => A.Library.open(A.library.activeId),
-    "save-template": () => { const label = name("template-name"); return A.State.change(lib => { lib.templates.push(M.clone(A.doc(), label)); }); },
+    "save-template": async () => { const label = name("template-name"); A.notice(""); await A.State.change(lib => { unique(lib.templates, label, "Un modèle"); lib.templates.push(M.clone(A.doc(), label)); }); await announce(`Modèle « ${label} » enregistré dans ce navigateur.`); },
     "use-template": () => { const template = selected(A.library.templates, "saved-templates"); return A.State.change(lib => { const doc = M.clone(template, `${template.name} · composition`); lib.documents.push(doc); lib.activeId = doc.id; }); },
-    "remove-template": () => { const target = selected(A.library.templates, "saved-templates"); return A.State.change(lib => { lib.templates = lib.templates.filter(t => t.id !== target.id); }); },
-    "save-identity": () => {
+    "remove-template": () => A.Library.askRemoval("templates", selected(A.library.templates, "saved-templates").id),
+    "save-identity": async () => {
       const label = name("identity-name"), blocks = A.doc().blocks.filter(b => ["En-têtes", "Pieds de page"].includes(M.component(b.component).family));
       if (!blocks.length) throw new Error("Ajoutez un en-tête ou un pied de page à cette composition.");
-      return A.State.change(lib => { lib.identities.push({id: M.id(), name: label, blocks: M.copy(blocks)}); });
+      A.notice(""); await A.State.change(lib => { unique(lib.identities, label, "Une identité"); lib.identities.push({id: M.id(), name: label, blocks: M.copy(blocks)}); });
+      await announce(`Identité « ${label} » enregistrée dans ce navigateur.`);
     },
     "use-identity": () => {
       const identity = selected(A.library.identities, "identities"), frames = M.copy(identity.blocks); frames.forEach(b => { b.id = M.id(); });
@@ -25,7 +31,7 @@
         doc.blocks = [...frames.filter(b => M.component(b.component).family === "En-têtes"), ...doc.blocks.filter(b => !["En-têtes", "Pieds de page"].includes(M.component(b.component).family)), ...frames.filter(b => M.component(b.component).family === "Pieds de page")];
       });
     },
-    "remove-identity": () => { const target = selected(A.library.identities, "identities"); return A.State.change(lib => { lib.identities = lib.identities.filter(i => i.id !== target.id); }); },
+    "remove-identity": () => A.Library.askRemoval("identities", selected(A.library.identities, "identities").id),
     "add-block": () => {
       const id = get("catalogue").value; if (!id) throw new Error("Choisissez un composant du catalogue.");
       A.State.guard(); const b = M.createBlock(id); A.selected = b.id;

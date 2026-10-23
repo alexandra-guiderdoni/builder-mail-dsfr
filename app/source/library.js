@@ -43,6 +43,18 @@
     get("library-dialog").showModal(); get(removing ? "library-cancel" : "library-name").focus();
     if (!removing) get("library-name").select();
   }
+  // Retrait d’un modèle ou d’une identité : même fenêtre de confirmation, élément désigné par son identifiant.
+  const itemKinds = {templates: {noun: "le modèle", the: "Ce modèle", button: "Retirer ce modèle", done: "Modèle", ended: "retiré"}, identities: {noun: "l’identité", the: "Cette identité", button: "Retirer cette identité", done: "Identité", ended: "retirée"}};
+  function askRemoval(list, id) {
+    A.State.guard(); const item = A.library[list].find(x => x.id === id), kind = itemKinds[list];
+    if (!item) throw new Error("Cet élément n’est plus disponible.");
+    const same = A.library[list].filter(x => x.name === item.name), rank = same.indexOf(item) + 1;
+    currentDialog = {kind: "item", list, id, opener: document.activeElement};
+    get("library-dialog-title").textContent = `Retirer ${kind.noun} « ${item.name} » ?${same.length > 1 ? ` (n° ${rank} sur ${same.length} du même nom)` : ""}`;
+    get("library-dialog-description").textContent = `${kind.the} sera retiré${list === "identities" ? "e" : ""} de ce navigateur. Les compositions déjà créées et les fichiers exportés ne changent pas.`;
+    get("library-name-field").hidden = true; get("library-name").disabled = true; get("library-name").removeAttribute("aria-invalid"); get("library-dialog-error").textContent = "";
+    get("library-confirm").textContent = kind.button; get("library-dialog").showModal(); get("library-cancel").focus();
+  }
   get("newsletter-list").addEventListener("click", event => {
     const button = event.target.closest("[data-library-action]"); if (!button) return;
     const id = button.closest("[data-document]").dataset.document, action = button.dataset.libraryAction;
@@ -58,6 +70,7 @@
   get("library-dialog").addEventListener("cancel", event => { if (busy) event.preventDefault(); });
   get("library-dialog").addEventListener("close", () => {
     if (!currentDialog) return;
+    if (currentDialog.kind === "item") { currentDialog.opener?.focus(); return; }
     const exists = A.library.documents.some(d => d.id === currentDialog.id), fallback = A.library.documents[Math.min(currentDialog.index, A.library.documents.length - 1)].id;
     focusRow(exists ? currentDialog.id : fallback, exists ? currentDialog.kind : "open");
   });
@@ -67,7 +80,17 @@
     if (target.kind === "rename" && !label) { get("library-dialog-error").textContent = "Renseignez un nom pour la composition."; get("library-name").setAttribute("aria-invalid", "true"); get("library-name").focus(); return; }
     busy = true; get("library-confirm").disabled = get("library-cancel").disabled = true; A.notice("");
     try {
-      A.State.guard(); find(target.id); let emptied = false;
+      A.State.guard();
+      if (target.kind === "item") {
+        const kind = itemKinds[target.list], item = A.library[target.list].find(x => x.id === target.id);
+        if (!item) throw new Error("Cet élément n’est plus disponible.");
+        await A.State.change(lib => { lib[target.list] = lib[target.list].filter(x => x.id !== target.id); });
+        get("library-dialog").close();
+        // Un échec de sauvegarde a déjà affiché son propre message : pas d’annonce de réussite.
+        try { await A.State.flush(); } catch (cause) { if (get("error").hidden) throw cause; return; }
+        A.notice(`${kind.done} « ${item.name} » ${kind.ended}.`); return;
+      }
+      find(target.id); let emptied = false;
       await A.State.change(lib => {
         if (target.kind === "rename") lib.documents.find(d => d.id === target.id).name = label;
         else {
@@ -83,5 +106,5 @@
     } catch (cause) { if (get("library-dialog").open) get("library-dialog-error").textContent = cause.message; else A.error(cause.message); }
     finally { busy = false; get("library-confirm").disabled = get("library-cancel").disabled = false; }
   });
-  A.Library = Object.freeze({refresh, open, home, duplicate, ask});
+  A.Library = Object.freeze({refresh, open, home, duplicate, ask, askRemoval});
 })();
