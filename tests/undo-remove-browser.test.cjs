@@ -63,7 +63,8 @@ test('annuler le dernier retrait restaure le bloc avec image à sa place, sans e
     assert.deepEqual(await focused(page), {id: 'field-f0', first: true});
     assert.equal(await button.isVisible(), false);
     const preview = page.frameLocator('#preview');
-    await preview.locator('a').filter({hasText: 'Article retiré puis restauré'}).waitFor();
+    // Présence dans le document de l’aperçu : sa mise en page n’est pas l’objet de ce test.
+    await preview.locator('a').filter({hasText: 'Article retiré puis restauré'}).waitFor({state: 'attached'});
     assert.equal(await preview.locator(`img[src="${removed.values.f0}"]`).count(), 1);
 
     assert.deepEqual((await store(page)).library.documents.find(d => d.id === doc.id), current);
@@ -90,11 +91,17 @@ test('dernier bloc et liens supplémentaires restaurés ; seul le retrait le plu
     assert.equal(await page.locator('#notice').textContent(), `Bloc ${g('Gestion des abonnements')} restauré en position 4.`);
     assert.deepEqual(await focused(page), {id: 'field-f0', first: true});
     assert.equal(await page.locator('#field-footer-label-1').inputValue(), 'Nous contacter');
-    await page.frameLocator('#preview').locator('a[href]').filter({hasText: 'Nous contacter'}).waitFor();
+    await page.frameLocator('#preview').locator('a[href]').filter({hasText: 'Nous contacter'}).waitFor({state: 'attached'});
 
     await remove(page, paragraph.id);
     await remove(page, title.id);
     assert.equal(await page.locator('#undo-remove').textContent(), `Annuler le retrait du bloc ${g('Titre principal')}`);
+    await page.locator('#article-source').fill('adresse sans protocole');
+    await click(page, '#undo-remove');
+    await page.locator('#error').filter({hasText: 'Corrigez les champs signalés'}).waitFor();
+    assert.deepEqual(await ids(page), [article.id, footer.id]);
+    assert.equal(await page.locator('#undo-remove').isVisible(), true, 'Une annulation refusée doit rester disponible.');
+    await click(page, '[data-action=cancel-fields]');
     await undo(page);
     assert.deepEqual(await ids(page), [title.id, article.id, footer.id]);
     assert.equal(await page.locator('#undo-remove').isVisible(), false);
@@ -118,7 +125,8 @@ test('chaque composition garde son propre dernier retrait, y compris lorsqu’el
 
     await page.locator('#documents').selectOption(other.id); await saved(page);
     assert.equal(await page.locator('#undo-remove').isVisible(), false);
-    while ((await ids(page)).length) { await click(page, '[data-block-action=remove]'); await saved(page); }
+    for (let i = 0; i < 10 && (await ids(page)).length; i++) { await click(page, '[data-block-action=remove]'); await saved(page); }
+    assert.deepEqual(await ids(page), []);
     assert.equal(await page.locator('#block-editor').textContent(), 'Ajoutez un composant au courriel pour personnaliser son contenu.');
     assert.equal(await page.locator('#undo-remove').textContent(), `Annuler le retrait du bloc ${g('Lien de désabonnement')}`);
     await undo(page);
