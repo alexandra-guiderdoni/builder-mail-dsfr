@@ -47,10 +47,10 @@ HEADING_FIELDS = {
 # Libellés explicites des champs, dans l’ordre des clés f0, f1… de chaque section.
 # Exclus de l’empreinte contractuelle : les modifier ne change ni les clés ni les types.
 MARIANNE = [
-    "Logo Marianne, thème clair",
-    "Alternative textuelle du logo Marianne, thème clair",
-    "Logo Marianne, thème sombre",
-    "Alternative textuelle du logo Marianne, thème sombre",
+    "Logo Marianne pour le thème clair",
+    "Alternative textuelle du logo Marianne pour le thème clair",
+    "Logo Marianne pour le thème sombre",
+    "Alternative textuelle du logo Marianne pour le thème sombre",
 ]
 OPERATOR = ["Logo de l’opérateur", "Alternative textuelle du logo de l’opérateur"]
 ILLUSTRATION = [
@@ -244,14 +244,15 @@ class Sections(HTMLParser):
 
 
 class Fields(HTMLParser):
-    def __init__(self, labels):
+    def __init__(self, section, labels):
         super().__init__(convert_charrefs=False)
-        self.parts, self.fields, self.buffer, self.labels = [], [], "", labels
+        self.parts, self.fields, self.buffer = [], [], ""
+        self.section, self.labels = section, labels
 
     def slot(self, kind, value):
         key = f"f{len(self.fields)}"
         if len(self.fields) >= len(self.labels):
-            raise ValueError(f"Libellé absent pour le champ {key}.")
+            raise ValueError(f"Libellé absent pour le champ {key} de {self.section}.")
         label = self.labels[len(self.fields)]
         self.fields.append({"key": key, "type": kind, "label": label, "default": value})
         return "{{" + key + "}}"
@@ -368,16 +369,20 @@ def compile_catalogue():
     parser = Sections(source)
     parser.feed(source)
     labels = json.loads((ROOT / "reference/catalogue.json").read_text(encoding="utf-8"))
-    if len(labels) != len(parser.sections) or not len(labels) == len(FIELD_LABELS) == 52:
+    if len(labels) != len(parser.sections) or len(labels) != 52:
         raise ValueError(
             "L’inventaire de référence doit couvrir exactement les 52 sections épinglées."
+        )
+    if len(FIELD_LABELS) != len(labels):
+        raise ValueError(
+            "FIELD_LABELS doit couvrir exactement les 52 sections épinglées."
         )
     components = []
     for index, ((start, end, first, last), (label, family)) in enumerate(
         zip(parser.sections, labels)
     ):
         raw = source[start:end]
-        fields = Fields(FIELD_LABELS[index])
+        fields = Fields(f"mail-{index:02}", FIELD_LABELS[index])
         fields.feed(raw)
         fields.flush()
         if len(fields.fields) != len(FIELD_LABELS[index]):
