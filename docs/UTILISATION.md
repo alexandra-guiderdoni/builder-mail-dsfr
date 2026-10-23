@@ -52,7 +52,7 @@ Charger les logos et visuels depuis des fichiers locaux PNG, JPEG, GIF ou WebP. 
 
 Certains en-têtes comportent deux images, pour les modes clair et sombre : personnaliser les deux emplacements. Les valeurs de démonstration et liens `exemple.invalid` doivent être remplacés avant tout usage réel.
 
-« Identités de service » enregistre les en-têtes et pieds de page de la composition active, avec leurs images et textes. « Appliquer » remplace les en-têtes et pieds de la composition choisie et conserve son contenu central. Chaque application est une copie : modifier une composition ne met pas à jour les autres.
+« Identités de service » enregistre les en-têtes et pieds de page de la composition active, avec leurs images et textes. « Appliquer » remplace les en-têtes et pieds de la composition choisie et conserve son contenu central. Si l’un des blocs remplacés ne porte plus les valeurs initiales de son composant (textes, images, liens, source ou liens supplémentaires), une confirmation liste ces blocs avant tout remplacement ; « Annuler » laisse la composition inchangée. Chaque application est une copie : modifier une composition ne met pas à jour les autres.
 
 ## Modèles et bibliothèque
 
