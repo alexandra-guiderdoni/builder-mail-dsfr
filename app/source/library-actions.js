@@ -12,16 +12,18 @@
     return Object.keys(initial.values).every(key => b.values[key] === initial.values[key]) && b.source === initial.source &&
       (b.sourceLabel ?? "") === (initial.sourceLabel ?? "") && JSON.stringify(b.additionalLinks ?? []) === JSON.stringify(initial.additionalLinks ?? []);
   }
-  function applyIdentity(identityId, docId) {
-    return A.State.change(lib => {
+  function applyIdentity(identityId, docId, label) {
+    const saving = A.State.change(lib => {
       const doc = lib.documents.find(d => d.id === docId), identity = lib.identities.find(i => i.id === identityId);
       if (!doc || lib.activeId !== docId || !identity) throw new Error("La composition ou l’identité a changé ; recommencez l’application de l’identité.");
       const frames = M.copy(identity.blocks); frames.forEach(b => { b.id = M.id(); });
       doc.blocks = [...frames.filter(b => family(b) === "En-têtes"), ...doc.blocks.filter(b => !framed(b)), ...frames.filter(b => family(b) === "Pieds de page")];
     });
+    A.notice(`Identité « ${label} » appliquée : en-têtes et pieds de page remplacés, corps du courriel conservé.`);
+    return saving;
   }
   const identityDialog = get("identity-dialog");
-  let identityTarget, identityBusy = false;
+  let identityTarget;
   function confirmIdentity(identity, doc, modified) {
     identityTarget = {identity: identity.id, name: identity.name, doc: doc.id};
     get("identity-dialog-title").textContent = `Appliquer l’identité « ${identity.name} » ?`;
@@ -33,17 +35,12 @@
     identityDialog.showModal(); get("identity-cancel").focus();
   }
   get("identity-cancel").addEventListener("click", () => identityDialog.close());
-  identityDialog.addEventListener("cancel", event => { if (identityBusy) event.preventDefault(); });
   identityDialog.addEventListener("close", () => { identityTarget = undefined; document.querySelector('[data-action="use-identity"]').focus(); });
-  get("identity-form").addEventListener("submit", async event => {
-    event.preventDefault(); if (identityBusy || !identityTarget) return;
-    const target = identityTarget; identityBusy = true; get("identity-confirm").disabled = get("identity-cancel").disabled = true;
-    try {
-      const saving = applyIdentity(target.identity, target.doc);
-      identityDialog.close(); A.notice(`Identité « ${target.name} » appliquée : en-têtes et pieds de page remplacés, corps du courriel conservé.`);
-      await saving;
-    } catch (cause) { identityDialog.close(); A.error(cause.message); }
-    finally { identityBusy = false; get("identity-confirm").disabled = get("identity-cancel").disabled = false; }
+  // Le remplacement en mémoire est synchrone : la boîte se ferme aussitôt, la sauvegarde suit sa propre file.
+  get("identity-form").addEventListener("submit", event => {
+    event.preventDefault(); const target = identityTarget; if (!target) return;
+    identityTarget = undefined; identityDialog.close();
+    try { applyIdentity(target.identity, target.doc, target.name); } catch (cause) { A.error(cause.message); }
   });
   A.Actions = {
     "new-document": () => A.State.change(lib => { const doc = M.create("Nouvelle composition", starters[get("starter").value]); lib.documents.push(doc); lib.activeId = doc.id; }),
@@ -62,7 +59,7 @@
     "use-identity": () => {
       const identity = selected(A.library.identities, "identities"), doc = A.doc(); A.State.guard();
       const modified = doc.blocks.map((b, index) => ({b, index})).filter(({b}) => framed(b) && !intact(b));
-      if (!modified.length) return applyIdentity(identity.id, doc.id);
+      if (!modified.length) return applyIdentity(identity.id, doc.id, identity.name);
       confirmIdentity(identity, doc, modified);
     },
     "remove-identity": () => { const target = selected(A.library.identities, "identities"); return A.State.change(lib => { lib.identities = lib.identities.filter(i => i.id !== target.id); }); },

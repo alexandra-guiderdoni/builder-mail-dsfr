@@ -10,13 +10,17 @@ const without = (b, keys = ['id']) => Object.fromEntries(Object.entries(b).filte
 async function importDocument(page, build) {
   const json = await page.evaluate(`(${build})(MailBuilder.Model)`);
   await expand(page, 'Importer du JSON'); await page.locator('#json-input').fill(json);
-  await click(page, '[data-action=json-import]'); await saved(page);
+  // La notice précédente est effacée : elle ne réapparaît qu’après l’import, l’ouverture et la sauvegarde.
+  await page.evaluate(() => MailBuilder.notice(''));
+  await click(page, '[data-action=json-import]');
   await page.locator('#notice').filter({hasText: 'Composition ou bibliothèque JSON ajoutée'}).waitFor();
+  await saved(page);
 }
 
 async function saveIdentity(page, name) {
   await expand(page, 'Identités de service'); await page.locator('#identity-name').fill(name);
-  await click(page, '[data-action=save-identity]'); await saved(page);
+  await click(page, '[data-action=save-identity]');
+  await page.waitForFunction(label => MailBuilder.library.identities.some(i => i.name === label), name, {timeout: 5000}); await saved(page);
 }
 
 // Attend l’effet du bouton « Appliquer » : soit la confirmation s’ouvre, soit la composition change.
@@ -122,6 +126,57 @@ test('identité : aucune confirmation quand les blocs remplacés sont intacts, q
     assert.deepEqual(result.blocks.map(b => b.component), ['mail-02', 'mail-19', 'mail-47']);
     assert.equal(result.blocks[0].values.f4, 'Direction appliquée sans question');
     assert.deepEqual(result.blocks[1], doc.blocks[2]);
+    assert.deepEqual(errors, []);
+  } finally { await browser.close(); }
+});
+
+test('identité : confirmation utilisable pendant une sauvegarde lente et notice propre à chaque application', async () => {
+  const browser = await engine.launch({headless: true});
+  try {
+    const {page, observations: {errors}} = await open(browser);
+    await importDocument(page, M => { const d = M.create('Source A', [2, 47]); d.blocks[0].values.f4 = 'Direction A'; return JSON.stringify(d); });
+    await saveIdentity(page, 'Identité A');
+    await importDocument(page, M => JSON.stringify(M.create('Source B', [3, 48])));
+    await saveIdentity(page, 'Identité B');
+    await importDocument(page, M => { const d = M.create('Composition lente', [2, 19, 47]); d.blocks[0].values.f4 = 'Service local'; return JSON.stringify(d); });
+    // La sauvegarde suivante reste en attente jusqu’à libération explicite.
+    await page.evaluate(() => { const storage = MailBuilder.Storage; MailBuilder.Storage = {...storage, save: (...args) => new Promise(resolve => { window.releaseSave = () => { MailBuilder.Storage = storage; resolve(); }; }).then(() => storage.save(...args))}; });
+    await apply(page, 'Identité A'); await click(page, '#identity-confirm');
+    await page.locator('#save-state').filter({hasText: 'Sauvegarde en cours'}).waitFor();
+    assert.match(await page.locator('#notice').innerText(), /Identité « Identité A » appliquée/);
+    const applied = await state(page);
+    await apply(page, 'Identité A');
+    assert.equal(await dialogOpen(page), true);
+    assert.deepEqual(await page.evaluate(() => ['#identity-confirm', '#identity-cancel'].map(s => document.querySelector(s).disabled)), [false, false], 'Les boutons restent actifs pendant la sauvegarde.');
+    await focused(page, '#identity-cancel');
+    await page.keyboard.press('Escape');
+    await page.waitForFunction(() => !document.querySelector('#identity-dialog').open, null, {timeout: 3000});
+    assert.deepEqual(await state(page), applied);
+    await page.evaluate(() => window.releaseSave()); await saved(page);
+    // Application directe sur une composition neuve : la notice nomme l’identité appliquée.
+    await importDocument(page, M => JSON.stringify(M.create('Composition neuve', [2, 19, 47])));
+    await apply(page, 'Identité B'); await saved(page);
+    assert.equal(await dialogOpen(page), false);
+    assert.match(await page.locator('#notice').innerText(), /Identité « Identité B » appliquée/);
+    assert.deepEqual(errors, []);
+  } finally { await browser.close(); }
+});
+
+test('identité : une composition changée pendant la confirmation est signalée sans modification', async () => {
+  const browser = await engine.launch({headless: true});
+  try {
+    const {page, observations: {errors}} = await open(browser);
+    await importDocument(page, M => { const d = M.create('Source', [2, 47]); d.blocks[0].values.f4 = 'Direction source'; return JSON.stringify(d); });
+    await saveIdentity(page, 'Identité source');
+    await importDocument(page, M => { const d = M.create('Composition visée', [2, 19, 47]); d.blocks[0].values.f4 = 'Service visé'; return JSON.stringify(d); });
+    await apply(page, 'Identité source'); assert.equal(await dialogOpen(page), true);
+    // Changement programmatique de la composition active pendant que la boîte modale est ouverte.
+    await page.evaluate(() => MailBuilder.State.change(lib => { lib.activeId = lib.documents.find(d => d.id !== lib.activeId).id; }));
+    const before = await state(page);
+    await click(page, '#identity-confirm');
+    await page.locator('#error').filter({hasText: 'La composition ou l’identité a changé'}).waitFor();
+    assert.equal(await dialogOpen(page), false);
+    assert.deepEqual(await state(page), before);
     assert.deepEqual(errors, []);
   } finally { await browser.close(); }
 });
