@@ -2,7 +2,8 @@
 (() => {
   "use strict";
   const A = window.MailBuilder, components = new Map(A.catalog.components.map(c => [c.id, c]));
-  const copy = value => JSON.parse(JSON.stringify(value));
+  // Les conteneurs sont recopiés ; les chaînes, immuables, sont partagées au lieu de recopier les images Base64.
+  const copy = value => Array.isArray(value) ? value.map(copy) : value && typeof value === "object" ? Object.fromEntries(Object.entries(value).map(([key, item]) => [key, copy(item)])) : value;
   const fail = message => { throw new Error(message); };
   const text = (value, label) => { if (typeof value !== "string") fail(`${label} : texte requis.`); };
   function object(value, fields, label, optional = []) {
@@ -31,7 +32,14 @@
     }
     fail(message);
   }
+  // Le contrôle d’une image ne dépend que de sa chaîne : une chaîne déjà acceptée n’est pas redécodée à chaque frappe.
+  // Le mémo ne garde que les images de la dernière bibliothèque validée, plus celles acceptées depuis.
+  let accepted = new Set(), collected;
   function image(value) {
+    if (!accepted.has(value)) { checkImage(value); accepted.add(value); }
+    collected?.add(value);
+  }
+  function checkImage(value) {
     const match = /^data:image\/(png|jpeg|gif|webp);base64,([A-Za-z0-9+/]+={0,2})$/.exec(value);
     let bytes;
     try {
@@ -83,6 +91,10 @@
     blocks(value.blocks); return value;
   }
   function library(value) {
+    collected = new Set();
+    try { libraryFields(value); accepted = collected; return value; } finally { collected = undefined; }
+  }
+  function libraryFields(value) {
     object(value, ["schema", "version", "catalogue", "activeId", "documents", "templates", "identities"], "Bibliothèque");
     if (value.schema !== "dsfr-mail/library" || value.version !== 1) fail("Version de bibliothèque non prise en charge ; les données sont conservées.");
     if (value.catalogue !== A.catalog.id) fail("Cette bibliothèque utilise un autre catalogue ; les données restent intactes pour une migration.");

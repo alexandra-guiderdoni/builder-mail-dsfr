@@ -29,10 +29,21 @@
     });
     return queue;
   }
+  // L’aperçu relit tout le courriel et ses images. Après une frappe, il suit l’affichage du caractère ; si sa dernière
+  // mise à jour complète a dépassé 50 ms, il attend en plus une pause de frappe triple de cette durée.
+  let previewTimer, previewCost = 0;
+  function previewAfterInput() {
+    clearTimeout(previewTimer);
+    previewTimer = setTimeout(() => requestAnimationFrame(() => setTimeout(() => {
+      const started = performance.now();
+      document.getElementById("preview").addEventListener("load", () => { previewCost = performance.now() - started; }, {once: true});
+      A.UI.preview();
+    })), previewCost > 50 ? 3 * previewCost : 0);
+  }
   function change(mutator, redraw = true, input = false) {
     if (restoring || !input) guard(); const next = M.copy(A.library); mutator(next); M.library(next); A.library = next; revision++;
     if (!A.doc().blocks.some(b => b.id === A.selected)) A.selected = A.doc().blocks[0]?.id || null;
-    if (redraw) A.UI.refresh(); else A.UI.preview();
+    if (redraw) A.UI.refresh(); else previewAfterInput();
     return save();
   }
   async function start() {

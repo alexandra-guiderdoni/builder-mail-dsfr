@@ -137,3 +137,17 @@ test('la migration du prototype conserve l’objet vide et n’invente aucune l�
   assert.equal(doc.subject, ''); assert(!R.plain(doc).includes('Description / Source'));
   assert(R.html(doc).includes('Alternative conservée')); assert.deepEqual(I.parse(JSON.stringify(doc)).value, doc);
 });
+
+test('la copie sépare les conteneurs ; une image acceptée ne dispense pas de contrôler une variante', () => {
+  const doc = M.create('Copie partagée', [27, 50]); doc.blocks[1].additionalLinks = [{url: 'https://exemple.invalid/', label: 'Lien'}];
+  const lib = {...M.initial(), documents: [doc], activeId: doc.id}, copied = M.copy(lib);
+  assert.deepEqual(copied, lib);
+  copied.documents[0].blocks[0].values.f1 = 'Texte modifié'; copied.documents[0].blocks[1].additionalLinks.push({url: 'https://exemple.invalid/b', label: 'B'}); copied.templates.push(M.create('Modèle'));
+  assert.equal(lib.documents[0].blocks[0].values.f1, doc.blocks[0].values.f1); assert.equal(lib.documents[0].blocks[1].additionalLinks.length, 1); assert.equal(lib.templates.length, 0);
+  assert.equal(M.library(lib), lib);
+  for (const variant of [image => image.replace('image/png', 'image/jpeg'), image => image.slice(0, 30) + 'A' + image.slice(31)]) {
+    const altered = M.copy(lib); altered.documents[0].blocks[0].values.f0 = variant(lib.documents[0].blocks[0].values.f0);
+    assert.throws(() => M.library(altered), /image/i); assert.throws(() => M.document(altered.documents[0]), /image/i);
+  }
+  assert.equal(M.library(lib), lib);
+});
