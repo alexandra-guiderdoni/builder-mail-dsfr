@@ -28,10 +28,10 @@
     "remove-identity": () => { const target = selected(A.library.identities, "identities"); return A.State.change(lib => { lib.identities = lib.identities.filter(i => i.id !== target.id); }); },
     "add-block": () => {
       const id = get("catalogue").value; if (!id) throw new Error("Choisissez un composant du catalogue.");
-      A.State.guard(); const b = M.createBlock(id); A.selected = b.id;
-      return A.State.change(lib => { const doc = lib.documents.find(d => d.id === lib.activeId), selectedIndex = doc.blocks.findIndex(x => x.id === get("block-list").querySelector('[aria-pressed="true"]')?.dataset.select); doc.blocks.splice(selectedIndex < 0 ? doc.blocks.length : selectedIndex + 1, 0, b); }).then(() => get("block-editor").querySelector("textarea,input")?.focus());
+      A.State.guardEdit(); const b = M.createBlock(id); A.selected = b.id;
+      return A.State.change(lib => { const doc = lib.documents.find(d => d.id === lib.activeId), selectedIndex = doc.blocks.findIndex(x => x.id === get("block-list").querySelector('[aria-pressed="true"]')?.dataset.select); doc.blocks.splice(selectedIndex < 0 ? doc.blocks.length : selectedIndex + 1, 0, b); }, true, "edit").then(() => get("block-editor").querySelector("textarea,input")?.focus());
     },
-    "cancel-fields": () => { A.UI.clearFieldErrors(); A.invalid.clear(); A.error(""); A.UI.refresh(); A.notice("Champs invalides annulés ; les dernières valeurs valides sont affichées."); },
+    "cancel-fields": () => { A.UI.clearFieldErrors(); A.invalid.clear(); A.drafts.clear(); A.error(""); A.UI.refresh(); A.notice("Champs invalides annulés ; les dernières valeurs valides sont affichées."); },
     "save-now": A.State.save,
     "recover": A.State.recover,
     "export-document": () => { A.State.guard(); A.Files.json(M.document(A.doc()), "composition.courriel.json"); A.notice("Composition proposée au téléchargement avec ses images."); },

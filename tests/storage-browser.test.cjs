@@ -98,7 +98,7 @@ test('un fichier en cours de lecture et un champ invalide empêchent une exporta
     await click(page, '[data-action=export-mail]'); await page.locator('#error').filter({hasText: 'Attendez la fin'}).waitFor();
     await page.locator('#notice').filter({hasText: 'Image locale incorporée'}).waitFor(); await saved(page);
     await page.locator('#article-source').fill('javascript:alert(1)');
-    const before = await store(page); await click(page, '[data-action=export-mail]'); await page.locator('#error').filter({hasText: 'Corrigez les champs'}).waitFor();
+    const before = await store(page); await click(page, '[data-action=export-mail]'); await page.locator('#error').filter({hasText: 'Protocole interdit'}).waitFor();
     assert.equal(await page.locator('#article-source').getAttribute('aria-invalid'), 'true'); assert.deepEqual(await store(page), before);
     await page.locator('#article-source').fill('https://exemple.invalid/source'); await saved(page);
     assert((await state(page)).documents[0].blocks[0].source.includes('https://'));
