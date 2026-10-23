@@ -2,6 +2,8 @@
 
 Objectif : 100 % des critères applicables. Aucun taux validé. Les [1 651 observations par instance](matrice-rgaa.json) et 1 220 observations de critère sont des preuves instrumentées à qualifier. Voir [le rapport](RAPPORT.md).
 
+Compléments rattachés sans changement de qualification : [balisage 8.2.1](BALISAGE-8.2.1.md) et [zoom natif 10.4.1–10.4.2](../zoom-20261023/RAPPORT.md). Leurs observations détaillées restent séparées des compteurs initiaux.
+
 | Référence | Attendu | Qualification | Observations locales |
 |---|---|---|---|
 | [1.1.1](https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#1.1.1) | Chaque image (balise `<img>` ou balise possédant l’attribut WAI-ARIA `role="img"`) porteuse d’information a-t-elle une alternative textuelle ? | NON_TESTE | 0 |

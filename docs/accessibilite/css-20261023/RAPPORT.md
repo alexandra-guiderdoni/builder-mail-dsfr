@@ -6,6 +6,8 @@
 
 Le [complément de zoom natif](../zoom-20261023/RAPPORT.md), sur les mêmes octets produit, ajoute 245 observations Firefox et les preuves des tests 10.4.1 et 10.4.2. Il complète la simulation de viewport ci-dessous sans la requalifier rétroactivement ; les matrices restent ouvertes.
 
+Le [complément de balisage 8.2.1](BALISAGE-8.2.1.md) examine 393 entrées, les cinq conditions officielles et les limites éprouvées du parsing. Il conserve séparément neuf familles dans le résultat brut, dont 245 doctypes omis par le sérialiseur, puis huit familles dans des copies dérivées sous le doctype source. Ces diagnostics ne justifient pas de nouveau correctif produit ; la qualification reste ouverte.
+
 ## Décision fondée sur les sources
 
 | Affirmation | Source | Verdict | Conséquence |

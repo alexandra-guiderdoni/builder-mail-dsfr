@@ -2002,7 +2002,13 @@
         "CSS-COULEURS-FIREFOX-0006",
         "CSS-COULEURS-FIREFOX-0007",
         "CSS-COULEURS-FIREFOX-0008"
-      ]
+      ],
+      "complementary_evidence": {
+        "report": "BALISAGE-8.2.1.md",
+        "data": "balisage-8.2.1.json",
+        "inputs": 393,
+        "qualification": "A_RETESTER"
+      }
     },
     {
       "id": "8.3",
@@ -2337,7 +2343,13 @@
       ],
       "source": "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#10.4",
       "qualification": "NON_TESTE",
-      "instance_observation_ids": []
+      "instance_observation_ids": [],
+      "complementary_evidence": {
+        "report": "../zoom-20261023/RAPPORT.md",
+        "data": "../zoom-20261023/recu.json",
+        "instances": "../zoom-20261023/observations.json",
+        "qualification": "NON_TESTE"
+      }
     },
     {
       "id": "10.5",
@@ -6313,7 +6325,13 @@
         "CSS-COULEURS-FIREFOX-0006",
         "CSS-COULEURS-FIREFOX-0007",
         "CSS-COULEURS-FIREFOX-0008"
-      ]
+      ],
+      "complementary_evidence": {
+        "report": "BALISAGE-8.2.1.md",
+        "data": "balisage-8.2.1.json",
+        "inputs": 393,
+        "qualification": "A_RETESTER"
+      }
     },
     {
       "id": "8.3.1",
@@ -6719,7 +6737,13 @@
       "human_validation_required": true,
       "source": "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#10.4.1",
       "qualification_all_pages_and_states": "NON_TESTE",
-      "instance_observation_ids": []
+      "instance_observation_ids": [],
+      "complementary_evidence": {
+        "report": "../zoom-20261023/RAPPORT.md",
+        "data": "../zoom-20261023/recu.json",
+        "instances": "../zoom-20261023/observations.json",
+        "qualification": "NON_TESTE"
+      }
     },
     {
       "id": "10.4.2",
@@ -6729,7 +6753,13 @@
       "human_validation_required": true,
       "source": "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#10.4.2",
       "qualification_all_pages_and_states": "NON_TESTE",
-      "instance_observation_ids": []
+      "instance_observation_ids": [],
+      "complementary_evidence": {
+        "report": "../zoom-20261023/RAPPORT.md",
+        "data": "../zoom-20261023/recu.json",
+        "instances": "../zoom-20261023/observations.json",
+        "qualification": "NON_TESTE"
+      }
     },
     {
       "id": "10.5.1",
