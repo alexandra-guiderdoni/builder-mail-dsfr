@@ -11,10 +11,11 @@
   });
   window.addEventListener("appinstalled", () => { install.hidden = true; environment.textContent = "Atelier installé dans ce navigateur"; });
   if (!("serviceWorker" in navigator)) { environment.textContent = "Hors connexion web indisponible · utilisez le fichier portable"; return; }
-  let reloading = false;
-  navigator.serviceWorker.addEventListener("controllerchange", () => { if (reloading) location.reload(); });
+  let reloading = false, controlled = !!navigator.serviceWorker.controller;
+  const reloadNeeded = () => { update.hidden = true; A.notice("Une nouvelle version est active dans un autre onglet. Rechargez cette page pour l’utiliser ; le rechargement reste soumis aux protections de sauvegarde."); };
+  navigator.serviceWorker.addEventListener("controllerchange", () => { if (reloading) location.reload(); else if (controlled) reloadNeeded(); controlled = true; });
   update.addEventListener("click", async () => {
-    try { await A.State.save(); await A.State.flush(); if (registration.waiting) { reloading = true; registration.waiting.postMessage({type: "ACTIVATE_UPDATE"}); } } catch (cause) { A.error(cause.message); }
+    try { await A.State.save(); await A.State.flush(); if (registration.waiting) { reloading = true; registration.waiting.postMessage({type: "ACTIVATE_UPDATE"}); } else reloadNeeded(); } catch (cause) { A.error(cause.message); }
   });
   navigator.serviceWorker.register("./sw.js").then(async result => {
     registration = result;
