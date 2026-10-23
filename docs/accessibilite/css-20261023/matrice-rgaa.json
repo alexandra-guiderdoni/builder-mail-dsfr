@@ -969,6 +969,12 @@
           "7.3.1"
         ],
         "qualification": "NON_TESTE"
+      },
+      "activation_evidence": {
+        "report": "ACTIVATION-FIREFOX.md",
+        "data": "activation-firefox.json",
+        "tests": ["7.3.1", "7.3.2"],
+        "qualification": "NON_TESTE"
       }
     },
     {
@@ -5240,6 +5246,12 @@
           "7.3.1"
         ],
         "qualification": "NON_TESTE"
+      },
+      "activation_evidence": {
+        "report": "ACTIVATION-FIREFOX.md",
+        "data": "activation-firefox.json",
+        "tests": ["7.3.1"],
+        "qualification": "NON_TESTE"
       }
     },
     {
@@ -5288,7 +5300,13 @@
         "LIEN-0039",
         "LIEN-0042",
         "LIEN-0043"
-      ]
+      ],
+      "activation_evidence": {
+        "report": "ACTIVATION-FIREFOX.md",
+        "data": "activation-firefox.json",
+        "tests": ["7.3.2"],
+        "qualification": "NON_TESTE"
+      }
     },
     {
       "id": "7.4.1",

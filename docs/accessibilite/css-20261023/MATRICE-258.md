@@ -4,6 +4,8 @@ Objectif : 100 % des critères applicables. Aucun taux validé. Les [1 651 obser
 
 Compléments rattachés sans changement de qualification : [balisage 8.2.1](BALISAGE-8.2.1.md), [zoom natif 10.4.1–10.4.2](../zoom-20261023/RAPPORT.md) et [clavier Firefox](CLAVIER-FIREFOX.md). Leurs observations détaillées restent séparées des compteurs initiaux.
 
+Le [complément d’activation des 52 composants](ACTIVATION-FIREFOX.md) ajoute des preuves partielles pour 7.3.1 et 7.3.2 ; aucun résultat global n’en est déduit.
+
 | Référence | Attendu | Qualification | Observations locales |
 |---|---|---|---|
 | [1.1.1](https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#1.1.1) | Chaque image (balise `<img>` ou balise possédant l’attribut WAI-ARIA `role="img"`) porteuse d’information a-t-elle une alternative textuelle ? | NON_TESTE | 0 |

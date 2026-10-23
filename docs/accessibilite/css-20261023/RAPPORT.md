@@ -10,6 +10,8 @@ Le [complément de balisage 8.2.1](BALISAGE-8.2.1.md) examine 393 entrées, les 
 
 Le [complément clavier Firefox](CLAVIER-FIREFOX.md) ajoute 19 états, 38 segments et 572 contrôles inventoriés atteints nativement en croisant les deux sens. Il conserve les échecs du harnais, l’interruption HTTP et la reprise ciblée, les amorçages programmatiques et les limites de visibilité. Aucun nouveau correctif produit ni qualification RGAA n’en est déduit.
 
+Le [complément d’activation Firefox](ACTIVATION-FIREFOX.md) exerce les 52 composants et 178 champs sur chaque surface portable et web locale : 412 allers-retours de saisie avec deux états stockés vérifiés, 104 sources refusées puis rétablies vides et 48 contrôles image seulement atteints. Les quatre candidats géométriques et les échecs du collecteur restent explicites ; les qualifications ne changent pas.
+
 ## Décision fondée sur les sources
 
 | Affirmation | Source | Verdict | Conséquence |
