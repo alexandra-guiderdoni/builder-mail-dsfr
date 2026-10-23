@@ -40,10 +40,13 @@
     }
     return M.library(next);
   }
+  async function read(file) {
+    try { return await file.text(); } catch { throw new Error(`Le fichier « ${file.name} » n’a pas pu être lu. Vérifiez qu’il est toujours présent sur votre poste, puis choisissez-le de nouveau ou collez son contenu dans « Importer du JSON ». Votre bibliothèque n’est pas modifiée.`); }
+  }
   async function prepare(input) {
     A.State.guard(); const before = A.library; A.pendingInputs++;
     try {
-      const incoming = parse(typeof input === "string" ? input : await input.text());
+      const incoming = parse(typeof input === "string" ? input : await read(input));
       await A.Files.validate(incoming.value);
       if (A.library !== before) {
         const message = "Import obsolète ignoré : la composition a changé pendant la validation des images.";
