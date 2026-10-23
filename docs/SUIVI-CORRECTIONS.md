@@ -4,6 +4,8 @@ La [campagne RGAA courante](accessibilite/css-20261023/RAPPORT.md) corrige quatr
 
 Les [mesures complémentaires de contraste](accessibilite/contrastes-20261022/RAPPORT.md) couvrent les cibles auparavant indéterminées, avec leurs limites. Elles corrigent une faiblesse du collecteur éprouvée par masque sans interception du pointeur ; aucun nouveau défaut produit ni clôture de critère n’en découle.
 
+Le [complément de zoom natif Firefox](accessibilite/zoom-20261023/RAPPORT.md) ajoute des preuves sans correction produit ni clôture de critère. L’issue [#28](https://github.com/alexandra-guiderdoni/builder-mail-dsfr/issues/28) reste ouverte pour les défilements internes : JSON compact confirmé, adaptation de l’aperçu encore soumise à la décision sur son script de mesure isolé.
+
 Mandat de livraison du 22 octobre 2026 : corriger, documenter, commiter et pousser sur `main` dans le seul dépôt personnel, puis fermer les issues dont les critères sont satisfaits. Les essais Gmail et Mélissa sur Mac ont reçu leur autorisation distincte. Les critères sont ceux des corps GitHub ; les validations absentes restent ouvertes. Aucun déploiement sur le parc n’est autorisé implicitement.
 
 Le chantier a démarré sur `feature/atelier-autonome` ; la livraison est désormais publiée sur `main`. Avant la première correction : HEAD `c329339aee8e6ba36288197ab22000772bb248ae`, comparaison distante `0/0`, 90 empreintes de la campagne précédente inchangées. Ce HEAD précédait le commit de l’application ; la copie locale entière a été préservée. Chaque campagne ci-dessous garde son périmètre historique.

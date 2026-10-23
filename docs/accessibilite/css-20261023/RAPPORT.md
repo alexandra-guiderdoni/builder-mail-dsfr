@@ -4,6 +4,8 @@
 
 **Objectif maintenu : démontrer 100 % des critères RGAA applicables. Aucun taux officiel validé.** La [campagne précédente](../html-20261023/RAPPORT.md) reste figée. Cette tranche retire quinze déclarations `font-color` invalides du seul CSS dérivé, sans les remplacer par `color`.
 
+Le [complément de zoom natif](../zoom-20261023/RAPPORT.md), sur les mêmes octets produit, ajoute 245 observations Firefox et les preuves des tests 10.4.1 et 10.4.2. Il complète la simulation de viewport ci-dessous sans la requalifier rétroactivement ; les matrices restent ouvertes.
+
 ## Décision fondée sur les sources
 
 | Affirmation | Source | Verdict | Conséquence |

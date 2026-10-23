@@ -10,6 +10,8 @@ La [campagne RGAA en cours](docs/accessibilite/css-20261023/RAPPORT.md) publie l
 
 Le [protocole de contraste](docs/accessibilite/contrastes-20261022/RAPPORT.md) décrit 80 observations ciblées et cinq contrôles négatifs. Leur renouvellement sur cette version figure dans la campagne courante ; il ne qualifie pas globalement les critères de couleur.
 
+Le [complément de zoom natif Firefox](docs/accessibilite/zoom-20261023/RAPPORT.md) ajoute 245 observations, avec les 52 composants et les vrais aperçus isolés. Certains titres ne doublent pas au réglage 200 % ; le portable permet leur doublement à 240 % dans les deux modes testés. Lisibilité et fonctionnalités restent à qualifier, sans nouveau taux RGAA.
+
 **[Ouvrir l’atelier en ligne](https://alexandra-guiderdoni.github.io/builder-mail-dsfr/)**. La version courante et le rechargement hors connexion après préparation du cache ont été vérifiés le 23 octobre 2026 ; [reçu de publication et limites](docs/accessibilite/css-20261023/publication.json).
 
 Télécharger puis ouvrir [le fichier portable](app/distribution/portable.html) par double-clic. Il contient l’interface, les composants et les images de départ ; il fonctionne dès la première ouverture sans réseau. Aucun Python, Node.js, compte ou service d’IA n’est nécessaire sur le poste métier.
