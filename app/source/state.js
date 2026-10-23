@@ -5,6 +5,8 @@
   let queue = Promise.resolve(), revision = 0, pending = 0, token = null, failed = false, restoring = false, running = false, latest;
   A.library = M.initial(); A.selected = A.library.documents[0].blocks[0].id;
   A.invalid = new Set(); A.ready = false; A.recoveryOnly = false; A.pendingInputs = 0;
+  // Dernier bloc retiré de chaque composition, en mémoire seulement : perdu à la fermeture de l’atelier.
+  A.removed = new Map();
   A.doc = () => A.library.documents.find(d => d.id === A.library.activeId);
   A.error = message => { const e = document.getElementById("error"); e.textContent = message; e.hidden = !message; };
   A.notice = message => { document.getElementById("notice").textContent = message; };

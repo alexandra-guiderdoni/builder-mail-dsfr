@@ -14,7 +14,8 @@
     const operation = event.target.closest("[data-block-action]");
     if (operation) attempt(async () => {
       const id = A.selected, actionName = operation.dataset.blockAction;
-      await A.State.change(lib => {
+      let removed;
+      const saving = A.State.change(lib => {
         const blocks = lib.documents.find(d => d.id === lib.activeId).blocks, index = blocks.findIndex(b => b.id === id);
         if (index < 0) throw new Error("Le bloc sélectionné a changé.");
         const block = blocks[index];
@@ -28,9 +29,15 @@
           if (!block.additionalLinks?.length) delete block.additionalLinks;
         }
         if (actionName === "duplicate") { const clone = {...M.copy(blocks[index]), id: M.id()}; blocks.splice(index + 1, 0, clone); A.selected = clone.id; }
-        if (actionName === "remove") { blocks.splice(index, 1); A.selected = blocks[Math.min(index, blocks.length - 1)]?.id || null; }
+        if (actionName === "remove") { removed = {block, index}; blocks.splice(index, 1); A.selected = blocks[Math.min(index, blocks.length - 1)]?.id || null; }
         if (["up", "down"].includes(actionName)) { const destination = index + (actionName === "up" ? -1 : 1); if (destination >= 0 && destination < blocks.length) [blocks[index], blocks[destination]] = [blocks[destination], blocks[index]]; }
       });
+      if (removed) {
+        // Chaque retrait remplace le précédent de cette composition seulement.
+        A.removed.set(A.library.activeId, removed); A.UI.removal();
+        A.notice(`Bloc « ${A.UI.blockName(removed.block)} » retiré. « Annuler le retrait » le rétablit à sa place.`);
+      }
+      await saving;
       const links = A.doc().blocks.find(b => b.id === A.selected)?.additionalLinks;
       const target = (actionName === "add-footer-link" && get(`field-footer-url-${links.length - 1}`)) || get("block-editor").querySelector("textarea,input") || get("catalogue").closest("details").querySelector("summary");
       target.focus();
