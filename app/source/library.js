@@ -12,7 +12,7 @@
     get(editor ? "composition-title" : "home-title").focus();
   }
   function refresh() {
-    get("newsletter-list").innerHTML = A.library.documents.map(doc => `<li class="fr-col-12 fr-col-md-6" data-document="${esc(doc.id)}"><div class="app-panel"><h3><button class="fr-btn fr-btn--tertiary-no-outline" data-library-action="open" aria-label="Ouvrir ${esc(doc.name)}">${esc(doc.name)}</button></h3><p>${esc(doc.subject || "Sans objet")} · ${doc.blocks.length} blocs${doc.id === A.library.activeId ? " · Composition active" : ""}</p><div class="actions">${[["rename", "Renommer"], ["duplicate", "Dupliquer"], ["export", "Exporter"], ["remove", "Supprimer"]].map(([action, label]) => `<button class="fr-btn fr-btn--secondary" data-library-action="${action}" aria-label="${label} ${esc(doc.name)}">${label}</button>`).join("")}</div></div></li>`).join("");
+    get("newsletter-list").innerHTML = A.library.documents.map(doc => `<li class="fr-col-12 fr-col-md-6" data-document="${esc(doc.id)}"><div class="app-panel"><h3><button class="fr-btn fr-btn--tertiary-no-outline" data-library-action="open" aria-label="Ouvrir ${esc(doc.name)}">${esc(doc.name)}</button></h3><p>${esc(doc.subject || "Sans objet")} · ${doc.blocks.length} blocs${doc.id === A.library.activeId ? " · Composition active" : ""}</p><div class="actions">${[["rename", "Renommer"], ["duplicate", "Dupliquer"], ["export", "Exporter"], ["remove", "Supprimer"]].map(([action, label]) => `<button class="fr-btn fr-btn--secondary" data-library-action="${action}" aria-label="${label} la composition ${esc(doc.name)}">${label}</button>`).join("")}</div></div></li>`).join("");
     get("resume-document").textContent = `Reprendre « ${A.doc().name} »`;
   }
   function focusRow(id, action = "open") {
