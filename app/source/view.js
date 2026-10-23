@@ -27,6 +27,14 @@
   }
   function option(value, label, selected = false) { return `<option value="${esc(value)}" ${selected ? "selected" : ""}>${esc(label)}</option>`; }
   const blockLabel = (b, definition) => b.component === "mail-31" && !b.values.f0 ? "Article sans image" : definition.label;
+  const blockName = b => blockLabel(b, M.component(b.component));
+  // Rang d’un bloc tel que la liste l’affiche, pour les messages de statut des actions sur les blocs.
+  const blockPlace = id => { const blocks = A.doc().blocks; return `en position ${blocks.findIndex(b => b.id === id) + 1} sur ${blocks.length}`; };
+  function focusBlock(id) {
+    const target = [...get("block-list").querySelectorAll("[data-select]")].find(button => button.dataset.select === id);
+    if (!target) return false;
+    target.closest("details").open = true; target.focus(); return true;
+  }
   function selections() {
     const doc = A.doc();
     get("documents").innerHTML = A.library.documents.map(d => option(d.id, d.name, d.id === doc.id)).join("");
@@ -84,5 +92,5 @@
     if (width !== editorWidth) { editorWidth = width; if (width) fitFields(); }
   }).observe(get("block-editor"));
   document.fonts.ready.then(fitFields);
-  A.UI = Object.freeze({refresh, preview, fields, blockList, selections, catalogue, fieldError, clearFieldErrors, showLinkIssue});
+  A.UI = Object.freeze({refresh, preview, fields, blockList, selections, catalogue, fieldError, clearFieldErrors, showLinkIssue, blockName, blockPlace, focusBlock});
 })();
