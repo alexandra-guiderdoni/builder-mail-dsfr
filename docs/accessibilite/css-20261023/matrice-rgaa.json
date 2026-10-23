@@ -961,7 +961,15 @@
         "LIEN-0039",
         "LIEN-0042",
         "LIEN-0043"
-      ]
+      ],
+      "complementary_evidence": {
+        "report": "CLAVIER-FIREFOX.md",
+        "data": "clavier-firefox.json",
+        "tests": [
+          "7.3.1"
+        ],
+        "qualification": "NON_TESTE"
+      }
     },
     {
       "id": "7.4",
@@ -2381,7 +2389,15 @@
       ],
       "source": "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#10.7",
       "qualification": "NON_TESTE",
-      "instance_observation_ids": []
+      "instance_observation_ids": [],
+      "complementary_evidence": {
+        "report": "CLAVIER-FIREFOX.md",
+        "data": "clavier-firefox.json",
+        "tests": [
+          "10.7.1"
+        ],
+        "qualification": "NON_TESTE"
+      }
     },
     {
       "id": "10.8",
@@ -3521,7 +3537,15 @@
       ],
       "source": "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#12.8",
       "qualification": "NON_TESTE",
-      "instance_observation_ids": []
+      "instance_observation_ids": [],
+      "complementary_evidence": {
+        "report": "CLAVIER-FIREFOX.md",
+        "data": "clavier-firefox.json",
+        "tests": [
+          "12.8.1"
+        ],
+        "qualification": "NON_TESTE"
+      }
     },
     {
       "id": "12.9",
@@ -3531,7 +3555,15 @@
       ],
       "source": "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#12.9",
       "qualification": "NON_TESTE",
-      "instance_observation_ids": []
+      "instance_observation_ids": [],
+      "complementary_evidence": {
+        "report": "CLAVIER-FIREFOX.md",
+        "data": "clavier-firefox.json",
+        "tests": [
+          "12.9.1"
+        ],
+        "qualification": "NON_TESTE"
+      }
     },
     {
       "id": "12.10",
@@ -5200,7 +5232,15 @@
         "LIEN-0039",
         "LIEN-0042",
         "LIEN-0043"
-      ]
+      ],
+      "complementary_evidence": {
+        "report": "CLAVIER-FIREFOX.md",
+        "data": "clavier-firefox.json",
+        "tests": [
+          "7.3.1"
+        ],
+        "qualification": "NON_TESTE"
+      }
     },
     {
       "id": "7.3.2",
@@ -6809,7 +6849,15 @@
       "human_validation_required": true,
       "source": "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#10.7.1",
       "qualification_all_pages_and_states": "NON_TESTE",
-      "instance_observation_ids": []
+      "instance_observation_ids": [],
+      "complementary_evidence": {
+        "report": "CLAVIER-FIREFOX.md",
+        "data": "clavier-firefox.json",
+        "tests": [
+          "10.7.1"
+        ],
+        "qualification": "NON_TESTE"
+      }
     },
     {
       "id": "10.8.1",
@@ -9158,7 +9206,15 @@
       "human_validation_required": true,
       "source": "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#12.8.1",
       "qualification_all_pages_and_states": "NON_TESTE",
-      "instance_observation_ids": []
+      "instance_observation_ids": [],
+      "complementary_evidence": {
+        "report": "CLAVIER-FIREFOX.md",
+        "data": "clavier-firefox.json",
+        "tests": [
+          "12.8.1"
+        ],
+        "qualification": "NON_TESTE"
+      }
     },
     {
       "id": "12.8.2",
@@ -9178,7 +9234,15 @@
       "human_validation_required": true,
       "source": "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#12.9.1",
       "qualification_all_pages_and_states": "NON_TESTE",
-      "instance_observation_ids": []
+      "instance_observation_ids": [],
+      "complementary_evidence": {
+        "report": "CLAVIER-FIREFOX.md",
+        "data": "clavier-firefox.json",
+        "tests": [
+          "12.9.1"
+        ],
+        "qualification": "NON_TESTE"
+      }
     },
     {
       "id": "12.10.1",

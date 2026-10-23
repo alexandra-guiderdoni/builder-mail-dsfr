@@ -8,6 +8,8 @@ Le [complément de zoom natif](../zoom-20261023/RAPPORT.md), sur les mêmes octe
 
 Le [complément de balisage 8.2.1](BALISAGE-8.2.1.md) examine 393 entrées, les cinq conditions officielles et les limites éprouvées du parsing. Il conserve séparément neuf familles dans le résultat brut, dont 245 doctypes omis par le sérialiseur, puis huit familles dans des copies dérivées sous le doctype source. Ces diagnostics ne justifient pas de nouveau correctif produit ; la qualification reste ouverte.
 
+Le [complément clavier Firefox](CLAVIER-FIREFOX.md) ajoute 19 états, 38 segments et 572 contrôles inventoriés atteints nativement en croisant les deux sens. Il conserve les échecs du harnais, l’interruption HTTP et la reprise ciblée, les amorçages programmatiques et les limites de visibilité. Aucun nouveau correctif produit ni qualification RGAA n’en est déduit.
+
 ## Décision fondée sur les sources
 
 | Affirmation | Source | Verdict | Conséquence |
