@@ -1,0 +1,440 @@
+{
+  "completed": true,
+  "baselineCommit": "0323ff465cff945eefc8727f8a1b762341e9b645",
+  "suite": {
+    "tests": 119,
+    "pass": 119,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0
+  },
+  "suiteDurationMs": 105707.049125,
+  "generation": [
+    "APPLICATION_DISTRIBUTIONS_OK",
+    "DISTRIBUTIONS_OK"
+  ],
+  "sourceSha256": {
+    "app/source/editor.js": "3f4b4dd9bc03a1add94198314a6053f13970ac2ef87b5ef15338e00dd850847e",
+    "app/source/files.js": "a12193111760960e211e32b4e7defc293a389099aa9228b90822bc89742fe0cb",
+    "app/source/imports.js": "e18940238107c72238dfba37f01e8ac4894bf76656e60ceda860bc35e5d14cfe",
+    "app/source/library-actions.js": "f1e2f701ef1e4a1c309c61abb21db110f2a448c23005e4087f2bc21d60da3f62",
+    "app/source/library.css": "72373f768d3dc1b921244d2aee64441357e86423870caefa9239e1607be5c48e",
+    "app/source/library.js": "c76b58cda4e5a8b43855ef16d5c43fab94ffee50ff584d2c62ea3b2137d7dcab",
+    "app/source/model.js": "24ef413e4e6e050e34547ec8c96b6f42ca0cc10d270dd279a0fa9fa0bf8799f9",
+    "app/source/preview-measure.js": "7de3a51499ed85de30cb9320d630c4ecbdc60b51b02cfc9cb6f029a565e7fa83",
+    "app/source/preview.js": "60c052422477aec0348ff4d244d6b92e503cd10a2a4581993f183f6f98ccb01a",
+    "app/source/pwa.js": "8f48d9312b4bbcc7676e4059a7ca7ac93b316da1a662356106e1d478cc17ca51",
+    "app/source/render.js": "541e6c5a7a329cf89277aaa43278d482fc8a7ef773b5146ebabf5a7fe3f3f6d2",
+    "app/source/shell.html": "1f2679659e6ca62b59f2a37f4f739a688bc5ade90aab2199283de3dad09d1374",
+    "app/source/state.js": "ca8af6f09f531229f9dcbabfb455e3dc2254ce8e4e46c24f49438822b2e85e37",
+    "app/source/storage.js": "d6c8176e2d6a0f10a8b3243da4fefac333e74494d87c4276054cb45ce0df1d92",
+    "app/source/style.css": "4a5df3a71120b5184f47727941c93c817821e83784e4d4748149d39315b0aa19",
+    "app/source/sw.js": "7d130e967c2404a80cc3ffc2a8388f42f87a9103dc0dadffc8ec7d59cdd96811",
+    "app/source/view.js": "4d772622564fc06ef8f551761d2a619a9d7d6aacb0724a1c54f83a0d2e745451",
+    "scripts/build_app.py": "3dfa6d4edabccfc7dfff3ea260cf4dbf617dfcd0fc44a101e514a4d6b4312c79",
+    "app/distribution/portable.html": "5b06b3c9e088476a096a9864cd7933e58985ca91c0acfc6ce33dd22c0426445d",
+    "app/distribution/web/index.html": "6765c681d56adb92e6704d8650c0f0dd6f5eb7b19b574bcb1bcc6cef53274cf8",
+    "app/distribution/web/sw.js": "40063dee8241ad0f5d0ab9f57b9b5179e1a21cd94ea0f736a679139100cca755",
+    "app/distribution/snum.html": "2361cc528654eb6470f76258708b8d74f36ac04217b847a3f4d771614f6d7af7",
+    "scripts/recipe_page_flow_firefox.mjs": "8171b526a7dc8854f2d6023ec97353dca560a88cb501f2bd1a1953348770e254",
+    "tests/page-flow-browser.test.cjs": "43547cfb935c7b940b540a1e474913ab86c14230461dbc816d63a2f8a0a0172c",
+    "tests/preview-size-browser.test.cjs": "69cb354cffbd0ea1e37a4a0772648860f83466a601139e6940f18d6e3e9f007d",
+    "tests/preview-contract.test.cjs": "312c63901ee7feb337321822b4f492d077e6597cee63d0c336385e44d936b2ef"
+  },
+  "unchangedFromBaseline": {
+    "app/source/model.js": "24ef413e4e6e050e34547ec8c96b6f42ca0cc10d270dd279a0fa9fa0bf8799f9",
+    "app/source/render.js": "541e6c5a7a329cf89277aaa43278d482fc8a7ef773b5146ebabf5a7fe3f3f6d2",
+    "app/source/storage.js": "d6c8176e2d6a0f10a8b3243da4fefac333e74494d87c4276054cb45ce0df1d92",
+    "app/source/imports.js": "e18940238107c72238dfba37f01e8ac4894bf76656e60ceda860bc35e5d14cfe",
+    "app/source/files.js": "a12193111760960e211e32b4e7defc293a389099aa9228b90822bc89742fe0cb",
+    "app/source/library.js": "c76b58cda4e5a8b43855ef16d5c43fab94ffee50ff584d2c62ea3b2137d7dcab",
+    "app/source/library.css": "72373f768d3dc1b921244d2aee64441357e86423870caefa9239e1607be5c48e",
+    "app/distribution/snum.html": "2361cc528654eb6470f76258708b8d74f36ac04217b847a3f4d771614f6d7af7",
+    "reference/catalogue.json": "7f7a49817fb0475caa3dfc5b1e4750172b344e0cacecb5e6b95e8907fda1b26a"
+  },
+  "localLogSha256": {
+    "evidence/scrollbars-20261023/suite-final.log": "4f8e77e8b2d36e6bf9cf84ee6d0fdc873f65867be017d4341f198f946895ee56",
+    "evidence/scrollbars-20261023/check-final.log": "f3cde4dfd32b4279bdff8e9adf7f4c3490efde752c25e8cde8813d5ab7ff5618",
+    "evidence/scrollbars-20261023/firefox-final/recu.json": "a43cd63375d86c667d38603a68034bc63bde7e9043f8936ef1a0b60be82531e9"
+  },
+  "firefox": {
+    "completed": true,
+    "profiles": [
+      {
+        "factor": 1,
+        "setting": [
+          [
+            "browser.content.full-zoom",
+            null,
+            1,
+            "real"
+          ]
+        ],
+        "browser": "156.0"
+      },
+      {
+        "factor": 2,
+        "setting": [
+          [
+            "browser.content.full-zoom",
+            null,
+            2,
+            "real"
+          ]
+        ],
+        "browser": "156.0"
+      }
+    ],
+    "cases": [
+      {
+        "surface": "portable",
+        "factor": 1,
+        "width": 1280,
+        "dpr": 1,
+        "file": "evidence/scrollbars-20261023/firefox-final/portable-1-1280.json",
+        "sha256": "3ca195b26a6750b45f558fbe7bdb7c0f76ce55941d8ca46d2323f3d078533d3c"
+      },
+      {
+        "surface": "portable",
+        "factor": 1,
+        "width": 1024,
+        "dpr": 1,
+        "file": "evidence/scrollbars-20261023/firefox-final/portable-1-1024.json",
+        "sha256": "1fa4809c9fc8fdd6623db7013c297177f2ef4fbf24f98517b18e5205359f5f38"
+      },
+      {
+        "surface": "portable",
+        "factor": 1,
+        "width": 390,
+        "dpr": 1,
+        "file": "evidence/scrollbars-20261023/firefox-final/portable-1-390.json",
+        "sha256": "a8bab2c68670dbc38469975336b028daf48f71d2c2b71d96876cea4d8c0d8e91"
+      },
+      {
+        "surface": "portable",
+        "factor": 1,
+        "navigation": {
+          "viewport": {
+            "width": 390,
+            "height": 900,
+            "dpr": 1,
+            "outerWidth": 1366,
+            "outerHeight": 768
+          },
+          "list": {
+            "client": 3928,
+            "scroll": 3928,
+            "height": 3928,
+            "top": -4793.5,
+            "bottom": -865.5
+          },
+          "catalogue": {
+            "client": 1524,
+            "scroll": 1524,
+            "height": 1524,
+            "top": -616,
+            "bottom": 908,
+            "size": 52,
+            "count": 52,
+            "value": "mail-51",
+            "last": {
+              "client": 29,
+              "scroll": 29,
+              "height": 29,
+              "top": 871,
+              "bottom": 900
+            }
+          },
+          "text": {
+            "client": 1696,
+            "scroll": 1696,
+            "height": 1696,
+            "top": 1125,
+            "bottom": 2821
+          },
+          "json": {
+            "client": 184,
+            "scroll": 191608,
+            "height": 184,
+            "top": 14025,
+            "bottom": 14209
+          },
+          "focus": "catalogue",
+          "selection": [
+            1739,
+            1739
+          ],
+          "pageWidth": 375
+        },
+        "shrink": {
+          "large": 8296,
+          "small": 53
+        },
+        "preShrinkDocumentSha256": "9f9881db48cc562a722f142ecac934f418a9baabcda3bd8a00baa9285b60660b"
+      },
+      {
+        "surface": "web",
+        "factor": 1,
+        "width": 1280,
+        "dpr": 1,
+        "file": "evidence/scrollbars-20261023/firefox-final/web-1-1280.json",
+        "sha256": "bac463a05d23535397094152f464515ce895cc463b73334f7eff13409b51a6b8"
+      },
+      {
+        "surface": "web",
+        "factor": 1,
+        "width": 1024,
+        "dpr": 1,
+        "file": "evidence/scrollbars-20261023/firefox-final/web-1-1024.json",
+        "sha256": "71841c650a4b1401bf27504b7b977a0955f449d020febef6412efe890e34f379"
+      },
+      {
+        "surface": "web",
+        "factor": 1,
+        "width": 390,
+        "dpr": 1,
+        "file": "evidence/scrollbars-20261023/firefox-final/web-1-390.json",
+        "sha256": "1db2767394c1fd83673f408be33d5a664493832bb08bd015b6c818e1304ca349"
+      },
+      {
+        "surface": "web",
+        "factor": 1,
+        "navigation": {
+          "viewport": {
+            "width": 390,
+            "height": 900,
+            "dpr": 1,
+            "outerWidth": 1366,
+            "outerHeight": 768
+          },
+          "list": {
+            "client": 3928,
+            "scroll": 3928,
+            "height": 3928,
+            "top": -4793.5,
+            "bottom": -865.5
+          },
+          "catalogue": {
+            "client": 1524,
+            "scroll": 1524,
+            "height": 1524,
+            "top": -616,
+            "bottom": 908,
+            "size": 52,
+            "count": 52,
+            "value": "mail-51",
+            "last": {
+              "client": 29,
+              "scroll": 29,
+              "height": 29,
+              "top": 871,
+              "bottom": 900
+            }
+          },
+          "text": {
+            "client": 1696,
+            "scroll": 1696,
+            "height": 1696,
+            "top": 1125,
+            "bottom": 2821
+          },
+          "json": {
+            "client": 184,
+            "scroll": 191800,
+            "height": 184,
+            "top": 14025,
+            "bottom": 14209
+          },
+          "focus": "catalogue",
+          "selection": [
+            1739,
+            1739
+          ],
+          "pageWidth": 375
+        },
+        "shrink": {
+          "large": 8296,
+          "small": 53
+        },
+        "preShrinkDocumentSha256": "27fcdf8e6b5ecd8d59bcadcf15b44a0069d0f8064565727f4b01cd139a3c320a"
+      },
+      {
+        "surface": "portable",
+        "factor": 2,
+        "width": 683,
+        "dpr": 2,
+        "file": "evidence/scrollbars-20261023/firefox-final/portable-2-natif.json",
+        "sha256": "c166632a3bee48c22e64e6d79c077c127f901ffa223ff96be6cacd22c85734e3"
+      },
+      {
+        "surface": "portable",
+        "factor": 2,
+        "navigation": {
+          "viewport": {
+            "width": 683,
+            "height": 342,
+            "dpr": 2,
+            "outerWidth": 683,
+            "outerHeight": 384
+          },
+          "list": {
+            "client": 3736,
+            "scroll": 3736,
+            "height": 3736,
+            "top": -5134,
+            "bottom": -1398
+          },
+          "catalogue": {
+            "client": 1498,
+            "scroll": 1498,
+            "height": 1498,
+            "top": -1148.75,
+            "bottom": 349.25,
+            "size": 52,
+            "count": 52,
+            "value": "mail-51",
+            "last": {
+              "client": 29,
+              "scroll": 29,
+              "height": 28.5,
+              "top": 312.75,
+              "bottom": 341.25
+            }
+          },
+          "text": {
+            "client": 856,
+            "scroll": 856,
+            "height": 856,
+            "top": 566.25,
+            "bottom": 1422.25
+          },
+          "json": {
+            "client": 184,
+            "scroll": 89272,
+            "height": 184,
+            "top": 12279.75,
+            "bottom": 12463.75
+          },
+          "focus": "catalogue",
+          "selection": [
+            1739,
+            1739
+          ],
+          "pageWidth": 676
+        },
+        "shrink": {
+          "large": 9036,
+          "small": 35
+        },
+        "preShrinkDocumentSha256": "ab2aa49fb93a1a36c1e34242aaf09692b093db0fcb213d7c004e75e339d6d0e7"
+      },
+      {
+        "surface": "web",
+        "factor": 2,
+        "width": 683,
+        "dpr": 2,
+        "file": "evidence/scrollbars-20261023/firefox-final/web-2-natif.json",
+        "sha256": "671e3fcf14a57126bad7967ef0eb23b943016cbeda3ffea510ddf2279aa3ce14"
+      },
+      {
+        "surface": "web",
+        "factor": 2,
+        "navigation": {
+          "viewport": {
+            "width": 683,
+            "height": 342,
+            "dpr": 2,
+            "outerWidth": 683,
+            "outerHeight": 384
+          },
+          "list": {
+            "client": 3736,
+            "scroll": 3736,
+            "height": 3736,
+            "top": -5134,
+            "bottom": -1398
+          },
+          "catalogue": {
+            "client": 1498,
+            "scroll": 1498,
+            "height": 1498,
+            "top": -1148.75,
+            "bottom": 349.25,
+            "size": 52,
+            "count": 52,
+            "value": "mail-51",
+            "last": {
+              "client": 29,
+              "scroll": 29,
+              "height": 28.5,
+              "top": 312.75,
+              "bottom": 341.25
+            }
+          },
+          "text": {
+            "client": 856,
+            "scroll": 856,
+            "height": 856,
+            "top": 566.25,
+            "bottom": 1422.25
+          },
+          "json": {
+            "client": 184,
+            "scroll": 89272,
+            "height": 184,
+            "top": 12279.75,
+            "bottom": 12463.75
+          },
+          "focus": "catalogue",
+          "selection": [
+            1739,
+            1739
+          ],
+          "pageWidth": 676
+        },
+        "shrink": {
+          "large": 9036,
+          "small": 35
+        },
+        "preShrinkDocumentSha256": "1f232e225036a646ab51052042e9fe4d023cc9a6c151edd5d624c3284550aa7c"
+      }
+    ],
+    "errors": [],
+    "humanQualification": false,
+    "screenReaderExecuted": false,
+    "windowsExecuted": false,
+    "sourceSha256": {
+      "app/source/editor.js": "3f4b4dd9bc03a1add94198314a6053f13970ac2ef87b5ef15338e00dd850847e",
+      "app/source/files.js": "a12193111760960e211e32b4e7defc293a389099aa9228b90822bc89742fe0cb",
+      "app/source/imports.js": "e18940238107c72238dfba37f01e8ac4894bf76656e60ceda860bc35e5d14cfe",
+      "app/source/library-actions.js": "f1e2f701ef1e4a1c309c61abb21db110f2a448c23005e4087f2bc21d60da3f62",
+      "app/source/library.css": "72373f768d3dc1b921244d2aee64441357e86423870caefa9239e1607be5c48e",
+      "app/source/library.js": "c76b58cda4e5a8b43855ef16d5c43fab94ffee50ff584d2c62ea3b2137d7dcab",
+      "app/source/model.js": "24ef413e4e6e050e34547ec8c96b6f42ca0cc10d270dd279a0fa9fa0bf8799f9",
+      "app/source/preview-measure.js": "7de3a51499ed85de30cb9320d630c4ecbdc60b51b02cfc9cb6f029a565e7fa83",
+      "app/source/preview.js": "60c052422477aec0348ff4d244d6b92e503cd10a2a4581993f183f6f98ccb01a",
+      "app/source/pwa.js": "8f48d9312b4bbcc7676e4059a7ca7ac93b316da1a662356106e1d478cc17ca51",
+      "app/source/render.js": "541e6c5a7a329cf89277aaa43278d482fc8a7ef773b5146ebabf5a7fe3f3f6d2",
+      "app/source/shell.html": "1f2679659e6ca62b59f2a37f4f739a688bc5ade90aab2199283de3dad09d1374",
+      "app/source/state.js": "ca8af6f09f531229f9dcbabfb455e3dc2254ce8e4e46c24f49438822b2e85e37",
+      "app/source/storage.js": "d6c8176e2d6a0f10a8b3243da4fefac333e74494d87c4276054cb45ce0df1d92",
+      "app/source/style.css": "4a5df3a71120b5184f47727941c93c817821e83784e4d4748149d39315b0aa19",
+      "app/source/sw.js": "7d130e967c2404a80cc3ffc2a8388f42f87a9103dc0dadffc8ec7d59cdd96811",
+      "app/source/view.js": "4d772622564fc06ef8f551761d2a619a9d7d6aacb0724a1c54f83a0d2e745451",
+      "scripts/build_app.py": "3dfa6d4edabccfc7dfff3ea260cf4dbf617dfcd0fc44a101e514a4d6b4312c79",
+      "app/distribution/portable.html": "5b06b3c9e088476a096a9864cd7933e58985ca91c0acfc6ce33dd22c0426445d",
+      "app/distribution/web/index.html": "6765c681d56adb92e6704d8650c0f0dd6f5eb7b19b574bcb1bcc6cef53274cf8",
+      "app/distribution/web/sw.js": "40063dee8241ad0f5d0ab9f57b9b5179e1a21cd94ea0f736a679139100cca755",
+      "app/distribution/snum.html": "2361cc528654eb6470f76258708b8d74f36ac04217b847a3f4d771614f6d7af7"
+    }
+  },
+  "review": {
+    "reviewer": "Astra",
+    "verdict": "GO technique et GO PDV",
+    "method": "lecture seule du diff et verification des huit empreintes de cas, sans execution navigateur concurrente"
+  },
+  "humanQualification": false,
+  "screenReaderExecuted": false,
+  "windowsExecuted": false,
+  "httpsPublication": "verification distincte apres publication"
+}

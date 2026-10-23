@@ -1,5 +1,7 @@
 # CSS des courriels : propriété inconnue retirée, qualification RGAA ouverte
 
+**Campagne historique figée avant le correctif d’interface #28.** Les matrices et empreintes ci-dessous gardent leur périmètre réel. La [recette des défilements internes](../../RECETTE-DEFILEMENT.md) documente l’interface suivante et ses contrôles ciblés ; elle ne renouvelle pas automatiquement l’ensemble des sondes RGAA de cette campagne.
+
 Échantillon : P01 webapp, P02 portable, P03 convertisseur SNUM et P04 à P13, dix compositions couvrant les 52 composants. Les 20 scènes AY11 ajoutent éditeur, panneaux dépliés, saisie invalide, dialogues et erreurs SNUM. La recette utilise temporairement `http://127.0.0.1:4197/`, `/portable.html`, `/snum.html` et `/mail/01.html` à `/mail/10.html`, avec des données synthétiques ; cette origine locale est distincte de la publication HTTPS.
 
 **Objectif maintenu : démontrer 100 % des critères RGAA applicables. Aucun taux officiel validé.** La [campagne précédente](../html-20261023/RAPPORT.md) reste figée. Cette tranche retire quinze déclarations `font-color` invalides du seul CSS dérivé, sans les remplacer par `color`.

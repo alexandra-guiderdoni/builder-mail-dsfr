@@ -1,10 +1,10 @@
-# Corrections des 27 issues
+# Suivi des corrections
 
 La [campagne RGAA courante](accessibilite/css-20261023/RAPPORT.md) corrige quatre causes dans le rendu dérivé et renouvelle les preuves, avec 110 tests réussis et 1 248 cas de rendu et copie. Le repli du titre HTML et la protection des 13 intitulés de liens sont conservés. Huit familles de signalements du validateur restent à instruire ; les recettes #2 et #13 restent ouvertes. Aucune conformité exhaustive n’est revendiquée. Le tableau ci-dessous conserve le suivi des 27 issues historiques.
 
 Les [mesures complémentaires de contraste](accessibilite/contrastes-20261022/RAPPORT.md) couvrent les cibles auparavant indéterminées, avec leurs limites. Elles corrigent une faiblesse du collecteur éprouvée par masque sans interception du pointeur ; aucun nouveau défaut produit ni clôture de critère n’en découle.
 
-Le [complément de zoom natif Firefox](accessibilite/zoom-20261023/RAPPORT.md) ajoute des preuves sans correction produit ni clôture de critère. L’issue [#28](https://github.com/alexandra-guiderdoni/builder-mail-dsfr/issues/28) reste ouverte pour les défilements internes : JSON compact confirmé, adaptation de l’aperçu encore soumise à la décision sur son script de mesure isolé.
+Le [complément de zoom natif Firefox](accessibilite/zoom-20261023/RAPPORT.md) reste historique. La [recette de l’issue #28](RECETTE-DEFILEMENT.md) porte sur le correctif suivant : liste, catalogue natif, champs et aperçu s’allongent dans la page ; JSON compact conservé. L’exception du seul script de mesure isolé a été explicitement autorisée. Les recettes de lecteur d’écran (#2) et de transport (#13) restent distinctes et ouvertes.
 
 Mandat de livraison du 22 octobre 2026 : corriger, documenter, commiter et pousser sur `main` dans le seul dépôt personnel, puis fermer les issues dont les critères sont satisfaits. Les essais Gmail et Mélissa sur Mac ont reçu leur autorisation distincte. Les critères sont ceux des corps GitHub ; les validations absentes restent ouvertes. Aucun déploiement sur le parc n’est autorisé implicitement.
 
@@ -45,6 +45,7 @@ Les chemins ci-dessous sont relatifs au dépôt. Les suites citées sont dans `t
 | #25 — Portable HTTP | `app/source/pwa.js`, éditeur prototype | Présence du manifeste distingue la webapp du portable | `pwa-contract` : portable HTTP sans inscription/violation worker ; fichier hors ligne et PWA conservés | Aucun serveur requis sur le poste métier |
 | #26 — Preuves discriminantes | `tests/browser-support.cjs`, `browser.test.cjs`, `model.test.cjs` | Observateurs avant navigation ; assertion pure renommée ; conservation testée au vrai import | `observers-browser` détecte erreur/requête au démarrage ; mutant tardif échoue. Baseline d’import corrompu échoue sur l’invariant réel | Pas de conclusion depuis la seule absence d’erreur |
 | #27 — Import différé | `prototype/source/editor.js` | Révision et numéro d’import ; remplacement après validation seulement | `prototype-browser`, `import-images-browser` : saisie ultérieure, ordre inverse, imports normaux et décodage différé | Aucun cas local identifié |
+| #28 — Défilements internes | `view.js`, `style.css`, `preview.js`, `preview-measure.js`, `editor.js`, générateur | Liste complète, catalogue natif dimensionné, champs extensibles et aperçu mesuré dans son origine opaque ; retour au bloc ; JSON compact | [Recette ciblée](RECETTE-DEFILEMENT.md), tests de frappe, sécurité et image tardive ; portable et web dans Chromium et Firefox, zoom Firefox 200 % | Volumes supérieurs aux cas mesurés, Windows et annonces vocales non qualifiés |
 
 ## Preuves de la campagne
 

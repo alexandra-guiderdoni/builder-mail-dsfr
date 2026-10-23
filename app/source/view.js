@@ -2,7 +2,13 @@
 (() => {
   "use strict";
   const A = window.MailBuilder, M = A.Model, esc = A.Render.escape, get = id => document.getElementById(id);
-  let previewURL;
+  function fitField(input) {
+    if (!input.matches("textarea[data-field]") || !input.getClientRects().length) return;
+    input.style.minHeight = "0px"; input.style.height = "auto";
+    const style = getComputedStyle(input), height = Math.ceil(input.scrollHeight + parseFloat(style.borderTopWidth) + parseFloat(style.borderBottomWidth));
+    input.style.minHeight = input.style.height = `${height}px`;
+  }
+  function fitFields() { get("block-editor").querySelectorAll("textarea[data-field]").forEach(fitField); }
   function fieldError(input, message) {
     const id = `error-${input.id}`, descriptions = new Set((input.getAttribute("aria-describedby") || "").split(/\s+/).filter(Boolean));
     let hint = get(id);
@@ -44,11 +50,11 @@
       const label = linkLabel ? `${f.label} — Intitulé du lien (obligatoire)` : required ? `${f.label} (obligatoire)` : f.label, id = `field-${f.key}`, v = b.values[f.key];
       if (f.type === "image") return `<div class="image-field"><img src="${esc(v)}" alt="Aperçu de l’image sélectionnée"><label class="fr-label" for="${id}">${esc(label)}</label><input id="${id}" data-image-field="${esc(f.key)}" type="file" accept="image/png,image/jpeg,image/gif,image/webp"></div>`;
       return `<label class="fr-label" for="${id}">${esc(label)}</label>${f.type === "text" ? `<textarea class="fr-input" id="${id}" data-field="${f.key}" rows="3"${linkLabel ? ' data-link-label aria-required="true"' : ""}>${esc(v)}</textarea>` : `<input class="fr-input" id="${id}" data-field="${f.key}" type="${f.type === "url" ? "url" : "text"}"${required ? ' aria-required="true"' : ""} value="${esc(v)}">`}`;
-    }).join("") + `<label class="fr-label" for="article-source">Lien source facultatif du bloc</label><input class="fr-input" id="article-source" type="url" data-source value="${esc(b.source)}"><label class="fr-label" for="article-source-label">Intitulé du lien source</label><input class="fr-input" id="article-source-label" type="text" data-source-label value="${esc(b.sourceLabel ?? "")}" placeholder="Consulter la source" aria-describedby="source-label-help"><p id="source-label-help" class="muted">Sans intitulé, le lien affiche « Consulter la source ». Sans URL, aucun lien source n’est ajouté.</p><div class="actions"><button class="fr-btn fr-btn--secondary" data-block-action="up" ${index === 0 ? "disabled" : ""}>Monter</button><button class="fr-btn fr-btn--secondary" data-block-action="down" ${index === A.doc().blocks.length - 1 ? "disabled" : ""}>Descendre</button><button class="fr-btn fr-btn--secondary" data-block-action="duplicate">Dupliquer</button><button class="fr-btn fr-btn--secondary" data-block-action="remove">Retirer le bloc</button><button class="fr-btn fr-btn--secondary" data-action="cancel-fields">Annuler les champs invalides</button></div>`;
+    }).join("") + `<label class="fr-label" for="article-source">Lien source facultatif du bloc</label><input class="fr-input" id="article-source" type="url" data-source value="${esc(b.source)}"><label class="fr-label" for="article-source-label">Intitulé du lien source</label><input class="fr-input" id="article-source-label" type="text" data-source-label value="${esc(b.sourceLabel ?? "")}" placeholder="Consulter la source" aria-describedby="source-label-help"><p id="source-label-help" class="muted">Sans intitulé, le lien affiche « Consulter la source ». Sans URL, aucun lien source n’est ajouté.</p><div class="actions"><button class="fr-btn fr-btn--secondary" type="button" data-return-to-block>Revenir au bloc sélectionné</button><button class="fr-btn fr-btn--secondary" data-block-action="up" ${index === 0 ? "disabled" : ""}>Monter</button><button class="fr-btn fr-btn--secondary" data-block-action="down" ${index === A.doc().blocks.length - 1 ? "disabled" : ""}>Descendre</button><button class="fr-btn fr-btn--secondary" data-block-action="duplicate">Dupliquer</button><button class="fr-btn fr-btn--secondary" data-block-action="remove">Retirer le bloc</button><button class="fr-btn fr-btn--secondary" data-action="cancel-fields">Annuler les champs invalides</button></div>`;
+    fitFields();
   }
   function preview() {
-    if (previewURL) URL.revokeObjectURL(previewURL);
-    previewURL = URL.createObjectURL(new Blob([A.Render.html(A.doc(), true)], {type: "text/html"})); get("preview").src = previewURL;
+    A.Preview.show(A.doc());
     get("composition-summary").textContent = `${A.doc().blocks.length} blocs dans « ${A.doc().name} »`;
   }
   function refresh() {
@@ -56,10 +62,20 @@
     blockList(); fields(); preview();
   }
   function catalogue() {
-    const query = get("catalogue-search").value.toLocaleLowerCase("fr");
+    const select = get("catalogue"), previous = select.value, query = get("catalogue-search").value.toLocaleLowerCase("fr");
     const visible = A.catalog.components.filter(c => `${c.family} ${c.label}`.toLocaleLowerCase("fr").includes(query));
-    get("catalogue").innerHTML = visible.map(c => option(c.id, `${c.family} — ${c.label}`)).join("");
+    select.innerHTML = visible.map(c => option(c.id, `${c.family} — ${c.label}`)).join("");
+    select.size = Math.max(2, visible.length);
+    if (visible.some(c => c.id === previous)) select.value = previous;
     get("catalogue-count").textContent = `${visible.length} composants sur ${A.catalog.components.length}`;
   }
+  get("block-editor").addEventListener("input", event => fitField(event.target));
+  get("catalogue").addEventListener("change", () => get("catalogue").selectedOptions[0]?.scrollIntoView({block: "nearest"}));
+  let editorWidth;
+  new ResizeObserver(entries => {
+    const width = entries[0].contentRect.width;
+    if (width !== editorWidth) { editorWidth = width; if (width) fitFields(); }
+  }).observe(get("block-editor"));
+  document.fonts.ready.then(fitFields);
   A.UI = Object.freeze({refresh, preview, fields, blockList, selections, catalogue, fieldError, clearFieldErrors, showLinkIssue});
 })();

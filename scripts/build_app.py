@@ -29,20 +29,38 @@ def build():
         (SOURCE / "model.js").read_text(encoding="utf-8"),
         (SOURCE / "render.js").read_text(encoding="utf-8"),
     ]
-    scripts = core + [
-        (SOURCE / name).read_text(encoding="utf-8")
-        for name in [
-            "imports.js",
-            "storage.js",
-            "state.js",
-            "view.js",
-            "files.js",
-            "library-actions.js",
-            "library.js",
-            "editor.js",
-            "pwa.js",
+    measure_source = (SOURCE / "preview-measure.js").read_text(encoding="utf-8")
+    measure_hash = base64.b64encode(
+        hashlib.sha256(measure_source.encode()).digest()
+    ).decode()
+    measure_payload = (
+        json.dumps({"source": measure_source, "hash": measure_hash}, ensure_ascii=False)
+        .replace("<", "\\u003c")
+        .replace(">", "\\u003e")
+    )
+    scripts = (
+        core
+        + [
+            "window.MailBuilder.previewMeasure = Object.freeze("
+            + measure_payload
+            + ");"
         ]
-    ]
+        + [
+            (SOURCE / name).read_text(encoding="utf-8")
+            for name in [
+                "imports.js",
+                "storage.js",
+                "state.js",
+                "preview.js",
+                "view.js",
+                "files.js",
+                "library-actions.js",
+                "library.js",
+                "editor.js",
+                "pwa.js",
+            ]
+        ]
+    )
     script = "\n".join(scripts)
     digest = base64.b64encode(hashlib.sha256(script.encode()).digest()).decode()
     shell = (
@@ -58,14 +76,15 @@ def build():
         .replace("@@SCRIPT@@", script)
     )
     csp = f"default-src 'none';script-src 'sha256-{digest}';style-src 'unsafe-inline';img-src data: blob:;frame-src blob:;base-uri 'none';form-action 'none';"
+    app_csp = csp.replace("script-src ", f"script-src 'sha256-{measure_hash}' ")
     portable = shell.replace("@@MANIFEST@@", "").replace(
-        "@@CSP@@", csp + "font-src data:;connect-src 'none';worker-src 'none'"
+        "@@CSP@@", app_csp + "font-src data:;connect-src 'none';worker-src 'none'"
     )
     web = shell.replace(
         "@@MANIFEST@@", '<link rel="manifest" href="./manifest.webmanifest">'
     ).replace(
         "@@CSP@@",
-        csp.replace("img-src data: blob:", "img-src 'self' data: blob:")
+        app_csp.replace("img-src data: blob:", "img-src 'self' data: blob:")
         + "font-src data:;connect-src 'self';worker-src 'self';manifest-src 'self'",
     )
     snum_script = "\n".join(

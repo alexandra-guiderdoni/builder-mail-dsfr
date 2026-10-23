@@ -5,6 +5,10 @@
   document.addEventListener("click", event => {
     const action = event.target.closest("[data-action]");
     if (action && !action.disabled) attempt(async () => { await A.Actions[action.dataset.action](); if (["new-document", "use-template"].includes(action.dataset.action)) await A.Library.open(A.library.activeId); });
+    if (event.target.closest("[data-return-to-block]")) {
+      const target = [...get("block-list").querySelectorAll("[data-select]")].find(button => button.dataset.select === A.selected);
+      if (target) { target.closest("details").open = true; target.focus(); }
+    }
     const selected = event.target.closest("[data-select]");
     if (selected) attempt(() => { A.State.guard(); A.selected = selected.dataset.select; A.UI.blockList(); A.UI.fields(); get("block-editor").querySelector("textarea,input")?.focus(); });
     const operation = event.target.closest("[data-block-action]");

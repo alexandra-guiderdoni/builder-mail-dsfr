@@ -1,5 +1,12 @@
 # Historique des livraisons
 
+## 23 octobre 2026 — Page de composition extensible (#28)
+
+- Liste et catalogue natif entièrement dans le flux de la page ; champs de contenu ajustés au texte et aperçu ajusté à son document réel. Zone JSON compacte conservée.
+- Retour au bloc sélectionné disponible depuis les champs, y compris avec une saisie invalide.
+- Seul script de mesure isolé autorisé par décision utilisateur : origine opaque, CSP par empreinte, réseau bloqué ; exports, copie et SNUM préservés.
+- 119 tests applicatifs réussis sans saut, recette Firefox portable et web à trois largeurs et au zoom natif de 200 %, frappe et image tardive vérifiées ; [preuves et limites](docs/RECETTE-DEFILEMENT.md).
+
 ## 22 octobre 2026 — Atelier autonome et corrections
 
 - Application portable et webapp issues du même socle : 52 composants, accueil « Mes newsletters », bibliothèque locale, modèles, identités et images incorporées.

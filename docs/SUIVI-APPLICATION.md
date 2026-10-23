@@ -4,7 +4,7 @@ Actualisation accessibilité : [campagne RGAA du 23 octobre](accessibilite/css-2
 
 Le [protocole de contraste](accessibilite/contrastes-20261022/RAPPORT.md) reste la référence méthodologique. Ses 80 observations et cinq contrôles négatifs sont renouvelés dans la campagne courante, avec les formulaires et les nouveaux états des liens. Aucun nouveau critère n’est déclaré conforme ou non applicable.
 
-Le [complément de zoom Firefox](accessibilite/zoom-20261023/RAPPORT.md) conserve 245 observations natives, sans modification produit ni qualification automatique du RGAA. L’issue #28 sur les défilements internes reste ouverte ; la zone JSON doit rester compacte et l’exception d’isolation de l’aperçu attend une décision.
+Le [complément de zoom Firefox](accessibilite/zoom-20261023/RAPPORT.md) conserve 245 observations natives historiques. La [recette #28](RECETTE-DEFILEMENT.md) vérifie ensuite l’allongement de la liste, du catalogue, des champs et de l’aperçu, sur les deux distributions et au zoom natif de 200 %. L’utilisateur a autorisé le seul script de mesure isolé ; l’origine reste opaque, le réseau bloqué et les exports sans script. Le JSON reste compact. Cette tranche ne qualifie aucun critère RGAA supplémentaire.
 
 Objectif : application complète du cadrage confirmé, depuis le prototype `c329339`. Le mandat de livraison du 22 octobre autorise la publication sur `main` dans le dépôt personnel et la clôture des issues satisfaites. Les essais de messagerie sur Mac ont été autorisés séparément ; le site public est livré, l’accès et l’installation depuis le parc restent à qualifier.
 

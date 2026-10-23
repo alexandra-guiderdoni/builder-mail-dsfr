@@ -28,6 +28,7 @@ L’application livrée est statique et autonome. Python et Node.js sont des out
 | `scripts/catalogue.py` | Compilation des tables en champs typés, CSS et empreinte du contrat. |
 | `scripts/mail_layout.py` | Adaptation CSS dérivée et colonnes natives ; arrêt sur dérive de la référence, sans modification du contrat canonique. |
 | `app/source/model.js`, `render.js`, `imports.js` | Validation, rendu commun et import des compositions et bibliothèques génériques. |
+| `app/source/preview.js`, `preview-measure.js` | Affichage de l’aperçu et mesure dans son origine opaque ; aucun ajout aux exports ou à SNUM. |
 | `app/snum/` | Page autonome et adaptation métier SNUM vers le contrat générique, sans stockage automatique. |
 | `app/source/storage.js`, `state.js` | Transaction locale, conflits, mémoire et sauvegardes. |
 | `app/source/library.js`, `library.css` | Accueil, navigation transitoire vers l’éditeur et actions ciblées sur une composition ; aucun stockage supplémentaire. |
@@ -60,6 +61,10 @@ npm test
 Les scénarios navigateur créent des contextes isolés, téléchargent des fichiers réels et produisent des preuves sous `evidence/application/`, ignorées par Git. `MAIL_BUILDER_EVIDENCE` peut désigner un autre répertoire pour préserver une campagne précédente. Le parcours presse-papiers Chromium utilise les permissions du profil de recette. Les pannes de quota et les bibliothèques inconnues sont injectées dans ce seul profil.
 
 Les installations et résultats locaux ShipGuard sous `visual-tests/` restent aussi ignorés : ils contiennent une copie de l’outillage et des chemins propres à la campagne. La suite produit reproductible et versionnée est sous `tests/`. Le compte rendu d’audit conserve les erreurs du plugin et faux liens du crawler ; ils ne sont pas transformés en défauts produit.
+
+Pour les défilements internes (#28), voir la [recette ciblée](RECETTE-DEFILEMENT.md). Le catalogue natif reçoit une taille égale au nombre de résultats ; les textareas de contenu sont mesurés à la création, à la saisie et au changement de largeur, y compris après masquage. Ne pas étendre cette adaptation au JSON technique.
+
+L’utilisateur a autorisé le seul script canonique de mesure dans l’aperçu : `allow-scripts` sans `allow-same-origin`, empreinte SHA-256 ajoutée aux CSP cumulées du parent et du Blob, réseau toujours interdit dans l’enfant. Le parent vérifie fenêtre source, origine opaque, jeton de navigation, largeur et hauteur entière avant tout ajustement. La mesure utilise le corps et la gouttière native éventuelle, sans réutiliser l’ancienne hauteur du cadre. Conserver l’échappement `<\/script>` dans le module parent assemblé en HTML. `preview-contract`, `preview-size-browser` et `page-flow-browser` exercent ce contrat ; `scripts/recipe_page_flow_firefox.mjs` le complète dans Firefox natif, sur profils isolés, sans installer de navigateur.
 
 `Render.html` produit l’adaptation accessible dérivée ; le champ `template` conserve le gabarit canonique. `Render.clipboardHtml` prépare la copie, y compris SNUM : colonnes de contenu égales et gouttières conservées, proportions d’origine dans l’export et l’aperçu. Les styles Office sont modifiés par chaînes brutes ; une réécriture CSSOM les retirerait. Le contrat et les fichiers JSON existants restent inchangés. `tests/mail-presentation-browser.test.cjs` couvre les seuils responsive, les textes longs, l’espacement, la copie réelle et ses lectures brute et filtrée. `tests/mail-layout-browser.test.cjs` conserve aussi les contrôles de largeurs réécrites et de filets décoratifs. Le rendu dans les clients réels reste une recette distincte.
 
