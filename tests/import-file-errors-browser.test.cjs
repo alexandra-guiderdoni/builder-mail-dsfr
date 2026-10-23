@@ -42,3 +42,21 @@ test('application : un fichier illisible affiche un message français, retire la
     assert.deepEqual(observations.errors, []);
   } finally { await browser.close(); }
 });
+
+test('application : un second import refusé ne retire pas la notice de la lecture en cours', async () => {
+  const browser = await chromium.launch({headless: true});
+  try {
+    const {page} = await open(browser);
+    const incoming = JSON.stringify(await page.evaluate(() => MailBuilder.Model.create('Lecture différée')));
+    await expand(page, 'Fichiers et récupération');
+    await page.evaluate(() => { const read = Blob.prototype.text; window.finishRead = null; File.prototype.text = function() { delete File.prototype.text; return new Promise(resolve => { window.finishRead = async () => resolve(await read.call(this)); }); }; });
+    await upload(page, 'premier.json', incoming);
+    await page.waitForFunction(() => typeof finishRead === 'function');
+    await upload(page, 'second.json', incoming);
+    await page.locator('#error').filter({hasText: 'Attendez la fin du chargement du fichier'}).waitFor();
+    assert.equal(await page.locator('#notice').textContent(), reading);
+    await page.evaluate(() => finishRead());
+    await page.locator('#notice').filter({hasText: 'Import ajouté à la bibliothèque'}).waitFor(); await saved(page);
+    assert.equal((await state(page)).documents.filter(d => d.name === 'Lecture différée').length, 1);
+  } finally { await browser.close(); }
+});
