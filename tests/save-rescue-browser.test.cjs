@@ -22,15 +22,16 @@ async function refuseWrites(page, name) {
     IDBObjectStore.prototype.put = function(...args) { if (window.failWrites && this.name === 'library') throw new DOMException('Écriture refusée pour la recette', name); return put.apply(this, args); };
   }, name);
 }
-async function rescueBesideMessage(page) {
-  assert.equal(await page.locator(rescue).count(), 1, 'Un secours d’export est attendu à côté du message d’échec.');
+// Depuis #31, un conflit met la fenêtre en lecture seule : le bandeau, placé après le message, porte alors l’export de secours.
+async function rescueBesideMessage(page, selector = rescue, gap = 32) {
+  assert.equal(await page.locator(selector).count(), 1, 'Un secours d’export est attendu à côté du message d’échec.');
   const layout = await page.evaluate(selector => {
     const box = e => { const r = e.getBoundingClientRect(); return {top: Math.round(r.top), bottom: Math.round(r.bottom), shown: e.getClientRects().length > 0}; };
     return {scrollY: Math.round(scrollY), height: innerHeight, error: box(document.querySelector('#error')), button: box(document.querySelector(selector))};
-  }, rescue);
+  }, selector);
   assert(layout.error.shown && layout.button.shown, `Message et secours doivent être affichés : ${JSON.stringify(layout)}`);
   for (const item of [layout.error, layout.button]) assert(item.top >= 0 && item.bottom <= layout.height, `Message et secours doivent tenir dans la fenêtre sans défilement : ${JSON.stringify(layout)}`);
-  assert(layout.button.top - layout.error.bottom >= 0 && layout.button.top - layout.error.bottom <= 32, `Le secours doit suivre le message : ${JSON.stringify(layout)}`);
+  assert(layout.button.top - layout.error.bottom >= 0 && layout.button.top - layout.error.bottom <= gap, `Le secours doit suivre le message : ${JSON.stringify(layout)}`);
   return layout;
 }
 
@@ -84,7 +85,7 @@ test('stockage absent, inaccessible, saturé ou en conflit : messages distincts,
     await first.page.locator('#document-name').fill('Sauvegarde de la première fenêtre'); await saved(first.page);
     await second.locator('#document-name').fill('Travail de la seconde fenêtre'); await second.locator('#error').filter({hasText: 'Une autre fenêtre'}).waitFor();
     observed.conflit = await second.locator('#error').innerText();
-    try { await rescueBesideMessage(second); } catch (cause) { problems.push(`conflit : ${cause.message.split('\n')[0]}`); }
+    try { await rescueBesideMessage(second, '[data-action=read-only-export]', 400); } catch (cause) { problems.push(`conflit : ${cause.message.split('\n')[0]}`); } // #31 : lecture seule, export du bandeau
 
     const full = await open(browser, {}, limitQuota);
     await full.page.locator('#document-name').fill('Avant saturation'); await saved(full.page);
