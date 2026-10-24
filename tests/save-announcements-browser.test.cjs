@@ -52,7 +52,10 @@ test('saisie continue valide : aucune annonce pendant la saisie, un seul succès
   } finally { await browser.close(); }
 });
 
-test('URL progressivement invalide : erreurs immédiates, jamais de succès périmé, un succès final', async () => {
+// Contrat de #37 : une URL rendue invalide reste un brouillon hors du modèle, sans erreur à la frappe ; l’erreur
+// apparaît sur le champ à son départ. Obligation de #65 conservée : aucune annonce de progression, aucun succès
+// tant que le lien reste invalide, un seul succès par sauvegarde réussie.
+test('URL progressivement invalide : aucune erreur à la frappe, erreur de champ au départ, un succès par sauvegarde réussie', async () => {
   const browser = await chromium.launch({headless: true});
   try {
     const {page} = await start(browser);
@@ -61,16 +64,22 @@ test('URL progressivement invalide : erreurs immédiates, jamais de succès pér
     await type(page, '#article-source', 'https://exemple.org/a');
     await until(page, () => document.querySelector('#save-state').textContent, SUCCESS);
     assert.deepEqual(await announced(page), [], 'aucune annonce de progression pendant la saisie');
-    await page.clock.runFor(500);
+    await page.clock.runFor(1000); assert.deepEqual(await announced(page), [SUCCESS], 'un seul succès pour la saisie valide');
     await page.keyboard.type(' ');
-    assert.match(await page.locator('#error').textContent(), /Lien HTTPS/);
-    assert.equal(await page.locator('#error').getAttribute('role'), 'alert', 'l’erreur reste annoncée immédiatement');
+    assert.equal(await page.locator('[data-field-error]').count(), 0, 'aucune erreur pendant la frappe');
+    assert.equal(await page.locator('#error').isVisible(), false);
     await page.clock.runFor(5000);
-    assert.deepEqual(await announced(page), [], 'le succès devenu périmé par la nouvelle erreur n’est pas annoncé');
-    await page.keyboard.press('Backspace');
-    await until(page, () => document.querySelector('#error').hidden, true);
-    await page.clock.runFor(999); assert.deepEqual(await announced(page), []);
-    await page.clock.runFor(1); assert.deepEqual(await announced(page), [SUCCESS]);
+    assert.deepEqual(await announced(page), [SUCCESS], 'un brouillon n’annonce ni erreur ni succès');
+    await page.keyboard.press('Tab');
+    assert.match(await page.locator('#error-article-source').textContent(), /Caractères interdits/, 'l’erreur du brouillon apparaît au départ du champ');
+    assert.equal(await page.locator('#article-source').getAttribute('aria-invalid'), 'true');
+    await page.clock.runFor(5000);
+    assert.deepEqual(await announced(page), [SUCCESS], 'aucun succès n’est annoncé tant que le lien reste invalide');
+    await page.locator('#article-source').focus(); await page.keyboard.press('End'); await page.keyboard.press('Backspace');
+    await until(page, () => document.querySelector('#article-source').getAttribute('aria-invalid'), null);
+    await until(page, () => document.querySelector('#save-state').textContent, SUCCESS);
+    await page.clock.runFor(999); assert.deepEqual(await announced(page), [SUCCESS]);
+    await page.clock.runFor(1); assert.deepEqual(await announced(page), [SUCCESS, SUCCESS], 'un succès final après la correction');
   } finally { await browser.close(); }
 });
 

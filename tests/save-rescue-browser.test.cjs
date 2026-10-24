@@ -1,7 +1,7 @@
 const test = require('node:test');
 const http = require('node:http');
 const path = require('node:path');
-const {root, evidence, portable, click, open, enterEditor, saved, download, state, store, chromium, fs, assert} = require('./browser-support.cjs');
+const {root, evidence, portable, click, open, enterEditor, saved, expand, download, state, store, chromium, fs, assert} = require('./browser-support.cjs');
 
 // Données synthétiques uniquement. Le secours doit exporter la bibliothèque en mémoire, à côté du message d’échec.
 const rescue = '[data-action=rescue-export]';
@@ -122,8 +122,9 @@ test('après un échec de sauvegarde, les changements de vue gardent le travail 
     assert.equal((await state(page)).documents.length, 3);
     await click(page, '[data-action=library-home]'); await click(page, `[data-document="${first}"] [data-library-action=open]`);
     assert.equal(await page.locator('#document-name').inputValue(), 'Travail non sauvegardé');
+    // Contrat de #37 : l’URL invalide reste un brouillon ; le changement de vue est refusé avec le message du lien.
     await page.locator('#article-source').fill('javascript:alert(1)'); await click(page, '[data-action=library-home]');
-    assert(await page.locator('#editor-page').isVisible()); await page.locator('#error').filter({hasText: 'Corrigez les champs'}).waitFor();
+    assert(await page.locator('#editor-page').isVisible()); await page.locator('#error').filter({hasText: 'Corrigez ce lien'}).waitFor();
     await click(page, '[data-action=cancel-fields]');
     await page.evaluate(() => { const files = MailBuilder.Files, gate = new Promise(resolve => { window.finishImage = resolve; }); MailBuilder.Files = {...files, image: async file => { await gate; return files.image(file); }}; });
     await page.locator('[data-image-field]').first().setInputFiles(path.join(root, 'app/assets/icon-192.png')); await page.waitForFunction(() => MailBuilder.pendingInputs === 1);
@@ -133,6 +134,30 @@ test('après un échec de sauvegarde, les changements de vue gardent le travail 
     assert.deepEqual(await store(page), persisted);
     const exported = JSON.parse(await fs.readFile(await download(page, rescue, 'secours-navigation.json'), 'utf8'));
     assert.deepEqual(exported, await state(page)); assert.equal(exported.documents.length, 3);
+  } finally { await browser.close(); }
+});
+
+// Décision du 24 octobre (#32 et #37) : l’export de secours n’est jamais bloqué par une URL invalide ;
+// la copie et l’export HTML du courriel le restent. Le brouillon n’est pas dans le modèle, donc pas dans le secours.
+test('un lien en cours de saisie bloque l’export du courriel, jamais l’export de secours', async () => {
+  const browser = await chromium.launch({headless: true});
+  try {
+    const {page} = await open(browser, {}, limitQuota);
+    await page.locator('#document-name').fill('Version sauvegardée'); await saved(page);
+    await saturate(page); await rescueBesideMessage(page);
+    await page.locator('#article-source').fill('https://'); await page.locator('#article-source').blur();
+    await page.locator('#error-article-source').waitFor();
+    let downloads = 0; page.on('download', () => { downloads++; });
+    await expand(page, 'Fichiers et récupération');
+    await click(page, '[data-action=export-mail]'); await page.locator('#error').filter({hasText: 'Corrigez ce lien'}).waitFor();
+    assert.equal(downloads, 0, 'Le courriel n’est pas exporté avec un lien invalide.');
+    const event = page.waitForEvent('download', {timeout: 5000}); await click(page, rescue);
+    const file = await event.catch(() => null);
+    assert(file, `L’export de secours ne dépend pas du lien en cours de saisie : ${await page.locator('#error').innerText()}`);
+    const destination = path.join(evidence, 'secours-brouillon.json'); await file.saveAs(destination);
+    const exported = JSON.parse(await fs.readFile(destination, 'utf8'));
+    assert.deepEqual(exported, await state(page));
+    assert(!JSON.stringify(exported).includes('"source":"https://"'), 'Le brouillon reste hors du secours.');
   } finally { await browser.close(); }
 });
 
