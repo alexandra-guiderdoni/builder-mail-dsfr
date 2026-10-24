@@ -12,16 +12,16 @@
     const ending = values.f6.trim() ? '<div class="darkmode-1" style="font-size:13px;line-height:20px;color:#666666;margin:4px 0 0">{{f6}}</div>' : "";
     return editorialFrame(`<tr><td class="darkmode-1" style="padding:14px 10px 16px;border-bottom:1px solid #e5e5e5;font-family:Arial,Helvetica,sans-serif;text-align:left;overflow-wrap:anywhere;word-break:break-word">${pretext}<div style="font-size:18px;line-height:26px;font-weight:700;margin:0">{{heading_open_f4}}<a href="{{f3}}" style="color:#000091;font-size:18px;line-height:26px;font-weight:700;text-decoration:none">{{f4}}</a>{{heading_close_f4}}</div>${metadata}${ending}</td></tr>`);
   }
-  function footerLinks(value, preview) {
-    const links = [{url: value.values.f1, label: value.values.f2}, ...value.additionalLinks];
-    const actions = links.map(link => {
-      const incomplete = !link.label.trim();
-      const target = preview && incomplete ? "" : ` href="${escape(link.url)}"`;
-      const label = preview && incomplete ? "Intitulé du lien à renseigner" : link.label;
-      return `<a${target} style="display:inline-block;white-space:nowrap;font-size:13px;line-height:24px;color:#000091;text-decoration:underline;margin:0 8px">${escape(label)}</a>`;
-    }).join(" ");
-    const question = value.values.f0.trim() ? `<div style="margin:0 0 6px">${escape(value.values.f0).replace(/\n/g, "<br>")}</div>` : "";
-    return editorialFrame(`<tr><td class="darkmode-1" style="padding:16px 10px 24px;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:20px;color:#666666;text-align:center">${question}<div style="text-align:center">${actions}</div></td></tr>`);
+  // Les liens supplémentaires de mail-50 reprennent le lien du gabarit, à la suite du premier :
+  // cadre, polices et couleurs restent ceux du catalogue, et les intitulés se replient comme lui.
+  function footerLinks(template, value, preview) {
+    const anchor = template.match(/<a\b[^>]*\bhref="\{\{f1\}\}"[^>]*>[\s\S]*?\{\{f2\}\}[\s\S]*?<\/a>/)?.[0];
+    if (!anchor) throw new Error("Gabarit du pied de page non reconnu.");
+    return value.additionalLinks.map(link => {
+      const incomplete = preview && !link.label.trim();
+      const markup = incomplete ? anchor.replace(/\s+href="\{\{f1\}\}"/, "") : anchor;
+      return "&nbsp;| " + markup.replace(/\{\{(f1|f2)\}\}/g, (_, key) => escape(key === "f1" ? link.url : incomplete ? "Intitulé du lien à renseigner" : link.label));
+    }).join("");
   }
   function block(value, context = [], preview = false) {
     M.block(value);
@@ -45,11 +45,16 @@
       incompleteLabels.add(link.label);
       template = template.replace(new RegExp(`(<a\\b[^>]*?)\\s+href="\\{\\{${link.url}\\}\\}"`, "g"), "$1");
     }
-    let result = template.replace(/\{\{(f\d+)\}\}/g, (_, key) => {
+    const fill = part => part.replace(/\{\{(f\d+)\}\}/g, (_, key) => {
       const encoded = escape(incompleteLabels.has(key) ? "Intitulé du lien à renseigner" : value.values[key]);
       return fields.get(key).type === "text" ? encoded.replace(/\n/g, "<br>") : encoded;
     });
-    if (value.component === "mail-50" && value.additionalLinks?.length) result = footerLinks(value, preview);
+    let result;
+    if (value.component === "mail-50" && value.additionalLinks?.length) {
+      // Les intitulés ajoutés sont insérés après le remplissage des champs : ils restent du texte.
+      const extras = footerLinks(definition.semanticTemplate, value, preview), end = template.indexOf("</a>", template.indexOf("{{f2}}")) + "</a>".length;
+      result = fill(template.slice(0, end)) + extras + fill(template.slice(end));
+    } else result = fill(template);
     if (value.source) result += `<table role="presentation" style="text-align:left;text-align:start;width:100%;border-spacing:0;border:0"><tr><td style="padding:0;text-align:center;overflow-wrap:anywhere;word-break:break-word"><table role="presentation" style="text-align:left;text-align:start;width:100%;max-width:600px;margin-left:auto;margin-right:auto"><tr><td style="padding:8px 52px 20px;font-family:Tahoma,Geneva,sans-serif;font-size:14px;overflow-wrap:anywhere;word-break:break-word"><a href="${escape(value.source)}" style="color:#000091">${escape(value.sourceLabel?.trim() || "Consulter la source")}</a></td></tr></table></td></tr></table>`;
     return result;
   }
