@@ -24,10 +24,13 @@ directement son lien ; les autres textes restent éditables dans ce même bloc.
 Charger une nouvelle image rétablit la présentation avec vignette.
 
 Le composant **« Gestion des abonnements »** accepte deux liens supplémentaires
-avec « Ajouter un lien ». Les actions sont regroupées sur une ligne lorsque
-l’espace le permet et reviennent à la ligne sur petit écran. Les adresses et
-intitulés se règlent séparément ; retirer le dernier lien supplémentaire rétablit
-le rendu initial. Un intitulé vide bloque la copie et le téléchargement HTML.
+avec « Ajouter un lien ». Ils suivent le premier lien, séparés par une barre
+verticale, avec le cadre, la police et la couleur du pied de page du catalogue.
+Les actions sont regroupées sur une ligne lorsque l’espace le permet et
+reviennent à la ligne sur petit écran, y compris avec un intitulé long. Les
+adresses et intitulés se règlent séparément ; retirer le dernier lien
+supplémentaire rétablit le rendu initial. Un intitulé vide bloque la copie et
+le téléchargement HTML.
 
 Ces variantes sont prises en charge par cette version de l’atelier. Conserver
 l’export JSON avec les compositions concernées : une ancienne version peut
