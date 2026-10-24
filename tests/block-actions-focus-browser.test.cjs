@@ -106,7 +106,7 @@ test('Retirer met le focus sur le bloc voisin, ou sur le catalogue quand il n’
     assert.equal(focus.select, following.id, 'Retirer doit cibler le bloc suivant dans la liste.');
     assert.equal(focus.pressed, 'true');
     await status(page);
-    assert.equal(await notice(page), `Bloc ${g(middle.label)} retiré. Bloc ${g(following.label)} sélectionné, en position 3 sur ${current.length - 1}.`);
+    assert.equal(await notice(page), `Bloc ${g(middle.label)} retiré. « Annuler le retrait » le rétablit à sa place. Bloc ${g(following.label)} sélectionné, en position 3 sur ${current.length - 1}.`);
 
     // Le dernier bloc retiré, la liste fermée : le bloc précédent reçoit le focus et la liste se rouvre.
     current = await blocks(page);
@@ -117,7 +117,7 @@ test('Retirer met le focus sur le bloc voisin, ou sur le catalogue quand il n’
     focus = await active(page);
     assert.equal(focus.select, previous.id, 'Retirer le dernier bloc doit cibler le bloc précédent.');
     assert.equal(await page.locator('#block-list').evaluate(e => e.closest('details').open), true);
-    assert.equal(await notice(page), `Bloc ${g(last.label)} retiré. Bloc ${g(previous.label)} sélectionné, en position ${current.length - 1} sur ${current.length - 1}.`);
+    assert.equal(await notice(page), `Bloc ${g(last.label)} retiré. « Annuler le retrait » le rétablit à sa place. Bloc ${g(previous.label)} sélectionné, en position ${current.length - 1} sur ${current.length - 1}.`);
 
     current = await blocks(page);
     while (current.length > 1) {
@@ -130,7 +130,7 @@ test('Retirer met le focus sur le bloc voisin, ou sur le catalogue quand il n’
     await click(page, '[data-block-action=remove]'); await saved(page);
     focus = await active(page);
     assert.equal(focus.tag, 'SUMMARY'); assert.equal(focus.text, 'Ajouter un composant');
-    assert.equal(await notice(page), `Bloc ${g(only.label)} retiré. La composition ne contient plus de bloc\u00a0: ajoutez un composant depuis le catalogue.`);
+    assert.equal(await notice(page), `Bloc ${g(only.label)} retiré. « Annuler le retrait » le rétablit à sa place. La composition ne contient plus de bloc\u00a0: ajoutez un composant depuis le catalogue.`);
     assert.deepEqual(observations.errors, []);
   } finally { await browser.close(); }
 });
@@ -142,11 +142,12 @@ test('Annuler les champs invalides met le focus sur le premier champ restauré e
     const [first] = await blocks(page);
     await selectBlock(page, first.id);
     await page.locator('#article-source').fill('http://exemple.invalid/');
-    // Une action refusée par un champ invalide ne remplace pas le bouton : le focus y reste, sans statut de réussite.
+    // Contrat de #37 et garde unique du 24 octobre : l’URL invalide est un brouillon ; l’action est refusée avec le
+    // message du lien, le focus revient sur le champ d’URL, sans statut de réussite.
     const before = await notice(page);
     await click(page, '[data-block-action=down]');
-    await page.locator('#error').filter({hasText: 'Corrigez les champs signalés'}).waitFor();
-    assert.equal((await active(page)).blockAction, 'down');
+    await page.locator('#error').filter({hasText: 'Corrigez ce lien'}).waitFor();
+    assert.equal((await active(page)).id, 'article-source');
     assert.equal(await notice(page), before);
     await click(page, '[data-action=cancel-fields]');
     assert.equal((await active(page)).id, 'article-source', 'Le champ restauré doit recevoir le focus.');
