@@ -27,6 +27,8 @@
   }
   function option(value, label, selected = false) { return `<option value="${esc(value)}" ${selected ? "selected" : ""}>${esc(label)}</option>`; }
   const blockLabel = (b, definition) => b.component === "mail-31" && !b.values.f0 ? "Article sans image" : definition.label;
+  // Les homonymes importés restent distinguables dans les listes : le rang s’ajoute au nom.
+  const labelled = list => list.map(x => { const same = list.filter(y => y.name === x.name); return [x.id, same.length > 1 ? `${x.name} (n° ${same.indexOf(x) + 1})` : x.name]; });
   const blockName = b => blockLabel(b, M.component(b.component));
   function removal() {
     // Un bloc déjà présent (par exemple relu par « Restaurer l’état précédent ») n’est pas proposé une seconde fois.
@@ -37,8 +39,8 @@
   function selections() {
     const doc = A.doc();
     get("documents").innerHTML = A.library.documents.map(d => option(d.id, d.name, d.id === doc.id)).join("");
-    get("saved-templates").innerHTML = option("", "Choisir un modèle enregistré") + A.library.templates.map(t => option(t.id, t.name)).join("");
-    get("identities").innerHTML = option("", "Choisir une identité enregistrée") + A.library.identities.map(i => option(i.id, i.name)).join("");
+    get("saved-templates").innerHTML = option("", "Choisir un modèle enregistré") + labelled(A.library.templates).map(([id, label]) => option(id, label)).join("");
+    get("identities").innerHTML = option("", "Choisir une identité enregistrée") + labelled(A.library.identities).map(([id, label]) => option(id, label)).join("");
     get("library-count").textContent = `${A.library.documents.length} compositions · ${A.library.templates.length} modèles · ${A.library.identities.length} identités`;
     A.Library?.refresh();
   }
