@@ -78,39 +78,44 @@
   }
   // L’export garde le rendu dérivé et ses styles de tête ; les bornes ajoutées en fin de style
   // ne jouent que si une messagerie retire ces styles, dont les règles !important l’emportent sinon.
+  // Un moteur qui lit ces styles sans comprendre min() garde le rendu dérivé : seules min(), width:auto
+  // et des largeurs identiques à la conception sont ajoutées hors des règles !important de tête.
   // Contrairement à la copie, il conserve les largeurs, les proportions des colonnes et les logos.
   function exportHtml(value) {
     const doc = new DOMParser().parseFromString(html(value), "text/html");
     const add = (element, css) => element.setAttribute("style", (element.getAttribute("style") || "") + ";" + css);
     const pixels = width => /^\d+(?:\.\d+)?px$/.test(width) ? Number.parseFloat(width) : 0;
     const imageWidth = image => pixels(image.style.width) || (!image.style.width && /^\d+$/.test(image.getAttribute("width") || "") ? Number(image.getAttribute("width")) : 0);
+    // Les images des colonnes tiennent dans leur colonne fixe ; seules les autres images fixes sont bornées.
+    const bounded = [...doc.images].filter(image => imageWidth(image) && !image.closest("td[data-mail-column]"));
     // Une table de largeur fixe s’élargit jusqu’à l’image fixe qu’elle contient : garder cette largeur rendue.
     const rendered = new Map();
-    for (const image of doc.images) {
-      const width = imageWidth(image);
+    for (const image of bounded) {
       let table = image.parentElement.closest("table");
       while (table && !pixels(table.style.width)) table = table.parentElement?.closest("table");
-      if (width && table && width > pixels(table.style.width)) rendered.set(table, Math.max(rendered.get(table) || 0, width));
+      if (table && imageWidth(image) > pixels(table.style.width)) rendered.set(table, Math.max(rendered.get(table) || 0, imageWidth(image)));
     }
     // WebKit ignore max-width sur une table de largeur fixe : min() la borne à son conteneur.
     for (const table of doc.querySelectorAll("table")) {
       const width = pixels(table.style.width);
       if (width) add(table, (pixels(table.style.minWidth) ? "min-width:0;" : "") + "width:min(100%," + (rendered.get(table) || width) + "px);");
     }
-    for (const cell of doc.querySelectorAll("td")) {
-      const width = pixels(cell.style.width), table = cell.closest("[data-mail-basis]"), basis = Number(table?.dataset.mailBasis);
-      if (!width) continue;
-      // Colonnes empilables : la même proportion, exacte à la largeur de conception ; un arrondi la décale sous WebKit.
-      if (cell.hasAttribute("data-mail-column")) {
-        if (table.classList.contains("mail-columns-stack") && basis > 0) add(cell, "width:" + width / basis * 100 + "%;");
-      } else if (width > 3) add(cell, "width:min(100%," + width + "px);");
+    for (const cell of doc.querySelectorAll("td:not([data-mail-column]):not([data-mail-gap])")) {
+      const width = pixels(cell.style.width);
+      if (width > 3) add(cell, "width:min(100%," + width + "px);");
     }
-    for (const image of doc.images) {
-      const width = imageWidth(image), limit = image.style.maxWidth, height = image.getAttribute("height");
-      if (!width) continue;
-      add(image, "max-width:" + (limit && limit !== "none" ? "min(" + limit + ",100%)" : "100%") + ";");
-      // Une hauteur d’attribut fixe déformerait l’image réduite : garder le cadre du gabarit.
-      if (/^\d+$/.test(height || "") && !image.style.height) add(image, "height:auto;aspect-ratio:" + width + "/" + height + ";");
+    // Colonnes empilables : la colonne d’image garde sa largeur, le texte prend le reste, la gouttière est fixée.
+    // À la largeur de conception, le partage reste celui du gabarit.
+    for (const table of doc.querySelectorAll("table.mail-columns-stack")) {
+      const columns = [...table.querySelectorAll(":scope>tbody>tr>td[data-mail-column]")];
+      const gutter = Number(table.dataset.mailBasis) - columns.reduce((sum, cell) => sum + pixels(cell.style.width), 0);
+      if (!columns.every(cell => pixels(cell.style.width)) || !(gutter >= 0)) continue;
+      for (const cell of columns) if (![...cell.querySelectorAll("img")].some(imageWidth)) add(cell, "width:auto;");
+      for (const gap of table.querySelectorAll(":scope>tbody>tr>td[data-mail-gap]")) add(gap, "width:" + gutter + "px;");
+    }
+    for (const image of bounded) {
+      const limit = image.style.maxWidth;
+      add(image, "max-width:min(" + (limit && limit !== "none" ? limit : imageWidth(image) + "px") + ",100%);");
     }
     for (const element of doc.querySelectorAll(".hide-white")) add(element, "display:none;");
     return "<!doctype html>" + doc.documentElement.outerHTML;
