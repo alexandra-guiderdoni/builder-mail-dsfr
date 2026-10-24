@@ -1,8 +1,62 @@
 const path = require('node:path');
 const fs = require('node:fs/promises');
 const assert = require('node:assert/strict');
-const {chromium} = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
-const root = path.resolve(__dirname, '..'), evidence = process.env.MAIL_BUILDER_EVIDENCE || path.join(root, 'evidence/application');
+const playwright = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
+const root = path.resolve(__dirname, '..');
+const engines = ['chromium', 'webkit', 'firefox'];
+const engineName = process.env.MAIL_BUILDER_ENGINE || 'chromium';
+if (!engines.includes(engineName)) throw new Error(`Moteur inconnu : ${engineName} (attendu : ${engines.join(', ')}).`);
+const testFile = path.basename(process.argv[1] || 'inconnu');
+// Journal des preuves non natives (MAIL_BUILDER_NOTES, fixé par tests/run-engines.cjs) : une ligne JSON par constat.
+const note = entry => { if (process.env.MAIL_BUILDER_NOTES) require('node:fs').appendFileSync(process.env.MAIL_BUILDER_NOTES, JSON.stringify({engine: engineName, file: testFile, ...entry}) + '\n'); };
+// Seul Chromium accorde clipboard-read et clipboard-write à Playwright ; les autres moteurs refusent la permission elle-même.
+const nativePermissions = new Set(engineName === 'chromium' ? ['clipboard-read', 'clipboard-write'] : []);
+const portablePermissions = permissions => permissions?.filter(p => !/^clipboard-/.test(p) || nativePermissions.has(p));
+// Hors Chromium, aucun collage réel n'est automatisable : l'écriture de l'application reste exécutée pour de bon, mais la
+// relecture rend les éléments enregistrés à l'écriture. C'est une interception, jamais un collage : chaque usage est journalisé.
+function clipboardInterception() {
+  const proto = window.Clipboard?.prototype; if (!proto || window.__mailBuilderClipboard) return;
+  window.__mailBuilderClipboard = {written: null};
+  const write = proto.write;
+  proto.write = async function (items) { window.__mailBuilderClipboard.written = items; try { window.mailBuilderNote({kind: 'clipboard-write-recorded'}); } catch {} return write.call(this, items); };
+  proto.read = async function () { try { window.mailBuilderNote({kind: 'clipboard-read-intercepted'}); } catch {} if (!window.__mailBuilderClipboard.written) throw new DOMException('Aucune écriture à relire.', 'NotAllowedError'); return window.__mailBuilderClipboard.written; };
+}
+async function prepareContext(context) {
+  if (nativePermissions.size) return context;
+  await context.exposeBinding('mailBuilderNote', (source, entry) => note(entry));
+  await context.addInitScript(clipboardInterception);
+  return context;
+}
+// `chromium` reste le nom historique importé par les tests : il désigne le moteur choisi par MAIL_BUILDER_ENGINE.
+const chromium = {
+  name: engineName,
+  async launch(options) {
+    const browser = await playwright[engineName].launch(options), newContext = browser.newContext.bind(browser);
+    browser.newContext = async (contextOptions = {}) => prepareContext(await newContext({...contextOptions, ...(contextOptions.permissions ? {permissions: portablePermissions(contextOptions.permissions)} : {})}));
+    return browser;
+  }
+};
+// Arbre d'accessibilité natif : il passe par CDP, donc Chromium seulement. Ailleurs ces aides rendent null et l'appelant
+// s'appuie sur la structure ARIA que Playwright calcule de la même façon dans les trois moteurs (ariaSnapshot).
+const nativeAx = engineName === 'chromium';
+async function nativeAxTree(context, target) {
+  if (!nativeAx) return null;
+  const cdp = await context.newCDPSession(target);
+  try { return (await cdp.send('Accessibility.getFullAXTree')).nodes; } finally { await cdp.detach(); }
+}
+async function nativeAxNode(page, selector) {
+  if (!nativeAx) return null;
+  const cdp = await page.context().newCDPSession(page);
+  try {
+    const {result} = await cdp.send('Runtime.evaluate', {expression: `document.querySelector(${JSON.stringify(selector)})`});
+    const {node} = await cdp.send('DOM.describeNode', {objectId: result.objectId});
+    const {nodes} = await cdp.send('Accessibility.getPartialAXTree', {backendNodeId: node.backendNodeId});
+    return nodes.find(n => n.backendDOMNodeId === node.backendNodeId) ?? null;
+  } finally { await cdp.detach(); }
+}
+const ariaHeadings = async target => (await target.locator('body').ariaSnapshot()).split('\n').flatMap(line => { const m = /^\s*- heading "(.*)" \[level=(\d)\]/.exec(line); return m ? [{level: Number(m[2]), text: m[1].trim()}] : []; });
+// Les reçus Chromium alimentent les scripts d'audit : un autre moteur écrit ailleurs et ne les écrase jamais.
+const evidence = process.env.MAIL_BUILDER_EVIDENCE || path.join(root, engineName === 'chromium' ? 'evidence/application' : `evidence/application-${engineName}`);
 const portable = 'file://' + path.join(root, 'app/distribution/portable.html');
 const click = async (page, selector) => { const control = page.locator(selector); await control.waitFor({state: 'visible'}); await control.focus(); await control.press('Enter'); };
 async function open(browser, contextOptions = {}, beforeNavigate) {
@@ -35,4 +89,4 @@ async function download(page, selector, filename) {
 async function selectBlock(page, id) { await click(page, `[data-select="${id}"]`); }
 const state = page => page.evaluate(() => JSON.parse(JSON.stringify(MailBuilder.library)));
 const store = page => page.evaluate(() => MailBuilder.Storage.load());
-module.exports = {root, evidence, portable, click, open, enterEditor, saved, expand, download, selectBlock, state, store, chromium, fs, assert};
+module.exports = {engines, engineName, note, nativeAx, nativeAxTree, nativeAxNode, ariaHeadings, root, evidence, portable, click, open, enterEditor, saved, expand, download, selectBlock, state, store, chromium, fs, assert};

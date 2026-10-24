@@ -60,6 +60,23 @@ npm test
 
 Les scénarios navigateur créent des contextes isolés, téléchargent des fichiers réels et produisent des preuves sous `evidence/application/`, ignorées par Git. `MAIL_BUILDER_EVIDENCE` peut désigner un autre répertoire pour préserver une campagne précédente. Le parcours presse-papiers Chromium utilise les permissions du profil de recette. Les pannes de quota et les bibliothèques inconnues sont injectées dans ce seul profil.
 
+### Suite navigateur multi-moteur
+
+`npm test` reste la suite de référence sous Chromium. `npm run test:engines` rejoue les fichiers qui lancent un navigateur sur Chromium, WebKit et Firefox (Playwright), un moteur après l'autre. Options : `--engines=webkit,firefox`, `--files=<fichier>.test.cjs,...`, `--json=<chemin>` pour garder le rapport structuré. Le moteur se choisit pour un fichier seul avec `MAIL_BUILDER_ENGINE=webkit node --test tests/<fichier>`. Le point d'extension est `tests/browser-support.cjs` ; le nom `chromium` importé par les tests désigne désormais le moteur choisi.
+
+Le rapport sépare quatre issues, jamais mélangées :
+
+- les échecs produit non expliqués : tout échec absent du registre `tests/engine-expectations.json` ; ils font échouer la commande (code 1) ;
+- les échecs produit connus : inscrits au registre avec leur raison et, quand elle existe, l'issue qui les porte (par exemple #39 pour la largeur sous WebKit) ; ils sont listés mais ne font pas échouer la commande ;
+- les limitations d'automatisation : échecs inscrits au registre avec la classe `automation`, et moteurs indisponibles ;
+- les tests ignorés explicitement (`skip` avec raison).
+
+Un moteur dont le navigateur Playwright n'est pas installé est rapporté « indisponible, non exécuté » et la commande rend le code 2 : il n'est jamais compté comme réussi. Le téléchargement d'un navigateur reste une décision explicite (`npx playwright install webkit firefox`, avec la version épinglée) ; la commande n'en installe aucun. Playwright exige son propre build de Firefox : le Firefox natif de `/Applications` n'est pas utilisé par cette commande ; `tests/firefox-support.mjs` le pilote séparément par WebDriver BiDi.
+
+Les oracles propres à Chromium sont remplacés par des propriétés vraies dans les trois moteurs. L'arbre d'accessibilité natif (CDP) ne sert qu'à renforcer le test sous Chromium ; ailleurs le test lit les attributs ARIA, le focus du DOM et `ariaSnapshot()`. Les reçus des autres moteurs s'écrivent sous `evidence/application-<moteur>/` et n'écrasent jamais ceux de Chromium.
+
+Presse-papiers : seul Chromium accorde `clipboard-read` à Playwright, donc seul Chromium relit un vrai presse-papiers. Sous WebKit et Firefox, l'écriture de l'application s'exécute pour de bon, mais la relecture rend les éléments enregistrés à l'écriture. C'est une interception, pas un collage : le rapport la signale fichier par fichier (« relecture du presse-papiers par interception, jamais un collage réel »). Aucun de ces tests ne prouve ce qu'une messagerie reçoit : voir #13.
+
 Les installations et résultats locaux ShipGuard sous `visual-tests/` restent aussi ignorés : ils contiennent une copie de l’outillage et des chemins propres à la campagne. La suite produit reproductible et versionnée est sous `tests/`. Le compte rendu d’audit conserve les erreurs du plugin et faux liens du crawler ; ils ne sont pas transformés en défauts produit.
 
 Pour les défilements internes (#28), voir la [recette ciblée](RECETTE-DEFILEMENT.md). Le catalogue natif reçoit une taille égale au nombre de résultats ; les textareas de contenu sont mesurés à la création, à la saisie et au changement de largeur, y compris après masquage. Ne pas étendre cette adaptation au JSON technique.
