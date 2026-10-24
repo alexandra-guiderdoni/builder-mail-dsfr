@@ -86,7 +86,7 @@
       // Le bloc le plus lourd est celui dont le rendu pèse le plus, images comprises.
       const sizes = value.blocks.map(block => new TextEncoder().encode(A.Render.block(block)).byteLength), heaviest = sizes.indexOf(Math.max(...sizes)), block = value.blocks[heaviest];
       const first = M.component(block.component).fields.find(f => f.type === "image") || M.component(block.component).fields[0];
-      found.push({rule: "weight", block: block.id, field: first ? `field-${first.key}` : "", message: `Courriel de ${kio(weight.bytes)} Kio, au-delà du repère prudent de 90 Kio : Gmail peut tronquer un message plus lourd. Le bloc ${heaviest + 1} « ${M.component(block.component).label} » est le plus lourd.`});
+      found.push({rule: "weight", block: block.id, field: first ? `field-${first.key}` : "", message: `Courriel de ${kio(weight.bytes)} Kio, au-delà du repère prudent de 90 Kio ; Gmail peut tronquer un message vers 102 Kio, sans garantie. Le bloc ${heaviest + 1} « ${M.component(block.component).label} » est le plus lourd.`});
     }
     return found.sort((a, b) => value.blocks.findIndex(x => x.id === a.block) - value.blocks.findIndex(x => x.id === b.block) || RULES.indexOf(a.rule) - RULES.indexOf(b.rule));
   }
