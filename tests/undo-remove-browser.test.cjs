@@ -96,9 +96,10 @@ test('dernier bloc et liens supplémentaires restaurés ; seul le retrait le plu
     await remove(page, paragraph.id);
     await remove(page, title.id);
     assert.equal(await page.locator('#undo-remove').textContent(), `Annuler le retrait du bloc ${g('Titre principal')}`);
+    // Contrat de #37 : l’URL invalide est un brouillon ; la garde refuse l’annulation avec le message du lien.
     await page.locator('#article-source').fill('adresse sans protocole');
     await click(page, '#undo-remove');
-    await page.locator('#error').filter({hasText: 'Corrigez les champs signalés'}).waitFor();
+    await page.locator('#error').filter({hasText: 'Corrigez ce lien'}).waitFor();
     assert.deepEqual(await ids(page), [article.id, footer.id]);
     assert.equal(await page.locator('#undo-remove').isVisible(), true, 'Une annulation refusée doit rester disponible.');
     await click(page, '[data-action=cancel-fields]');
