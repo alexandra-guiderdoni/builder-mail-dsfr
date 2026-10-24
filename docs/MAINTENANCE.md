@@ -38,7 +38,7 @@ L’application livrée est statique et autonome. Python et Node.js sont des out
 | `scripts/interchange.py` | Schéma JSON générique, exemple importable et bibliothèque de qualification. |
 | `tests/`, `scripts/recipe_firefox.mjs`, `scripts/recipe_installation.cjs` | Vérifications automatiques, recette Firefox et installation PWA de recette. |
 
-Le parseur SNUM utilisé est la copie conservée sous `prototype/reference/snum-packet.js` ; seule sa fonction `parse` est appelée dans la page SNUM dédiée. Cette copie locale contrôle maintenant la cohérence du jour de semaine avec la date (#24) ; le projet SNUM source reste intact. Le parseur n’est pas assemblé dans le builder générique. L’ancien prototype et ses distributions restent indépendants. Ne pas éditer les HTML générés pour corriger le produit.
+Le parseur SNUM utilisé est la copie conservée sous `prototype/reference/snum-packet.js` ; seule sa fonction `parse` est appelée dans la page SNUM dédiée. Cette copie locale contrôle maintenant la cohérence du jour de semaine avec la date (#24) ; le projet SNUM source reste intact. Sa provenance a deux niveaux (empreinte amont historique `sha256`, empreinte de la copie adaptée `adapted_sha256`) et `npm run check` contrôle la seconde. Le parseur n’est pas assemblé dans le builder générique. L’ancien prototype et ses distributions restent indépendants. Ne pas éditer les HTML générés pour corriger le produit.
 
 Les gabarits canoniques du catalogue restent inchangés. `scripts/catalogue.py` produit aussi une adaptation sémantique et les 32 champs de titre qualifiés ; `render.js` calcule leurs niveaux selon le contexte de la composition. Modifier ces champs exige de vérifier la référence, les titres frères, les parents absents ou vides, les sorties réelles, le contrat v1 et les comparaisons visuelles des 52 composants. L’empreinte du catalogue reste celle du contrat canonique.
 
@@ -56,7 +56,7 @@ npm run check
 npm test
 ```
 
-`npm run check` compare les octets générés aux sources et contrôle aussi que le prototype conservé est reproductible. Les tests utilisent le Chromium attendu par Playwright. Si ce navigateur manque sur le poste de développement, le préparer explicitement avec le CLI de la version épinglée (`npx --no-install playwright install chromium`) ; cette préparation n’est pas une installation sur le poste métier.
+`npm run check` contrôle l’empreinte de la copie SNUM adaptée, compare les octets générés aux sources et contrôle aussi que le prototype conservé est reproductible. Les tests utilisent le Chromium attendu par Playwright. Si ce navigateur manque sur le poste de développement, le préparer explicitement avec le CLI de la version épinglée (`npx --no-install playwright install chromium`) ; cette préparation n’est pas une installation sur le poste métier.
 
 Les scénarios navigateur créent des contextes isolés, téléchargent des fichiers réels et produisent des preuves sous `evidence/application/`, ignorées par Git. `MAIL_BUILDER_EVIDENCE` peut désigner un autre répertoire pour préserver une campagne précédente. Le parcours presse-papiers Chromium utilise les permissions du profil de recette. Les pannes de quota et les bibliothèques inconnues sont injectées dans ce seul profil.
 
