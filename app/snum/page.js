@@ -33,7 +33,7 @@
     get("preview").src = previewURL; get("preview").hidden = false; get("empty").hidden = true;
   }));
   get("export-json").addEventListener("click", () => attempt(() => { A.State.guard(); A.Files.json(A.Model.document(current), "snum.composition.courriel.json"); A.notice("Composition générique proposée au téléchargement. Importez ce fichier dans le builder pour poursuivre l’édition."); }));
-  get("export-html").addEventListener("click", () => attempt(() => { A.State.guard(); A.Files.download(A.Render.html(current), "text/html;charset=utf-8", "snum.courriel.html"); }));
+  get("export-html").addEventListener("click", () => attempt(() => { A.State.guard(); A.Files.download(A.Render.exportHtml(current), "text/html;charset=utf-8", "snum.courriel.html"); }));
   get("copy").addEventListener("click", () => attempt(A.Files.copy));
   A.ready = true;
 })();

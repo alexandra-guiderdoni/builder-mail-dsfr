@@ -76,6 +76,47 @@
     M.document(value);
     return [value.subject, ...value.blocks.map(b => [...M.component(b.component).fields.map(f => f.type === "image" ? "" : b.values[f.key]), ...(b.additionalLinks || []).flatMap(link => [link.label, link.url]), ...(b.source && b.sourceLabel?.trim() ? [b.sourceLabel.trim()] : []), b.source].filter(Boolean).join("\n"))].join("\n\n");
   }
+  // L’export garde le rendu dérivé et ses styles de tête ; les bornes ajoutées en fin de style
+  // ne jouent que si une messagerie retire ces styles, dont les règles !important l’emportent sinon.
+  // Un moteur qui lit ces styles sans comprendre min() garde le rendu dérivé : seules min(), width:auto
+  // et des largeurs identiques à la conception sont ajoutées hors des règles !important de tête.
+  // Contrairement à la copie, il conserve avec ces styles les largeurs, les proportions des colonnes et les logos.
+  function exportHtml(value) {
+    const doc = new DOMParser().parseFromString(html(value), "text/html");
+    const add = (element, css) => element.setAttribute("style", (element.getAttribute("style") || "") + ";" + css);
+    const pixels = width => /^\d+(?:\.\d+)?px$/.test(width) ? Number.parseFloat(width) : 0;
+    const imageWidth = image => pixels(image.style.width) || (!image.style.width && /^\d+$/.test(image.getAttribute("width") || "") ? Number(image.getAttribute("width")) : 0);
+    // Les images des colonnes tiennent dans leur colonne fixe ; seules les autres images fixes sont bornées.
+    const bounded = [...doc.images].filter(image => imageWidth(image) && !image.closest("td[data-mail-column]"));
+    // Une table de largeur fixe s’élargit jusqu’à l’image fixe qu’elle contient : garder cette largeur rendue.
+    const rendered = new Map();
+    for (const image of bounded) {
+      let table = image.parentElement.closest("table");
+      while (table && !pixels(table.style.width)) table = table.parentElement?.closest("table");
+      if (table && imageWidth(image) > pixels(table.style.width)) rendered.set(table, Math.max(rendered.get(table) || 0, imageWidth(image)));
+    }
+    // WebKit ignore max-width sur une table de largeur fixe : min() la borne à son conteneur.
+    for (const table of doc.querySelectorAll("table")) {
+      const width = pixels(table.style.width);
+      if (width) add(table, (pixels(table.style.minWidth) ? "min-width:0;" : "") + "width:min(100%," + (rendered.get(table) || width) + "px);");
+    }
+    // Bornée par min(), une table n’est pas élargie par ses cellules de largeur fixe, laissées inchangées.
+    // Colonnes empilables : la colonne d’image garde sa largeur, le texte prend le reste, la gouttière est fixée.
+    // À la largeur de conception, le partage reste celui du gabarit.
+    for (const table of doc.querySelectorAll("table.mail-columns-stack")) {
+      const columns = [...table.querySelectorAll(":scope>tbody>tr>td[data-mail-column]")];
+      const gutter = Number(table.dataset.mailBasis) - columns.reduce((sum, cell) => sum + pixels(cell.style.width), 0);
+      if (!columns.every(cell => pixels(cell.style.width)) || !(gutter >= 0)) continue;
+      for (const cell of columns) if (![...cell.querySelectorAll("img")].some(imageWidth)) add(cell, "width:auto;");
+      for (const gap of table.querySelectorAll(":scope>tbody>tr>td[data-mail-gap]")) add(gap, "width:" + gutter + "px;");
+    }
+    for (const image of bounded) {
+      const limit = image.style.maxWidth;
+      add(image, "max-width:min(" + (limit && limit !== "none" ? limit : imageWidth(image) + "px") + ",100%);");
+    }
+    for (const element of doc.querySelectorAll(".hide-white")) add(element, "display:none;");
+    return "<!doctype html>" + doc.documentElement.outerHTML;
+  }
   function clipboardHtml(value) {
     const markup = html(value), doc = new DOMParser().parseFromString(markup, "text/html");
     const add = (element, css) => element.setAttribute("style", (element.getAttribute("style") || "") + ";" + css);
@@ -126,5 +167,5 @@
     for (const element of doc.querySelectorAll(".hide-black")) add(element, "display:block;");
     return "<!doctype html>" + doc.documentElement.outerHTML;
   }
-  A.Render = Object.freeze({escape, block, body, html, plain, clipboardHtml, linkIssues, assertOutput});
+  A.Render = Object.freeze({escape, block, body, html, plain, exportHtml, clipboardHtml, linkIssues, assertOutput});
 })();
