@@ -64,7 +64,7 @@
       A.State.guard();
       if (action === "open") return open(id);
       if (action === "duplicate") return duplicate(id);
-      if (action === "export") { A.Files.json(M.document(find(id)), "composition.courriel.json"); A.notice("Composition choisie proposée au téléchargement avec ses images."); return; }
+      if (action === "export") { A.Files.json(M.document(find(id)), A.Files.exportName(find(id).name, "courriel.json")); A.notice("Composition choisie proposée au téléchargement avec ses images."); return; }
       ask(action, id);
     });
   });
