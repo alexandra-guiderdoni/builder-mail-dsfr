@@ -34,10 +34,10 @@
     "cancel-fields": () => { A.UI.clearFieldErrors(); A.invalid.clear(); A.error(""); A.UI.refresh(); A.notice("Champs invalides annulés ; les dernières valeurs valides sont affichées."); },
     "save-now": A.State.save,
     "recover": A.State.recover,
-    "export-document": () => { A.State.guard(); A.Files.json(M.document(A.doc()), "composition.courriel.json"); A.notice("Composition proposée au téléchargement avec ses images."); },
-    "export-library": () => { A.State.guard(); A.Files.json(M.library(A.library), "bibliotheque.courriels.json"); A.notice("Bibliothèque proposée au téléchargement, avec modèles et identités."); },
+    "export-document": () => { A.State.guard(); A.Files.json(M.document(A.doc()), A.Files.exportName(A.doc().name, "courriel.json")); A.notice("Composition proposée au téléchargement avec ses images."); },
+    "export-library": () => { A.State.guard(); A.Files.json(M.library(A.library), A.Files.exportName("bibliotheque-courriels", "json")); A.notice("Bibliothèque proposée au téléchargement, avec modèles et identités."); },
     "export-stored": async () => { const record = await A.Storage.load(); if (!record) throw new Error("Aucune donnée enregistrée."); A.Files.json(record, "recuperation.stockage.json"); A.notice("Copie brute du stockage proposée au téléchargement pour récupération."); },
-    "export-mail": () => { A.State.guard(); A.Files.download(A.Render.html(A.doc()), "text/html;charset=utf-8", "courriel.html"); A.notice("Courriel proposé au téléchargement."); },
+    "export-mail": () => { A.State.guard(); A.Files.download(A.Render.html(A.doc()), "text/html;charset=utf-8", A.Files.exportName(A.doc().name, "html")); A.notice("Courriel proposé au téléchargement."); },
     "copy": A.Files.copy,
     "example-json": () => { A.State.guard(); A.Files.json(M.create("Exemple de composition", [5, 19, 40]), "exemple.courriel.json"); A.notice("Exemple JSON proposé au téléchargement. Votre composition actuelle est conservée."); },
     "json-import": async () => {
