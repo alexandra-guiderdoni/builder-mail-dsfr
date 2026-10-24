@@ -53,6 +53,7 @@ def build():
                 "state.js",
                 "preview.js",
                 "view.js",
+                "images.js",
                 "files.js",
                 "library-actions.js",
                 "library.js",

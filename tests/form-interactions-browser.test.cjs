@@ -82,8 +82,10 @@ test('les erreurs réelles des 13 URL, du nom et de la source conservent les don
         const selector = `#field-${f.key}`, before = await doc(page);
         for (const value of ['', 'http://exemple.invalid/', 'https://recette:synthetique@exemple.invalid/']) {
           await page.locator(selector).fill(value);
-          const current = await field(page, selector, true);
-          assert.equal(current.invalid, 'true'); assert(current.descriptions.some(d => d.visible && /HTTPS/.test(d.text)));
+          if (value === '') assert.equal(await page.locator(selector).getAttribute('aria-invalid'), null, 'Aucune erreur pendant la frappe.');
+          await page.locator(selector).blur();
+          const current = await field(page, selector, true), expectedError = value === '' ? /incomplète/ : value.startsWith('http:') ? /Protocole interdit/ : /Identifiants interdits/;
+          assert.equal(current.invalid, 'true'); assert(current.descriptions.some(d => d.visible && expectedError.test(d.text)));
           assert.deepEqual(await doc(page), before, 'Une saisie refusée ne remplace pas le document valide.');
           observations.push({scope: block.component, key: f.key, step: 'rejected', ...current});
         }
@@ -112,9 +114,9 @@ test('les erreurs réelles des 13 URL, du nom et de la source conservent les don
     await click(page, `[data-select="${sourceBlock.id}"]`);
     const beforeSource = await doc(page);
     for (const value of ['http://exemple.invalid/', 'https://recette:synthetique@exemple.invalid/', 'adresse-incomplete']) {
-      await page.locator('#article-source').fill(value);
-      const current = await field(page, '#article-source', true);
-      assert.equal(current.invalid, 'true'); assert(current.descriptions.some(d => d.visible && /HTTPS/.test(d.text)));
+      await page.locator('#article-source').fill(value); await page.locator('#article-source').blur();
+      const current = await field(page, '#article-source', true), expectedError = value.startsWith('http:') ? /Protocole interdit/ : value.includes('@') ? /Identifiants interdits/ : /incomplète/;
+      assert.equal(current.invalid, 'true'); assert(current.descriptions.some(d => d.visible && expectedError.test(d.text)));
       assert.deepEqual(await doc(page), beforeSource); observations.push({step: 'optional-source-rejected', ...current});
       assert.equal(await page.locator('#article-source-label').getAttribute('aria-describedby'), 'source-label-help');
     }

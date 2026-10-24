@@ -14,6 +14,8 @@ OUT = (
     ROOT / os.environ.get("BUILDER_AUDIT_OUTPUT", "evidence/accessibilite-20261022")
 ) / "supplements"
 sys.path.insert(0, str(AY11 / "src"))
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from audit_expectations import ScenarioError, scene_expectation_error, select_scenes
 from ay11.cli import build_parser
 from audit_server_lifecycle import RecipeServer, install_cleanup
 
@@ -69,6 +71,10 @@ def fill(selector, value):
     return {"type": "fill", "selector": selector, "value": value}
 
 
+def press(selector, key):
+    return {"type": "press", "selector": selector, "key": key}
+
+
 OUT.mkdir(parents=True, exist_ok=True)
 # La campagne devient responsable du serveur qu’elle lance ; un serveur déjà présent n’est jamais arrêté.
 server = RecipeServer(int(os.environ.get("BUILDER_AUDIT_PORT", "4187")), ROOT, os.environ)
@@ -106,8 +112,13 @@ scenes = [
     (
         "invalid",
         "portable.html",
-        editor + [fill("#article-source", "http://exemple.invalid/")],
-        "Ce champ n’est pas sauvegardé.",
+        # L’erreur d’une URL s’affiche au départ du champ (issue #37) : Tab quitte le champ.
+        editor
+        + [
+            fill("#article-source", "http://exemple.invalid/"),
+            press("#article-source", "Tab"),
+        ],
+        "Protocole interdit : seul HTTPS est accepté",
     ),
     ("dialog", "portable.html", dialog, "Enregistrer le nom"),
     (
@@ -151,10 +162,10 @@ if os.environ.get("BUILDER_AUDIT_ALL_PAGES") == "1":
         start=1,
     ):
         scenes.append((f"P{index + 3:02}", f"mail/{index:02}.html", [], expectation))
-if os.environ.get("BUILDER_AUDIT_SCENES"):
-    selected = set(os.environ["BUILDER_AUDIT_SCENES"].split(","))
-    assert selected <= {scene[0] for scene in scenes}
-    scenes = [scene for scene in scenes if scene[0] in selected]
+try:
+    scenes = select_scenes(scenes, os.environ.get("BUILDER_AUDIT_SCENES"))
+except ScenarioError as error:
+    sys.exit(f"BUILDER_AUDIT_SCENES : {error}")
 parser = build_parser()
 commands = next(a for a in parser._actions if isinstance(a, argparse._SubParsersAction))
 probes = next(
@@ -219,6 +230,16 @@ for scene, page, actions, expectation in scenes:
         )
         continue
     collection = next(directory.glob("*browser-collection.json"))
+    problem = scene_expectation_error(scene, actions, expectation, collection)
+    if problem:
+        print(problem, file=sys.stderr, flush=True)
+        inventory.append(
+            {"scene": scene, "status": "expectation_failed", "reason": problem}
+        )
+        (OUT / "inventory.json").write_text(
+            json.dumps(inventory, ensure_ascii=False, indent=2) + "\n"
+        )
+        continue
     html = Path(json.loads(collection.read_text())["rendered_html_path"])
     for family, probe in probes.choices.items():
         options = [a for a in probe._actions if a.dest not in ["help", "json"]]
@@ -261,9 +282,17 @@ print(
             "commands": len(manifest),
             "inventory_entries": len(inventory),
             "failed_commands": sum(item["exit_code"] != 0 for item in manifest),
+            "expectation_failures": sum(
+                item["status"] == "expectation_failed" for item in inventory
+            ),
             "produces_conformity": False,
         }
     ),
     flush=True,
 )
-sys.exit(1 if any(item["exit_code"] for item in manifest) else 0)
+sys.exit(
+    1
+    if any(item["exit_code"] for item in manifest)
+    or any(item["status"] == "expectation_failed" for item in inventory)
+    else 0
+)
