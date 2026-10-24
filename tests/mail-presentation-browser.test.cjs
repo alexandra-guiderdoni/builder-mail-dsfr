@@ -1,5 +1,5 @@
 const test = require('node:test'), path = require('node:path');
-const {root, evidence, open, expand, click, saved, chromium, fs, assert} = require('./browser-support.cjs');
+const {root, evidence, open, expand, click, saved, confirmChecks, chromium, fs, assert} = require('./browser-support.cjs');
 
 function inspect() {
   const forbidden = new Set('align alink background bgcolor border cellpadding cellspacing char charoff clear color compact frameborder hspace link marginheight marginwidth text valign vlink vspace size width height'.split(' '));
@@ -24,7 +24,7 @@ function inspect() {
     }
   }
   const words = [], text = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
-  while (text.nextNode()) {const value = text.currentNode.textContent.replace(/\s+/g,' ').trim(); if (value && !text.currentNode.parentElement.closest('[style*="mso-hide:all"]')) words.push(value);} // #41 : le pré-en-tête masqué n'est pas du texte affiché
+  while (text.nextNode()) {const value = text.currentNode.textContent.replace(/\s+/g,' ').trim(); if (value) words.push(value);}
   return {attributes, overflow: document.documentElement.scrollWidth > innerWidth + 1, overlaps,
     floats: [...document.querySelectorAll('table')].filter(e => getComputedStyle(e).float !== 'none').length,
     text: words.join(' '),
@@ -67,8 +67,8 @@ test('52 composants : présentation CSS, bornes responsive, contenus longs, espa
       const before = await display.evaluate(inspect), png = await display.screenshot({fullPage: true});
       await display.setContent(doc.normal.html); await loaded(display);
       const current = await display.evaluate(inspect), after = await display.screenshot({fullPage: true}), name = `${doc.component}-normal-${scheme}-${width}`;
-      check(current, name); assert.equal(current.text, doc.component === 0 ? '' : before.text, name); // #41 : mail-00 est masqué, la référence l'affiche assert.deepEqual(current.links, before.links, name);
-      const identical = png.equals(after), intendedChange = [601, 619].includes(width) || (doc.component === 48 && width === 320) || doc.component === 0; // #41 : pré-en-tête masqué
+      check(current, name); assert.equal(current.text, before.text, name); assert.deepEqual(current.links, before.links, name);
+      const identical = png.equals(after), intendedChange = [601, 619].includes(width) || (doc.component === 48 && width === 320) || doc.component === 0 /* #41 : pré-en-tête masqué */ || (scheme === 'dark' && [7, 51].includes(doc.component)); // #42 : texte éclairci en mode sombre
       if (!identical) {await fs.writeFile(path.join(output, name + '-before.png'), png); await fs.writeFile(path.join(output, name + '-after.png'), after);}
       assert(identical || intendedChange, name + ' : différence visuelle inattendue');
       await display.setContent(doc.normal.copy); await display.locator('style,link').evaluateAll(nodes => nodes.forEach(e => e.remove())); await loaded(display);
@@ -105,7 +105,7 @@ test('la copie système des 52 composants conserve le HTML strict, les styles Of
     await expand(page, 'Fichiers et récupération');
     await page.locator('#project-input').setInputFiles({name:'presentation.courriel.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(packet))});
     await page.locator('#notice').filter({hasText:'Import ajouté à la bibliothèque'}).waitFor(); await saved(page);
-    await click(page, '[data-action=copy]'); await page.locator('#notice').filter({hasText:'Courriel copié en HTML et texte.'}).waitFor();
+    await click(page, '[data-action=copy]'); await confirmChecks(page); await page.locator('#notice').filter({hasText:'Courriel copié en HTML et texte.'}).waitFor();
     const copied = await page.evaluate(async () => {
       const [item] = await navigator.clipboard.read({unsanitized:['text/html']}), html = await (await item.getType('text/html')).text(), plain = await (await item.getType('text/plain')).text();
       const [filtered] = await navigator.clipboard.read(), sanitizedHtml = await (await filtered.getType('text/html')).text();

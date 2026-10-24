@@ -1,5 +1,5 @@
 const test = require('node:test');
-const {chromium,open,click,expand,saved,state,enterEditor,selectBlock,download,fs,assert} = require('./browser-support.cjs');
+const {chromium,open,click,expand,saved,state,enterEditor,selectBlock,download,confirmChecks,fs,assert} = require('./browser-support.cjs');
 
 test('pieds de page mailto : import natif, saisie, refus ciblé, sauvegarde, copie et exports', async () => {
   const browser=await chromium.launch();
@@ -23,7 +23,7 @@ test('pieds de page mailto : import natif, saisie, refus ciblé, sauvegarde, cop
       await page.locator('#field-f1').fill(value);await saved(page);
       assert.equal(await page.locator('#field-f1').evaluate(e=>e.validity.typeMismatch),false);
       assert.equal(await page.locator('#field-f1').getAttribute('aria-invalid'),null);
-      await page.locator('#field-f1').fill(value+'&bcc=autre@example.invalid');
+      await page.locator('#field-f1').fill(value+'&bcc=autre@example.invalid');await page.locator('#field-f1').blur();
       assert.equal(await page.locator('#field-f1').getAttribute('aria-invalid'),'true');
       const current=await state(page);assert.equal(current.documents.find(d=>d.id===current.activeId).blocks[i].values.f1,value);
       await click(page,'[data-action=cancel-fields]');assert.equal(await page.locator('#field-f1').inputValue(),value);
@@ -31,9 +31,9 @@ test('pieds de page mailto : import natif, saisie, refus ciblé, sauvegarde, cop
     }
     await page.frameLocator('#preview').locator('a[href^="mailto:"]').first().waitFor();
     assert.deepEqual(await page.frameLocator('#preview').locator('a[href^="mailto:"]').evaluateAll(links=>links.map(a=>a.getAttribute('href'))),expected);
-    await page.locator('#article-source').fill(expected[0]);assert.equal(await page.locator('#article-source').getAttribute('aria-invalid'),'true');
+    await page.locator('#article-source').fill(expected[0]);await page.locator('#article-source').blur();assert.equal(await page.locator('#article-source').getAttribute('aria-invalid'),'true');
     await click(page,'[data-action=cancel-fields]');
-    await click(page,'[data-action=copy]');await page.locator('#notice').filter({hasText:'Courriel copié en HTML et texte.'}).waitFor();
+    await click(page,'[data-action=copy]');await confirmChecks(page);await page.locator('#notice').filter({hasText:'Courriel copié en HTML et texte.'}).waitFor();
     const copied=await page.evaluate(async()=>{const [item]=await navigator.clipboard.read();return (await item.getType('text/html')).text();});
     for(const value of expected) assert.ok(copied.includes(value));
     await expand(page,'Fichiers et récupération');

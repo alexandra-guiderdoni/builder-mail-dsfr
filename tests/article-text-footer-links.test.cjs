@@ -9,7 +9,9 @@ global.window = global;
 global.MailBuilder = {catalog: JSON.parse(execFileSync('python3', ['-c', 'import json;from scripts.catalogue import compile_catalogue;print(json.dumps(compile_catalogue()))'], {encoding: 'utf8'}))};
 for (const name of ['model.js', 'render.js', 'imports.js']) vm.runInThisContext(fs.readFileSync('app/source/' + name, 'utf8'), {filename: name});
 const {Model: M, Render: R, Imports: I} = MailBuilder;
-const hash = value => createHash('sha256').update(value).digest('hex');
+// #42 : le seul ajout au HTML par défaut est un bloc réservé au mode sombre ; hors de ce bloc, les octets du mode clair restent ceux du catalogue v1.
+const darkOnlyBlock = '@media(prefers-color-scheme:dark){\n td.wlkm-cl[style*="#585858"]{color:#CECECE!important}\n}\n';
+const hash = value => createHash('sha256').update(value.replace(darkOnlyBlock, '')).digest('hex');
 const mailto = 'mailto:service@example.invalid?subject=' + encodeURIComponent('S’abonner & rester informé');
 const article = () => {
   const doc = M.create('Article texte', [5, 13, 31]);
@@ -96,10 +98,11 @@ test('les trois actions du pied de page sont ordonnées, échappées et présent
   assert.ok(html.indexOf('S’abonner') < html.indexOf('Se désabonner'));
   assert.ok(html.indexOf('Se désabonner') < html.indexOf('Contact &lt;équipe&gt; &amp; &quot;aide&quot;'));
   assert.ok(html.includes('href="' + R.escape(block.additionalLinks[1].url) + '"'));
-  assert.equal((html.match(/white-space:nowrap/g) || []).length, 3);
-  assert.match(html, /text-align:center/);
-  assert.match(html, /font-size:13px;line-height:20px/);
-  assert.doesNotMatch(html, /<button\b|min-width/);
+  // Depuis #40, les trois actions gardent le lien gris souligné du gabarit et se replient.
+  assert.doesNotMatch(html, /white-space:nowrap/);
+  assert.equal((html.match(/style="color: #6b6b6b; text-decoration: underline;" class="darkmode-1" spellcheck="false" target="_blank"/g) || []).length, 3);
+  assert.match(html, /font-size: 14px; color: #6b6b6b; font-family: &#x27;Marianne&#x27;/);
+  assert.doesNotMatch(html, /<button\b/);
   for (const link of [{url: block.values.f1, label: block.values.f2}, ...block.additionalLinks]) {
     assert.ok(plain.includes(link.label)); assert.ok(plain.includes(link.url));
   }

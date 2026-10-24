@@ -1,6 +1,6 @@
 const test = require('node:test');
 const {createHash} = require('node:crypto');
-const {open, chromium, assert} = require('./browser-support.cjs');
+const {open, confirmChecks, chromium, assert} = require('./browser-support.cjs');
 
 test('le courriel copié tient dans un message étroit après retrait des styles de tête', async () => {
   const browser = await chromium.launch({headless: true});
@@ -10,7 +10,7 @@ test('le courriel copié tient dans un message étroit après retrait des styles
       const A = MailBuilder;
       A.library.documents.find(d => d.id === A.library.activeId).blocks = A.Model.create('Recette largeur', [2, 5, 19, 21, 27, 47]).blocks;
     });
-    await page.locator('[data-action=copy]').click();
+    await page.locator('[data-action=copy]').click(); await confirmChecks(page);
     await page.locator('#notice').filter({hasText: 'Courriel copié en HTML et texte.'}).waitFor();
     const html = await page.evaluate(async () => {
       const [item] = await navigator.clipboard.read();
@@ -37,7 +37,7 @@ test('la copie conserve les filets décoratifs de trois pixels des mises en avan
   try {
     const {page, context} = await open(browser, {permissions: ['clipboard-read', 'clipboard-write']});
     await page.evaluate(() => { MailBuilder.library.documents.find(d => d.id === MailBuilder.library.activeId).blocks = MailBuilder.Model.create('Filets', [35, 36]).blocks; });
-    await page.locator('[data-action=copy]').click();
+    await page.locator('[data-action=copy]').click(); await confirmChecks(page);
     await page.locator('#notice').filter({hasText: 'Courriel copié en HTML et texte.'}).waitFor();
     const html = await page.evaluate(async () => { const [item] = await navigator.clipboard.read(); return (await item.getType('text/html')).text(); });
     const rendered = await context.newPage();
@@ -67,10 +67,10 @@ test('les 52 composants copiés conservent texte, liens et images sans déborder
       if (JSON.stringify([...adapted.images].map(i => [i.src, i.alt])) !== JSON.stringify([...original.images].map(i => [i.src, i.alt]))) throw new Error('La préparation du presse-papiers a changé les images');
       const nodes = original.createTreeWalker(original.body, NodeFilter.SHOW_TEXT), text = [];
       while (nodes.nextNode()) { const value = nodes.currentNode.data.replace(/\s+/g, ' ').trim(); if (value && !nodes.currentNode.parentElement.closest('[style*="mso-hide:all"]')) text.push(value); } // #41 : le pré-en-tête masqué n'est pas du texte reçu
-      // Chromium omet les variantes blanches masquées dans sa copie en mode clair.
+      // Chromium omet les variantes blanches masquées dans sa copie en mode clair, les autres moteurs non : on ne compare que les images visibles.
       return {text, images: [...original.images].filter(i => !i.closest('.hide-white')).map(i => [i.src, i.alt]), links: [...original.querySelectorAll('a')].map(a => a.getAttribute('href')), plain: A.Render.plain(A.doc())};
     });
-    await page.locator('[data-action=copy]').click();
+    await page.locator('[data-action=copy]').click(); await confirmChecks(page);
     await page.locator('#notice').filter({hasText: 'Courriel copié en HTML et texte.'}).waitFor();
     const clipboard = await page.evaluate(async () => {
       const [item] = await navigator.clipboard.read();
@@ -87,7 +87,7 @@ test('les 52 composants copiés conservent texte, liens et images sans déborder
       document.querySelector('#message').innerHTML = doc.body.innerHTML;
       const nodes = doc.createTreeWalker(doc.body, NodeFilter.SHOW_TEXT), text = [];
       while (nodes.nextNode()) { const value = nodes.currentNode.data.replace(/\s+/g, ' ').trim(); if (value && !nodes.currentNode.parentElement.closest('[style*="mso-hide:all"]')) text.push(value); } // #41 : le pré-en-tête masqué n'est pas du texte reçu
-      return {text, images: [...doc.images].map(i => [i.src, i.alt]), links: [...doc.querySelectorAll('a')].map(a => a.getAttribute('href'))};
+      return {text, images: [...doc.images].filter(i => !i.closest('.hide-white')).map(i => [i.src, i.alt]), links: [...doc.querySelectorAll('a')].map(a => a.getAttribute('href'))};
     }, clipboard.html);
     assert.deepEqual(actual.text, expected.text);
     const signatures = values => values.map(([src, alt]) => ({sha256: createHash('sha256').update(src).digest('hex'), alt}));

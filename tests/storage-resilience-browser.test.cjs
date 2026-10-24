@@ -1,6 +1,6 @@
 const test = require('node:test');
 const path = require('node:path');
-const {root, portable, click, open, saved, state, store, chromium, assert} = require('./browser-support.cjs');
+const {root, portable, click, open, saved, state, store, chromium, nativeAx, assert} = require('./browser-support.cjs');
 test('une ouverture bloquée puis réussie tardivement est fermée sans empoisonner la nouvelle connexion', async () => {
   const browser = await chromium.launch({headless: true});
   try {
@@ -61,14 +61,15 @@ test('une sauvegarde lente retient seulement l’écriture en cours et la derni�
       MailBuilder.Storage = {...storage, save: async (...args) => { writeAttempts++; await gate; return storage.save(...args); }};
     });
     await page.locator('#document-name').fill('Première écriture'); await page.waitForFunction(() => writeAttempts === 1);
-    const cdp = await page.context().newCDPSession(page); await cdp.send('HeapProfiler.collectGarbage');
-    const heapBefore = await cdp.send('Runtime.getHeapUsage');
+    // Mesure du tas V8 par CDP : Chromium seulement, informative (jamais une assertion) ; ailleurs elle vaut null.
+    const cdp = nativeAx ? await page.context().newCDPSession(page) : null; await cdp?.send('HeapProfiler.collectGarbage');
+    const heapBefore = cdp ? await cdp.send('Runtime.getHeapUsage') : {usedSize: null};
     const milliseconds = await page.evaluate(() => {
       const start = performance.now(), field = document.querySelector('#document-name');
       for (let i = 0; i < 80; i++) { field.value = 'Révision ' + i; field.dispatchEvent(new Event('input', {bubbles: true})); }
       return performance.now() - start;
     });
-    await cdp.send('HeapProfiler.collectGarbage'); const heapBlocked = await cdp.send('Runtime.getHeapUsage');
+    await cdp?.send('HeapProfiler.collectGarbage'); const heapBlocked = cdp ? await cdp.send('Runtime.getHeapUsage') : {usedSize: null};
     assert.equal((await store(page)).library.documents[0].name, 'Avant la rafale');
     await page.evaluate(() => releaseWrites()); await saved(page); await page.evaluate(() => MailBuilder.State.flush());
     assert.equal((await store(page)).library.documents[0].name, 'Révision 79');
@@ -99,7 +100,7 @@ test('un changement de composition refusé rétablit toujours le sélecteur', as
       if (outcome === 'success') await saved(page); else await page.locator('#error').filter({hasText: 'Image refusée pour la recette'}).waitFor();
       assert.equal((await state(page)).activeId, active); assert.equal((await store(page)).library.activeId, active);
     }
-    await page.locator('#article-source').fill('https://'); await page.locator('#documents').selectOption(before.activeId);
+    await page.locator('#document-name').fill(''); await page.locator('#documents').selectOption(before.activeId);
     assert.equal(await page.locator('#documents').inputValue(), other); assert.equal((await state(page)).activeId, other);
     await click(page, '[data-action=cancel-fields]');
     await page.evaluate(() => {
