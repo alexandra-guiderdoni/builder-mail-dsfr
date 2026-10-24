@@ -4,12 +4,12 @@ const {spawnSync} = require('node:child_process');
 const {root, evidence, open, expand, download, chromium, fs, assert} = require('./browser-support.cjs');
 const dist = path.join(root, 'app/distribution');
 const schemaPath = path.join(dist, 'courriels.schema.json');
-const validator = path.join(__dirname, 'validate_schema.py');
+const validator = path.join(__dirname, 'validate-schema.cjs');
 
 // Validateur de développement uniquement : jsonschema (Python) contrôle le schéma 2020-12.
 function validate(...files) {
-  const run = spawnSync('python3', [validator, schemaPath, ...files], {encoding: 'utf8'});
-  assert.equal(run.error, undefined, 'python3 introuvable : ' + run.error);
+  const run = spawnSync(process.execPath, [validator, schemaPath, ...files], {encoding: 'utf8'});
+  assert.equal(run.error, undefined, 'node introuvable : ' + run.error);
   assert.notEqual(run.status, 2, 'validateur indisponible ou schéma invalide : ' + run.stderr);
   return JSON.parse(run.stdout);
 }
