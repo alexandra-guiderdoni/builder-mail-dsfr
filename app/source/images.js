@@ -20,7 +20,8 @@
     const ceiling = declared("max-width") || Infinity, auto = /(?:^|;)\s*width\s*:\s*auto\b/i.test(style);
     return Math.min(ceiling, Math.max(Number(/\swidth="(\d+)"/.exec(tag)?.[1]) || 0, declared("width"), ...responsive, auto && ceiling < Infinity ? ceiling : 0));
   }
-  const targetWidth = display => Math.min(contract.maxWidth, 2 * display);
+  // Sans largeur d’affichage connue, la cible retombe sur le plafond.
+  const targetWidth = display => display > 0 ? Math.min(contract.maxWidth, 2 * display) : contract.maxWidth;
   function help(componentId, key) {
     return `Formats acceptés : PNG, JPEG, GIF ou WebP, jusqu’à 10 Mio, 8192 pixels par côté et 16 777 216 pixels au total. Une nouvelle image est réduite à ${number(targetWidth(displayWidth(componentId, key)))} pixels de large au plus, puis enregistrée en JPEG si elle est opaque, ou en PNG si elle comporte de la transparence ; un WebP est converti. Un GIF animé est gardé tel quel jusqu’à 1 Mio. Au-delà de 300 Kio après compression, un avertissement s’affiche. Les images déjà présentes ne sont pas modifiées.`;
   }
@@ -43,7 +44,7 @@
   const failure = "Image : la réduction a échoué dans ce navigateur ; le fichier original est conservé.";
   async function encode(canvas, type) {
     const blob = await new Promise(resolve => canvas.toBlob(resolve, type, contract.quality));
-    if (!blob) throw new Error(failure);
+    if (blob?.type !== type) throw new Error(failure);
     return new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(reader.result); reader.onerror = () => reject(new Error(failure)); reader.readAsDataURL(blob); });
   }
   function opaque(context, width, height) {
@@ -53,12 +54,13 @@
   }
   async function prepare(file, display) {
     const original = await MailImages.read(file, formats), source = /^data:([^;]+);/.exec(original)[1], bytes = size(original);
+    M.image(original);
     const image = await decoded(original), from = [image.naturalWidth, image.naturalHeight];
     if (source === "image/gif" && gifFrames(atob(payload(original))) > 1) {
       if (bytes > contract.animatedGifBytes) throw new Error(`GIF animé refusé : ${mio(bytes)}, au-delà de la limite de 1 Mio. Un GIF animé n’est ni réduit ni recompressé : allégez-le (moins d’images, de couleurs ou de pixels) ou choisissez une image fixe. La composition n’est pas modifiée.`);
       return {value: original, type: source, width: from[0], height: from[1], bytes, animated: true, resized: false};
     }
-    const width = Math.min(from[0], display ? targetWidth(display) : contract.maxWidth), height = Math.max(1, Math.round(from[1] * width / from[0]));
+    const width = Math.min(from[0], targetWidth(display)), height = Math.max(1, Math.round(from[1] * width / from[0]));
     const canvas = document.createElement("canvas"); canvas.width = width; canvas.height = height;
     try {
       const context = canvas.getContext("2d"); if (!context) throw new Error(failure);
@@ -77,5 +79,5 @@
     const warning = result.bytes > contract.warningBytes ? ` Attention : ${kio(result.bytes)} après compression, au-delà des 300 Kio conseillés par image ; le courriel sera plus lourd à envoyer et à recevoir. Choisissez si possible une image plus légère.` : "";
     return `Image locale incorporée à la composition : ${summary}.${warning}`;
   }
-  A.Images = Object.freeze({contract, displayWidth, targetWidth, help, prepare, describe});
+  A.Images = Object.freeze({contract, displayWidth, targetWidth, help, gifFrames, prepare, describe});
 })();

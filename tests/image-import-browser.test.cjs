@@ -108,8 +108,8 @@ for (const engine of [chromium, webkit]) {
       for (const expected of [/PNG, JPEG, GIF ou WebP/, /10 Mio/, /8192 pixels par côté/, /16\s777\s216 pixels au total/, /1\s000 pixels de large/, /JPEG/, /PNG/, /transparence/, /WebP est converti/, /GIF animé/, /1 Mio/, /300 Kio/, /déjà présentes ne sont pas modifiées/]) assert.match(help[0].text, expected);
       await selectBlock(page, ids.header);
       assert.match(await page.locator('#field-f0').evaluate(input => document.getElementById(input.getAttribute('aria-describedby')).textContent), /152 pixels de large/);
-      const contract = await page.evaluate(() => ({target: [76, 460, 500, 600, 700].map(MailBuilder.Images.targetWidth), display: Object.fromEntries(MailBuilder.catalog.components.filter(c => c.fields.some(f => f.type === 'image')).map(c => [c.id, Object.fromEntries(c.fields.filter(f => f.type === 'image').map(f => [f.key, MailBuilder.Images.displayWidth(c.id, f.key)]))]))}));
-      assert.deepEqual(contract, {target: [152, 920, 1000, 1200, 1200], display: DISPLAY});
+      const contract = await page.evaluate(() => ({target: [76, 460, 500, 600, 700, 0, undefined].map(MailBuilder.Images.targetWidth), display: Object.fromEntries(MailBuilder.catalog.components.filter(c => c.fields.some(f => f.type === 'image')).map(c => [c.id, Object.fromEntries(c.fields.filter(f => f.type === 'image').map(f => [f.key, MailBuilder.Images.displayWidth(c.id, f.key)]))]))}));
+      assert.deepEqual(contract, {target: [152, 920, 1000, 1200, 1200, 1200, 1200], display: DISPLAY});
     } finally { await browser.close(); }
   });
 
@@ -152,6 +152,21 @@ for (const engine of [chromium, webkit]) {
       assert.deepEqual(observations.errors, []);
       assert(observations.requests.every(url => /^(file|data|blob):/.test(url)), 'aucune requête réseau');
       console.log(`${engine.name()} : ${results.map(r => `${r.name} ${r.width}×${r.height} ${r.type} ${r.bytes} o`).join(' ; ')}`);
+    } finally { await browser.close(); }
+  });
+
+  test(`${engine.name()} : un fichier mal étiqueté ou une réduction défaillante est refusé sans modifier la composition`, async () => {
+    const images = await synthetic(), browser = await engine.launch({headless: true});
+    try {
+      const {page, observations} = await open(browser), ids = await prepare(page), before = await state(page);
+      const mislabeled = await upload(page, ids.picture, 'f0', {...images.animatedGif, type: 'image/png'}, 'anime.png');
+      assert.match(mislabeled.error, /format annoncé|illisible/, 'un GIF présenté comme PNG est refusé comme avant #33');
+      assert.deepEqual(await state(page), before);
+      await page.evaluate(() => { const encode = HTMLCanvasElement.prototype.toBlob; HTMLCanvasElement.prototype.toBlob = function(callback) { return encode.call(this, callback, 'image/png'); }; });
+      const fallback = await upload(page, ids.picture, 'f0', images.photo, 'photo.jpg');
+      assert.match(fallback.error, /réduction a échoué/, 'un encodage dans un autre format que celui demandé est refusé');
+      assert.deepEqual(await state(page), before); assert.equal(await page.evaluate(() => MailBuilder.pendingInputs), 0);
+      assert.deepEqual(observations.errors, []);
     } finally { await browser.close(); }
   });
 
