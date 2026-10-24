@@ -1,6 +1,6 @@
 const test = require('node:test'), path = require('node:path'), {createHash} = require('node:crypto');
 const {pathToFileURL} = require('node:url');
-const {root, evidence, open, click, expand, saved, state, download, chromium, fs, assert} = require('./browser-support.cjs');
+const {root, evidence, open, click, expand, saved, state, download, chromium, nativeAxTree, fs, assert} = require('./browser-support.cjs');
 const output = path.join(evidence, 'page-title');
 async function receipt(name, observations, completed) {
   await fs.mkdir(output, {recursive: true});
@@ -12,9 +12,10 @@ async function exportedTitle(context, filename, expected) {
   const exported = await context.newPage();
   try {
     await exported.goto(pathToFileURL(path.resolve(filename)).href); assert.equal(await exported.title(), expected);
-    const cdp = await context.newCDPSession(exported), {nodes} = await cdp.send('Accessibility.getFullAXTree'); await cdp.detach();
-    const root = nodes.find(n => !n.ignored && n.role?.value === 'RootWebArea');
-    assert.equal(root.name.value, expected); return {title: await exported.title(), nativeRoot: root};
+    // Racine de l'arbre natif sous Chromium (CDP) ; ailleurs, le titre du document, seule propriété commune aux trois moteurs.
+    const nodes = await nativeAxTree(context, exported), root = nodes?.find(n => !n.ignored && n.role?.value === 'RootWebArea');
+    if (nodes) assert.equal(root.name.value, expected);
+    return {title: await exported.title(), ...(root ? {nativeRoot: root} : {})};
   } finally { await exported.close(); }
 }
 async function previewTitle(page, expected) {

@@ -9,7 +9,9 @@ global.window = global;
 global.MailBuilder = {catalog: JSON.parse(execFileSync('python3', ['-c', 'import json;from scripts.catalogue import compile_catalogue;print(json.dumps(compile_catalogue()))'], {encoding: 'utf8'}))};
 for (const name of ['model.js', 'render.js', 'imports.js']) vm.runInThisContext(fs.readFileSync('app/source/' + name, 'utf8'), {filename: name});
 const {Model: M, Render: R, Imports: I} = MailBuilder;
-const hash = value => createHash('sha256').update(value).digest('hex');
+// #42 : le seul ajout au HTML par défaut est un bloc réservé au mode sombre ; hors de ce bloc, les octets du mode clair restent ceux du catalogue v1.
+const darkOnlyBlock = '@media(prefers-color-scheme:dark){\n td.wlkm-cl[style*="#585858"]{color:#CECECE!important}\n}\n';
+const hash = value => createHash('sha256').update(value.replace(darkOnlyBlock, '')).digest('hex');
 const mailto = 'mailto:service@example.invalid?subject=' + encodeURIComponent('S’abonner & rester informé');
 const article = () => {
   const doc = M.create('Article texte', [5, 13, 31]);
