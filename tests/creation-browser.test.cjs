@@ -62,6 +62,8 @@ for (const [engine, launcher] of [['Chromium', chromium], ['WebKit', webkit]]) {
         await page.locator('#subject').fill(subject); await saved(page);
         await page.locator('#template-name').fill(name);
         await click(page, '[data-action=save-template]'); await saved(page);
+        // Depuis #47, l’enregistrement est annoncé après la sauvegarde : attendre l’annonce évite qu’elle écrase le statut suivant.
+        await page.locator('#notice').filter({hasText: new RegExp(`${name}.*enregistré dans ce navigateur`)}).waitFor();
       }
       const templates = (await state(page)).templates;
       assert.deepEqual(templates.map(t => t.subject), [DATED, UNDATED]);
