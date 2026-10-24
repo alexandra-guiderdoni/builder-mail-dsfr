@@ -102,7 +102,7 @@ Si un retour à l’accueil est refusé, les champs restent affichés et les exp
 
 Si le navigateur avertit lors d’une fermeture pendant la sauvegarde, annuler le départ et attendre l’indication de sauvegarde réussie avant de fermer à nouveau.
 
-« Restaurer l’état précédent » relit la sauvegarde précédant la dernière écriture réussie ; ce n’est pas un historique illimité ni une annulation de chaque frappe. Exporter d’abord le travail à conserver. « Exporter les données enregistrées brutes » produit une copie de secours pour le diagnostic ; ce format brut n’est pas un fichier de composition importable.
+« Restaurer l’état précédent » relit la sauvegarde précédant la dernière écriture réussie ; ce n’est pas un historique illimité ni une annulation de chaque frappe. Exporter d’abord le travail à conserver. Si le navigateur a refusé l’ouverture de la bibliothèque au démarrage, « Restaurer l’état précédent » n’écrit rien : la page propose d’exporter le travail temporaire, puis de recharger l’atelier pour relire la bibliothèque enregistrée (aucun faux conflit de fenêtre, et le contrôle de conflit reste actif). « Exporter les données enregistrées brutes » produit une copie de secours pour le diagnostic ; ce format brut n’est pas un fichier de composition importable.
 
 Une version ou un catalogue inconnu n’est pas réinterprété : conserver le fichier d’origine et demander une migration. Si la bibliothèque stockée ne peut pas être relue, l’atelier préserve le stockage existant ; le travail temporaire doit être exporté jusqu’à une récupération réussie.
 
