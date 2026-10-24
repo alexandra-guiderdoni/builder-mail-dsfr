@@ -36,18 +36,23 @@ test('le texte affiché donne les octets, des Kio jamais arrondis vers le seuil,
   assert.ok(below.includes('89,9 Kio') && below.includes(group(NOTICE - 1) + ' octets'), below);
   assert.doesNotMatch(below, /Attention|Alerte|Gmail/);
   assert.ok(notice.includes('90,0 Kio') && notice.includes(group(NOTICE) + ' octets'), notice);
-  assert.match(notice, /^Poids du courriel copié : .*images comprises\. Attention : .*102 Kio.*Gmail/);
+  assert.match(notice, /^Poids du courriel à copier : .*images comprises\. Attention : .*102 Kio.*Gmail/);
   assert.ok(high.includes('101,9 Kio') && /Attention/.test(high) && !/Alerte/.test(high), high);
   assert.ok(alert.includes('102,0 Kio') && /Alerte/.test(alert) && !/Attention/.test(alert), alert);
   for (const warning of [notice, high, alert]) assert.match(warning, /Repères prudents, sans garantie sur la taille reçue ni sur la troncature\.$/);
   assert.doesNotMatch(below + notice + alert, /bloqu|impossible|refus/i, 'aucun repère ne bloque la copie');
 });
 
-test('le poids du HTML dérivé compte ses images incorporées', () => {
-  const M = MailBuilder.Model, doc = M.create('Poids', [5, 31]);
-  // Sans DOMParser, Node ne produit pas la copie : le test navigateur mesure clipboardHtml.
-  const html = R.html(doc), images = html.match(/data:image\/[a-z]+;base64,[A-Za-z0-9+/=]+/g) || [];
-  assert.ok(images.length > 0);
-  assert.ok(R.weight(html).bytes >= images.reduce((sum, image) => sum + image.length, 0));
-  assert.equal(R.weight(html).bytes, Buffer.byteLength(html, 'utf8'));
+test('une image incorporée pèse exactement sa donnée, et seule une chaîne se pèse', () => {
+  const M = MailBuilder.Model, doc = M.create('Poids', [5, 31]), article = doc.blocks[1];
+  // Sans DOMParser, Node ne produit pas la copie : le test navigateur mesure clipboardHtml ; ici, le HTML dérivé.
+  const before = R.html(doc), image = article.values.f0;
+  const lighter = 'data:image/png;base64,' + fs.readFileSync('app/assets/icon-192.png').toString('base64');
+  article.values.f0 = lighter;
+  const after = R.html(doc), occurrences = before.split(image).length - 1;
+  assert.ok(occurrences >= 1);
+  assert.equal(after.split(lighter).length - 1, occurrences);
+  assert.notEqual(lighter.length, image.length);
+  assert.equal(R.weight(before).bytes - R.weight(after).bytes, occurrences * (image.length - lighter.length));
+  for (const value of [undefined, null, 42, {}]) assert.throws(() => R.weight(value), TypeError);
 });

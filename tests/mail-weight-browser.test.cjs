@@ -57,6 +57,12 @@ for (const engine of ['chromium', 'webkit']) {
       assert.equal(result.text, second, 'le HTML remis au presse-papiers est celui qui a été pesé');
       assert.equal(result.size, bytes(second));
       assert.equal(await page.locator('#mail-weight').getAttribute('data-bytes'), String(result.size));
+      // Écriture refusée après une copie réussie : l’erreur s’affiche, sans annonce de succès périmée.
+      await page.evaluate(() => Object.defineProperty(navigator.clipboard, 'write', {configurable: true, value: () => Promise.reject(new DOMException('Écriture refusée pour la recette.', 'NotAllowedError'))}));
+      await compose(page, () => MailBuilder.State.change(lib => { lib.documents.find(d => d.id === lib.activeId).subject += ' modifié'; }));
+      await click(page, '[data-action=copy]');
+      await page.locator('#error').filter({hasText: 'Écriture refusée pour la recette.'}).waitFor();
+      assert.equal(await page.locator('#notice').textContent(), '', 'aucune annonce « Courriel copié » périmée');
       assert.deepEqual(observations.errors, []);
     } finally { await browser.close(); }
   });
@@ -90,7 +96,7 @@ for (const engine of ['chromium', 'webkit']) {
         assert.equal(result.size, target);
         const message = await notice.textContent();
         if (level === 'ok') assert.doesNotMatch(message, /Attention|Alerte/);
-        else assert.match(message, level === 'alert' ? /Alerte/ : /Attention/);
+        else assert.match(message, new RegExp((level === 'alert' ? 'Alerte' : 'Attention') + '.*Repères prudents, sans garantie'));
         assert.equal(await page.locator('#error').isVisible(), false);
       }
     } finally { await browser.close(); }
@@ -104,8 +110,11 @@ for (const engine of ['chromium', 'webkit']) {
       await compose(page, article => MailBuilder.State.change(lib => { lib.documents.find(d => d.id === lib.activeId).blocks = MailBuilder.Model.create('Frappe', [article]).blocks; }), article);
       await displayed(page, bytes(await clipboardHtml(page)));
       await page.evaluate(() => {
-        window.__inputs = []; window.__weights = [];
+        window.__inputs = []; window.__weights = []; window.__renders = [];
         document.addEventListener('input', () => window.__inputs.push(performance.now()), true);
+        // Seuls clipboardHtml et exportHtml analysent le HTML : chaque analyse est un rendu de copie coûteux.
+        const parse = DOMParser.prototype.parseFromString;
+        DOMParser.prototype.parseFromString = function (...args) { window.__renders.push(performance.now()); return parse.apply(this, args); };
         new MutationObserver(() => window.__weights.push({at: performance.now(), bytes: document.getElementById('mail-weight').dataset.bytes})).observe(document.getElementById('mail-weight'), {attributes: true, childList: true, characterData: true, subtree: true});
       });
       const field = page.locator('#field-f4');
@@ -113,8 +122,11 @@ for (const engine of ['chromium', 'webkit']) {
       await field.pressSequentially('abcdefghijklmnopqrstuvwxy', {delay: 60});
       const final = bytes(await clipboardHtml(page));
       await displayed(page, final);
-      const {inputs, weights} = await page.evaluate(() => ({inputs: window.__inputs, weights: window.__weights}));
+      const {inputs, weights, renders} = await page.evaluate(() => ({inputs: window.__inputs, weights: window.__weights, renders: window.__renders}));
       assert.equal(inputs.length, 25);
+      // L’oracle du test lui-même (clipboardHtml après la frappe) est exclu : seuls les rendus antérieurs comptent.
+      const during = renders.filter(at => at >= inputs[0] && at <= inputs.at(-1));
+      assert.ok(during.every(at => at - Math.max(...inputs.filter(i => i <= at)) >= PAUSE - 20), `${during.length} rendus de copie pendant la frappe`);
       assert.ok(weights.length >= 1);
       // Chaque mise à jour du poids suit une pause de saisie : jamais pendant une frappe soutenue.
       for (const update of weights) {
