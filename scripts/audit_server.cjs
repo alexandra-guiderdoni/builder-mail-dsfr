@@ -14,11 +14,12 @@ const server = http.createServer(async (request, response) => {
   else if (route === '/snum.html') file = 'app/distribution/snum.html';
   else if (/^\/mail\/\d{2}\.html$/.test(route)) file = path.join(directory, 'exports', path.basename(route));
   else { response.writeHead(404); response.end(); return; }
-  try {
-    const types = {'.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.webmanifest': 'application/manifest+json', '.svg': 'image/svg+xml', '.png': 'image/png'};
-    response.writeHead(200, {'Content-Type': types[path.extname(file)], 'Cache-Control': 'no-store'});
-    response.end(await fs.readFile(path.resolve(root, file)));
-  } catch { response.writeHead(404); response.end(); }
+  // Lire avant d’écrire l’en-tête : un fichier listé mais absent donne un 404 propre.
+  let body;
+  try { body = await fs.readFile(path.resolve(root, file)); } catch { response.writeHead(404); response.end(); return; }
+  const types = {'.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.webmanifest': 'application/manifest+json', '.svg': 'image/svg+xml', '.png': 'image/png'};
+  response.writeHead(200, {'Content-Type': types[path.extname(file)], 'Cache-Control': 'no-store'});
+  response.end(body);
 });
 server.listen(Number(process.env.BUILDER_AUDIT_PORT || 4187), '127.0.0.1', async () => {
   await fs.mkdir(directory, {recursive: true});
