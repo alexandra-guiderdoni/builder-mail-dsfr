@@ -1,6 +1,6 @@
 const test = require('node:test');
 const path = require('node:path');
-const {root, evidence, click, open, enterEditor, saved, expand, download, confirmChecks, selectBlock, state, chromium, fs, assert} = require('./browser-support.cjs');
+const {root, evidence, click, open, enterEditor, saved, expand, download, confirmChecks, selectBlock, selectBlockEffective, focusPage, duplicateBlock, state, chromium, fs, assert, engineName} = require('./browser-support.cjs');
 
 test('les 52 gabarits canoniques conservent le DOM officiel et le rendu dérivé porte les titres attendus', async () => {
   const browser = await chromium.launch({headless: true});
@@ -47,14 +47,14 @@ test('parcours complet par les contrôles : bibliothèque, identités, modèles,
     await expand(page, 'Fichiers et récupération'); await page.locator('#project-input').setInputFiles(converted);
     await page.locator('#notice').filter({hasText: 'Import ajouté à la bibliothèque'}).waitFor(); await saved(page);
     const articleId = await page.evaluate(url => MailBuilder.doc().blocks.find(b => b.source === url).id, packet.articles[0].url);
-    await selectBlock(page, articleId); await page.locator('#block-editor textarea').first().fill('Titre <script>window.injected=1</script>');
-    await click(page, '[data-block-action=duplicate]');
+    await focusPage(page); await selectBlockEffective(page, articleId); await page.locator('#block-editor textarea').first().fill('Titre <script>window.injected=1</script>');
+    await duplicateBlock(page);
     const order = await page.evaluate(() => MailBuilder.doc().blocks.map(b => b.id)), selected = await page.evaluate(() => MailBuilder.selected);
     await click(page, '[data-block-action=up]'); await saved(page);
     assert.equal(await page.evaluate(id => MailBuilder.doc().blocks.findIndex(b => b.id === id), selected), order.indexOf(selected) - 1);
     await click(page, '[data-block-action=down]'); await saved(page);
     assert.deepEqual(await page.evaluate(() => MailBuilder.doc().blocks.map(b => b.id)), order);
-    await click(page, '[data-block-action=duplicate]'); await saved(page);
+    await duplicateBlock(page);
     assert.equal(await page.evaluate(() => MailBuilder.doc().blocks.length), order.length + 1);
     await click(page, '[data-block-action=remove]'); await saved(page);
     assert.deepEqual(await page.evaluate(() => MailBuilder.doc().blocks.map(b => b.id)), order);
@@ -79,10 +79,10 @@ test('parcours complet par les contrôles : bibliothèque, identités, modèles,
     await page.reload(); await page.waitForFunction(() => window.MailBuilder?.ready); assert.equal((await state(page)).documents.length, 4);
     const fresh = await open(browser, {offline: true}); await expand(fresh.page, 'Fichiers et récupération'); await fresh.page.locator('#project-input').setInputFiles(libraryPath); await saved(fresh.page);
     const restored = await state(fresh.page); assert.equal(restored.documents.length, 5); assert.equal(restored.templates.length, 1); assert.equal(restored.identities.length, 1); assert(JSON.stringify(restored).includes(image));
-    await enterEditor(page); await page.frameLocator('#preview').locator('img').first().waitFor({state: 'visible'});
+    await focusPage(page); await enterEditor(page); await page.frameLocator('#preview').locator('img').first().waitFor({state: 'visible'});
     await page.screenshot({path: path.join(evidence, 'bibliotheque-verifiee.png'), fullPage: true});
     assert.deepEqual(errors, []); assert(!requests.some(url => /^https?:/.test(url)));
-    await fs.writeFile(path.join(evidence, 'parcours-chromium.json'), JSON.stringify({browser: browser.version(),offlinePortable: true,documents: lib.documents.length,templates: lib.templates.length,identities: lib.identities.length,blockMoveAndRemoval: true,clipboardTypes: clipboard.types,sourceCopiesInPlain: 2,imageRestored: true,errors}, null, 2));
+    await fs.writeFile(path.join(evidence, `parcours-${engineName}.json`), JSON.stringify({browser: browser.version(),offlinePortable: true,documents: lib.documents.length,templates: lib.templates.length,identities: lib.identities.length,blockMoveAndRemoval: true,clipboardTypes: clipboard.types,sourceCopiesInPlain: 2,imageRestored: true,errors}, null, 2));
     await context.close();
   } finally { await browser.close(); }
 });

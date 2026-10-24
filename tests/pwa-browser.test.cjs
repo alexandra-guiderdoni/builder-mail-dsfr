@@ -2,7 +2,7 @@ const test = require('node:test');
 const http = require('node:http');
 const path = require('node:path');
 const {execFileSync} = require('node:child_process');
-const {root, evidence, click, open, enterEditor, saved, expand, state, chromium, fs, assert} = require('./browser-support.cjs');
+const {root, evidence, click, open, enterEditor, saved, expand, state, chromium, nativeAx, engineName, fs, assert} = require('./browser-support.cjs');
 
 test('cache réel, mise à jour explicite et conservation de la bibliothèque avec serveur arrêté', async () => {
   const browser = await chromium.launch({headless: true});
@@ -37,13 +37,14 @@ print(json.dumps({p.name:base64.b64encode(data).decode('ascii') for p,data in re
     await enterEditor(page);
     await page.locator('#document-name').fill('Bibliothèque conservée après mise à jour');
     await expand(page, 'Identités de service'); await page.locator('#identity-name').fill('Identité de mise à jour'); await click(page, '[data-action=save-identity]'); await saved(page);
-    const before = await state(page), session = await context.newCDPSession(page);
+    const before = await state(page), session = nativeAx ? await context.newCDPSession(page) : null;
     const originalIcon = await fs.readFile(path.join(base, 'icon-192.png'));
     const other = await context.newPage(); await other.goto(url + 'other/'); await other.waitForFunction(() => !!navigator.serviceWorker.controller);
     const otherCache = await other.evaluate(async () => (await caches.keys()).find(key => key.includes(encodeURIComponent(location.href))));
-    const manifest = await session.send('Page.getAppManifest');
+    // Manifeste et installabilité par CDP sous Chromium ; ailleurs, le manifeste est lu par fetch et l'installabilité n'est pas évaluée (null).
+    const manifest = session ? await session.send('Page.getAppManifest') : {errors: [], data: JSON.stringify(await page.evaluate(async () => (await fetch(document.querySelector('link[rel=manifest]').href)).json()))};
     assert.equal(manifest.errors.length, 0); assert.equal(JSON.parse(manifest.data).icons.length, 2);
-    const installability = await session.send('Page.getInstallabilityErrors');
+    const installability = session ? await session.send('Page.getInstallabilityErrors') : {installabilityErrors: null};
     generation = 2; await page.evaluate(async () => { window.previousController = navigator.serviceWorker.controller; const registration = await navigator.serviceWorker.getRegistration(); await registration.update(); });
     await page.locator('#update').waitFor({state: 'visible'});
     assert(await page.evaluate(() => navigator.serviceWorker.controller === window.previousController));
@@ -61,7 +62,7 @@ print(json.dumps({p.name:base64.b64encode(data).decode('ascii') for p,data in re
     await enterEditor(page); await page.frameLocator('#preview').locator('img').first().waitFor({state: 'visible'});
     await fs.mkdir(evidence, {recursive: true}); await page.screenshot({path: path.join(evidence, 'application-web-hors-ligne.png'), fullPage: true});
     assert.deepEqual(errors, []);
-    await fs.writeFile(path.join(evidence, 'pwa-chromium.json'), JSON.stringify({browser: browser.version(),manifestErrors: manifest.errors,installabilityErrors: installability.installabilityErrors,updateObserved: true,libraryPreserved: true,serverStopped: true,offlineReloadObserved: true,nativeInstallation: 'NOT_VERIFIED',realHTTPS: 'NOT_VERIFIED',errors}, null, 2));
+    await fs.writeFile(path.join(evidence, `pwa-${engineName}.json`), JSON.stringify({browser: browser.version(),manifestErrors: manifest.errors,installabilityErrors: installability.installabilityErrors,updateObserved: true,libraryPreserved: true,serverStopped: true,offlineReloadObserved: true,nativeInstallation: 'NOT_VERIFIED',realHTTPS: 'NOT_VERIFIED',errors}, null, 2));
   } finally { if (server?.listening) await new Promise(resolve => server.close(resolve)); await browser.close(); }
 });
 

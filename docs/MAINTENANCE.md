@@ -39,7 +39,7 @@ L’application livrée est statique et autonome. Python et Node.js sont des out
 | `scripts/interchange.py` | Schéma JSON générique, exemple importable et bibliothèque de qualification. |
 | `tests/`, `scripts/recipe_firefox.mjs`, `scripts/recipe_installation.cjs` | Vérifications automatiques, recette Firefox et installation PWA de recette. |
 
-Le parseur SNUM utilisé est la copie conservée sous `prototype/reference/snum-packet.js` ; seule sa fonction `parse` est appelée dans la page SNUM dédiée. Cette copie locale contrôle maintenant la cohérence du jour de semaine avec la date (#24) ; le projet SNUM source reste intact. Le parseur n’est pas assemblé dans le builder générique. L’ancien prototype et ses distributions restent indépendants. Ne pas éditer les HTML générés pour corriger le produit.
+Le parseur SNUM utilisé est la copie conservée sous `prototype/reference/snum-packet.js` ; seule sa fonction `parse` est appelée dans la page SNUM dédiée. Cette copie locale contrôle maintenant la cohérence du jour de semaine avec la date (#24) ; le projet SNUM source reste intact. Sa provenance a deux niveaux (empreinte amont historique `sha256`, empreinte de la copie adaptée `adapted_sha256`) et `npm run check` contrôle la seconde. Le parseur n’est pas assemblé dans le builder générique. L’ancien prototype et ses distributions restent indépendants. Ne pas éditer les HTML générés pour corriger le produit.
 
 Les gabarits canoniques du catalogue restent inchangés. `scripts/catalogue.py` produit aussi une adaptation sémantique et les 32 champs de titre qualifiés ; `render.js` calcule leurs niveaux selon le contexte de la composition. Modifier ces champs exige de vérifier la référence, les titres frères, les parents absents ou vides, les sorties réelles, le contrat v1 et les comparaisons visuelles des 52 composants. L’empreinte du catalogue reste celle du contrat canonique.
 
@@ -57,9 +57,26 @@ npm run check
 npm test
 ```
 
-`npm run check` compare les octets générés aux sources et contrôle aussi que le prototype conservé est reproductible. Les tests utilisent le Chromium attendu par Playwright. Si ce navigateur manque sur le poste de développement, le préparer explicitement avec le CLI de la version épinglée (`npx --no-install playwright install chromium`) ; cette préparation n’est pas une installation sur le poste métier.
+`npm run check` contrôle l’empreinte de la copie SNUM adaptée, compare les octets générés aux sources et contrôle aussi que le prototype conservé est reproductible. Les tests utilisent le Chromium attendu par Playwright. Si ce navigateur manque sur le poste de développement, le préparer explicitement avec le CLI de la version épinglée (`npx --no-install playwright install chromium`) ; cette préparation n’est pas une installation sur le poste métier.
 
 Les scénarios navigateur créent des contextes isolés, téléchargent des fichiers réels et produisent des preuves sous `evidence/application/`, ignorées par Git. `MAIL_BUILDER_EVIDENCE` peut désigner un autre répertoire pour préserver une campagne précédente. Le parcours presse-papiers Chromium utilise les permissions du profil de recette. Les pannes de quota et les bibliothèques inconnues sont injectées dans ce seul profil.
+
+### Suite navigateur multi-moteur
+
+`npm test` reste la suite de référence sous Chromium. `npm run test:engines` rejoue les fichiers qui lancent un navigateur sur Chromium, WebKit et Firefox (Playwright), un moteur après l'autre. Options : `--engines=webkit,firefox`, `--files=<fichier>.test.cjs,...`, `--json=<chemin>` pour garder le rapport structuré. Le moteur se choisit pour un fichier seul avec `MAIL_BUILDER_ENGINE=webkit node --test tests/<fichier>`. Le point d'extension est `tests/browser-support.cjs` ; le nom `chromium` importé par les tests désigne désormais le moteur choisi.
+
+Le rapport sépare quatre issues, jamais mélangées :
+
+- les échecs produit non expliqués : tout échec absent du registre `tests/engine-expectations.json` ; ils font échouer la commande (code 1) ;
+- les échecs produit connus : inscrits au registre avec leur raison et, quand elle existe, l'issue qui les porte (par exemple #39 pour la largeur sous WebKit) ; ils sont listés mais ne font pas échouer la commande ;
+- les limitations d'automatisation : échecs inscrits au registre avec la classe `automation`, et moteurs indisponibles ;
+- les tests ignorés explicitement (`skip` avec raison).
+
+Un moteur dont le navigateur Playwright n'est pas installé est rapporté « indisponible, non exécuté » et la commande rend le code 2 : il n'est jamais compté comme réussi. Le téléchargement d'un navigateur reste une décision explicite (`npx playwright install webkit firefox`, avec la version épinglée) ; la commande n'en installe aucun. Playwright exige son propre build de Firefox : le Firefox natif de `/Applications` n'est pas utilisé par cette commande ; `tests/firefox-support.mjs` le pilote séparément par WebDriver BiDi.
+
+Les oracles propres à Chromium sont remplacés par des propriétés vraies dans les trois moteurs. L'arbre d'accessibilité natif (CDP) ne sert qu'à renforcer le test sous Chromium ; ailleurs le test lit les attributs ARIA, le focus du DOM et `ariaSnapshot()`. Les reçus des autres moteurs s'écrivent sous `evidence/application-<moteur>/` et n'écrasent jamais ceux de Chromium.
+
+Presse-papiers : seul Chromium accorde `clipboard-read` à Playwright, donc seul Chromium relit un vrai presse-papiers. Sous WebKit et Firefox, l'écriture de l'application s'exécute pour de bon, mais la relecture rend les éléments enregistrés à l'écriture. C'est une interception, pas un collage : le rapport la signale fichier par fichier (« relecture du presse-papiers par interception, jamais un collage réel »). Aucun de ces tests ne prouve ce qu'une messagerie reçoit : voir #13.
 
 Les installations et résultats locaux ShipGuard sous `visual-tests/` restent aussi ignorés : ils contiennent une copie de l’outillage et des chemins propres à la campagne. La suite produit reproductible et versionnée est sous `tests/`. Le compte rendu d’audit conserve les erreurs du plugin et faux liens du crawler ; ils ne sont pas transformés en défauts produit.
 
@@ -126,7 +143,7 @@ ne change ni les champs, ni la version, ni l’empreinte du catalogue. Un ancien
 lecteur strict peut refuser une nouvelle composition contenant `mailto:` :
 ouvrir celle-ci avec la livraison qui prend en charge ces pieds de page.
 
-Le schéma JSON Schema 2020-12 vérifie la structure ; les contrôles d’URL, d’unicité et de référence active restent aussi dans le moteur. Il ne crée aucune dépendance d’exécution. Lors de cette recette, le validateur Python local `jsonschema` 4.26.0 a contrôlé le métaschéma et les deux fichiers d’exemple ; il n’est pas requis pour ouvrir l’application.
+Le schéma JSON Schema 2020-12 vérifie la structure ; les contrôles d’URL, d’unicité et de référence active restent aussi dans le moteur. Il ne crée aucune dépendance d’exécution. La suite utilise `tests/schema-validation.test.cjs`, via `tests/validate-schema.cjs`, pour valider les deux exemples livrés, un export de composition et un export de bibliothèque produits par l’application, et pour rejeter des témoins invalides. Le validateur s’appuie sur `ajv` 8 et `ajv-formats` 3, inscrits en `devDependencies` et installés par `npm ci --ignore-scripts` ; sans eux le test échoue explicitement avec le code 2, il n’est jamais ignoré. Aucune dépendance Python n’est requise.
 
 IndexedDB utilise `builder-mail-dsfr-library`, version 1, magasin `library`. L’enregistrement courant et l’état précédent sont écrits dans la même transaction. Le token courant empêche une fenêtre obsolète d’écraser silencieusement une autre fenêtre. Chaque sauvegarde réussie remplace l’unique état précédent.
 
@@ -146,7 +163,7 @@ Une modification des champs, gabarits ou CSS change l’empreinte du catalogue. 
 4. Régénérer, relire le diff, exécuter les vérifications adaptées et qualifier chaque famille concernée dans le mail reçu.
 5. Fournir le dossier de recette et les limites. Tout push ou déploiement exige le mandat correspondant.
 
-Servir uniquement le contenu de `app/distribution/web/` sur l’origine HTTPS autorisée, dans un périmètre stable. Ne pas mettre un profil navigateur ou `evidence/` en ligne. La recette de mise à jour locale utilise une variation contrôlée du cache ; elle ne prouve pas une migration de schéma ni les politiques d’un hébergeur réel.
+Publier trois variantes : le contenu de `app/distribution/web/` (atelier web), `app/distribution/snum.html` (publié sous `snum.html`) et `app/distribution/portable.html` (publié sous `atelier-portable.html`). Seule la variante web est installable et hors connexion ; SNUM et le portable sont des fichiers autonomes servis à côté d’elle. Les servir sur l’origine HTTPS autorisée, dans un périmètre stable. Ne pas mettre un profil navigateur ou `evidence/` en ligne. La recette de mise à jour locale utilise une variation contrôlée du cache ; elle ne prouve pas une migration de schéma ni les politiques d’un hébergeur réel.
 
 GitHub Pages est l’hébergement choisi par l’utilisateur. `.github/workflows/pages.yml` vérifie les octets générés puis publie seulement la variante web, `snum.html` et `atelier-portable.html`. Les Actions officielles sont épinglées par SHA ; aucun secret personnel n’est requis. Activer Pages avec la source « GitHub Actions » dans les paramètres du dépôt et utiliser `main` comme branche par défaut. Cette activation exige les droits d’administration ou de gestion de Pages ; un accès Git en écriture ne suffit pas. Voir la [procédure GitHub](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages).
 

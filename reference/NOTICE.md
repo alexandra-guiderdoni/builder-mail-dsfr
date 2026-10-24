@@ -24,7 +24,7 @@ Ces ressources concernent l’interface : conteneur commun, grille, typographie,
 
 ## Import SNUM et prototype
 
-Le module `prototype/reference/snum-packet.js` est utilisé dans `app/distribution/snum.html` pour analyser les paquets. Sa source et sa provenance initiale sont conservées dans [la provenance du prototype](../prototype/reference/provenance.json). La copie locale contrôle aussi le jour de semaine depuis la correction #24 ; le projet SNUM extérieur reste intact. Le builder générique ne contient pas ce parseur. L’adaptateur local `app/snum/adapter.js` organise les rubriques et les articles en blocs du contrat générique ; son rendu utilise le moteur commun de l’application.
+Le module `prototype/reference/snum-packet.js` est utilisé dans `app/distribution/snum.html` pour analyser les paquets. Sa provenance est conservée à deux niveaux dans [la provenance du prototype](../prototype/reference/provenance.json) : `sha256` est l’empreinte amont historique du fichier SNUM tel que copié à l’origine ; `adapted_sha256` est celle de la copie locale actuelle, adaptée pour contrôler le jour de semaine depuis la correction #24. L’écart entre les deux est donc voulu et documenté ; le projet SNUM extérieur reste intact. `npm run check` recalcule l’empreinte de la copie adaptée (`scripts/check_provenance.py`) : toute évolution volontaire du module met à jour `adapted_sha256` et `adaptation` dans le même changement. Le builder générique ne contient pas ce parseur. L’adaptateur local `app/snum/adapter.js` organise les rubriques et les articles en blocs du contrat générique ; son rendu utilise le moteur commun de l’application.
 
 Les fichiers du prototype et son historique restent conservés. Leur qualification ne se substitue pas à celle de l’application.
 

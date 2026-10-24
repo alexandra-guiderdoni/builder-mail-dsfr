@@ -68,7 +68,7 @@ test('52 composants : présentation CSS, bornes responsive, contenus longs, espa
       await display.setContent(doc.normal.html); await loaded(display);
       const current = await display.evaluate(inspect), after = await display.screenshot({fullPage: true}), name = `${doc.component}-normal-${scheme}-${width}`;
       check(current, name); assert.equal(current.text, before.text, name); assert.deepEqual(current.links, before.links, name);
-      const identical = png.equals(after), intendedChange = [601, 619].includes(width) || (doc.component === 48 && width === 320);
+      const identical = png.equals(after), intendedChange = [601, 619].includes(width) || (doc.component === 48 && width === 320) || (scheme === 'dark' && [7, 51].includes(doc.component)); // #42 : texte éclairci en mode sombre
       if (!identical) {await fs.writeFile(path.join(output, name + '-before.png'), png); await fs.writeFile(path.join(output, name + '-after.png'), after);}
       assert(identical || intendedChange, name + ' : différence visuelle inattendue');
       await display.setContent(doc.normal.copy); await display.locator('style,link').evaluateAll(nodes => nodes.forEach(e => e.remove())); await loaded(display);
