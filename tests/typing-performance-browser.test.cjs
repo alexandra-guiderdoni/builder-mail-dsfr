@@ -157,12 +157,14 @@ test('après la saisie, l’import, la restauration et le changement d’image c
     await fresh.page.evaluate(() => MailBuilder.error(''));
     await fresh.page.locator('[data-image-field]').setInputFiles({name: 'valide.png', mimeType: 'image/png', buffer: Buffer.from(good.slice(good.indexOf(',') + 1), 'base64')});
     await fresh.page.locator('#notice').filter({hasText: 'Image locale incorporée'}).waitFor();
-    assert.equal(await fresh.page.evaluate(() => MailBuilder.doc().blocks.at(-1).values.f0), good);
+    // Depuis #33, l’import peut recompresser l’image : on vérifie une image de données contrôlée, pas son encodage.
+    const stored = await fresh.page.evaluate(() => { const value = MailBuilder.doc().blocks.at(-1).values.f0; MailBuilder.Model.image(value); return value; });
+    assert.match(stored, /^data:image\/(png|jpeg);base64,/); assert.notEqual(stored, forged);
     // Mêmes octets annoncés en JPEG : le décodage natif réussit, le contrôle du modèle doit refuser la chaîne.
     await fresh.page.evaluate(() => MailBuilder.notice(''));
     await fresh.page.locator('[data-image-field]').setInputFiles({name: 'annonce.jpg', mimeType: 'image/jpeg', buffer: Buffer.from(good.slice(good.indexOf(',') + 1), 'base64')});
     await fresh.page.locator('#error').filter({hasText: 'ne correspond pas au format annoncé'}).waitFor();
-    assert.equal(await fresh.page.evaluate(() => MailBuilder.doc().blocks.at(-1).values.f0), good);
+    assert.equal(await fresh.page.evaluate(() => MailBuilder.doc().blocks.at(-1).values.f0), stored);
     assert.deepEqual(observations.errors, []); assert.deepEqual(fresh.observations.errors, []);
   } finally { await browser.close(); }
 });

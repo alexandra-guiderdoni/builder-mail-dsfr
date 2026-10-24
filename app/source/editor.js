@@ -89,11 +89,13 @@
   get("block-editor").addEventListener("change", event => {
     if (!event.target.hasAttribute("data-image-field")) return;
     const file = event.target.files[0], key = event.target.dataset.imageField, docId = A.doc().id, blockId = A.selected;
+    const component = A.doc().blocks.find(b => b.id === blockId)?.component;
     attempt(async () => {
-      A.State.guard(); A.pendingInputs++; A.notice("Chargement de l’image locale…");
-      const value = await A.Files.image(file).finally(() => { A.pendingInputs--; });
-      await A.State.change(lib => { const b = lib.documents.find(d => d.id === docId)?.blocks.find(b => b.id === blockId); if (!b) throw new Error("La composition a changé pendant le chargement de l’image."); b.values[key] = value; });
-      A.notice("Image locale incorporée à la composition.");
+      A.State.guard(); const display = component && A.Images.displayWidth(component, key);
+      A.pendingInputs++; A.notice("Chargement de l’image locale…");
+      const image = await A.Files.image(file, display).finally(() => { A.pendingInputs--; });
+      await A.State.change(lib => { const b = lib.documents.find(d => d.id === docId)?.blocks.find(b => b.id === blockId); if (!b) throw new Error("La composition a changé pendant le chargement de l’image."); b.values[key] = image.value; });
+      A.notice(A.Images.describe(image));
     });
   });
   get("documents").addEventListener("change", async event => {
