@@ -73,8 +73,13 @@
       const add = (rule, field, detail) => { if (!found.some(w => w.rule === rule && w.block === block.id)) found.push({rule, block: block.id, field, message: `${name} : ${detail}`}); };
       const items = links(block);
       for (const link of items) { const host = hostOf(link.url); if (host && demoHost(host)) add("demo-domain", link.urlField, `lien de démonstration vers ${host}.`); }
-      const unchanged = definition.fields.filter(f => f.type === "text" && f.default.trim() && block.values[f.key] === f.default);
-      if (unchanged.length) add("demo-text", `field-${unchanged[0].key}`, `texte de démonstration du catalogue inchangé (${unchanged.map(f => f.label).join(", ")}).`);
+      const unchanged = definition.fields.filter(f => {
+        if (!f.default.trim() || block.values[f.key] !== f.default) return false;
+        if (f.type === "text") return true;
+        if (f.type === "url") return !demoHost(hostOf(f.default));
+        return false;
+      });
+      if (unchanged.length) add("demo-text", `field-${unchanged[0].key}`, `valeur de démonstration du catalogue inchangée (${unchanged.map(f => f.label).join(", ")}).`);
       for (const link of items) {
         const real = hostOf(link.url), shown = real && shownHosts(link.label).find(host => !sameSite(real, host));
         if (shown) add("label-domain", link.labelField, `l’intitulé annonce ${decodeHost(shown)}, mais le lien mène à ${decodeHost(real)}.`);

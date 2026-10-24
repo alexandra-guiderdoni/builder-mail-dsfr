@@ -136,7 +136,7 @@ test('fermer pendant la sauvegarde avertit ; le départ annulé conserve le trav
 
 const both = page => page.evaluate(async () => ({current: await MailBuilder.Storage.load(), previous: await MailBuilder.Storage.load('previous')}));
 
-test('quota asynchrone : la transaction est abandonnée après les écritures, current et previous restent inchangés et le travail reste exportable', async () => {
+test('abandon de transaction après écriture : la transaction est abandonnée après les écritures, current et previous restent inchangés et le travail reste exportable', async () => {
   const browser = await chromium.launch({headless: true});
   try {
     const {page} = await open(browser), errors = []; page.on('pageerror', e => errors.push(e.message));
@@ -159,8 +159,11 @@ test('quota asynchrone : la transaction est abandonnée après les écritures, c
     await page.locator('#save-state').filter({hasText: 'Modifications non sauvegardées'}).waitFor();
     assert.equal(await page.evaluate(() => window.abortedAfterPut), 1, 'l’abandon doit survenir après l’écriture de current');
     // Depuis #32, un abandon sans erreur nommée est classé « inaccessible » ; un vrai QuotaExceededError est classé
-    // « saturé » (couvert par save-rescue-browser). Le message nomme l’un de ces cas et propose l’export.
-    assert.match(await page.locator('#error').innerText(), /inaccessible|saturé/);
+    // « saturé » (couvert par save-rescue-browser, pas ici). Ce test ne doit pas accepter « saturé », qui serait un
+    // classement erroné pour un abandon applicatif sans erreur de quota.
+    const errorText = await page.locator('#error').innerText();
+    assert.match(errorText, /inaccessible/);
+    assert.doesNotMatch(errorText, /saturé/);
     assert.deepEqual(await both(page), before);
     await expand(page, 'Fichiers et récupération');
     const output = await download(page, '[data-action=export-document]', 'quota-asynchrone-composition.json');
