@@ -39,12 +39,15 @@
         if (selected) {
           if (!A.UI.focusBlock(selected.id)) editor.querySelector("textarea,input")?.focus();
           A.notice(`Bloc ${name} retiré. Bloc «\u00a0${A.UI.blockName(selected)}\u00a0» sélectionné, ${A.UI.blockPlace(selected.id)}.`);
-        } else { catalogue.focus(); A.notice(`Bloc ${name} retiré. La composition ne contient plus de bloc : ajoutez un composant depuis le catalogue.`); }
+        } else { catalogue.focus(); A.notice(`Bloc ${name} retiré. La composition ne contient plus de bloc\u00a0: ajoutez un composant depuis le catalogue.`); }
       } else {
         const links = selected?.additionalLinks;
         const target = (actionName === "add-footer-link" && get(`field-footer-url-${links.length - 1}`)) || editor.querySelector("textarea,input") || catalogue;
         target.focus();
-        if (actionName === "duplicate") A.notice(`Bloc ${name} dupliqué : la copie est sélectionnée, ${A.UI.blockPlace(A.selected)}.`);
+        if (actionName === "duplicate") A.notice(`Bloc ${name} dupliqué\u00a0: la copie est sélectionnée, ${A.UI.blockPlace(A.selected)}.`);
+        if (actionName === "remove-image") A.notice(`Image retirée du bloc ${name}.`);
+        if (actionName === "add-footer-link") A.notice(`Lien supplémentaire ${links.length} ajouté au bloc ${name}.`);
+        if (actionName === "remove-footer-link") A.notice(`Lien supplémentaire ${Number(operation.dataset.footerLinkIndex) + 1} retiré du bloc ${name}.`);
       }
       await saving;
     });

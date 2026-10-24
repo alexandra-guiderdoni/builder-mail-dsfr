@@ -1,5 +1,6 @@
 const test = require('node:test');
-const {open, click, expand, saved, selectBlock, chromium, assert} = require('./browser-support.cjs');
+const path = require('node:path');
+const {root, open, click, expand, saved, selectBlock, chromium, assert} = require('./browser-support.cjs');
 
 // Contrat de l’issue #43 : chaque action sur un bloc laisse le focus à un endroit prévisible et annonce son résultat
 // dans la région de statut #notice. Les données sont la composition de départ de l’atelier, sans contenu réel.
@@ -19,13 +20,14 @@ test('Monter et Descendre gardent le focus sur le bouton activé, ou passent sur
   const browser = await chromium.launch({headless: true});
   try {
     const {page, observations} = await open(browser);
-    const start = await blocks(page), moving = start[3], total = start.length;
+    const start = await blocks(page), total = start.length, moving = start.at(-3);
+    assert.ok(total >= 4, 'La composition de départ doit compter au moins quatre blocs.');
     await selectBlock(page, moving.id);
 
     await click(page, '[data-block-action=down]'); await saved(page);
     assert.equal((await active(page)).blockAction, 'down', 'Descendre doit garder le focus sur Descendre.');
     await status(page);
-    assert.equal(await notice(page), `Bloc ${g(moving.label)} déplacé en position 5 sur ${total}.`);
+    assert.equal(await notice(page), `Bloc ${g(moving.label)} déplacé en position ${total - 1} sur ${total}.`);
 
     // La touche Entrée répétée enchaîne le déplacement sans revenir chercher le bouton.
     await page.keyboard.press('Enter'); await saved(page);
@@ -60,7 +62,7 @@ test('Dupliquer et Ajouter mettent le focus sur le premier champ du nouveau bloc
     assert.equal(await page.evaluate(() => MailBuilder.selected), copy.id);
     assert.equal((await active(page)).id, copy.first, 'Dupliquer doit cibler le premier champ de la copie.');
     await status(page);
-    assert.equal(await notice(page), `Bloc ${g(source.label)} dupliqué : la copie est sélectionnée, en position 3 sur ${current.length}.`);
+    assert.equal(await notice(page), `Bloc ${g(source.label)} dupliqué\u00a0: la copie est sélectionnée, en position 3 sur ${current.length}.`);
 
     const last = current.at(-1);
     await selectBlock(page, last.id);
@@ -68,7 +70,7 @@ test('Dupliquer et Ajouter mettent le focus sur le premier champ du nouveau bloc
     current = await blocks(page);
     assert.equal(await page.evaluate(() => MailBuilder.selected), current.at(-1).id);
     assert.equal((await active(page)).id, current.at(-1).first, 'La copie du dernier bloc doit recevoir le focus.');
-    assert.equal(await notice(page), `Bloc ${g(last.label)} dupliqué : la copie est sélectionnée, en position ${current.length} sur ${current.length}.`);
+    assert.equal(await notice(page), `Bloc ${g(last.label)} dupliqué\u00a0: la copie est sélectionnée, en position ${current.length} sur ${current.length}.`);
 
     await selectBlock(page, current[0].id);
     await expand(page, 'Ajouter un composant');
@@ -128,7 +130,7 @@ test('Retirer met le focus sur le bloc voisin, ou sur le catalogue quand il n’
     await click(page, '[data-block-action=remove]'); await saved(page);
     focus = await active(page);
     assert.equal(focus.tag, 'SUMMARY'); assert.equal(focus.text, 'Ajouter un composant');
-    assert.equal(await notice(page), `Bloc ${g(only.label)} retiré. La composition ne contient plus de bloc : ajoutez un composant depuis le catalogue.`);
+    assert.equal(await notice(page), `Bloc ${g(only.label)} retiré. La composition ne contient plus de bloc\u00a0: ajoutez un composant depuis le catalogue.`);
     assert.deepEqual(observations.errors, []);
   } finally { await browser.close(); }
 });
@@ -140,6 +142,12 @@ test('Annuler les champs invalides met le focus sur le premier champ restauré e
     const [first] = await blocks(page);
     await selectBlock(page, first.id);
     await page.locator('#article-source').fill('http://exemple.invalid/');
+    // Une action refusée par un champ invalide ne remplace pas le bouton : le focus y reste, sans statut de réussite.
+    const before = await notice(page);
+    await click(page, '[data-block-action=down]');
+    await page.locator('#error').filter({hasText: 'Corrigez les champs signalés'}).waitFor();
+    assert.equal((await active(page)).blockAction, 'down');
+    assert.equal(await notice(page), before);
     await click(page, '[data-action=cancel-fields]');
     assert.equal((await active(page)).id, 'article-source', 'Le champ restauré doit recevoir le focus.');
     assert.equal(await page.locator('#article-source').inputValue(), '');
@@ -160,6 +168,69 @@ test('Annuler les champs invalides met le focus sur le premier champ restauré e
     const focus = await active(page);
     assert.equal(focus.action, 'cancel-fields');
     assert.equal(await notice(page), 'Aucun champ invalide à annuler.');
+    assert.deepEqual(observations.errors, []);
+  } finally { await browser.close(); }
+});
+
+// Retient chaque écriture du stockage jusqu’à releaseSaves() : le focus doit déjà être replacé pendant la sauvegarde.
+async function holdSaves(page) {
+  await page.evaluate(() => {
+    const storage = MailBuilder.Storage, held = [];
+    window.releaseSaves = () => held.splice(0).forEach(release => release());
+    MailBuilder.Storage = Object.freeze({...storage, save: (...args) => new Promise(resolve => held.push(() => resolve(storage.save(...args))))});
+  });
+}
+
+test('le focus est replacé dès le rendu, sans attendre la fin de la sauvegarde', async () => {
+  const browser = await chromium.launch({headless: true});
+  try {
+    const {page, observations} = await open(browser);
+    const start = await blocks(page);
+    await selectBlock(page, start[1].id);
+    await holdSaves(page);
+    await click(page, '[data-block-action=down]');
+    assert.equal(await page.locator('#save-state').textContent(), 'Sauvegarde en cours…');
+    assert.equal((await active(page)).blockAction, 'down');
+    assert.equal(await notice(page), `Bloc ${g(start[1].label)} déplacé en position 3 sur ${start.length}.`);
+    await page.evaluate(() => releaseSaves()); await saved(page);
+
+    await expand(page, 'Ajouter un composant');
+    await page.locator('#catalogue').selectOption('mail-29');
+    await click(page, '[data-action=add-block]');
+    assert.equal(await page.locator('#save-state').textContent(), 'Sauvegarde en cours…');
+    const selected = await page.evaluate(() => MailBuilder.selected);
+    assert.equal((await active(page)).id, (await blocks(page)).find(b => b.id === selected).first, 'Ajouter doit cibler le premier champ avant la fin de la sauvegarde.');
+    await page.evaluate(() => releaseSaves()); await saved(page);
+    assert.deepEqual(observations.errors, []);
+  } finally { await browser.close(); }
+});
+
+test('Retirer l’image, Ajouter un lien et Retirer un lien du pied de page annoncent leur résultat', async () => {
+  const browser = await chromium.launch({headless: true});
+  try {
+    const {page, observations} = await open(browser);
+    await expand(page, 'Ajouter un composant');
+    await page.locator('#catalogue').selectOption('mail-31');
+    await click(page, '[data-action=add-block]'); await saved(page);
+    const article = await page.evaluate(() => MailBuilder.Model.component('mail-31').label);
+    await page.locator('[data-image-field]').first().setInputFiles(path.join(root, 'app/assets/icon-192.png'));
+    await page.locator('#notice').filter({hasText: 'Image locale incorporée'}).waitFor(); await saved(page);
+    await click(page, '[data-block-action=remove-image]'); await saved(page);
+    await status(page);
+    assert.equal(await notice(page), `Image retirée du bloc ${g(article)}.`);
+    assert.equal((await active(page)).id, 'field-f0', 'Le focus de Retirer l’image est inchangé : premier champ du bloc.');
+
+    await page.locator('#catalogue').selectOption('mail-50');
+    await click(page, '[data-action=add-block]'); await saved(page);
+    const footer = await page.evaluate(() => MailBuilder.Model.component('mail-50').label);
+    await click(page, '[data-block-action=add-footer-link]'); await saved(page);
+    assert.equal((await active(page)).id, 'field-footer-url-0');
+    assert.equal(await notice(page), `Lien supplémentaire 1 ajouté au bloc ${g(footer)}.`);
+    await click(page, '[data-block-action=add-footer-link]'); await saved(page);
+    assert.equal((await active(page)).id, 'field-footer-url-1');
+    assert.equal(await notice(page), `Lien supplémentaire 2 ajouté au bloc ${g(footer)}.`);
+    await click(page, '[data-block-action=remove-footer-link][data-footer-link-index="0"]'); await saved(page);
+    assert.equal(await notice(page), `Lien supplémentaire 1 retiré du bloc ${g(footer)}.`);
     assert.deepEqual(observations.errors, []);
   } finally { await browser.close(); }
 });
