@@ -20,7 +20,7 @@ test('les erreurs de champs restent associées à chacun et disparaissent après
   const browser = await chromium.launch();
   try {
     const {page} = await open(browser);
-    await page.locator('#article-source').fill('http://exemple.invalid/');
+    await page.locator('#article-source').fill('http://exemple.invalid/'); await page.locator('#article-source').blur();
     await page.locator('#document-name').fill('');
     const described = selector => page.locator(selector).evaluate(e => ({invalid: e.getAttribute('aria-invalid'),
       text: (e.getAttribute('aria-describedby') || '').split(/\s+/).map(id => document.getElementById(id)?.textContent || '').join(' ')}));

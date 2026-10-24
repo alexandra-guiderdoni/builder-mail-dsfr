@@ -70,6 +70,10 @@ def fill(selector, value):
     return {"type": "fill", "selector": selector, "value": value}
 
 
+def press(selector, key):
+    return {"type": "press", "selector": selector, "key": key}
+
+
 OUT.mkdir(parents=True, exist_ok=True)
 editor = [click("[data-action=resume-document]")]
 dialog = [click("[data-library-action=rename]")]
@@ -103,8 +107,13 @@ scenes = [
     (
         "invalid",
         "portable.html",
-        editor + [fill("#article-source", "http://exemple.invalid/")],
-        "Ce champ n’est pas sauvegardé.",
+        # L’erreur d’une URL s’affiche au départ du champ (issue #37) : Tab quitte le champ.
+        editor
+        + [
+            fill("#article-source", "http://exemple.invalid/"),
+            press("#article-source", "Tab"),
+        ],
+        "Protocole interdit : seul HTTPS est accepté",
     ),
     ("dialog", "portable.html", dialog, "Enregistrer le nom"),
     (

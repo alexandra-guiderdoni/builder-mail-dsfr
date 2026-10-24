@@ -69,14 +69,16 @@ test('retour à la bibliothèque : champ invalide et fichier en chargement conse
   } finally { await browser.close(); }
 });
 
-test('panne de sauvegarde : retour refusé sans perte et export de secours toujours accessible', async () => {
+test('panne de sauvegarde : retour à l’accueil sans perte, stockage intact et export de secours toujours accessible', async () => {
   const browser = await chromium.launch({headless: true});
   try {
     const {page} = await open(browser); await page.locator('#document-name').fill('Version sauvegardée'); await saved(page);
     const persisted = await page.evaluate(() => MailBuilder.Storage.load());
     await page.evaluate(() => { MailBuilder.Storage = {...MailBuilder.Storage, save: async () => { throw new Error('Quota de recette'); }}; });
     await page.locator('#document-name').fill('Travail à exporter'); await page.locator('#error').filter({hasText: 'Quota de recette'}).waitFor();
-    await click(page, '[data-action=library-home]'); assert(await page.locator('#editor-page').isVisible());
+    // #32 : après un échec, le changement de vue reste disponible ; le travail en mémoire est conservé.
+    await click(page, '[data-action=library-home]'); assert(await page.locator('#library-home').isVisible());
+    assert.match(await page.locator('#newsletter-list').innerText(), /Travail à exporter/);
     await expand(page, 'Fichiers et récupération');
     const exported = JSON.parse(await fs.readFile(await download(page, '[data-action=export-library]', 'bibliotheque-panne-accueil.json'), 'utf8'));
     assert.equal(exported.documents.find(d => d.id === exported.activeId).name, 'Travail à exporter');
