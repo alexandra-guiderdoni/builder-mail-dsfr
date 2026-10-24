@@ -23,8 +23,9 @@ test('la liste entière reste dans la page et le retour au bloc fonctionne depui
     assert(list.client >= list.scroll - 1 && list.maxHeight === 'none', JSON.stringify(list));
     for (const block of [blocks[0], blocks.at(-1)]) {
       await selectBlock(page, block.id);
+      await page.waitForFunction(() => document.activeElement?.id, null, {timeout: 5000}); // le gestionnaire de sélection passe par attempt() : on attend le focus au lieu de le lire aussitôt
       const active = await page.evaluate(() => ({id: document.activeElement.id, y: document.activeElement.getBoundingClientRect().top, h: innerHeight}));
-      assert(active.id && active.y >= 0 && active.y < active.h);
+      assert(active.id && active.y >= 0 && active.y < active.h, JSON.stringify(active));
       await page.locator('#article-source').fill('invalide');
       await page.locator('#block-list').evaluate(e => { e.closest('details').open = false; });
       await click(page, '[data-return-to-block]');

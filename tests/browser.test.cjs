@@ -1,6 +1,6 @@
 const test = require('node:test');
 const path = require('node:path');
-const {root, evidence, click, open, enterEditor, saved, expand, download, selectBlock, selectBlockEffective, focusPage, duplicateBlock, state, chromium, fs, assert} = require('./browser-support.cjs');
+const {root, evidence, click, open, enterEditor, saved, expand, download, selectBlock, selectBlockEffective, focusPage, duplicateBlock, state, chromium, fs, assert, engineName} = require('./browser-support.cjs');
 
 test('les 52 gabarits canoniques conservent le DOM officiel et le rendu dérivé porte les titres attendus', async () => {
   const browser = await chromium.launch({headless: true});
@@ -82,7 +82,7 @@ test('parcours complet par les contrôles : bibliothèque, identités, modèles,
     await focusPage(page); await enterEditor(page); await page.frameLocator('#preview').locator('img').first().waitFor({state: 'visible'});
     await page.screenshot({path: path.join(evidence, 'bibliotheque-verifiee.png'), fullPage: true});
     assert.deepEqual(errors, []); assert(!requests.some(url => /^https?:/.test(url)));
-    await fs.writeFile(path.join(evidence, 'parcours-chromium.json'), JSON.stringify({browser: browser.version(),offlinePortable: true,documents: lib.documents.length,templates: lib.templates.length,identities: lib.identities.length,blockMoveAndRemoval: true,clipboardTypes: clipboard.types,sourceCopiesInPlain: 2,imageRestored: true,errors}, null, 2));
+    await fs.writeFile(path.join(evidence, `parcours-${engineName}.json`), JSON.stringify({browser: browser.version(),offlinePortable: true,documents: lib.documents.length,templates: lib.templates.length,identities: lib.identities.length,blockMoveAndRemoval: true,clipboardTypes: clipboard.types,sourceCopiesInPlain: 2,imageRestored: true,errors}, null, 2));
     await context.close();
   } finally { await browser.close(); }
 });

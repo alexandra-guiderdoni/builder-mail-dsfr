@@ -1,7 +1,7 @@
 const test = require('node:test');
 const path = require('node:path');
 const {createHash} = require('node:crypto');
-const {root, evidence, open, click, enterEditor, expand, saved, state, chromium, fs, assert} = require('./browser-support.cjs');
+const {root, evidence, open, click, enterEditor, expand, saved, state, chromium, nativeAx, nativeAxNode, fs, assert} = require('./browser-support.cjs');
 const directory = path.join(evidence, 'form-interactions');
 const doc = page => page.evaluate(() => JSON.parse(JSON.stringify(MailBuilder.doc())));
 
@@ -20,14 +20,10 @@ async function field(page, selector, native = false) {
       const n = document.getElementById(id); return {id, text: n?.textContent, visible: n?.checkVisibility()};
     })}));
   if (native) {
-    const cdp = await page.context().newCDPSession(page);
-    try {
-      const {result: object} = await cdp.send('Runtime.evaluate', {expression: `document.querySelector(${JSON.stringify(selector)})`});
-      const {node} = await cdp.send('DOM.describeNode', {objectId: object.objectId});
-      const {nodes} = await cdp.send('Accessibility.getPartialAXTree', {backendNodeId: node.backendNodeId});
-      result.ax = nodes.find(n => n.backendDOMNodeId === node.backendNodeId);
-      assert(result.ax && !result.ax.ignored, 'Le contrôle doit être exposé dans l’arbre natif.');
-    } finally { await cdp.detach(); }
+    // Natif sous Chromium (CDP) ; ailleurs, la même propriété se lit sur les attributs ARIA et le focus du DOM, vrais dans tous les moteurs.
+    const ax = await nativeAxNode(page, selector);
+    if (nativeAx) { assert(ax && !ax.ignored, 'Le contrôle doit être exposé dans l’arbre natif.'); result.ax = ax; }
+    result.exposed = {required: ax ? !!ax.properties?.some(p => p.name === 'required' && p.value.value === true) : result.required === 'true', focused: ax ? !!ax.properties?.some(p => p.name === 'focused' && p.value.value === true) : result.focused, source: ax ? 'arbre natif (CDP)' : 'DOM et ARIA'};
   }
   return result;
 }
@@ -59,10 +55,10 @@ test('les contraintes obligatoires sont visibles et exposées pour le nom et les
       assert.equal(await page.locator('#article-source').getAttribute('aria-required'), null, 'La source reste facultative.');
       assert.equal(await page.locator('#article-source-label').getAttribute('aria-required'), null);
     }
-    const required = observations.filter(o => o.ax);
+    const required = observations.filter(o => o.exposed);
     assert.equal(blocks.length, 52); assert.equal(observations.filter(o => o.fieldCount !== undefined).reduce((n, o) => n + o.fieldCount, 0), 178);
     assert.equal(required.length, 14);
-    const missing = required.filter(o => o.required !== 'true' || !o.labels.some(l => l.visible && /obligatoire/i.test(l.text)) || !o.ax.properties?.some(p => p.name === 'required' && p.value.value === true));
+    const missing = required.filter(o => o.required !== 'true' || !o.labels.some(l => l.visible && /obligatoire/i.test(l.text)) || !o.exposed.required);
     assert.deepEqual(missing.map(o => [o.scope, o.id]), [], 'Les contraintes doivent être prévisibles avant la saisie.');
     completed = true;
   } finally { await receipt('constraints', observations, completed); await browser.close(); }
@@ -143,7 +139,7 @@ test('renommage : rejet du vide, correction, annulations et retour du focus sont
     const focusReturned = async step => {
       await page.waitForFunction(selector => document.activeElement === document.querySelector(selector), button);
       const current = await field(page, button, true);
-      assert.equal(current.focused, true); assert(current.ax.properties.some(p => p.name === 'focused' && p.value.value === true));
+      assert.equal(current.focused, true); assert(current.exposed.focused);
       observations.push({step, ...current});
     };
     await click(page, button);
@@ -152,7 +148,7 @@ test('renommage : rejet du vide, correction, annulations et retour du focus sont
       const current = await field(page, '#library-name', true);
       assert.equal(current.invalid, 'true'); assert.equal(current.focused, true);
       assert(current.descriptions.some(d => d.id === 'library-dialog-error' && d.visible && /Renseignez un nom/.test(d.text)));
-      assert(current.ax.properties.some(p => p.name === 'focused' && p.value.value === true));
+      assert(current.exposed.focused);
       assert(await page.locator('#library-dialog').evaluate(e => e.open)); assert.deepEqual(await state(page), before);
       observations.push({step: 'rename-rejected', ...current});
     }
