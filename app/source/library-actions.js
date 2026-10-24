@@ -7,7 +7,7 @@
   const key = value => value.normalize("NFKC").trim().toLowerCase();
   const unique = (list, label, kind) => { if (list.some(x => key(x.name) === key(label))) throw new Error(`${kind} nommé « ${label} » existe déjà. Choisissez un autre nom.`); };
   // L’annonce de réussite attend la fin de la sauvegarde ; un échec a déjà affiché son propre message.
-  const announce = async message => { try { await A.State.flush(); } catch (cause) { if (get("error").hidden) throw cause; return; } A.notice(message); };
+  const announce = async message => { const ticket = A.State.noticeTicket(); try { await A.State.flush(); } catch (cause) { if (get("error").hidden) throw cause; return; } if (A.State.noticeTicket() !== ticket) return; A.notice(message); };
   const starters = {information: [2, 5, 8, 19, 40, 47, 49], lettre: [2, 5, 10, 31, 35, 46, 47, 49], invitation: [2, 6, 19, 39, 40, 47, 49]};
   const family = b => M.component(b.component).family, framed = b => ["En-têtes", "Pieds de page"].includes(family(b));
   // Intact : valeurs éditoriales, source et liens égaux aux valeurs initiales du composant, identifiant ignoré.

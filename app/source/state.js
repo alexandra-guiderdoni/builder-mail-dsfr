@@ -22,7 +22,8 @@
   A.removed = new Map();
   A.doc = () => A.library.documents.find(d => d.id === A.library.activeId);
   A.error = message => { const e = get("error"); e.textContent = message; e.hidden = !message; if (message) cancelSuccess(); };
-  A.notice = message => { get("notice").textContent = message; };
+  let noticeTicket = 0;
+  A.notice = message => { get("notice").textContent = message; noticeTicket++; };
   // Tant que le travail n’est pas sauvegardé, l’export de secours suit le message d’échec.
   function failing(value) { failed = value; get("save-rescue").hidden = !value || !!readOnly; }
   const readOnlyError = () => new Error(readOnly === "version" ? "Cette fenêtre utilise une autre version de l’atelier : exportez la bibliothèque en mémoire, puis rechargez la page avant de reprendre la main." : "Une autre fenêtre détient la bibliothèque : cette fenêtre est en lecture seule. Exportez la bibliothèque en mémoire ou reprenez la main.");
@@ -227,5 +228,5 @@
   // Le rechargement et l’activation d’une mise à jour exigent, eux, une sauvegarde réussie.
   async function flush() { await settle(); if (failed || pending || A.recoveryOnly) throw new Error("La sauvegarde doit réussir avant de recharger l’application."); }
   const saved = () => !failed && !pending && !A.recoveryOnly;
-  A.State = Object.freeze({guard, guardEdit, setDraft, dropDraft, dropFooterDraft, change, save, start, recover, settle, flush, saved, takeOver, outdated, reload, exported});
+  A.State = Object.freeze({guard, guardEdit, setDraft, dropDraft, dropFooterDraft, change, save, start, recover, settle, flush, saved, takeOver, outdated, reload, exported, noticeTicket: () => noticeTicket});
 })();
