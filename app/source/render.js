@@ -80,7 +80,7 @@
   // ne jouent que si une messagerie retire ces styles, dont les règles !important l’emportent sinon.
   // Un moteur qui lit ces styles sans comprendre min() garde le rendu dérivé : seules min(), width:auto
   // et des largeurs identiques à la conception sont ajoutées hors des règles !important de tête.
-  // Contrairement à la copie, il conserve les largeurs, les proportions des colonnes et les logos.
+  // Contrairement à la copie, il conserve avec ces styles les largeurs, les proportions des colonnes et les logos.
   function exportHtml(value) {
     const doc = new DOMParser().parseFromString(html(value), "text/html");
     const add = (element, css) => element.setAttribute("style", (element.getAttribute("style") || "") + ";" + css);
