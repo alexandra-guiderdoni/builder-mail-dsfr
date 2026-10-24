@@ -60,3 +60,18 @@ for (const [engine, launcher] of [['Chromium', chromium], ['WebKit', webkit]]) {
     } finally { await browser.close(); }
   });
 }
+
+for (const [engine, launcher] of [['Chromium', chromium], ['WebKit', webkit]]) {
+  test(`export d’une composition depuis l’accueil de la bibliothèque (${engine})`, async () => {
+    const browser = await launcher.launch();
+    try {
+      const {page, context} = await open(browser, {timezoneId: 'Europe/Paris'}, p => p.clock.setFixedTime(FIXED));
+      await page.locator('#document-name').fill('Bulletin n°3 : été / automne ?'); await saved(page);
+      await page.evaluate(() => MailBuilder.Library.home());
+      const id = await page.evaluate(() => MailBuilder.library.activeId);
+      const filename = await suggested(page, `[data-document="${id}"] [data-library-action=export]`);
+      assert.equal(filename.normalize('NFC'), `Bulletin-n°3-été-automne-${DATE}.courriel.json`);
+      await context.close();
+    } finally { await browser.close(); }
+  });
+}
