@@ -66,12 +66,15 @@
     await attempt(() => A.State.change(lib => { lib.activeId = selected; }));
     event.target.value = A.library.activeId;
   });
+  let readings = 0; const reading = "Lecture du fichier de travail…";
   get("project-input").addEventListener("change", event => {
     const file = event.target.files[0]; if (!file) return;
     attempt(async () => {
-      A.notice("Lecture du fichier de travail…");
-      const incoming = await A.Imports.prepare(file), merged = A.Imports.merge(A.library, incoming);
-      await A.State.change(lib => { Object.assign(lib, merged); }); await A.Library.open(A.library.activeId); A.notice("Import ajouté à la bibliothèque, avec ses images. Les compositions existantes sont conservées.");
+      readings++; A.notice(reading);
+      try {
+        const incoming = await A.Imports.prepare(file), merged = A.Imports.merge(A.library, incoming);
+        await A.State.change(lib => { Object.assign(lib, merged); }); await A.Library.open(A.library.activeId); A.notice("Import ajouté à la bibliothèque, avec ses images. Les compositions existantes sont conservées.");
+      } finally { if (!--readings && get("notice").textContent === reading) A.notice(""); }
     });
     event.target.value = "";
   });
