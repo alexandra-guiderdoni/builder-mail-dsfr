@@ -134,3 +134,29 @@ test('une image chargée après la mesure agrandit puis réduit le même aperçu
     assert.equal(await page.evaluate(() => JSON.stringify(MailBuilder.doc())), before);
   } finally { await browser.close(); }
 });
+
+test('une mesure reçue avant le chargement du nouvel aperçu ne change pas la hauteur du cadre', async () => {
+  const browser = await chromium.launch();
+  try {
+    const {page, context} = await open(browser);
+    const frame = await composition(page, true, 'Mesure prématurée');
+    const id = await page.evaluate(() => MailBuilder.doc().blocks.find(b => MailBuilder.Model.component(b.component).headings.length).id);
+    await click(page, `[data-select="${id}"]`);
+    const input = page.locator('textarea[data-field]').first(); await input.fill('Titre'); await saved(page);
+    await frame.waitForFunction(() => document.documentElement.scrollHeight <= document.documentElement.clientHeight);
+    const result = await input.evaluate(async element => {
+      const f = document.getElementById('preview'), baseline = f.getBoundingClientRect().height, heights = [];
+      new MutationObserver(() => heights.push(f.getBoundingClientRect().height)).observe(f, {attributes: true, attributeFilter: ['style']});
+      element.value = 'Titre modifié'; element.dispatchEvent(new Event('input', {bubbles: true}));
+      /* Le cadre vient de recevoir un nouveau document : une mesure partielle arrive avant son chargement, comme sous Firefox. */
+      const token = f.src.split('#')[1], premature = Math.round(baseline / 2);
+      dispatchEvent(new MessageEvent('message', {source: f.contentWindow, origin: 'null', data: {type: 'mail-preview-size', token, height: premature, width: f.clientWidth}}));
+      return {baseline, premature, afterPremature: f.getBoundingClientRect().height, heights};
+    });
+    assert.equal(result.afterPremature, result.baseline, JSON.stringify(result));
+    const settled = await (await page.locator('#preview').elementHandle()).contentFrame();
+    await settled.waitForFunction(() => document.title === 'Mesure prématurée' && document.body.textContent.includes('Titre modifié'));
+    await page.waitForFunction(baseline => Math.abs(document.getElementById('preview').getBoundingClientRect().height - baseline) <= 2, result.baseline);
+    await context.close();
+  } finally { await browser.close(); }
+});
