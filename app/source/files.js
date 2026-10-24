@@ -6,10 +6,23 @@
     anchor.href = url; anchor.download = filename; document.body.append(anchor); anchor.click(); anchor.remove();
     setTimeout(() => URL.revokeObjectURL(url), 2000);
   }
+  // Nom de fichier lisible : caractères interdits par Windows, macOS et Linux remplacés, longueur bornée.
+  function safeName(value, fallback = "composition") {
+    const bytes = text => new TextEncoder().encode(text).length;
+    let base = String(value ?? "").normalize("NFC").replace(/[\\/:*?"<>|\u0000-\u001f\u007f]/g, "-").replace(/\s+/g, "-").replace(/-{2,}/g, "-").replace(/^[-.]+|[-.]+$/g, "");
+    let chars = Array.from(base).slice(0, 80);
+    while (chars.length && bytes(chars.join("")) > 120) chars.pop();
+    base = chars.join("").replace(/[-.]+$/, "");
+    return base || fallback;
+  }
+  // Date d'export locale au format AAAA-MM-JJ (celle du poste, pas l'UTC).
+  const exportDate = (now = new Date()) => `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+  const exportName = (base, extension, now) => `${safeName(base)}-${exportDate(now)}.${extension}`;
   const json = (value, filename) => download(JSON.stringify(value, null, 2), "application/json", filename);
-  async function image(file) {
-    const data = await MailImages.read(file, ["image/png", "image/jpeg", "image/gif", "image/webp"]);
-    A.Model.image(data); return data;
+  // Nouvelle image locale seulement : réduite et recompressée selon le contrat de A.Images.
+  async function image(file, displayWidth) {
+    const result = await A.Images.prepare(file, displayWidth);
+    A.Model.image(result.value); return result;
   }
   async function validate(value) {
     const items = value.schema === "dsfr-mail/library" ? [...value.documents, ...value.templates, ...value.identities] : [value];
@@ -57,5 +70,5 @@
     await navigator.clipboard.write([new ClipboardItem({"text/html": new Blob([html], {type: "text/html"}), "text/plain": new Blob([A.Render.plain(A.doc())], {type: "text/plain"})})]);
     A.notice(`Courriel copié en HTML et texte. ${result.level === "ok" ? "" : `${WARNINGS[result.level]} ${CAUTION} `}Contrôlez le collage et les images dans votre messagerie.`);
   }
-  A.Files = Object.freeze({download, json, image, validate, copy, weightText, measureWeight, scheduleWeight, staleWeight});
+  A.Files = Object.freeze({download, json, safeName, exportDate, exportName, image, validate, copy, weightText, measureWeight, scheduleWeight, staleWeight});
 })();

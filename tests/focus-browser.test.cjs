@@ -1,5 +1,5 @@
 const test = require('node:test');
-const {open, click, saved, chromium, assert} = require('./browser-support.cjs');
+const {open, click, saved, chromium, nativeAx, nativeAxNode, assert} = require('./browser-support.cjs');
 
 test('le dernier retrait rend le focus nommé à Ajouter un composant, même si la section est fermée', async () => {
   const browser = await chromium.launch({headless: true});
@@ -12,13 +12,9 @@ test('le dernier retrait rend le focus nommé à Ajouter un composant, même si 
     }
     const focus = await page.evaluate(() => ({tag: document.activeElement.tagName, text: document.activeElement.textContent}));
     assert.equal(focus.tag, 'SUMMARY'); assert.equal(focus.text, 'Ajouter un composant');
-    const client = await context.newCDPSession(page);
-    const {result} = await client.send('Runtime.evaluate', {expression: 'document.activeElement'});
-    const {node} = await client.send('DOM.describeNode', {objectId: result.objectId});
-    const {nodes} = await client.send('Accessibility.getPartialAXTree', {backendNodeId: node.backendNodeId});
-    const active = nodes.find(n => n.backendDOMNodeId === node.backendNodeId);
-    assert(active && !active.ignored); assert.equal(active.name.value, 'Ajouter un composant');
-    assert.equal(active.properties.find(p => p.name === 'focused')?.value.value, true);
+    const active = await nativeAxNode(page, 'summary:focus');
+    if (nativeAx) { assert(active && !active.ignored); assert.equal(active.name.value, 'Ajouter un composant'); assert.equal(active.properties.find(p => p.name === 'focused')?.value.value, true); }
+    else assert.match(await page.locator('summary:focus').ariaSnapshot(), /Ajouter un composant/);
     await page.keyboard.press('Enter');
     assert(await summary.evaluate(e => e.parentElement.open));
     await page.keyboard.press('Tab');
