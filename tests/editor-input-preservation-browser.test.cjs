@@ -84,10 +84,13 @@ test('une saisie invalide reste visible pendant et après le chargement', async 
     const source = page.locator('#article-source');
     await source.fill('https://'); await source.press('End');
     await release(page, {persist: false});
+    // Contrat de #37 : l’URL invalide est un brouillon hors du modèle ; il survit au rechargement de l’éditeur
+    // et son erreur apparaît au départ du champ.
     assert.equal(await source.inputValue(), 'https://');
+    assert.equal(await page.evaluate(() => [...MailBuilder.drafts.values()].some(d => d.input === 'article-source')), true);
+    await source.blur();
     await page.locator('[data-field-error="article-source"]').waitFor();
     assert.equal(await source.getAttribute('aria-invalid'), 'true');
-    assert.equal(await page.evaluate(() => MailBuilder.invalid.has('article-source')), true);
   } finally { await browser.close(); }
 });
 
