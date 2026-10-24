@@ -10,10 +10,24 @@
     if (!value || typeof value !== "object" || Array.isArray(value)) fail(`${label} : objet requis.`);
     if (Object.keys(value).some(key => !fields.includes(key) && !optional.includes(key)) || fields.some(key => !Object.hasOwn(value, key))) fail(`${label} : champs manquants ou inconnus.`);
   }
+  // Quatre causes distinctes, testées dans cet ordre : caractères interdits, adresse incomplète, protocole, identifiants.
+  const URL_MESSAGES = Object.freeze({
+    characters: "Caractères interdits dans l’adresse HTTPS : retirez les espaces et les caractères de contrôle.",
+    incomplete: "Adresse HTTPS incomplète : saisissez une adresse complète commençant par https://, par exemple https://exemple.fr/page.",
+    protocol: "Protocole interdit : seul HTTPS est accepté, l’adresse doit commencer par https://.",
+    credentials: "Identifiants interdits dans l’adresse HTTPS : retirez l’identifiant et le mot de passe."
+  });
+  function urlIssue(value) {
+    if (/[\x00-\x20\x7f]/.test(value)) return "characters";
+    let parsed; try { parsed = new URL(value); } catch { return "incomplete"; }
+    if (parsed.protocol !== "https:") return "protocol";
+    if (parsed.username || parsed.password) return "credentials";
+    return null;
+  }
   function url(value, empty = false) {
     if (empty && value === "") return;
-    let parsed; try { parsed = new URL(value); } catch { fail("Lien HTTPS complet requis."); }
-    if (parsed.protocol !== "https:" || parsed.username || parsed.password || /[\x00-\x20\x7f]/.test(value)) fail("Lien HTTPS sans identifiant requis.");
+    const issue = urlIssue(value);
+    if (issue) fail(URL_MESSAGES[issue]);
   }
   function footerUrl(value) {
     if (!/^mailto:/i.test(value)) return url(value);
@@ -31,6 +45,10 @@
       subject = decoded;
     }
     fail(message);
+  }
+  // Message exact d’un champ de lien, sans préfixe de bloc ; chaîne vide si le lien est valide.
+  function checkUrl(value, {optional = false, footer = false} = {}) {
+    try { if (footer) footerUrl(value); else url(value, optional); return ""; } catch (cause) { return cause.message; }
   }
   // Le contrôle d’une image ne dépend que de sa chaîne : une chaîne déjà acceptée n’est pas redécodée à chaque frappe.
   // Le mémo ne garde que les images de la dernière bibliothèque validée, plus celles acceptées depuis.
@@ -135,5 +153,5 @@
     component(value.component).fields.filter(f => f.type === "text").forEach((f, i) => { if (strings[i] !== undefined) value.values[f.key] = strings[i]; });
     return value;
   }
-  A.Model = Object.freeze({copy, document, library, block, blocks, component, image, url, id, createBlock, create, clone, initial, setTexts});
+  A.Model = Object.freeze({copy, document, library, block, blocks, component, image, url, checkUrl, urlMessages: URL_MESSAGES, id, createBlock, create, clone, initial, setTexts});
 })();

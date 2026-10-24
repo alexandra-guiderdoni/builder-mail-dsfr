@@ -44,6 +44,153 @@ HEADING_FIELDS = {
     46: [("f0", "section"), ("f3", "local"), ("f8", "local")],
 }
 
+# Libellés explicites des champs, dans l’ordre des clés f0, f1… de chaque section.
+# Exclus de l’empreinte contractuelle : les modifier ne change ni les clés ni les types.
+MARIANNE = [
+    "Logo Marianne pour le thème clair",
+    "Alternative textuelle du logo Marianne pour le thème clair",
+    "Logo Marianne pour le thème sombre",
+    "Alternative textuelle du logo Marianne pour le thème sombre",
+]
+OPERATOR = ["Logo de l’opérateur", "Alternative textuelle du logo de l’opérateur"]
+ILLUSTRATION = [
+    "Image d’illustration",
+    "Alternative textuelle de l’image d’illustration",
+]
+SECTION = ["Titre de la section", "Accroche de la section"]
+PART = ["Titre de la partie", "Accroche de la partie"]
+LIST = [
+    "Premier élément de la liste",
+    "Deuxième élément de la liste",
+    "Troisième élément de la liste",
+]
+BUTTON = ["Adresse HTTPS du bouton", "Texte du bouton"]
+HIGHLIGHT = ["Titre de la mise en avant", "Texte de la mise en avant"]
+CAPTIONED = [*ILLUSTRATION, "Légende ou source de l’image"]
+CONTRIBUTION = ["Titre de l’appel à contribution", "Texte de l’appel à contribution"]
+ARTICLE = ["Vignette de l’article", "Alternative textuelle de la vignette"]
+BYLINE = ["Auteur de l’article", "Date et durée de lecture"]
+PRIVACY = [
+    "Mention d’abonnement",
+    "Adresse HTTPS ou mailto de la politique de données personnelles",
+    "Texte du lien vers la politique de données personnelles",
+]
+
+
+def card(rank):
+    return [
+        f"Image de la {rank} carte",
+        f"Alternative textuelle de l’image de la {rank} carte",
+        f"Titre de la {rank} carte",
+        f"Description de la {rank} carte",
+        f"Chiffre clé de la {rank} carte",
+    ]
+
+
+def subsection(rank):
+    return [f"{rank.capitalize()} sous-titre", f"Texte du {rank} sous-titre"]
+
+
+FIELD_LABELS = [
+    ["Texte du pré-en-tête masqué"],
+    [
+        "Phrase précédant le lien vers la version en ligne",
+        "Adresse HTTPS de la version en ligne",
+        "Texte du lien vers la version en ligne",
+    ],
+    [*MARIANNE, "Nom du service"],
+    [*MARIANNE, *OPERATOR, "Nom du service"],
+    [
+        "Image de la bannière",
+        "Alternative textuelle de la bannière",
+        "Message de la campagne",
+    ],
+    ["Titre principal"],
+    ["Titre principal", *ILLUSTRATION],
+    ["Texte de prévisualisation"],
+    ["Chapô", "Prénom et nom du signataire", "Fonction du signataire"],
+    ["Chapô", "Service signataire"],
+    SECTION,
+    SECTION,
+    SECTION[:1],
+    SECTION[:1],
+    PART,
+    PART,
+    PART[:1],
+    PART[:1],
+    ["Texte du paragraphe"],
+    ["Texte du paragraphe"],
+    ["Phrase d’introduction de la liste", *LIST],
+    ["Phrase d’introduction de la liste", *LIST],
+    LIST[:2],
+    LIST[:2],
+    ["Titre du bloc", "Description du bloc"],
+    ["Titre du bloc", "Description du bloc"],
+    CAPTIONED,
+    CAPTIONED,
+    CAPTIONED,
+    CAPTIONED,
+    [*ARTICLE, "Surtitre de l’article", "Titre de l’article", *BYLINE],
+    [
+        *ARTICLE,
+        "Surtitre de l’article",
+        "Adresse HTTPS de l’article",
+        "Titre cliquable de l’article",
+        *BYLINE,
+    ],
+    [*CONTRIBUTION, *ILLUSTRATION],
+    [*CONTRIBUTION, *BUTTON, *ILLUSTRATION],
+    [
+        "Titre des chiffres clés",
+        "Premier chiffre clé",
+        "Deuxième chiffre clé",
+        *subsection("premier"),
+        *subsection("deuxième"),
+        *subsection("troisième"),
+        *subsection("quatrième"),
+    ],
+    HIGHLIGHT,
+    HIGHLIGHT,
+    [PART[0], *CAPTIONED, *subsection("premier"), *subsection("deuxième")],
+    [PART[0], *CAPTIONED, "Texte de la partie"],
+    [
+        "Titre du contact",
+        "Nom du service",
+        "Département ou unité",
+        "Coordonnées du service",
+    ],
+    BUTTON,
+    BUTTON,
+    BUTTON,
+    [
+        "Adresse HTTPS du lien d’action",
+        "Texte du lien d’action",
+        "Adresse HTTPS du lien au fil du texte",
+        "Texte du lien au fil du texte",
+    ],
+    ["Chiffre clé", "Description du chiffre clé"],
+    [
+        "Titre de l’invitation",
+        "Texte de l’invitation",
+        "Adresse HTTPS du lien d’invitation",
+        "Texte du lien d’invitation",
+    ],
+    ["Titre de la section", *card("première"), *card("deuxième")],
+    [*PRIVACY, *MARIANNE, "Nom du service"],
+    [*PRIVACY, *MARIANNE, *OPERATOR, "Nom du service"],
+    [
+        "Phrase précédant le lien de désabonnement",
+        "Adresse HTTPS ou mailto de désabonnement",
+        "Texte du lien de désabonnement",
+    ],
+    [
+        "Phrase précédant le lien de gestion des abonnements",
+        "Adresse HTTPS ou mailto de gestion des abonnements",
+        "Texte du lien de gestion des abonnements",
+    ],
+    ["Texte de clôture"],
+]
+
 
 def semantic_template(index, template):
     headings = [
@@ -97,12 +244,16 @@ class Sections(HTMLParser):
 
 
 class Fields(HTMLParser):
-    def __init__(self):
+    def __init__(self, section, labels):
         super().__init__(convert_charrefs=False)
         self.parts, self.fields, self.buffer = [], [], ""
+        self.section, self.labels = section, labels
 
-    def slot(self, kind, label, value):
+    def slot(self, kind, value):
         key = f"f{len(self.fields)}"
+        if len(self.fields) >= len(self.labels):
+            raise ValueError(f"Libellé absent pour le champ {key} de {self.section}.")
+        label = self.labels[len(self.fields)]
         self.fields.append({"key": key, "type": kind, "label": label, "default": value})
         return "{{" + key + "}}"
 
@@ -110,26 +261,12 @@ class Fields(HTMLParser):
         value = html.unescape(self.buffer)
         if value.strip():
             value = re.sub(r"\s+", " ", value).strip()
-            label = (
-                value
-                if value in ["Titre", "Description", "Texte", "Accroche", "Chapô"]
-                else f"Texte {sum(f['type'] == 'text' for f in self.fields) + 1}"
-            )
             if value.startswith("Service d'Information du Gouvernement"):
-                value, label = "Votre service", "Nom du service"
+                value = "Votre service"
             if "@" in value:
-                value, label = (
-                    "Adresse du service à renseigner",
-                    "Coordonnées du service",
-                )
+                value = "Adresse du service à renseigner"
             self.parts.append(" " if self.buffer[:1].isspace() else "")
-            self.parts.append(
-                self.slot(
-                    "text",
-                    label,
-                    value,
-                )
-            )
+            self.parts.append(self.slot("text", value))
             self.parts.append(" " if self.buffer[-1:].isspace() else "")
         else:
             self.parts.append(self.buffer)
@@ -159,12 +296,7 @@ class Fields(HTMLParser):
                     )
                 else:
                     default = value
-                label = {
-                    "image": "Image locale",
-                    "url": "Lien HTTPS",
-                    "alt": "Alternative de l’image",
-                }[kind]
-                token = self.slot(kind, label, default)
+                token = self.slot(kind, default)
                 raw = re.sub(
                     rf"(\b{attr}\s*=\s*)([\"\']).*?\2",
                     lambda m, value=token: m[1] + m[2] + value + m[2],
@@ -241,14 +373,20 @@ def compile_catalogue():
         raise ValueError(
             "L’inventaire de référence doit couvrir exactement les 52 sections épinglées."
         )
+    if len(FIELD_LABELS) != len(labels):
+        raise ValueError(
+            "FIELD_LABELS doit couvrir exactement les 52 sections épinglées."
+        )
     components = []
     for index, ((start, end, first, last), (label, family)) in enumerate(
         zip(parser.sections, labels)
     ):
         raw = source[start:end]
-        fields = Fields()
+        fields = Fields(f"mail-{index:02}", FIELD_LABELS[index])
         fields.feed(raw)
         fields.flush()
+        if len(fields.fields) != len(FIELD_LABELS[index]):
+            raise ValueError(f"Libellés de champ en surnombre dans mail-{index:02}.")
         template = "".join(fields.parts)
         semantic, headings = semantic_template(index, template)
         components.append(
