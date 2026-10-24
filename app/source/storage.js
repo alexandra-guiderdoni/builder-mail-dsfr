@@ -2,6 +2,8 @@
 (() => {
   "use strict";
   const A = window.MailBuilder; let opening;
+  // Chaque enregistrement nomme la version de l’application qui l’a écrit.
+  const version = document.querySelector('meta[name="application-version"]')?.content || "";
   // Chaque refus nomme son cas : stockage absent, inaccessible, saturé ou en conflit.
   const failure = (storage, message) => Object.assign(new Error(message), {storage});
   function database() {
@@ -39,7 +41,7 @@
     const snapshot = A.Model.copy(A.Model.library(value)), db = await database();
     return new Promise((resolve, reject) => {
       const tx = db.transaction("library", "readwrite"), store = tx.objectStore("library"), previous = store.get("current");
-      const record = {token: crypto.randomUUID(), library: snapshot}; let conflict = false, refusal;
+      const record = {token: crypto.randomUUID(), library: snapshot, app: version}; let conflict = false, refusal;
       previous.onsuccess = () => {
         if ((previous.result?.token ?? null) !== expectedToken) { conflict = true; tx.abort(); return; }
         try { if (previous.result) store.put(previous.result, "previous"); store.put(record, "current"); }
@@ -55,5 +57,5 @@
       };
     });
   }
-  A.Storage = Object.freeze({load, save});
+  A.Storage = Object.freeze({load, save, version});
 })();

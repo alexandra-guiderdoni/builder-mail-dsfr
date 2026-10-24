@@ -5,6 +5,9 @@
   "use strict";
   const A = window.MailBuilder, M = A.Model, get = id => document.getElementById(id);
   let queue = Promise.resolve(), revision = 0, pending = 0, token = null, failed = false, restoring = false, running = false, latest, absent = false, lastChange = 0, successTimer = null;
+  // Une fenêtre sans la main reste en lecture seule ; base est la bibliothèque relue ou écrite sous son jeton.
+  let readOnly = null, base, exportedRevision = -1, leaving = false;
+  const channel = window.BroadcastChannel ? new BroadcastChannel("builder-mail-dsfr-library") : null;
   const QUIET_MS = 1000;
   const cancelSuccess = () => { clearTimeout(successTimer); successTimer = null; };
   const say = text => { cancelSuccess(); get("save-announce").textContent = text; };
@@ -21,7 +24,17 @@
   A.error = message => { const e = get("error"); e.textContent = message; e.hidden = !message; if (message) cancelSuccess(); };
   A.notice = message => { get("notice").textContent = message; };
   // Tant que le travail n’est pas sauvegardé, l’export de secours suit le message d’échec.
-  function failing(value) { failed = value; get("save-rescue").hidden = !value; }
+  function failing(value) { failed = value; get("save-rescue").hidden = !value || !!readOnly; }
+  const readOnlyError = () => new Error(readOnly === "version" ? "Cette fenêtre utilise une autre version de l’atelier : exportez la bibliothèque en mémoire, puis rechargez la page avant de reprendre la main." : "Une autre fenêtre détient la bibliothèque : cette fenêtre est en lecture seule. Exportez la bibliothèque en mémoire ou reprenez la main.");
+  function lock(kind, reason) {
+    if (readOnly === "version") return;
+    const editing = get("editing"), late = kind === "version", focused = editing.contains(document.activeElement) || (late && document.activeElement?.dataset.action === "take-over");
+    readOnly = kind; editing.disabled = true; get("read-only").hidden = false;
+    show(failed ? "Lecture seule : modifications non sauvegardées. Exportez votre bibliothèque." : "Lecture seule : cette fenêtre n’enregistre plus rien.", true); get("save-rescue").hidden = true;
+    get("read-only-message").textContent = `${reason} Cette fenêtre n’enregistre plus rien. ${late ? "Exportez la bibliothèque en mémoire, puis rechargez cette page avant de reprendre la main." : "Exportez la bibliothèque en mémoire pour la conserver, ou reprenez la main : les compositions modifiées ici seront ajoutées en copies, sans remplacer celles de l’autre fenêtre."}`;
+    get("read-only").querySelector("[data-action=take-over]").hidden = late; get("read-only").querySelector("[data-action=reload-page]").hidden = !late;
+    if (focused) get("read-only-title").focus();
+  }
   // Saisies d’URL en cours : conservées hors du modèle tant qu’elles sont invalides, jamais diffusées.
   const draftKey = (doc, block, input) => `${doc}|${block}|${input}`;
   function guardEdit() { if (restoring) throw new Error("Attendez la fin de la récupération avant cette action."); if (A.pendingInputs) throw new Error("Attendez la fin du chargement du fichier avant cette action."); if (A.invalid.size) throw new Error("Corrigez les champs signalés ou annulez leur modification avant cette action."); }
@@ -54,6 +67,7 @@
   }
   function save() {
     if (restoring) throw new Error("Attendez la fin de la récupération avant de sauvegarder.");
+    if (readOnly) throw readOnlyError();
     if (A.recoveryOnly) { failing(true); show(absent ? "Modifications non sauvegardées : aucun stockage n’est disponible. Exportez votre bibliothèque." : "Modifications non sauvegardées : la bibliothèque enregistrée reste inchangée. Exportez votre bibliothèque.", true); return Promise.resolve(); }
     latest = {current: revision, library: A.library};
     cancelSuccess(); show("Sauvegarde en cours…");
@@ -64,11 +78,12 @@
         while (latest) {
           const task = latest; latest = undefined;
           try {
-            const saved = await A.Storage.save(task.library, token); token = saved.token;
+            const saved = await A.Storage.save(task.library, token); token = saved.token; base = task.library;
             if (task.current === revision) { failing(false); if (!A.invalid.size && !A.drafts.size) A.error(""); const text = A.invalid.size || A.drafts.size ? "Bibliothèque sauvegardée ; les champs invalides restent non enregistrés." : "Bibliothèque sauvegardée dans ce navigateur."; show(text); announceSuccess(text); }
           } catch (cause) {
             failing(true); A.error(`${cause.message} ${cause.storage === "conflit" ? "Exportez la bibliothèque en mémoire pour conserver ce travail, puis rechargez cette page." : "Exportez la bibliothèque en mémoire pour conserver ce travail."}`);
             show("Modifications non sauvegardées. Exportez votre bibliothèque.", true);
+            if (cause.storage === "conflit") lock("conflit", "Une autre fenêtre a enregistré la bibliothèque après la dernière sauvegarde de celle-ci.");
           }
         }
       } finally { pending--; running = false; }
@@ -88,6 +103,7 @@
     })), previewCost > 50 ? 3 * previewCost : 0);
   }
   function change(mutator, redraw = true, input = false) {
+    if (readOnly) throw readOnlyError();
     if (input === "edit") guardEdit(); else if (restoring || !input) guard(); const next = M.copy(A.library); mutator(next); M.library(next); A.library = next; revision++; lastChange = Date.now(); pruneDrafts();
     if (!A.doc().blocks.some(b => b.id === A.selected)) A.selected = A.doc().blocks[0]?.id || null;
     if (redraw) { clearTimeout(previewTimer); A.UI.refresh(); } else { A.UI.summary(); previewAfterInput(); }
@@ -110,20 +126,25 @@
       show(absent ? "Stockage indisponible : travail en mémoire seulement." : "Bibliothèque non restaurée.", true);
       if (absent) get("storage-help").textContent = "Aucun stockage n’est disponible dans ce navigateur : exportez une copie pour conserver votre travail.";
     }
-    A.ready = true; get("workspace").disabled = false; A.UI.refresh();
+    base = A.library; A.ready = true; get("workspace").disabled = false; A.UI.refresh();
   }
   async function recover() {
     guard(); if (A.recoveryOnly && !opened) { offerReopen(); return; }
     restoring = true; pending++; get("workspace").disabled = true;
     try {
+      if (readOnly) throw readOnlyError();
       await queue; const previous = await A.Storage.load("previous");
       if (!previous) throw new Error("Aucun état précédent disponible.");
       const restored = M.copy(M.library(previous.library)), saved = await A.Storage.save(restored, token);
-      token = saved.token; A.library = restored; A.recoveryOnly = false; failing(false); revision++;
+      token = saved.token; base = A.library = restored; A.recoveryOnly = false; failing(false); revision++;
       A.selected = A.doc().blocks[0]?.id || null; A.UI.refresh(); A.error("");
       show("Bibliothèque sauvegardée dans ce navigateur."); announceSuccess("Bibliothèque sauvegardée dans ce navigateur.");
       A.notice("État précédent relu. Contrôlez les compositions avant de poursuivre.");
-    } catch (cause) { show("Récupération impossible ; le travail actuel est conservé.", true); throw cause; }
+    } catch (cause) {
+      show("Récupération impossible ; le travail actuel est conservé.", true);
+      if (cause.storage === "conflit") lock("conflit", "Une autre fenêtre a enregistré la bibliothèque après la dernière sauvegarde de celle-ci.");
+      throw cause;
+    }
     finally { restoring = false; pending--; get("workspace").disabled = false; }
   }
   // Le jeton du stockage n'est connu qu'après une lecture réussie. Après un refus initial, une restauration écrirait avec un jeton nul
@@ -147,11 +168,64 @@
     document.getElementById("reopen-title").focus();
     A.notice("Restauration non lancée : aucune écriture n’a été faite dans la bibliothèque enregistrée.");
   }
-  window.addEventListener("beforeunload", event => { if (pending || failed || A.invalid.size || A.drafts.size || A.pendingInputs) { event.preventDefault(); event.returnValue = ""; } });
+  function rebase(stored) {
+    const memory = M.copy(A.library), now = new Date(), stamp = ` · copie à ${now.getHours()} h ${String(now.getMinutes()).padStart(2, "0")}`;
+    if (!stored) return {library: M.library(memory), copies: 0};
+    const next = M.copy(stored), same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+    let copies = 0, active = next.documents.some(d => d.id === memory.activeId) ? memory.activeId : next.activeId;
+    for (const list of ["documents", "templates", "identities"]) {
+      const before = new Map((base?.[list] || []).map(item => [item.id, item])), kept = new Map(next[list].map(item => [item.id, item]));
+      for (const item of memory[list]) {
+        if (same(before.get(item.id), item) || same(kept.get(item.id), item)) continue;
+        const copy = list === "identities" ? {...item, id: M.id(), name: item.name + stamp, blocks: item.blocks.map(b => ({...b, id: M.id()}))} : M.clone(item, item.name + stamp);
+        next[list].push(copy); copies++;
+        if (list === "documents" && item.id === memory.activeId) active = copy.id;
+      }
+    }
+    next.activeId = active; return {library: M.library(next), copies};
+  }
+  async function takeOver() {
+    if (!readOnly) throw new Error("Cette fenêtre détient déjà la bibliothèque.");
+    if (readOnly === "version") throw readOnlyError();
+    if (restoring) throw new Error("Attendez la fin de l’opération en cours avant de reprendre la main.");
+    if (A.pendingInputs) throw new Error("Attendez la fin du chargement du fichier avant de reprendre la main.");
+    restoring = true; pending++; get("workspace").disabled = true; A.notice(""); show("Reprise de la main en cours…");
+    try {
+      await queue; const record = await A.Storage.load();
+      if (record?.app && record.app !== A.Storage.version) { lock("version", "La bibliothèque a été enregistrée par une autre version de l’atelier."); throw readOnlyError(); }
+      const {library, copies} = rebase(record ? M.copy(M.library(record.library)) : null);
+      if (readOnly === "version") throw readOnlyError();
+      const saved = await A.Storage.save(library, record?.token ?? null);
+      token = saved.token; base = A.library = library; revision++; failing(false); A.recoveryOnly = false;
+      channel?.postMessage({type: "takeover", token: saved.token});
+      if (!A.doc().blocks.some(b => b.id === A.selected)) A.selected = A.doc().blocks[0]?.id || null;
+      // Un retard signalé pendant l’écriture garde la lecture seule : la bibliothèque écrite est déjà en mémoire.
+      if (readOnly === "version") { A.UI.refresh(); show("Bibliothèque sauvegardée ; cette fenêtre reste en lecture seule : exportez puis rechargez-la.", true); return; }
+      readOnly = null;
+      get("editing").disabled = false; get("read-only").hidden = true; A.invalid.clear(); A.drafts.clear(); A.UI.clearFieldErrors();
+      A.UI.refresh(); A.error(""); show("Bibliothèque sauvegardée dans ce navigateur."); announceSuccess("Bibliothèque sauvegardée dans ce navigateur."); get(get("editor-page").hidden ? "home-title" : "composition-title").focus();
+      A.notice(copies ? `Main reprise : ${copies > 1 ? `${copies} copies horodatées ajoutées` : "une copie horodatée ajoutée"} à la bibliothèque enregistrée, sans rien remplacer. L’autre fenêtre ne peut plus enregistrer ; elle passe en lecture seule au plus tard à sa prochaine modification.` : "Main reprise : rien n’avait changé dans cette fenêtre, la bibliothèque enregistrée est conservée telle quelle.");
+    } catch (cause) {
+      show("Reprise impossible : rien n’a été enregistré.", true);
+      if (readOnly === "version") throw cause;
+      throw new Error(`${cause.message} Rien n’a été enregistré : exportez la bibliothèque en mémoire pour conserver le travail de cette fenêtre.`);
+    } finally { restoring = false; pending--; get("workspace").disabled = false; }
+  }
+  channel?.addEventListener("message", event => {
+    if (!A.ready || event.data?.type !== "takeover" || event.data.token === token) return;
+    lock("reprise", "Une autre fenêtre a repris la main sur la bibliothèque."); A.error("Une autre fenêtre a repris la main sur la bibliothèque : cette fenêtre passe en lecture seule.");
+  });
+  function outdated() { lock("version", "Une nouvelle version de l’atelier est active dans une autre fenêtre."); A.error("Une nouvelle version de l’atelier est active dans une autre fenêtre : cette fenêtre passe en lecture seule."); }
+  const exported = () => { exportedRevision = revision; };
+  function reload() {
+    if ((failed || pending || A.invalid.size || A.pendingInputs) && exportedRevision !== revision) throw new Error("Exportez d’abord la bibliothèque en mémoire : le rechargement efface le travail non enregistré de cette fenêtre.");
+    leaving = true; location.reload();
+  }
+  window.addEventListener("beforeunload", event => { if (leaving) return; if (pending || failed || A.invalid.size || A.drafts.size || A.pendingInputs) { event.preventDefault(); event.returnValue = ""; } });
   // Les vues internes attendent les écritures en cours sans exiger leur succès : le travail reste en mémoire.
   async function settle() { await queue; guard(); }
   // Le rechargement et l’activation d’une mise à jour exigent, eux, une sauvegarde réussie.
   async function flush() { await settle(); if (failed || pending || A.recoveryOnly) throw new Error("La sauvegarde doit réussir avant de recharger l’application."); }
   const saved = () => !failed && !pending && !A.recoveryOnly;
-  A.State = Object.freeze({guard, guardEdit, setDraft, dropDraft, dropFooterDraft, change, save, start, recover, settle, flush, saved});
+  A.State = Object.freeze({guard, guardEdit, setDraft, dropDraft, dropFooterDraft, change, save, start, recover, settle, flush, saved, takeOver, outdated, reload, exported});
 })();
