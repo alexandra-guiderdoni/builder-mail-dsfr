@@ -4,7 +4,7 @@
   const attempt = async action => { try { await action(); } catch (cause) { if (cause.linkIssue) A.UI.showLinkIssue(cause.linkIssue); A.error(cause.message); } };
   document.addEventListener("click", event => {
     const action = event.target.closest("[data-action]");
-    if (action && !action.disabled) attempt(async () => { await A.Actions[action.dataset.action](); if (["new-document", "use-template"].includes(action.dataset.action)) await A.Library.open(A.library.activeId); });
+    if (action && !action.disabled) attempt(async () => { await A.Actions[action.dataset.action](); if (["new-document", "use-template"].includes(action.dataset.action)) { await A.Library.open(A.library.activeId); get("document-name").focus(); get("document-name").select(); } });
     if (event.target.closest("[data-return-to-block]")) A.UI.focusBlock(A.selected);
     const selected = event.target.closest("[data-select]");
     if (selected) attempt(() => { A.State.guardEdit(); A.selected = selected.dataset.select; A.UI.blockList(); A.UI.fields(); get("block-editor").querySelector("textarea,input")?.focus(); });

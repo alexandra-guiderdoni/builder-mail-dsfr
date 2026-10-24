@@ -145,6 +145,23 @@
     const next = copy(document(value)); next.id = id(); next.name = name;
     next.blocks.forEach(b => { b.id = id(); }); return next;
   }
+  // Date explicite dans un texte : année, jour et mois en lettres, jj/mm, jj.mm.aa, aaaa-mm-jj.
+  const MONTHS = "janvier|janv|février|fevrier|févr|fevr|mars|avril|avr|mai|juin|juillet|juil|août|aout|septembre|sept|octobre|oct|novembre|nov|décembre|decembre|déc|dec";
+  const DATE = new RegExp(`\\b(?:19|20)\\d{2}\\b|\\b(?:${MONTHS})\\b\\.?|\\b(?:0?[1-9]|[12]\\d|3[01])\\/(?:0?[1-9]|1[0-2])\\b|\\b(?:0?[1-9]|[12]\\d|3[01])[.-](?:0?[1-9]|1[0-2])[.-](?:\\d{2}|\\d{4})\\b`, "iu");
+  const hasDate = text => DATE.test(String(text ?? ""));
+  // Nom libre dans la bibliothèque : « X », puis « X (2) », « X (3) »…
+  function uniqueName(base, documents) {
+    const taken = new Set(documents.map(d => d.name.trim()));
+    if (!taken.has(base.trim())) return base;
+    let n = 2; while (taken.has(`${base} (${n})`)) n++;
+    return `${base} (${n})`;
+  }
+  // Composition dérivée d'une autre (modèle, copie) : un objet daté n'est jamais transmis tel quel.
+  function derive(source, name) {
+    const doc = clone(source, name), replacedSubject = hasDate(doc.subject) ? doc.subject : null;
+    if (replacedSubject !== null) doc.subject = name;
+    return {doc, replacedSubject};
+  }
   function initial() {
     const first = create("Mon premier courriel");
     return {schema: "dsfr-mail/library", version: 1, catalogue: A.catalog.id, activeId: first.id, documents: [first], templates: [], identities: []};
@@ -153,5 +170,5 @@
     component(value.component).fields.filter(f => f.type === "text").forEach((f, i) => { if (strings[i] !== undefined) value.values[f.key] = strings[i]; });
     return value;
   }
-  A.Model = Object.freeze({copy, document, library, block, blocks, component, image, url, checkUrl, urlMessages: URL_MESSAGES, id, createBlock, create, clone, initial, setTexts});
+  A.Model = Object.freeze({copy, document, library, block, blocks, component, image, url, checkUrl, urlMessages: URL_MESSAGES, id, createBlock, create, clone, hasDate, uniqueName, derive, initial, setTexts});
 })();

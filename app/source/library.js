@@ -28,11 +28,13 @@
     show(true); A.UI.refresh();
   }
   async function home() { A.State.guard(); await A.State.settle(); refresh(); show(false); }
+  // Message commun : signale un objet daté qui n'a pas été repris tel quel.
+  const subjectNotice = (done, replaced) => replaced === null ? `${done}.` : `${done}. L’objet d’origine contenait une date (« ${replaced} ») : il est remplacé par le nom de la composition. Mettez-le à jour avant l’envoi.`;
   async function duplicate(id) {
-    A.State.guard(); const clone = M.clone(find(id), `${find(id).name} · copie`);
+    A.State.guard(); const made = M.derive(find(id), M.uniqueName(`${find(id).name} · copie`, A.library.documents)), clone = made.doc;
     A.notice(""); await A.State.change(lib => { lib.documents.push(clone); lib.activeId = clone.id; });
     await A.State.settle(); focusRow(clone.id);
-    A.notice(A.State.saved() ? "Copie indépendante ajoutée et sauvegardée dans la bibliothèque." : "Copie indépendante ajoutée en mémoire, non sauvegardée : exportez la bibliothèque pour la conserver.");
+    A.notice(subjectNotice(A.State.saved() ? "Copie indépendante ajoutée et sauvegardée dans la bibliothèque" : "Copie indépendante ajoutée en mémoire, non sauvegardée : exportez la bibliothèque pour la conserver", made.replacedSubject));
   }
   function ask(kind, id) {
     A.State.guard(); const doc = find(id), removing = kind === "remove";
@@ -109,5 +111,5 @@
     } catch (cause) { if (get("library-dialog").open) get("library-dialog-error").textContent = cause.message; else A.error(cause.message); }
     finally { busy = false; get("library-confirm").disabled = get("library-cancel").disabled = false; }
   });
-  A.Library = Object.freeze({refresh, open, home, duplicate, ask, askRemoval});
+  A.Library = Object.freeze({subjectNotice, refresh, open, home, duplicate, ask, askRemoval});
 })();

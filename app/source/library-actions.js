@@ -48,13 +48,21 @@
     try { applyIdentity(target.identity, target.doc, target.name); } catch (cause) { A.error(cause.message); }
   });
   A.Actions = {
-    "new-document": () => A.State.change(lib => { const doc = M.create("Nouvelle composition", starters[get("starter").value]); lib.documents.push(doc); lib.activeId = doc.id; }),
+    "new-document": () => {
+      const label = get("starter").selectedOptions[0].textContent.trim();
+      return A.State.change(lib => { const doc = M.create(M.uniqueName(label, lib.documents), starters[get("starter").value]); lib.documents.push(doc); lib.activeId = doc.id; })
+        .then(() => A.notice("Composition créée : vérifiez son nom et l’objet du courriel, modifiables ci-dessous."));
+    },
     "duplicate-document": () => A.Library.duplicate(A.library.activeId),
     "remove-document": () => A.Library.ask("remove", A.library.activeId),
     "library-home": () => A.Library.home(),
     "resume-document": () => A.Library.open(A.library.activeId),
     "save-template": async () => { const label = name("template-name"); A.notice(""); await A.State.change(lib => { unique(lib.templates, label, "Un modèle"); lib.templates.push(M.clone(A.doc(), label)); }); await announce(`Modèle « ${label} » enregistré dans ce navigateur.`); },
-    "use-template": () => { const template = selected(A.library.templates, "saved-templates"); return A.State.change(lib => { const doc = M.clone(template, `${template.name} · composition`); lib.documents.push(doc); lib.activeId = doc.id; }); },
+    "use-template": () => {
+      const template = selected(A.library.templates, "saved-templates"); let replaced = null;
+      return A.State.change(lib => { const made = M.derive(template, M.uniqueName(`${template.name} · composition`, lib.documents)); replaced = made.replacedSubject; lib.documents.push(made.doc); lib.activeId = made.doc.id; })
+        .then(() => A.notice(A.Library.subjectNotice("Composition créée depuis le modèle", replaced)));
+    },
     "remove-template": () => A.Library.askRemoval("templates", selected(A.library.templates, "saved-templates").id),
     "save-identity": async () => {
       const label = name("identity-name"), blocks = A.doc().blocks.filter(b => ["En-têtes", "Pieds de page"].includes(M.component(b.component).family));
