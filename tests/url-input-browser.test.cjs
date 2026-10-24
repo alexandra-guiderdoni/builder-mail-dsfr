@@ -1,5 +1,5 @@
 const test = require('node:test');
-const {chromium, open, click, expand, selectBlock, state, assert} = require('./browser-support.cjs');
+const {chromium, open, click, expand, saved, selectBlock, state, assert} = require('./browser-support.cjs');
 
 const OLD = 'https://exemple.invalid/ancien', NEW = 'https://exemple.invalid/nouveau';
 async function setup(page) {
@@ -120,5 +120,63 @@ test('un champ de lien obligatoire vidé bloque aussi la diffusion sans réutili
     assert.deepEqual(await page.evaluate(() => window.__out), []);
     assert.equal(await page.evaluate(k => MailBuilder.doc().blocks.find(b => b.component === 'mail-40').values[k], key), old);
     assert.equal(await page.locator(`#field-${key}`).getAttribute('aria-invalid'), 'true');
+  } finally { await browser.close(); }
+});
+
+// Deux compositions : X, active, porte l’ancienne URL valide ; Y ne l’a jamais portée.
+async function twoCompositions(page) {
+  await click(page, '[data-action=duplicate-document]'); await saved(page);
+  const library = await state(page), X = library.activeId, Y = library.documents.find(d => d.id !== X).id;
+  await setup(page);
+  return {X, Y};
+}
+const refusal = 'Adresse HTTPS incomplète : saisissez une adresse complète commençant par https://, par exemple https://exemple.fr/page. Corrigez ce lien ou annulez sa modification avant cette action.';
+async function settled(page, X) { await page.waitForFunction(x => !document.querySelector('#error').hidden || MailBuilder.library.activeId !== x, X); }
+
+test('un brouillon d’URL refuse le changement de composition avec le même message et rétablit le sélecteur', async () => {
+  const browser = await chromium.launch();
+  try {
+    const {page} = await open(browser); const {X, Y} = await twoCompositions(page);
+    await page.locator('#article-source').fill('https://');
+    await page.locator('#documents').selectOption(Y); await settled(page, X);
+    assert.equal((await state(page)).activeId, X, 'La composition active ne change pas.');
+    assert.equal(await page.locator('#documents').inputValue(), X, 'Le sélecteur est rétabli sur la composition en cours.');
+    assert.equal(await page.locator('#error').textContent(), refusal);
+    assert.equal(await page.locator('#article-source').inputValue(), 'https://', 'La saisie temporaire est conservée.');
+    assert.equal(await page.locator('#article-source').getAttribute('aria-invalid'), 'true');
+    assert.equal(await page.evaluate(() => document.activeElement.id), 'article-source');
+    await page.locator('#error').evaluate(e => { e.textContent = ''; });
+    await click(page, '[data-action=export-mail]'); await page.locator('#error').filter({hasText: 'Corrigez ce lien'}).waitFor();
+    assert.equal(await page.locator('#error').textContent(), refusal, 'Même refus que pour les autres actions.');
+    await page.locator('#article-source').fill(NEW); await saved(page);
+    await page.locator('#documents').selectOption(Y); await page.waitForFunction(y => MailBuilder.library.activeId === y, Y); await saved(page);
+    await click(page, '#library-back'); await page.locator('#library-home').waitFor({state: 'visible'});
+    await click(page, `[data-document="${X}"] [data-library-action=open]`); await page.locator('#editor-page').waitFor({state: 'visible'});
+    assert.equal((await state(page)).activeId, X, 'Après correction, la composition se rouvre.');
+    assert.equal(await source(page), NEW);
+  } finally { await browser.close(); }
+});
+
+test('un brouillon d’URL n’est diffusé depuis aucune autre composition', async () => {
+  const browser = await chromium.launch();
+  try {
+    const {page} = await open(browser, {permissions: ['clipboard-read', 'clipboard-write']}); const {X, Y} = await twoCompositions(page);
+    await expand(page, 'Fichiers et récupération'); await page.evaluate(() => navigator.clipboard.writeText('presse-papiers inchangé'));
+    const leaks = () => page.evaluate(async () => {
+      const [item] = await navigator.clipboard.read(), blobs = await Promise.all(item.types.map(type => item.getType(type)));
+      const texts = await Promise.all(blobs.map(blob => blob.text()));
+      return [...window.__out.map(o => o.data), ...texts].filter(text => text.includes('ancien')).length;
+    });
+    await page.locator('#article-source').fill('https://');
+    await page.locator('#documents').selectOption(Y); await settled(page, X);
+    await page.locator('#error').evaluate(e => { e.textContent = ''; e.hidden = true; });
+    for (const action of ['export-library', 'export-document', 'copy']) {
+      await click(page, `[data-action=${action}]`);
+      await page.locator('#error').filter({hasText: 'Corrigez ce lien'}).or(page.locator('#notice').filter({hasText: /proposée au téléchargement|Courriel copié/})).first().waitFor();
+      await page.locator('#error').evaluate(e => { e.textContent = ''; e.hidden = true; });
+    }
+    assert.equal(await leaks(), 0, 'Ni export ni copie ne contient l’ancienne URL valide de X.');
+    await click(page, '#library-back'); await page.locator('#error').filter({hasText: 'Corrigez ce lien'}).waitFor();
+    assert.equal(await page.locator('#library-home').isVisible(), false, 'L’accueil, et donc la duplication de X, restent fermés tant que le brouillon existe.');
   } finally { await browser.close(); }
 });

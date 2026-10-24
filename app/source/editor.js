@@ -87,7 +87,8 @@
   });
   get("documents").addEventListener("change", async event => {
     const selected = event.target.value;
-    await attempt(() => A.State.change(lib => { lib.activeId = selected; }, true, "edit"));
+    // Garde complète : quitter une composition qui porte un brouillon d’URL la rendrait injoignable depuis l’accueil.
+    await attempt(() => A.State.change(lib => { lib.activeId = selected; }));
     event.target.value = A.library.activeId;
   });
   get("project-input").addEventListener("change", event => {
