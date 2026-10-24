@@ -63,9 +63,12 @@ def build():
     )
     script = "\n".join(scripts)
     digest = base64.b64encode(hashlib.sha256(script.encode()).digest()).decode()
+    # Deux onglets comparent cette version avant une reprise de la bibliothèque.
+    application_version = hashlib.sha256(script.encode()).hexdigest()[:16]
     shell = (
         (SOURCE / "shell.html")
         .read_text(encoding="utf-8")
+        .replace("@@APP_VERSION@@", application_version)
         .replace(
             "@@STYLE@@",
             dsfr_styles()

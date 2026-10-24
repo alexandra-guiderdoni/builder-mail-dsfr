@@ -96,7 +96,7 @@ Les images sont incorporées ; leur présence dans le fichier ne démontre pas l
 
 Un champ invalide est signalé et sa nouvelle valeur n’est pas enregistrée. Corriger ce champ ou utiliser « Annuler les champs invalides » avant de changer de composition ou d’exporter. Un import refusé conserve les compositions existantes.
 
-Si la sauvegarde échoue, le travail reste en mémoire : exporter la composition ou la bibliothèque avant de fermer. Si une autre fenêtre a enregistré des changements, exporter le travail de la fenêtre en conflit, puis la recharger et réimporter ce fichier pour le fusionner.
+Si la sauvegarde échoue, le travail reste en mémoire : exporter la composition ou la bibliothèque avant de fermer. Si une autre fenêtre a enregistré des changements, voir « Plusieurs fenêtres » ci-dessous.
 
 Si un retour à l’accueil est refusé, les champs restent affichés et les exports de secours restent accessibles sous l’éditeur. Corriger le champ signalé, attendre la lecture en cours ou réessayer la sauvegarde ; ne pas effacer les données du navigateur pour changer de newsletter.
 
@@ -105,6 +105,17 @@ Si le navigateur avertit lors d’une fermeture pendant la sauvegarde, annuler l
 « Restaurer l’état précédent » relit la sauvegarde précédant la dernière écriture réussie ; ce n’est pas un historique illimité ni une annulation de chaque frappe. Exporter d’abord le travail à conserver. « Exporter les données enregistrées brutes » produit une copie de secours pour le diagnostic ; ce format brut n’est pas un fichier de composition importable.
 
 Une version ou un catalogue inconnu n’est pas réinterprété : conserver le fichier d’origine et demander une migration. Si la bibliothèque stockée ne peut pas être relue, l’atelier préserve le stockage existant ; le travail temporaire doit être exporté jusqu’à une récupération réussie.
+
+## Plusieurs fenêtres
+
+Une seule fenêtre de l’atelier enregistre à la fois dans la bibliothèque de ce navigateur. Quand une autre fenêtre a enregistré entre-temps, ou a repris la main, cette fenêtre passe en lecture seule : un bandeau l’indique, la saisie est désactivée et rien n’y est plus enregistré. Le bandeau propose deux actions :
+
+- « Exporter la bibliothèque en mémoire » : le fichier contient le travail de cette fenêtre, y compris ses modifications non enregistrées ;
+- « Reprendre la main » : l’atelier relit la bibliothèque enregistrée, la conserve telle quelle et y ajoute en copies les compositions, modèles et identités modifiés dans cette fenêtre, suffixés de l’heure, par exemple « Lettre d’octobre · copie à 14 h 32 ». Rien n’est fusionné ni remplacé : comparer les deux versions, puis supprimer celle qui ne sert plus. Une suppression faite dans cette fenêtre n’est pas reportée. L’autre fenêtre passe à son tour en lecture seule ; selon le navigateur, elle peut ne le découvrir qu’à sa prochaine modification.
+
+Si l’enregistrement échoue pendant la reprise, rien n’est écrit : la fenêtre reste en lecture seule et son travail doit être exporté.
+
+Après une mise à jour appliquée dans une autre fenêtre, ou si la bibliothèque a été enregistrée par une autre version de l’atelier, la fenêtre reste en lecture seule sans proposer la reprise : exporter la bibliothèque en mémoire, puis choisir « Recharger cette page ». Le rechargement est refusé tant qu’un travail non enregistré n’a pas été exporté. Après le rechargement, importer le fichier exporté pour retrouver ce travail en copies.
 
 ## Variante web et mises à jour
 
