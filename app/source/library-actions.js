@@ -59,6 +59,7 @@
     "remove-document": () => A.Library.ask("remove", A.library.activeId),
     "library-home": () => A.Library.home(),
     "resume-document": () => A.Library.open(A.library.activeId),
+    "open-document": async () => { const id = get("documents").value; if (id && id !== A.library.activeId) await A.Library.open(id); },
     "save-template": async () => { const label = name("template-name"); A.notice(""); const ticket = A.State.noticeTicket(); await A.State.change(lib => { unique(lib.templates, label, "Un modèle"); lib.templates.push(M.clone(A.doc(), label)); }); await announce(`Modèle « ${label} » enregistré dans ce navigateur.`, ticket); },
     "use-template": () => {
       const template = selected(A.library.templates, "saved-templates"), ticket = A.State.noticeTicket(); let replaced = null;

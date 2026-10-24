@@ -124,7 +124,7 @@ test('chaque composition garde son propre dernier retrait, y compris lorsqu’el
     await remove(page, letter.blocks[1].id);
     assert.equal(await page.locator('#undo-remove').isVisible(), true, 'Le retrait doit proposer « Annuler le retrait ».');
 
-    await page.locator('#documents').selectOption(other.id); await saved(page);
+    await page.locator('#documents').selectOption(other.id); await click(page, '[data-action=open-document]'); await saved(page);
     assert.equal(await page.locator('#undo-remove').isVisible(), false);
     for (let i = 0; i < 10 && (await ids(page)).length; i++) { await click(page, '[data-block-action=remove]'); await saved(page); }
     assert.deepEqual(await ids(page), []);
@@ -135,7 +135,7 @@ test('chaque composition garde son propre dernier retrait, y compris lorsqu’el
     assert.equal(await page.locator('#notice').textContent(), `Bloc ${g('Lien de désabonnement')} restauré en position 1.`);
     assert.deepEqual(await focused(page), {id: 'field-f0', first: true});
 
-    await page.locator('#documents').selectOption(letter.id); await saved(page);
+    await page.locator('#documents').selectOption(letter.id); await click(page, '[data-action=open-document]'); await saved(page);
     assert.equal(await page.locator('#undo-remove').textContent(), `Annuler le retrait du bloc ${g('Article avec vignette et lien')}`);
     await undo(page);
     assert.deepEqual(await page.evaluate(() => MailBuilder.doc()), letter);

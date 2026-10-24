@@ -2,6 +2,7 @@
 (() => {
   "use strict";
   const A = window.MailBuilder, M = A.Model, esc = A.Render.escape, get = id => document.getElementById(id);
+  let lastActiveId;
   function fitField(input) {
     if (!input.matches("textarea[data-field]") || !input.getClientRects().length) return;
     input.style.minHeight = "0px"; input.style.height = "auto";
@@ -45,7 +46,14 @@
   }
   function selections() {
     const doc = A.doc(), template = get("saved-templates").value, identity = get("identities").value;
-    get("documents").innerHTML = A.library.documents.map(d => option(d.id, d.name, d.id === doc.id)).join("");
+    // Depuis #57, la bascule passe par le bouton « Ouvrir cette composition » : on préserve la valeur en attente du
+    // sélecteur, mais seulement tant que la composition active n'a pas changé par une autre voie (duplication,
+    // nouvelle composition, ouverture depuis l'accueil). Sinon le sélecteur affiche une composition périmée.
+    const current = get("documents").value;
+    const preservedDoc = (doc.id === lastActiveId && A.library.documents.some(d => d.id === current)) ? current : doc.id;
+    lastActiveId = doc.id;
+    get("documents").innerHTML = A.library.documents.map(d => option(d.id, d.name, d.id === preservedDoc)).join("");
+    get("open-document").hidden = (preservedDoc === doc.id);
     get("saved-templates").innerHTML = option("", "Choisir un modèle enregistré") + labelled(A.library.templates).map(([id, label]) => option(id, label, id === template)).join("");
     get("identities").innerHTML = option("", "Choisir une identité enregistrée") + labelled(A.library.identities).map(([id, label]) => option(id, label, id === identity)).join("");
     get("library-count").textContent = `${A.library.documents.length} compositions · ${A.library.templates.length} modèles · ${A.library.identities.length} identités`;
