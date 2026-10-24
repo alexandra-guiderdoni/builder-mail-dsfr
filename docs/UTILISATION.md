@@ -110,6 +110,8 @@ Une version ou un catalogue inconnu n’est pas réinterprété : conserver le f
 
 La variante web doit être ouverte depuis une origine HTTPS autorisée. Attendre « ressources disponibles hors connexion ». Le bouton d’installation n’apparaît que si le navigateur propose cette possibilité ; l’absence du bouton ne doit pas être interprétée comme une installation réussie.
 
+Si une ressource ne peut pas être mise en cache, l’atelier le dit sous l’en-tête au lieu de rester sur « Ouverture de l’atelier… » : le hors connexion n’est jamais annoncé sans que le cache contienne toutes les ressources. Pour une première installation, le message renvoie au fichier portable. Sa bibliothèque est séparée de celle de la page web : exporter la bibliothèque (bouton du message), puis l’importer dans le fichier portable. Pour une mise à jour en échec, la version précédente reste en place ; elle n’est présentée comme disponible hors connexion que si son cache est complet. Les compositions restent enregistrées dans le navigateur dans tous les cas.
+
 Avant de quitter le réseau, éprouver la réouverture avec les contenus et images nécessaires. Le cache du programme et la bibliothèque de travail ont des fonctions distinctes. Effacer les données du navigateur peut retirer les deux.
 
 Quand « Appliquer la mise à jour » apparaît, l’atelier exige une sauvegarde réussie avant son rechargement. Exporter auparavant la bibliothèque, surtout avant un changement de version. Le parcours humain d’installation et les règles du parc restent à qualifier.
