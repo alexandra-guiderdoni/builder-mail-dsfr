@@ -172,5 +172,13 @@
     for (const element of doc.querySelectorAll(".hide-black")) add(element, "display:block;");
     return "<!doctype html>" + doc.documentElement.outerHTML;
   }
-  A.Render = Object.freeze({escape, block, body, html, plain, exportHtml, clipboardHtml, linkIssues, assertOutput});
+  // Poids du HTML remis au presse-papiers, en octets UTF-8, images incorporées comprises (#35).
+  // 90 et 102 Kio sont des repères prudents : ni la taille reçue ni une troncature par Gmail ne sont garanties.
+  const WEIGHT_NOTICE = 90 * 1024, WEIGHT_ALERT = 102 * 1024;
+  function weight(markup) {
+    if (typeof markup !== "string") throw new TypeError("Seul un HTML sous forme de chaîne se pèse.");
+    const bytes = new TextEncoder().encode(markup).byteLength;
+    return {bytes, level: bytes >= WEIGHT_ALERT ? "alert" : bytes >= WEIGHT_NOTICE ? "notice" : "ok"};
+  }
+  A.Render = Object.freeze({escape, block, body, html, plain, exportHtml, clipboardHtml, weight, linkIssues, assertOutput});
 })();

@@ -23,11 +23,11 @@
   A.State = Object.freeze({guard() { if (!current || dirty) throw new Error("Convertissez la collecte actuelle avant d’exporter."); }});
   const buttons = () => { for (const id of ["export-json", "export-html", "copy"]) get(id).disabled = !current || dirty; };
   const attempt = async action => { try { await action(); } catch (cause) { A.error(cause.linkIssue ? `${cause.message} Exportez le JSON puis corrigez cet intitulé dans le builder.` : cause.message); } };
-  input.addEventListener("input", () => { dirty = true; buttons(); A.error(""); clearFieldError(); A.notice(current ? "Collecte modifiée : reconvertissez avant d’exporter. L’aperçu précédent est conservé." : ""); });
+  input.addEventListener("input", () => { dirty = true; buttons(); A.error(""); clearFieldError(); A.notice(current ? "Collecte modifiée : reconvertissez avant d’exporter. L’aperçu précédent est conservé." : ""); A.Files.staleWeight("Poids du courriel à copier : calculé après la conversion."); });
   get("convert").addEventListener("click", () => attempt(() => {
     clearFieldError(); let result;
     try { result = A.SnumAdapter.convert(input.value); } catch (cause) { fieldError(cause); return; }
-    current = result.document; dirty = false; A.error(""); A.notice(result.notice); buttons();
+    current = result.document; dirty = false; A.error(""); A.notice(result.notice); buttons(); A.Files.measureWeight();
     if (previewURL) URL.revokeObjectURL(previewURL);
     previewURL = URL.createObjectURL(new Blob([A.Render.html(current, true)], {type: "text/html"}));
     get("preview").src = previewURL; get("preview").hidden = false; get("empty").hidden = true;

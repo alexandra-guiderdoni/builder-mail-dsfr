@@ -108,6 +108,7 @@
   function preview() {
     pageTitle(); A.Preview.show(A.doc());
     summary();
+    A.Files.scheduleWeight();
   }
   function refresh() {
     selections();

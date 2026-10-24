@@ -50,3 +50,6 @@ iframe { display:block; width:100%; height:760px; border:1px solid var(--border-
 .sr-only { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
 [hidden] { display:none!important; }
 @media(max-width:767px) { .header-row { flex-direction:column; } .preview-panel { position:static; } iframe { height:648px; } }
+.mail-weight { color:var(--text-mention-grey); font-size:.875rem; line-height:1.5rem; margin:0 0 16px; overflow-wrap:anywhere; }
+.mail-weight[data-level=notice] { color:var(--text-default-warning); background:var(--background-contrast-warning); border-left:4px solid var(--border-plain-warning); padding:8px 12px; }
+.mail-weight[data-level=alert] { color:var(--text-default-error); background:var(--background-contrast-error); border-left:4px solid var(--border-plain-error); padding:8px 12px; font-weight:700; }
