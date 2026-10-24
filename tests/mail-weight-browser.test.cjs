@@ -124,6 +124,19 @@ for (const engine of ['chromium', 'webkit']) {
       const gaps = inputs.slice(1).map((at, i) => at - inputs[i]).filter(gap => gap >= PAUSE - 20).length;
       assert.ok(weights.length <= gaps + 1, `${weights.length} calculs pour ${gaps} pauses`);
       assert.equal(weights.at(-1).bytes, String(final));
+      // Copie lancée avant la fin de la pause : le poids affiché devient aussitôt celui du HTML copié.
+      const immediate = await page.evaluate(async () => {
+        MailBuilder.State.change(lib => { lib.documents.find(d => d.id === lib.activeId).subject += ' — copie immédiate'; });
+        const before = document.getElementById('mail-weight').dataset.bytes, copying = MailBuilder.Files.copy();
+        const shown = document.getElementById('mail-weight').dataset.bytes;
+        await copying;
+        return {before, shown, html: MailBuilder.Render.clipboardHtml(MailBuilder.doc())};
+      });
+      const result = await copied(page);
+      assert.equal(immediate.before, String(final), 'aucun calcul avant la pause');
+      assert.equal(result.text, immediate.html);
+      assert.equal(immediate.shown, String(result.size));
+      assert.equal(result.size, bytes(immediate.html));
     } finally { await browser.close(); }
   });
 
