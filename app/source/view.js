@@ -60,8 +60,13 @@
     }).join("") + footerLinks(b) + `<label class="fr-label" for="article-source">Lien source facultatif du bloc</label><input class="fr-input" id="article-source" type="url" data-source value="${esc(b.source)}"><label class="fr-label" for="article-source-label">Intitulé du lien source</label><input class="fr-input" id="article-source-label" type="text" data-source-label value="${esc(b.sourceLabel ?? "")}" placeholder="Consulter la source" aria-describedby="source-label-help"><p id="source-label-help" class="muted">Sans intitulé, le lien affiche « Consulter la source ». Sans URL, aucun lien source n’est ajouté.</p><div class="actions"><button class="fr-btn fr-btn--secondary" type="button" data-return-to-block>Revenir au bloc sélectionné</button><button class="fr-btn fr-btn--secondary" data-block-action="up" ${index === 0 ? "disabled" : ""}>Monter</button><button class="fr-btn fr-btn--secondary" data-block-action="down" ${index === A.doc().blocks.length - 1 ? "disabled" : ""}>Descendre</button><button class="fr-btn fr-btn--secondary" data-block-action="duplicate">Dupliquer</button><button class="fr-btn fr-btn--secondary" data-block-action="remove">Retirer le bloc</button><button class="fr-btn fr-btn--secondary" data-action="cancel-fields">Annuler les champs invalides</button></div>`;
     fitFields();
   }
+  // Titre de page propre à la vue (RGAA 8.6) ; les dialogues gardent leur nom accessible.
+  function pageTitle() {
+    const brand = "Atelier de courriels DSFR", name = A.doc()?.name?.trim();
+    document.title = get("editor-page").hidden ? `Mes newsletters – ${brand}` : `${name ? `${name} – ` : ""}Éditeur – ${brand}`;
+  }
   function preview() {
-    A.Preview.show(A.doc());
+    pageTitle(); A.Preview.show(A.doc());
     get("composition-summary").textContent = `${A.doc().blocks.length} blocs dans « ${A.doc().name} »`;
   }
   function refresh() {
@@ -84,5 +89,5 @@
     if (width !== editorWidth) { editorWidth = width; if (width) fitFields(); }
   }).observe(get("block-editor"));
   document.fonts.ready.then(fitFields);
-  A.UI = Object.freeze({refresh, preview, fields, blockList, selections, catalogue, fieldError, clearFieldErrors, showLinkIssue});
+  A.UI = Object.freeze({refresh, preview, fields, blockList, selections, catalogue, pageTitle, fieldError, clearFieldErrors, showLinkIssue});
 })();

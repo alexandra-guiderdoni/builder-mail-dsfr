@@ -8,7 +8,7 @@
   const attempt = async action => { try { await action(); } catch (cause) { A.error(cause.message); } };
   function show(editor) {
     get("library-home").hidden = editor; get("editor-page").hidden = !editor;
-    get("library-back").hidden = !editor; get("resume-document").hidden = editor;
+    get("library-back").hidden = !editor; get("resume-document").hidden = editor; A.UI.pageTitle();
     get(editor ? "composition-title" : "home-title").focus();
   }
   function refresh() {
