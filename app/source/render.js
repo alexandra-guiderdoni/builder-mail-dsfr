@@ -96,6 +96,10 @@
       if (table.parentElement === doc.body) {
         add(table, "width:620px;margin:0;");
       }
+      // WebKit ignore max-width sur une table de largeur fixe en pixels, imbriquée ou racine.
+      // min() la borne à son conteneur ; un moteur qui ignore min() garde la largeur fixe.
+      const width = table.style.width;
+      if (/^\d+(?:\.\d+)?px$/.test(width)) add(table, "width:min(100%," + width + ");");
     }
     for (const cell of doc.querySelectorAll("td")) {
       add(cell, "overflow-wrap:anywhere;word-break:break-word;max-width:100%;");
