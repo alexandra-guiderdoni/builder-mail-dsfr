@@ -76,6 +76,45 @@
     M.document(value);
     return [value.subject, ...value.blocks.map(b => [...M.component(b.component).fields.map(f => f.type === "image" ? "" : b.values[f.key]), ...(b.additionalLinks || []).flatMap(link => [link.label, link.url]), ...(b.source && b.sourceLabel?.trim() ? [b.sourceLabel.trim()] : []), b.source].filter(Boolean).join("\n"))].join("\n\n");
   }
+  // L’export garde le rendu dérivé et ses styles de tête ; les bornes ajoutées en fin de style
+  // ne jouent que si une messagerie retire ces styles, dont les règles !important l’emportent sinon.
+  // Contrairement à la copie, il conserve les largeurs, les proportions des colonnes et les logos.
+  function exportHtml(value) {
+    const doc = new DOMParser().parseFromString(html(value), "text/html");
+    const add = (element, css) => element.setAttribute("style", (element.getAttribute("style") || "") + ";" + css);
+    const pixels = width => /^\d+(?:\.\d+)?px$/.test(width) ? Number.parseFloat(width) : 0;
+    const imageWidth = image => pixels(image.style.width) || (!image.style.width && /^\d+$/.test(image.getAttribute("width") || "") ? Number(image.getAttribute("width")) : 0);
+    // Une table de largeur fixe s’élargit jusqu’à l’image fixe qu’elle contient : garder cette largeur rendue.
+    const rendered = new Map();
+    for (const image of doc.images) {
+      const width = imageWidth(image);
+      let table = image.parentElement.closest("table");
+      while (table && !pixels(table.style.width)) table = table.parentElement?.closest("table");
+      if (width && table && width > pixels(table.style.width)) rendered.set(table, Math.max(rendered.get(table) || 0, width));
+    }
+    // WebKit ignore max-width sur une table de largeur fixe : min() la borne à son conteneur.
+    for (const table of doc.querySelectorAll("table")) {
+      const width = pixels(table.style.width);
+      if (width) add(table, (pixels(table.style.minWidth) ? "min-width:0;" : "") + "width:min(100%," + (rendered.get(table) || width) + "px);");
+    }
+    for (const cell of doc.querySelectorAll("td")) {
+      const width = pixels(cell.style.width), table = cell.closest("[data-mail-basis]"), basis = Number(table?.dataset.mailBasis);
+      if (!width) continue;
+      // Colonnes empilables : la même proportion, exacte à la largeur de conception ; un arrondi la décale sous WebKit.
+      if (cell.hasAttribute("data-mail-column")) {
+        if (table.classList.contains("mail-columns-stack") && basis > 0) add(cell, "width:" + width / basis * 100 + "%;");
+      } else if (width > 3) add(cell, "width:min(100%," + width + "px);");
+    }
+    for (const image of doc.images) {
+      const width = imageWidth(image), limit = image.style.maxWidth, height = image.getAttribute("height");
+      if (!width) continue;
+      add(image, "max-width:" + (limit && limit !== "none" ? "min(" + limit + ",100%)" : "100%") + ";");
+      // Une hauteur d’attribut fixe déformerait l’image réduite : garder le cadre du gabarit.
+      if (/^\d+$/.test(height || "") && !image.style.height) add(image, "height:auto;aspect-ratio:" + width + "/" + height + ";");
+    }
+    for (const element of doc.querySelectorAll(".hide-white")) add(element, "display:none;");
+    return "<!doctype html>" + doc.documentElement.outerHTML;
+  }
   function clipboardHtml(value) {
     const markup = html(value), doc = new DOMParser().parseFromString(markup, "text/html");
     const add = (element, css) => element.setAttribute("style", (element.getAttribute("style") || "") + ";" + css);
@@ -126,5 +165,5 @@
     for (const element of doc.querySelectorAll(".hide-black")) add(element, "display:block;");
     return "<!doctype html>" + doc.documentElement.outerHTML;
   }
-  A.Render = Object.freeze({escape, block, body, html, plain, clipboardHtml, linkIssues, assertOutput});
+  A.Render = Object.freeze({escape, block, body, html, plain, exportHtml, clipboardHtml, linkIssues, assertOutput});
 })();
