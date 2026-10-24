@@ -20,12 +20,13 @@ test('frappe sur le sélecteur fermé : aucune bascule de composition active', a
     const {page} = await open(browser);
     const {X} = await twoCompositions(page);
     assert.equal(await activeId(page), X, 'La composition dupliquée est active au départ.');
-    // Focaliser le sélecteur fermé puis taper une lettre : sous Firefox et WebKit, l'option correspondante est
-    // sélectionnée et un `change` est émis. Avant #57, cela basculait `activeId` immédiatement.
+    // Les deux compositions commencent par la même lettre (« M » de « Mon premier courriel » et sa « · copie »).
+    // Focaliser le sélecteur fermé puis taper « m » déclenche la recherche par frappe sous Firefox et WebKit, émet
+    // `change` et basculait immédiatement avant #57. On dispatche aussi un `change` directement pour couvrir le cas
+    // sans dépendre du moteur, puisque le défaut est bien la réception d'un `change` sans action explicite.
     await page.locator('#documents').focus();
-    await page.keyboard.press('a');
-    await page.keyboard.press('b');
-    await page.keyboard.press('c');
+    await page.keyboard.press('m');
+    await page.evaluate(() => { const s = document.querySelector('#documents'); s.dispatchEvent(new Event('change', {bubbles: true})); });
     // La frappe peut avoir modifié la valeur affichée du select, mais pas l'état réel de l'application.
     assert.equal(await activeId(page), X, 'Aucune frappe ne bascule la composition active.');
   } finally { await browser.close(); }
@@ -58,5 +59,18 @@ test('rafraîchissement après sélection : la sélection en attente du sélecte
     await page.evaluate(() => MailBuilder.UI.selections());
     assert.equal(await page.locator('#documents').inputValue(), Y, 'La sélection en attente est préservée au refresh.');
     assert.equal(await activeId(page), X, 'La composition active n’a pas changé pendant ce temps.');
+  } finally { await browser.close(); }
+});
+
+test('bascule par autre voie (duplication) : le sélecteur se synchronise sur la composition active', async () => {
+  const browser = await chromium.launch();
+  try {
+    const {page} = await open(browser);
+    const {X} = await twoCompositions(page);
+    // Une deuxième duplication rend la nouvelle copie active : le sélecteur doit la refléter, pas X.
+    await click(page, '[data-action=duplicate-document]'); await saved(page);
+    const newActive = await activeId(page);
+    assert.notEqual(newActive, X, 'La duplication crée une nouvelle composition active.');
+    assert.equal(await page.locator('#documents').inputValue(), newActive, 'Le sélecteur affiche la composition active, pas une sélection périmée.');
   } finally { await browser.close(); }
 });

@@ -113,6 +113,10 @@
   });
   // Depuis #57, la bascule de composition active passe par une action explicite (bouton « Ouvrir cette composition »)
   // et jamais par un `change` du sélecteur, qui serait aussi déclenché par la recherche par frappe sous Firefox et WebKit.
+  // Le `change` reste écouté uniquement pour afficher ou masquer le bouton selon la sélection en attente, sans muter l'état.
+  get("documents").addEventListener("change", () => {
+    get("open-document").hidden = (get("documents").value === A.library.activeId);
+  });
 
   let readings = 0; const reading = "Lecture du fichier de travail…";
   get("project-input").addEventListener("change", event => {
