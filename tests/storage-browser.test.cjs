@@ -91,11 +91,14 @@ test('un fichier en cours de lecture et un champ invalide empêchent une exporta
   try {
     const {page} = await open(browser);
     await page.evaluate(() => {
-      const read = FileReader.prototype.readAsDataURL;
-      FileReader.prototype.readAsDataURL = function(...args) { setTimeout(() => read.apply(this, args), 1500); };
+      const read = FileReader.prototype.readAsDataURL, gate = new Promise(resolve => { window.releaseRead = resolve; });
+      window.readHeld = false;
+      FileReader.prototype.readAsDataURL = function(...args) { window.readHeld = true; gate.then(() => read.apply(this, args)); };
     });
     await page.locator('[data-image-field]').first().setInputFiles(path.join(root, 'app/assets/icon-192.png'));
+    await page.waitForFunction(() => window.readHeld && MailBuilder.pendingInputs === 1);
     await click(page, '[data-action=export-mail]'); await page.locator('#error').filter({hasText: 'Attendez la fin'}).waitFor();
+    assert.equal(await page.evaluate(() => MailBuilder.pendingInputs), 1); await page.evaluate(() => window.releaseRead());
     await page.locator('#notice').filter({hasText: 'Image locale incorporée'}).waitFor(); await saved(page);
     await page.locator('#article-source').fill('javascript:alert(1)');
     const before = await store(page); await click(page, '[data-action=export-mail]'); await page.locator('#error').filter({hasText: 'Corrigez les champs'}).waitFor();
@@ -128,5 +131,67 @@ test('fermer pendant la sauvegarde avertit ; le départ annulé conserve le trav
     const reopened = await context.newPage(); await reopened.goto(portable); await reopened.waitForFunction(() => window.MailBuilder?.ready);
     assert.equal(await reopened.locator('#document-name').inputValue(), 'Travail conservé après avertissement');
     await fs.mkdir(evidence, {recursive: true}); await fs.writeFile(path.join(evidence, 'fermeture-sauvegarde.json'), JSON.stringify({warningObserved: true, departureCancelled: true, memoryPreserved: true, storeUnchangedBeforeCommit: true, noWarningAfterCommit: true, reopenedWithSavedDocument: true, scope: 'Chromium ; écriture retardée avant la transaction réelle'}, null, 2));
+  } finally { await browser.close(); }
+});
+
+const both = page => page.evaluate(async () => ({current: await MailBuilder.Storage.load(), previous: await MailBuilder.Storage.load('previous')}));
+
+test('quota asynchrone : la transaction est abandonnée après les écritures, current et previous restent inchangés et le travail reste exportable', async () => {
+  const browser = await chromium.launch({headless: true});
+  try {
+    const {page} = await open(browser), errors = []; page.on('pageerror', e => errors.push(e.message));
+    await page.locator('#document-name').fill('État initial sauvegardé'); await saved(page);
+    await page.locator('#document-name').fill('Avant la panne'); await saved(page);
+    const before = await both(page);
+    assert.equal(before.current.library.documents[0].name, 'Avant la panne');
+    assert.equal(before.previous.library.documents[0].name, 'État initial sauvegardé');
+    await page.evaluate(() => {
+      const put = IDBObjectStore.prototype.put; window.failWrites = true; window.abortedAfterPut = 0;
+      IDBObjectStore.prototype.put = function(...args) {
+        const request = put.apply(this, args), transaction = this.transaction;
+        if (window.failWrites && this.name === 'library' && args[1] === 'current') {
+          request.addEventListener('success', () => { window.abortedAfterPut++; transaction.abort(); });
+        }
+        return request;
+      };
+    });
+    await page.locator('#document-name').fill('Travail en mémoire');
+    await page.locator('#save-state').filter({hasText: 'Modifications non sauvegardées'}).waitFor();
+    assert.equal(await page.evaluate(() => window.abortedAfterPut), 1, 'l’abandon doit survenir après l’écriture de current');
+    assert.match(await page.locator('#error').innerText(), /stockage refusé ou saturé/);
+    assert.deepEqual(await both(page), before);
+    await expand(page, 'Fichiers et récupération');
+    const output = await download(page, '[data-action=export-document]', 'quota-asynchrone-composition.json');
+    assert.equal(JSON.parse(await fs.readFile(output, 'utf8')).name, 'Travail en mémoire');
+    assert.equal(await page.locator('#document-name').inputValue(), 'Travail en mémoire');
+    await page.evaluate(() => { window.failWrites = false; }); await click(page, '[data-action=save-now]'); await saved(page);
+    const after = await both(page);
+    assert.equal(after.current.library.documents[0].name, 'Travail en mémoire');
+    assert.equal(after.previous.library.documents[0].name, 'Avant la panne'); assert.deepEqual(errors, []);
+  } finally { await browser.close(); }
+});
+
+test('un previous invalide ne remplace ni le stockage ni le travail courant lors de la récupération', async () => {
+  const browser = await chromium.launch({headless: true});
+  try {
+    const {page} = await open(browser), errors = []; page.on('pageerror', e => errors.push(e.message));
+    await page.locator('#document-name').fill('État initial sauvegardé'); await saved(page);
+    await page.locator('#document-name').fill('Travail courant'); await saved(page);
+    await page.locator('#document-name').fill('Travail non sauvegardé encore'); await saved(page);
+    await page.evaluate(() => new Promise((resolve, reject) => {
+      const request = indexedDB.open('builder-mail-dsfr-library', 1);
+      request.onsuccess = () => { const tx = request.result.transaction('library', 'readwrite'); tx.objectStore('library').put({token: 'previous-invalide', library: {version: 99, documents: 'invalide'}}, 'previous'); tx.oncomplete = () => { request.result.close(); resolve(); }; tx.onerror = reject; };
+      request.onerror = reject;
+    }));
+    const invalid = await both(page), memory = await state(page);
+    assert.equal(invalid.previous.token, 'previous-invalide');
+    await expand(page, 'Fichiers et récupération'); await click(page, '[data-action=recover]');
+    await page.locator('#save-state').filter({hasText: 'Récupération impossible'}).waitFor();
+    assert(!(await page.locator('#error').innerText()).includes('Aucun état précédent'), 'le previous existe mais est invalide');
+    assert.deepEqual(await both(page), invalid);
+    assert.deepEqual(await state(page), memory);
+    assert.equal(await page.locator('#document-name').inputValue(), 'Travail non sauvegardé encore');
+    const output = await download(page, '[data-action=export-document]', 'previous-invalide-composition.json');
+    assert.equal(JSON.parse(await fs.readFile(output, 'utf8')).name, 'Travail non sauvegardé encore');
   } finally { await browser.close(); }
 });
