@@ -66,3 +66,9 @@ test('le portable servi par HTTP reste autonome et ne tente pas d’inscrire un 
     assert(!requests.some(url => url.endsWith('/sw.js'))); assert(!errors.some(message => /worker|Content Security Policy/.test(message)));
   } finally { if (server) { server.closeAllConnections(); await new Promise(resolve => server.close(resolve)); } await browser.close(); }
 });
+test('la liste de ressources vérifiée par la page est celle que le service worker précache', () => {
+  const list = text => text.match(/\[("\.[^\]]*)\]/)[1].split(',').map(item => item.trim().replace(/^"|"$/g, ''));
+  const worker = list(native.readFileSync(path.join(root, 'app/source/sw.js'), 'utf8').split('\n').find(line => line.startsWith('const FILES')));
+  const page = list(native.readFileSync(path.join(root, 'app/source/pwa.js'), 'utf8').split('\n').find(line => line.includes('const PRECACHED')).replace('const PRECACHED = ', ''));
+  assert.deepEqual(page, worker); assert(worker.length >= 6);
+});

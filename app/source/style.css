@@ -5,7 +5,7 @@ body { background:var(--background-alt-grey); }
 .app-footer { border-top:1px solid var(--border-default-grey); }
 .header-row { display:flex; justify-content:space-between; align-items:start; gap:24px; }
 .header-row h1 { color:var(--text-title-blue-france); } .eyebrow,.muted,.environment { color:var(--text-mention-grey); }
-.environment { min-width:192px; font-size:.875rem; } .environment button { margin-top:8px; }
+.environment { min-width:192px; font-size:.875rem; } .environment button { margin-top:8px; } .offline-help { max-width:60ch; margin-top:12px; }
 #workspace { min-width:0; border:0; margin:0; padding:0; }
 .app-panel { min-width:0; padding:24px; background:var(--background-default-grey); border:1px solid var(--border-default-grey); }
 .app-panel h2 { font-size:1.25rem; line-height:1.75rem; margin-bottom:24px; }
