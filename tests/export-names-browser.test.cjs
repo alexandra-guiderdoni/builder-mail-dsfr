@@ -1,5 +1,5 @@
 const test = require('node:test');
-const {open, expand, saved, click, chromium, assert} = require('./browser-support.cjs');
+const {open, expand, saved, click, confirmChecks, chromium, assert} = require('./browser-support.cjs');
 const {webkit} = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
 
 // 25 octobre 2026, 00 h 30 à Paris : le 24 en UTC. La date d'export est la date locale.
@@ -19,7 +19,7 @@ const selectors = ['[data-action=export-mail]', '[data-action=export-document]',
 
 async function suggested(page, selector) {
   const event = page.waitForEvent('download');
-  await click(page, selector);
+  await click(page, selector); await confirmChecks(page); // fenêtre de contrôle de #36
   return (await event).suggestedFilename();
 }
 

@@ -21,20 +21,20 @@ async function setBlocks(page, build) {
     const index = id => MailBuilder.catalog.components.findIndex(c => c.id === id);
     const footer = (values, extra = {}) => Object.assign(M.createBlock(index('mail-50')), extra, {values: {...M.createBlock(index('mail-50')).values, ...values}});
     const noise = (w, h) => { const c = document.createElement('canvas'); c.width = w; c.height = h; const x = c.getContext('2d'), d = x.createImageData(w, h); let s = 7; for (let i = 0; i < d.data.length; i++) { s ^= s << 13; s ^= s >>> 17; s ^= s << 5; d.data[i] = i % 4 === 3 ? 255 : s & 255; } x.putImageData(d, 0, 0); return c.toDataURL('image/png'); };
-    const healthy = () => footer({f0: 'Pour vos abonnements,', f1: 'https://www.info.gouv.fr/abonnements', f2: 'Gérer mon abonnement'});
+    const healthy = () => footer({f0: 'Pour vos abonnements,', f1: 'https://www.exemple-info.gouv.fr/abonnements', f2: 'Gérer mon abonnement'});
     const sets = {
       empty: () => [],
       healthy: () => [healthy()],
       starter: () => M.create('Départ').blocks,
       rules: () => {
         const article = M.createBlock(index('mail-31'));
-        Object.assign(article.values, {f0: noise(300, 300), f1: 'Motif synthétique', f2: 'Avant-titre rédigé', f3: 'https://www.info.gouv.fr/article', f4: 'Titre rédigé', f5: 'Détail rédigé', f6: 'Fin rédigée'});
+        Object.assign(article.values, {f0: noise(300, 300), f1: 'Motif synthétique', f2: 'Avant-titre rédigé', f3: 'https://www.exemple-info.gouv.fr/article', f4: 'Titre rédigé', f5: 'Détail rédigé', f6: 'Fin rédigée'});
         return [
           footer({f0: 'Pour vos abonnements,', f1: 'https://exemple.invalid/abonnement', f2: 'Gérer mon abonnement'}),
-          footer({f1: 'https://www.info.gouv.fr/abonnements'}),
-          footer({f0: 'Pour payer,', f1: 'https://collecte-amendes.fr/', f2: 'impots.gouv.fr'}),
-          footer({f0: 'Pour lire,', f1: 'https://www.info.gouv.fr/‮fdp.exe', f2: 'Lire la pièce'}),
-          footer({f0: 'Pour se connecter,', f1: 'https://аррӏе.com/', f2: 'Se connecter'}),
+          footer({f1: 'https://www.exemple-info.gouv.fr/abonnements'}),
+          footer({f0: 'Pour payer,', f1: 'https://collecte-exemple.fr/', f2: 'exemple-admin.gouv.fr'}),
+          footer({f0: 'Pour lire,', f1: 'https://www.exemple-info.gouv.fr/‮fdp.exe', f2: 'Lire la pièce'}),
+          footer({f0: 'Pour se connecter,', f1: 'https://ехемрӏе.com/', f2: 'Se connecter'}),
           article,
         ];
       },
