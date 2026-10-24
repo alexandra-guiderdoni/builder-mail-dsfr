@@ -74,7 +74,11 @@
       A.selected = A.doc().blocks[0]?.id || null; A.UI.refresh(); A.error("");
       document.getElementById("save-state").textContent = "Bibliothèque sauvegardée dans ce navigateur.";
       A.notice("État précédent relu. Contrôlez les compositions avant de poursuivre.");
-    } catch (cause) { document.getElementById("save-state").textContent = "Récupération impossible ; le travail actuel est conservé."; throw cause; }
+    } catch (cause) {
+      document.getElementById("save-state").textContent = "Récupération impossible ; le travail actuel est conservé.";
+      if (cause.storage === "conflit") lock("conflit", "Une autre fenêtre a enregistré la bibliothèque après la dernière sauvegarde de celle-ci.");
+      throw cause;
+    }
     finally { restoring = false; pending--; document.getElementById("workspace").disabled = false; }
   }
   // Ajoute en copies horodatées ce que cette fenêtre a modifié depuis sa base, sans rien remplacer du stockage relu.
@@ -98,17 +102,23 @@
     if (!readOnly) throw new Error("Cette fenêtre détient déjà la bibliothèque.");
     if (readOnly === "version") throw readOnlyError();
     if (restoring) throw new Error("Attendez la fin de l’opération en cours avant de reprendre la main.");
+    if (A.pendingInputs) throw new Error("Attendez la fin du chargement du fichier avant de reprendre la main.");
     restoring = true; pending++; get("workspace").disabled = true; A.notice(""); get("save-state").textContent = "Reprise de la main en cours…";
     try {
       await queue; const record = await A.Storage.load();
       if (record?.app && record.app !== A.Storage.version) { lock("version", "La bibliothèque a été enregistrée par une autre version de l’atelier."); throw readOnlyError(); }
-      const {library, copies} = rebase(record ? M.copy(M.library(record.library)) : null), saved = await A.Storage.save(library, record?.token ?? null);
-      token = saved.token; base = A.library = library; revision++; failed = false; readOnly = null; A.recoveryOnly = false;
-      get("editing").disabled = false; get("read-only").hidden = true; A.invalid.clear(); A.UI.clearFieldErrors();
-      if (!A.doc().blocks.some(b => b.id === A.selected)) A.selected = A.doc().blocks[0]?.id || null;
-      A.UI.refresh(); A.error(""); get("save-state").textContent = "Bibliothèque sauvegardée dans ce navigateur."; get(get("editor-page").hidden ? "home-title" : "composition-title").focus();
-      A.notice(copies ? `Main reprise : ${copies > 1 ? `${copies} copies horodatées ajoutées` : "une copie horodatée ajoutée"} à la bibliothèque enregistrée, sans rien remplacer. L’autre fenêtre n’enregistre plus rien et passe en lecture seule.` : "Main reprise : rien n’avait changé dans cette fenêtre, la bibliothèque enregistrée est conservée telle quelle.");
+      const {library, copies} = rebase(record ? M.copy(M.library(record.library)) : null);
+      if (readOnly === "version") throw readOnlyError();
+      const saved = await A.Storage.save(library, record?.token ?? null);
+      token = saved.token; base = A.library = library; revision++; failed = false; A.recoveryOnly = false;
       channel?.postMessage({type: "takeover", token: saved.token});
+      if (!A.doc().blocks.some(b => b.id === A.selected)) A.selected = A.doc().blocks[0]?.id || null;
+      // Un retard signalé pendant l’écriture garde la lecture seule : la bibliothèque écrite est déjà en mémoire.
+      if (readOnly === "version") { A.UI.refresh(); get("save-state").textContent = "Bibliothèque sauvegardée ; cette fenêtre reste en lecture seule : exportez puis rechargez-la."; return; }
+      readOnly = null;
+      get("editing").disabled = false; get("read-only").hidden = true; A.invalid.clear(); A.UI.clearFieldErrors();
+      A.UI.refresh(); A.error(""); get("save-state").textContent = "Bibliothèque sauvegardée dans ce navigateur."; get(get("editor-page").hidden ? "home-title" : "composition-title").focus();
+      A.notice(copies ? `Main reprise : ${copies > 1 ? `${copies} copies horodatées ajoutées` : "une copie horodatée ajoutée"} à la bibliothèque enregistrée, sans rien remplacer. L’autre fenêtre ne peut plus enregistrer ; elle passe en lecture seule au plus tard à sa prochaine modification.` : "Main reprise : rien n’avait changé dans cette fenêtre, la bibliothèque enregistrée est conservée telle quelle.");
     } catch (cause) {
       get("save-state").textContent = "Reprise impossible : rien n’a été enregistré.";
       if (readOnly === "version") throw cause;

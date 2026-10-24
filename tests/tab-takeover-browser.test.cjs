@@ -2,7 +2,7 @@ const test = require('node:test');
 const http = require('node:http');
 const path = require('node:path');
 const {execFileSync} = require('node:child_process');
-const {root, portable, click, open, enterEditor, saved, download, state, store, chromium, fs, assert} = require('./browser-support.cjs');
+const {root, portable, click, open, enterEditor, saved, expand, download, state, store, chromium, fs, assert} = require('./browser-support.cjs');
 
 // Données synthétiques uniquement. Chaque test constate séparément la mémoire, le stockage et l’export.
 const banner = '#read-only', takeOver = '[data-action=take-over]', rescue = '[data-action=read-only-export]', reload = '[data-action=reload-page]';
@@ -231,4 +231,56 @@ print(json.dumps({p.name:base64.b64encode(data).decode('ascii') for p,data in re
     assert.equal(await late.locator(banner).isHidden(), true);
     assert.deepEqual(await store(first), storedBefore, 'Le rechargement n’écrit rien.');
   } finally { if (server?.listening) await new Promise(resolve => { server.close(resolve); server.closeAllConnections(); }); await browser.close(); }
+});
+
+test('une image en cours de lecture bloque la reprise : elle n’est jamais versée dans la composition de l’autre fenêtre', async () => {
+  const browser = await chromium.launch({headless: true});
+  try {
+    const {page: first, context} = await open(browser);
+    await first.locator('#document-name').fill('Composition commune'); await saved(first);
+    const other = await second(context), image = other.locator('[data-image-field]').first(), field = await image.getAttribute('data-image-field');
+    await first.locator('#document-name').fill('Version de la première fenêtre'); await saved(first);
+    await other.evaluate(() => { const files = MailBuilder.Files, gate = new Promise(resolve => { window.finishImage = resolve; }); MailBuilder.Files = {...files, image: async file => { await gate; MailBuilder.Files = files; return files.image(file); }}; });
+    await image.setInputFiles(path.join(root, 'app/assets/icon-192.png')); await other.waitForFunction(() => MailBuilder.pendingInputs === 1);
+    await other.locator('#document-name').fill('Version de la seconde fenêtre'); await expectReadOnly(other, 'fenêtre en conflit pendant la lecture d’une image');
+    const storedBefore = await store(first), otherMemory = await state(other);
+    assert.match(await other.evaluate(() => MailBuilder.State.takeOver().then(() => 'reprise acceptée', e => e.message)), /chargement/);
+    assert.deepEqual(await store(first), storedBefore, 'Aucune reprise pendant la lecture d’un fichier.'); assert.deepEqual(await state(other), otherMemory);
+    await other.evaluate(() => window.finishImage()); await other.waitForFunction(() => MailBuilder.pendingInputs === 0);
+    await click(other, takeOver); await saved(other);
+    const merged = await state(other);
+    assert.deepEqual(merged.documents[0], storedBefore.library.documents[0], 'La composition de l’autre fenêtre ne reçoit pas l’image.');
+    assert.equal(merged.documents[1].blocks[0].values[field], otherMemory.documents[0].blocks[0].values[field]);
+    assert.deepEqual((await store(other)).library, merged);
+  } finally { await browser.close(); }
+});
+
+test('un retard de version signalé pendant la reprise l’annule sans écrire et garde la lecture seule', async () => {
+  const browser = await chromium.launch({headless: true});
+  try {
+    const {first, other} = await conflict(browser);
+    await expectReadOnly(other, 'fenêtre en conflit');
+    const storedBefore = await store(first), otherMemory = await state(other);
+    const outcome = await other.evaluate(() => { const taking = MailBuilder.State.takeOver(); MailBuilder.State.outdated(); return taking.then(() => 'reprise acceptée', e => e.message); });
+    assert.match(outcome, /version/);
+    assert.deepEqual(await store(first), storedBefore); assert.deepEqual(await state(other), otherMemory);
+    await expectReadOnly(other, 'fenêtre en retard');
+    assert(await other.locator(reload).isVisible()); assert(await other.locator(takeOver).isHidden());
+  } finally { await browser.close(); }
+});
+
+test('une restauration refusée par le jeton passe la fenêtre en lecture seule avec export et reprise', async () => {
+  const browser = await chromium.launch({headless: true});
+  try {
+    const {page: first, context} = await open(browser);
+    await first.locator('#document-name').fill('Composition commune'); await saved(first);
+    const other = await second(context);
+    await first.locator('#document-name').fill('Version de la première fenêtre'); await saved(first);
+    const storedBefore = await store(first), otherMemory = await state(other);
+    await expand(other, 'Fichiers et récupération'); await click(other, '[data-action=recover]');
+    await other.locator('#error').filter({hasText: 'Une autre fenêtre'}).waitFor();
+    assert.deepEqual(await store(first), storedBefore); assert.deepEqual(await state(other), otherMemory);
+    await expectReadOnly(other, 'restauration refusée');
+    assert(await other.locator(takeOver).isVisible());
+  } finally { await browser.close(); }
 });
