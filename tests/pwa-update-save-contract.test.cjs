@@ -21,7 +21,9 @@ async function scenario({pwa = read('pwa.js'), storage = {}, loadFails = false, 
     document: {querySelector: () => ({}), getElementById: element},
     location: {protocol: 'https:', reload: () => { log.reloads++; }},
     navigator: {serviceWorker: {addEventListener: (type, action) => { worker[type] = action; }, register: async () => registration, ready: Promise.resolve({active: {}})}},
-    addEventListener: (type, action) => { listeners[type] = action; }
+    addEventListener: (type, action) => { listeners[type] = action; },
+    // Depuis #65, state.js temporise l’annonce de succès : le contexte isolé reçoit les minuteries de Node.
+    setTimeout, clearTimeout
   };
   scope.window = scope;
   scope.MailBuilder = {
