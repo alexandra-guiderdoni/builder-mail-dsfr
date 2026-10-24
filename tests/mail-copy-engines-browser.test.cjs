@@ -10,7 +10,8 @@ function inspectCopy() {
   const width = document.documentElement.clientWidth, problems = [];
   const describe = e => e.tagName.toLowerCase() + (typeof e.className === 'string' && e.className.trim() ? '.' + e.className.trim().split(/\s+/)[0] : '');
   // Sans styles de tête, la copie masque seulement les variantes d’image pour fond sombre.
-  const intended = e => e.closest('.hide-white');
+  // Masquages voulus : variantes d’image pour fond sombre, et pré-en-tête masqué (#41).
+  const intended = e => e.closest('.hide-white') || e.closest('[style*="mso-hide:all"]');
   const outside = r => r.left < -1 || r.right > width + 1;
   for (const element of document.body.querySelectorAll('*')) {
     if (intended(element)) continue;
@@ -90,7 +91,7 @@ test('la copie des 52 composants tient sans débordement ni contenu masqué ou c
           await display.locator('style,link').evaluateAll(nodes => nodes.forEach(e => e.remove()));
           await display.waitForFunction(() => [...document.images].every(i => i.complete));
           const result = await display.evaluate(inspectCopy); cases++;
-          const reasons = [...(result.overflow > 1 ? [`débordement de ${result.overflow} px`] : []), ...(result.texts ? [] : ['aucun texte rendu']), ...result.problems];
+          const reasons = [...(result.overflow > 1 ? [`débordement de ${result.overflow} px`] : []), ...(result.texts || doc.component === 'mail-00' ? [] : ['aucun texte rendu']) /* #41 : le pré-en-tête seul n’a aucun texte rendu, par conception */, ...result.problems];
           if (reasons.length) failures.push(`${doc.component} ${variant} ${width} px : ${reasons.slice(0, 3).join(' ; ')}`);
         }
         await context.close();

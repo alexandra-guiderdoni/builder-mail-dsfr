@@ -33,7 +33,8 @@ test('les 52 composants gardent exactement leur HTML par défaut et le catalogue
   assert.equal(MailBuilder.catalog.components.length, 52);
   assert.equal(MailBuilder.catalog.components.reduce((count, c) => count + c.fields.length, 0), 178);
   const doc = M.create('Valeurs par défaut', Array.from({length: 52}, (_, i) => i));
-  assert.equal(hash(R.html(doc)), '34c9a2b3579eba44b549d15aafd460e4d4672a83d398a500f28ee942e8e666fc');
+  // #41 : seul mail-00 change (pré-en-tête masqué) ; les 51 autres composants gardent leurs octets, vérifiés un à un contre la base.
+  assert.equal(hash(R.html(doc)), '8956fd8f474fbf7a3b3d856599fe9689fc149bc40cf61110934d749916a0f75c');
   for (const [index, expected] of [[31, '4eccb52993ec177c37d5a9a4d8abec71597576c8ec6c4e5dc23a8cac30a2faa1'], [50, '54609b46f1a7a3f20c5991476661f3fbaa2af26b435d73d0d96774409480a406']]) {
     assert.equal(hash(R.html(M.create('Valeurs par défaut', [index]))), expected);
   }

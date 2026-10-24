@@ -66,7 +66,7 @@ test('les 52 composants copiés conservent texte, liens et images sans déborder
       const adapted = new DOMParser().parseFromString(A.Render.clipboardHtml(A.doc()), 'text/html');
       if (JSON.stringify([...adapted.images].map(i => [i.src, i.alt])) !== JSON.stringify([...original.images].map(i => [i.src, i.alt]))) throw new Error('La préparation du presse-papiers a changé les images');
       const nodes = original.createTreeWalker(original.body, NodeFilter.SHOW_TEXT), text = [];
-      while (nodes.nextNode()) { const value = nodes.currentNode.data.replace(/\s+/g, ' ').trim(); if (value) text.push(value); }
+      while (nodes.nextNode()) { const value = nodes.currentNode.data.replace(/\s+/g, ' ').trim(); if (value && !nodes.currentNode.parentElement.closest('[style*="mso-hide:all"]')) text.push(value); } // #41 : le pré-en-tête masqué n'est pas du texte reçu
       // Chromium omet les variantes blanches masquées dans sa copie en mode clair, les autres moteurs non : on ne compare que les images visibles.
       return {text, images: [...original.images].filter(i => !i.closest('.hide-white')).map(i => [i.src, i.alt]), links: [...original.querySelectorAll('a')].map(a => a.getAttribute('href')), plain: A.Render.plain(A.doc())};
     });
@@ -86,7 +86,7 @@ test('les 52 composants copiés conservent texte, liens et images sans déborder
       for (const table of doc.body.children) table.style.width = '800px';
       document.querySelector('#message').innerHTML = doc.body.innerHTML;
       const nodes = doc.createTreeWalker(doc.body, NodeFilter.SHOW_TEXT), text = [];
-      while (nodes.nextNode()) { const value = nodes.currentNode.data.replace(/\s+/g, ' ').trim(); if (value) text.push(value); }
+      while (nodes.nextNode()) { const value = nodes.currentNode.data.replace(/\s+/g, ' ').trim(); if (value && !nodes.currentNode.parentElement.closest('[style*="mso-hide:all"]')) text.push(value); } // #41 : le pré-en-tête masqué n'est pas du texte reçu
       return {text, images: [...doc.images].filter(i => !i.closest('.hide-white')).map(i => [i.src, i.alt]), links: [...doc.querySelectorAll('a')].map(a => a.getAttribute('href'))};
     }, clipboard.html);
     assert.deepEqual(actual.text, expected.text);
@@ -95,8 +95,8 @@ test('les 52 composants copiés conservent texte, liens et images sans déborder
     assert.deepEqual(actual.links, expected.links);
     for (const width of [1024, 800, 600, 390]) {
       await received.setViewportSize({width, height: 900});
-      const result = await received.locator('#message').evaluate(e => ({available: e.clientWidth, content: e.scrollWidth, blocks: e.children.length}));
-      assert.equal(result.blocks, 52);
+      const result = await received.locator('#message').evaluate(e => ({available: e.clientWidth, content: e.scrollWidth, blocks: [...e.children].filter(c => getComputedStyle(c).display !== 'none').length}));
+      assert.equal(result.blocks, 51); // #41 : 52 composants, dont mail-00 masqué (ou retiré par la lecture filtrée de Chromium)
       assert(result.content <= result.available + 1, `${width}px : ${JSON.stringify(result)}`);
     }
   } finally { await browser.close(); }
