@@ -100,10 +100,7 @@
       const width = pixels(table.style.width);
       if (width) add(table, (pixels(table.style.minWidth) ? "min-width:0;" : "") + "width:min(100%," + (rendered.get(table) || width) + "px);");
     }
-    for (const cell of doc.querySelectorAll("td:not([data-mail-column]):not([data-mail-gap])")) {
-      const width = pixels(cell.style.width);
-      if (width > 3) add(cell, "width:min(100%," + width + "px);");
-    }
+    // Bornée par min(), une table n’est pas élargie par ses cellules de largeur fixe, laissées inchangées.
     // Colonnes empilables : la colonne d’image garde sa largeur, le texte prend le reste, la gouttière est fixée.
     // À la largeur de conception, le partage reste celui du gabarit.
     for (const table of doc.querySelectorAll("table.mail-columns-stack")) {
