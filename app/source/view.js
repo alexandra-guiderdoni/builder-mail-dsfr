@@ -22,11 +22,18 @@
   function showLinkIssue(issue) {
     if (get("editor-page").hidden) return;
     A.selected = issue.block; blockList(); fields();
-    const input = get(`field-${issue.field}`);
+    const input = get(issue.inputId || `field-${issue.field}`);
     if (input) { fieldError(input, issue.message); input.focus(); }
   }
   function option(value, label, selected = false) { return `<option value="${esc(value)}" ${selected ? "selected" : ""}>${esc(label)}</option>`; }
   const blockLabel = (b, definition) => b.component === "mail-31" && !b.values.f0 ? "Article sans image" : definition.label;
+  const blockName = b => blockLabel(b, M.component(b.component));
+  function removal() {
+    // Un bloc déjà présent (par exemple relu par « Restaurer l’état précédent ») n’est pas proposé une seconde fois.
+    const doc = A.doc(), entry = A.removed.get(doc.id), available = Boolean(entry) && !doc.blocks.some(b => b.id === entry.block.id);
+    get("undo-remove-zone").hidden = !available;
+    get("undo-remove").textContent = available ? `Annuler le retrait du bloc « ${blockName(entry.block)} »` : "Annuler le retrait du bloc";
+  }
   function selections() {
     const doc = A.doc();
     get("documents").innerHTML = A.library.documents.map(d => option(d.id, d.name, d.id === doc.id)).join("");
@@ -56,7 +63,11 @@
       const label = linkLabel ? `${f.label} — Intitulé du lien (obligatoire)` : required ? `${f.label} (obligatoire)` : f.label, id = `field-${f.key}`, v = b.values[f.key];
       if (f.type === "image") return `<div class="image-field">${v ? `<img src="${esc(v)}" alt="Aperçu de l’image sélectionnée">` : '<p class="muted">Sans image</p>'}<label class="fr-label" for="${id}">${esc(b.component === "mail-31" ? "Image facultative" : label)}</label><input id="${id}" data-image-field="${esc(f.key)}" type="file" accept="image/png,image/jpeg,image/gif,image/webp">${b.component === "mail-31" && v ? '<div class="actions"><button class="fr-btn fr-btn--secondary" type="button" data-block-action="remove-image">Retirer l’image</button></div>' : ""}</div>`;
       return `<label class="fr-label" for="${id}">${esc(label)}</label>${f.type === "text" ? `<textarea class="fr-input" id="${id}" data-field="${f.key}" rows="3"${linkLabel ? ' data-link-label aria-required="true"' : ""}>${esc(v)}</textarea>` : `<input class="fr-input" id="${id}" data-field="${f.key}" type="${f.type === "url" ? "url" : "text"}"${required ? ' aria-required="true"' : ""} value="${esc(v)}">`}`;
-    }).join("") + footerLinks(b) + `<label class="fr-label" for="article-source">Lien source facultatif du bloc</label><input class="fr-input" id="article-source" type="url" data-source value="${esc(b.source)}"><label class="fr-label" for="article-source-label">Intitulé du lien source</label><input class="fr-input" id="article-source-label" type="text" data-source-label value="${esc(b.sourceLabel ?? "")}" placeholder="Consulter la source" aria-describedby="source-label-help"><p id="source-label-help" class="muted">Sans intitulé, le lien affiche « Consulter la source ». Sans URL, aucun lien source n’est ajouté.</p><div class="actions"><button class="fr-btn fr-btn--secondary" type="button" data-return-to-block>Revenir au bloc sélectionné</button><button class="fr-btn fr-btn--secondary" data-block-action="up" ${index === 0 ? "disabled" : ""}>Monter</button><button class="fr-btn fr-btn--secondary" data-block-action="down" ${index === A.doc().blocks.length - 1 ? "disabled" : ""}>Descendre</button><button class="fr-btn fr-btn--secondary" data-block-action="duplicate">Dupliquer</button><button class="fr-btn fr-btn--secondary" data-block-action="remove">Retirer le bloc</button><button class="fr-btn fr-btn--secondary" data-action="cancel-fields">Annuler les champs invalides</button></div>`;
+    }).join("") + footerLinks(b) + `<label class="fr-label" for="article-source">Lien source facultatif du bloc</label><input class="fr-input" id="article-source" type="url" data-source value="${esc(b.source)}"><label class="fr-label" for="article-source-label">Intitulé du lien source</label><input class="fr-input" id="article-source-label" type="text" data-source-label value="${esc(b.sourceLabel ?? "")}" placeholder="Consulter la source" aria-describedby="source-label-help"><p id="source-label-help" class="muted">Sans intitulé, le lien affiche « Consulter la source ». Sans URL, aucun lien source n’est ajouté.</p><div class="actions"><button class="fr-btn fr-btn--secondary" type="button" data-return-to-block>Revenir au bloc sélectionné</button><button class="fr-btn fr-btn--secondary" data-block-action="up" ${index === 0 ? "disabled" : ""}>Monter</button><button class="fr-btn fr-btn--secondary" data-block-action="down" ${index === A.doc().blocks.length - 1 ? "disabled" : ""}>Descendre</button><button class="fr-btn fr-btn--secondary" data-block-action="duplicate">Dupliquer le bloc</button><button class="fr-btn fr-btn--secondary" data-block-action="remove">Retirer le bloc</button><button class="fr-btn fr-btn--secondary" data-action="cancel-fields">Annuler les champs invalides</button></div>`;
+    for (const d of A.drafts.values()) {
+      const input = d.doc === A.doc().id && d.block === b.id && get(d.input);
+      if (input) { input.value = d.value; if (d.shown) fieldError(input, d.message); }
+    }
     fitFields();
   }
   function preview() {
@@ -65,7 +76,7 @@
   }
   function refresh() {
     selections(); get("document-name").value = A.doc().name; get("subject").value = A.doc().subject;
-    blockList(); fields(); preview();
+    blockList(); fields(); preview(); removal();
   }
   function catalogue() {
     const select = get("catalogue"), previous = select.value, query = get("catalogue-search").value.toLocaleLowerCase("fr");
@@ -83,5 +94,5 @@
     if (width !== editorWidth) { editorWidth = width; if (width) fitFields(); }
   }).observe(get("block-editor"));
   document.fonts.ready.then(fitFields);
-  A.UI = Object.freeze({refresh, preview, fields, blockList, selections, catalogue, fieldError, clearFieldErrors, showLinkIssue});
+  A.UI = Object.freeze({refresh, preview, fields, blockList, selections, catalogue, fieldError, clearFieldErrors, showLinkIssue, removal, blockName});
 })();
