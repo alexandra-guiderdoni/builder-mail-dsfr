@@ -63,10 +63,20 @@
       confirmIdentity(identity, doc, modified);
     },
     "remove-identity": () => { const target = selected(A.library.identities, "identities"); return A.State.change(lib => { lib.identities = lib.identities.filter(i => i.id !== target.id); }); },
+    "undo-remove": () => {
+      const docId = A.library.activeId, entry = A.removed.get(docId);
+      if (!entry) throw new Error("Aucun retrait de bloc à annuler dans cette composition.");
+      // Le bloc revient dans l’état courant : les saisies faites depuis le retrait sont conservées.
+      const saving = A.State.change(lib => { const blocks = lib.documents.find(d => d.id === docId).blocks; blocks.splice(Math.min(entry.index, blocks.length), 0, M.copy(entry.block)); A.selected = entry.block.id; });
+      A.removed.delete(docId); A.UI.removal();
+      get("block-editor").querySelector("textarea,input")?.focus();
+      A.notice(`Bloc « ${A.UI.blockName(entry.block)} » restauré en position ${A.doc().blocks.findIndex(b => b.id === entry.block.id) + 1}.`);
+      return saving;
+    },
     "add-block": () => {
       const id = get("catalogue").value; if (!id) throw new Error("Choisissez un composant du catalogue.");
-      A.State.guardEdit(); const b = M.createBlock(id); A.selected = b.id;
-      return A.State.change(lib => { const doc = lib.documents.find(d => d.id === lib.activeId), selectedIndex = doc.blocks.findIndex(x => x.id === get("block-list").querySelector('[aria-pressed="true"]')?.dataset.select); doc.blocks.splice(selectedIndex < 0 ? doc.blocks.length : selectedIndex + 1, 0, b); }, true, "edit").then(() => get("block-editor").querySelector("textarea,input")?.focus());
+      A.State.guard(); const b = M.createBlock(id); A.selected = b.id;
+      return A.State.change(lib => { const doc = lib.documents.find(d => d.id === lib.activeId), selectedIndex = doc.blocks.findIndex(x => x.id === get("block-list").querySelector('[aria-pressed="true"]')?.dataset.select); doc.blocks.splice(selectedIndex < 0 ? doc.blocks.length : selectedIndex + 1, 0, b); }).then(() => get("block-editor").querySelector("textarea,input")?.focus());
     },
     "cancel-fields": () => { A.UI.clearFieldErrors(); A.invalid.clear(); A.drafts.clear(); A.error(""); A.UI.refresh(); A.notice("Champs invalides annulés ; les dernières valeurs valides sont affichées."); },
     "save-now": A.State.save,

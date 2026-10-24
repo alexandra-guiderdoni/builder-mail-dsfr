@@ -15,6 +15,8 @@
   }
   A.library = M.initial(); A.selected = A.library.documents[0].blocks[0].id;
   A.invalid = new Set(); A.drafts = new Map(); A.ready = false; A.recoveryOnly = false; A.pendingInputs = 0;
+  // Dernier bloc retiré de chaque composition, en mémoire seulement : perdu à la fermeture de l’atelier.
+  A.removed = new Map();
   A.doc = () => A.library.documents.find(d => d.id === A.library.activeId);
   A.error = message => { const e = get("error"); e.textContent = message; e.hidden = !message; if (message) cancelSuccess(); };
   A.notice = message => { get("notice").textContent = message; };

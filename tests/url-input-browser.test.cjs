@@ -218,3 +218,33 @@ test('retirer un lien supplémentaire de pied recale les brouillons avant de red
     assert.deepEqual(await page.evaluate(() => [...MailBuilder.drafts.values()].map(d => d.input)), ['field-footer-url-0']);
   } finally { await browser.close(); }
 });
+
+// Décision du 24 octobre (garde unique) : pendant un brouillon d’URL, les actions qui modifient la composition
+// (Monter, Descendre, Retirer, Dupliquer, Ajouter, Annuler le retrait) sont refusées avec le message du lien, le
+// brouillon reste visible et le focus revient sur le champ. « Annuler les champs invalides » reste le moyen
+// d’abandonner le brouillon : la refuser rendrait le message « annulez sa modification » sans issue.
+test('un brouillon d’URL refuse les actions de bloc avec le message du lien et laisse l’annulation possible', async () => {
+  const browser = await chromium.launch();
+  try {
+    const {page} = await open(browser); await setup(page);
+    const blocks = () => page.evaluate(() => MailBuilder.doc().blocks.map(b => b.id));
+    const before = await blocks();
+    await expand(page, 'Ajouter un composant'); await page.locator('#catalogue').selectOption('mail-29');
+    await page.locator('#article-source').fill('https://');
+    const actions = ['[data-block-action=up]', '[data-block-action=down]', '[data-block-action=duplicate]', '[data-block-action=remove]', '[data-action=add-block]'];
+    for (const selector of actions) {
+      if (await page.locator(selector).isDisabled()) continue;
+      await click(page, selector);
+      await page.locator('#error').filter({hasText: 'Corrigez ce lien'}).waitFor();
+      assert.deepEqual(await blocks(), before, `« ${selector} » ne modifie pas la composition.`);
+      assert.equal(await page.locator('#article-source').inputValue(), 'https://', 'Le brouillon reste visible.');
+      assert.equal(await page.evaluate(() => document.activeElement.id), 'article-source', 'Le focus revient sur le champ.');
+      await page.locator('#error').evaluate(e => { e.textContent = ''; });
+    }
+    await click(page, '[data-action=cancel-fields]');
+    assert.equal(await page.evaluate(() => MailBuilder.drafts.size), 0, 'L’annulation abandonne le brouillon.');
+    assert.equal(await page.locator('#article-source').inputValue(), OLD, 'La dernière adresse valide est rétablie.');
+    await click(page, '[data-block-action=duplicate]');
+    await page.waitForFunction(n => MailBuilder.doc().blocks.length === n + 1, before.length);
+  } finally { await browser.close(); }
+});

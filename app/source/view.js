@@ -27,6 +27,13 @@
   }
   function option(value, label, selected = false) { return `<option value="${esc(value)}" ${selected ? "selected" : ""}>${esc(label)}</option>`; }
   const blockLabel = (b, definition) => b.component === "mail-31" && !b.values.f0 ? "Article sans image" : definition.label;
+  const blockName = b => blockLabel(b, M.component(b.component));
+  function removal() {
+    // Un bloc déjà présent (par exemple relu par « Restaurer l’état précédent ») n’est pas proposé une seconde fois.
+    const doc = A.doc(), entry = A.removed.get(doc.id), available = Boolean(entry) && !doc.blocks.some(b => b.id === entry.block.id);
+    get("undo-remove-zone").hidden = !available;
+    get("undo-remove").textContent = available ? `Annuler le retrait du bloc « ${blockName(entry.block)} »` : "Annuler le retrait du bloc";
+  }
   function selections() {
     const doc = A.doc();
     get("documents").innerHTML = A.library.documents.map(d => option(d.id, d.name, d.id === doc.id)).join("");
@@ -70,7 +77,7 @@
   }
   function refresh() {
     selections(); get("document-name").value = A.doc().name; get("subject").value = A.doc().subject;
-    blockList(); fields(); preview();
+    blockList(); fields(); preview(); removal();
   }
   function catalogue() {
     const select = get("catalogue"), previous = select.value, query = get("catalogue-search").value.toLocaleLowerCase("fr");
@@ -88,5 +95,5 @@
     if (width !== editorWidth) { editorWidth = width; if (width) fitFields(); }
   }).observe(get("block-editor"));
   document.fonts.ready.then(fitFields);
-  A.UI = Object.freeze({refresh, preview, fields, blockList, selections, catalogue, fieldError, clearFieldErrors, showLinkIssue});
+  A.UI = Object.freeze({refresh, preview, fields, blockList, selections, catalogue, fieldError, clearFieldErrors, showLinkIssue, removal, blockName});
 })();
