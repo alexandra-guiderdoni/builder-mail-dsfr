@@ -23,7 +23,8 @@
   A.doc = () => A.library.documents.find(d => d.id === A.library.activeId);
   A.error = message => { const e = get("error"); e.textContent = message; e.hidden = !message; if (message) cancelSuccess(); };
   let noticeTicket = 0;
-  A.notice = message => { get("notice").textContent = message; noticeTicket++; };
+  // Un écrivain différé passe le jeton relevé au départ : si une autre annonce est passée entre-temps, il se tait.
+  A.notice = (message, since) => { if (since !== undefined && since !== noticeTicket) return; get("notice").textContent = message; noticeTicket++; };
   // Tant que le travail n’est pas sauvegardé, l’export de secours suit le message d’échec.
   function failing(value) { failed = value; get("save-rescue").hidden = !value || !!readOnly; }
   const readOnlyError = () => new Error(readOnly === "version" ? "Cette fenêtre utilise une autre version de l’atelier : exportez la bibliothèque en mémoire, puis rechargez la page avant de reprendre la main." : "Une autre fenêtre détient la bibliothèque : cette fenêtre est en lecture seule. Exportez la bibliothèque en mémoire ou reprenez la main.");

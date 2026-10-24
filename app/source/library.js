@@ -32,9 +32,9 @@
   const subjectNotice = (done, replaced) => replaced === null ? `${done}.` : `${done}. L’objet d’origine contenait une date (« ${replaced} ») : il est remplacé par le nom de la composition. Mettez-le à jour avant l’envoi.`;
   async function duplicate(id) {
     A.State.guard(); const made = M.derive(find(id), M.uniqueName(`${find(id).name} · copie`, A.library.documents)), clone = made.doc;
-    A.notice(""); await A.State.change(lib => { lib.documents.push(clone); lib.activeId = clone.id; });
+    A.notice(""); const ticket = A.State.noticeTicket(); await A.State.change(lib => { lib.documents.push(clone); lib.activeId = clone.id; });
     await A.State.settle(); focusRow(clone.id);
-    A.notice(subjectNotice(A.State.saved() ? "Copie indépendante ajoutée et sauvegardée dans la bibliothèque" : "Copie indépendante ajoutée en mémoire, non sauvegardée : exportez la bibliothèque pour la conserver", made.replacedSubject));
+    A.notice(subjectNotice(A.State.saved() ? "Copie indépendante ajoutée et sauvegardée dans la bibliothèque" : "Copie indépendante ajoutée en mémoire, non sauvegardée : exportez la bibliothèque pour la conserver", made.replacedSubject), ticket);
   }
   function ask(kind, id) {
     A.State.guard(); const doc = find(id), removing = kind === "remove";

@@ -6,8 +6,9 @@
   // Deux noms sont homonymes s’ils ne diffèrent que par les espaces périphériques, la casse ou la forme Unicode.
   const key = value => value.normalize("NFKC").trim().toLowerCase();
   const unique = (list, label, kind) => { if (list.some(x => key(x.name) === key(label))) throw new Error(`${kind} nommé « ${label} » existe déjà. Choisissez un autre nom.`); };
-  // L’annonce de réussite attend la fin de la sauvegarde ; un échec a déjà affiché son propre message.
-  const announce = async message => { const ticket = A.State.noticeTicket(); try { await A.State.flush(); } catch (cause) { if (get("error").hidden) throw cause; return; } if (A.State.noticeTicket() !== ticket) return; A.notice(message); };
+  // L’annonce de réussite attend la fin de la sauvegarde ; un échec a déjà affiché son propre message. Le jeton est relevé
+  // au départ de l’action : une annonce posée pendant la sauvegarde (bloc ajouté, autre action) n’est pas écrasée.
+  const announce = async (message, ticket) => { try { await A.State.flush(); } catch (cause) { if (get("error").hidden) throw cause; return; } A.notice(message, ticket); };
   const starters = {information: [2, 5, 8, 19, 40, 47, 49], lettre: [2, 5, 10, 31, 35, 46, 47, 49], invitation: [2, 6, 19, 39, 40, 47, 49]};
   const family = b => M.component(b.component).family, framed = b => ["En-têtes", "Pieds de page"].includes(family(b));
   // Intact : valeurs éditoriales, source et liens égaux aux valeurs initiales du composant, identifiant ignoré.
@@ -50,25 +51,26 @@
   A.Actions = {
     "new-document": () => {
       const label = get("starter").selectedOptions[0].textContent.trim();
+      const ticket = A.State.noticeTicket();
       return A.State.change(lib => { const doc = M.create(M.uniqueName(label, lib.documents), starters[get("starter").value]); lib.documents.push(doc); lib.activeId = doc.id; })
-        .then(() => A.notice("Composition créée : vérifiez son nom et l’objet du courriel, modifiables ci-dessous."));
+        .then(() => A.notice("Composition créée : vérifiez son nom et l’objet du courriel, modifiables ci-dessous.", ticket));
     },
     "duplicate-document": () => A.Library.duplicate(A.library.activeId),
     "remove-document": () => A.Library.ask("remove", A.library.activeId),
     "library-home": () => A.Library.home(),
     "resume-document": () => A.Library.open(A.library.activeId),
-    "save-template": async () => { const label = name("template-name"); A.notice(""); await A.State.change(lib => { unique(lib.templates, label, "Un modèle"); lib.templates.push(M.clone(A.doc(), label)); }); await announce(`Modèle « ${label} » enregistré dans ce navigateur.`); },
+    "save-template": async () => { const label = name("template-name"); A.notice(""); const ticket = A.State.noticeTicket(); await A.State.change(lib => { unique(lib.templates, label, "Un modèle"); lib.templates.push(M.clone(A.doc(), label)); }); await announce(`Modèle « ${label} » enregistré dans ce navigateur.`, ticket); },
     "use-template": () => {
-      const template = selected(A.library.templates, "saved-templates"); let replaced = null;
+      const template = selected(A.library.templates, "saved-templates"), ticket = A.State.noticeTicket(); let replaced = null;
       return A.State.change(lib => { const made = M.derive(template, M.uniqueName(`${template.name} · composition`, lib.documents)); replaced = made.replacedSubject; lib.documents.push(made.doc); lib.activeId = made.doc.id; })
-        .then(() => A.notice(A.Library.subjectNotice("Composition créée depuis le modèle", replaced)));
+        .then(() => A.notice(A.Library.subjectNotice("Composition créée depuis le modèle", replaced), ticket));
     },
     "remove-template": () => A.Library.askRemoval("templates", selected(A.library.templates, "saved-templates").id),
     "save-identity": async () => {
       const label = name("identity-name"), blocks = A.doc().blocks.filter(b => ["En-têtes", "Pieds de page"].includes(M.component(b.component).family));
       if (!blocks.length) throw new Error("Ajoutez un en-tête ou un pied de page à cette composition.");
-      A.notice(""); await A.State.change(lib => { unique(lib.identities, label, "Une identité"); lib.identities.push({id: M.id(), name: label, blocks: M.copy(blocks)}); });
-      await announce(`Identité « ${label} » enregistrée dans ce navigateur.`);
+      A.notice(""); const ticket = A.State.noticeTicket(); await A.State.change(lib => { unique(lib.identities, label, "Une identité"); lib.identities.push({id: M.id(), name: label, blocks: M.copy(blocks)}); });
+      await announce(`Identité « ${label} » enregistrée dans ce navigateur.`, ticket);
     },
     "use-identity": () => {
       const identity = selected(A.library.identities, "identities"), doc = A.doc(); A.State.guard();
@@ -122,8 +124,8 @@
     "copy": A.Files.copy,
     "example-json": () => { A.State.guard(); A.Files.json(M.create("Exemple de composition", [5, 19, 40]), "exemple.courriel.json"); A.notice("Exemple JSON proposé au téléchargement. Votre composition actuelle est conservée."); },
     "json-import": async () => {
-      const incoming = await A.Imports.prepare(get("json-input").value), merged = A.Imports.merge(A.library, incoming);
-      return A.State.change(lib => { Object.assign(lib, merged); }).then(async () => { await A.Library.open(A.library.activeId); A.notice("Composition ou bibliothèque JSON ajoutée. Les éléments existants sont conservés."); });
+      const incoming = await A.Imports.prepare(get("json-input").value), merged = A.Imports.merge(A.library, incoming), ticket = A.State.noticeTicket();
+      return A.State.change(lib => { Object.assign(lib, merged); }).then(async () => { await A.Library.open(A.library.activeId); A.notice("Composition ou bibliothèque JSON ajoutée. Les éléments existants sont conservés.", ticket); });
     }
   };
 })();
