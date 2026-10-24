@@ -1,5 +1,5 @@
 const test = require('node:test');
-const {root, open, expand, click, saved, fs, assert} = require('./browser-support.cjs');
+const {root, open, expand, click, saved, confirmChecks, fs, assert} = require('./browser-support.cjs');
 const playwright = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
 
 // #41 : le pré-en-tête n'occupe aucune place ni ne s'affiche, sous Chromium et WebKit, sur l'export, l'aperçu et la copie.
@@ -55,7 +55,7 @@ test('plusieurs pré-en-têtes : avertissement visible dans l’éditeur, un seu
     await page.locator('#project-input').setInputFiles({name: 'preentetes.courriel.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(packet))});
     await page.locator('#notice').filter({hasText: 'Import ajouté à la bibliothèque'}).waitFor(); await saved(page);
     await page.locator('#composition-summary').filter({hasText: 'seul le premier est utilisé'}).waitFor();
-    await click(page, '[data-action=copy]'); await page.locator('#notice').filter({hasText: 'Courriel copié en HTML et texte.'}).waitFor();
+    await click(page, '[data-action=copy]'); await confirmChecks(page); await page.locator('#notice').filter({hasText: 'Courriel copié en HTML et texte.'}).waitFor();
     assert.match(await page.locator('#notice').textContent(), /seul le premier est utilisé/);
     const copied = await page.evaluate(async () => { const [item] = await navigator.clipboard.read({unsanitized: ['text/html']}); return {html: await (await item.getType('text/html')).text(), plain: await (await item.getType('text/plain')).text()}; });
     assert(copied.html.includes('Premier pré-en-tête') && !copied.html.includes('Second pré-en-tête'));

@@ -11,7 +11,7 @@ function inspectBare({ratios, inherited}) {
   const width = document.documentElement.clientWidth, problems = [];
   const describe = e => e.tagName.toLowerCase() + (typeof e.className === 'string' && e.className.trim() ? '.' + e.className.trim().split(/\s+/)[0] : '');
   // Sans styles de tête, seules les variantes du logo pour fond sombre restent masquées.
-  const intended = e => e.closest('.hide-white');
+  const intended = e => e.closest('.hide-white') || e.closest('[style*="mso-hide:all"]');
   const outside = r => r.left < -1 || r.right > width + 1;
   for (const element of document.body.querySelectorAll('*')) {
     if (intended(element)) continue;
@@ -146,7 +146,7 @@ test('l’export téléchargé tient sans styles de tête et garde son rendu ave
             await display.setContent(exported); await display.locator('style,link').evaluateAll(nodes => nodes.forEach(e => e.remove())); await loaded();
             const result = await display.evaluate(inspectBare, design); bare++;
             if (result.logos.light) logoCounts[item.component] = result.logos;
-            const reasons = [...(result.overflow > 1 ? [`débordement de ${result.overflow} px`] : []), ...(result.texts ? [] : ['aucun texte rendu']), ...result.problems];
+            const reasons = [...(result.overflow > 1 ? [`débordement de ${result.overflow} px`] : []), ...(result.texts || item.component === 'mail-00' ? [] : ['aucun texte rendu']) /* #41 : le pré-en-tête seul n’a aucun texte rendu, par conception */, ...result.problems];
             if (reasons.length) failures.push(`${name} ${width} px sans styles de tête : ${reasons.slice(0, 3).join(' ; ')}`);
           }
           for (const scheme of ['light', 'dark']) for (const width of item.variant === 'long' ? longStyledWidths : styledWidths) {

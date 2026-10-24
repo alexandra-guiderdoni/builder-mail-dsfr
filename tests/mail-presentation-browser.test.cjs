@@ -24,7 +24,7 @@ function inspect() {
     }
   }
   const words = [], text = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
-  while (text.nextNode()) {const value = text.currentNode.textContent.replace(/\s+/g,' ').trim(); if (value) words.push(value);}
+  while (text.nextNode()) {const value = text.currentNode.textContent.replace(/\s+/g,' ').trim(); if (value && !text.currentNode.parentElement.closest('[style*="mso-hide:all"]')) words.push(value);} // #41 : le pré-en-tête masqué n'est pas du texte affiché
   return {attributes, overflow: document.documentElement.scrollWidth > innerWidth + 1, overlaps,
     floats: [...document.querySelectorAll('table')].filter(e => getComputedStyle(e).float !== 'none').length,
     text: words.join(' '),
@@ -67,7 +67,7 @@ test('52 composants : présentation CSS, bornes responsive, contenus longs, espa
       const before = await display.evaluate(inspect), png = await display.screenshot({fullPage: true});
       await display.setContent(doc.normal.html); await loaded(display);
       const current = await display.evaluate(inspect), after = await display.screenshot({fullPage: true}), name = `${doc.component}-normal-${scheme}-${width}`;
-      check(current, name); assert.equal(current.text, before.text, name); assert.deepEqual(current.links, before.links, name);
+      check(current, name); assert.equal(current.text, doc.component === 0 ? '' : before.text, name); /* #41 : mail-00 est masqué, la référence l'affiche */ assert.deepEqual(current.links, before.links, name);
       const identical = png.equals(after), intendedChange = [601, 619].includes(width) || (doc.component === 48 && width === 320) || doc.component === 0 /* #41 : pré-en-tête masqué */ || (scheme === 'dark' && [7, 51].includes(doc.component)); // #42 : texte éclairci en mode sombre
       if (!identical) {await fs.writeFile(path.join(output, name + '-before.png'), png); await fs.writeFile(path.join(output, name + '-after.png'), after);}
       assert(identical || intendedChange, name + ' : différence visuelle inattendue');

@@ -89,6 +89,8 @@ Les remarques de collecte restent dans le paquet source, hors du courriel. Conse
 
 ## Récupérer le courriel
 
+Le composant « Pré-en-tête masqué » (mail-00) n’apparaît pas dans le courriel : son texte est masqué par la technique usuelle des messageries et sert d’aperçu dans la boîte de réception. Quelle que soit la position du bloc dans la composition, le pré-en-tête est placé en tête du corps du courriel. Si la composition en contient plusieurs, seul le premier est utilisé et un avertissement le signale. L’affichage réel de l’aperçu en boîte de réception n’est pas vérifié.
+
 « Copier le courriel » écrit le HTML et une version texte dans le presse-papiers, si le navigateur l’autorise. Coller dans un nouveau message, reporter l’objet, vérifier les liens, les images et les variantes. Si la copie est refusée, « Télécharger le HTML » fournit le fichier autonome pour la reprise selon les possibilités du poste.
 
 Sous ce bouton, le poids du courriel à copier s’affiche en Kio et en octets : il compte le HTML que la copie remet au presse-papiers, images incorporées comprises. Il se met à jour après une pause de saisie, et à chaque copie. À partir de 90 Kio, un avertissement signale l’approche du repère de 102 Kio au-delà duquel Gmail peut tronquer un message ; à partir de 102 Kio, l’alerte se renforce. Ces repères sont prudents : la taille reçue par la messagerie peut différer, et aucune troncature n’est garantie ni exclue. La copie reste toujours possible. Pour alléger un courriel, réduire ou retirer des images, ou répartir les blocs sur plusieurs envois. Le convertisseur SNUM affiche le même poids après chaque conversion.
