@@ -99,7 +99,7 @@ test('un changement de composition refusé rétablit toujours le sélecteur', as
       if (outcome === 'success') await saved(page); else await page.locator('#error').filter({hasText: 'Image refusée pour la recette'}).waitFor();
       assert.equal((await state(page)).activeId, active); assert.equal((await store(page)).library.activeId, active);
     }
-    await page.locator('#article-source').fill('https://'); await page.locator('#documents').selectOption(before.activeId);
+    await page.locator('#document-name').fill(''); await page.locator('#documents').selectOption(before.activeId);
     assert.equal(await page.locator('#documents').inputValue(), other); assert.equal((await state(page)).activeId, other);
     await click(page, '[data-action=cancel-fields]');
     await page.evaluate(() => {
