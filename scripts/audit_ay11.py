@@ -17,6 +17,7 @@ sys.path.insert(0, str(AY11 / "src"))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from audit_expectations import ScenarioError, scene_expectation_error, select_scenes
 from ay11.cli import build_parser
+from audit_server_lifecycle import RecipeServer, install_cleanup
 
 ENV = {**os.environ, "PYTHONDONTWRITEBYTECODE": "1", "PYTHONPATH": str(AY11 / "src")}
 manifest = []
@@ -75,6 +76,10 @@ def press(selector, key):
 
 
 OUT.mkdir(parents=True, exist_ok=True)
+# La campagne devient responsable du serveur qu’elle lance ; un serveur déjà présent n’est jamais arrêté.
+server = RecipeServer(int(os.environ.get("BUILDER_AUDIT_PORT", "4187")), ROOT, os.environ)
+server.start()
+install_cleanup(server)
 editor = [click("[data-action=resume-document]")]
 dialog = [click("[data-library-action=rename]")]
 packet = subprocess.check_output(
