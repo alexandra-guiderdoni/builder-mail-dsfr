@@ -25,7 +25,7 @@ test('le job de tests ne reçoit aucun droit de publication', () => {
 
 test('les dépendances du job de tests sont installées depuis le verrou et les actions sont épinglées', () => {
   assert.match(jobs.tests, /run: npm ci --ignore-scripts\b/);
-  assert.match(jobs.tests, /playwright install --with-deps chromium\b/);
+  assert.match(jobs.tests, /playwright install --with-deps chromium webkit\b/);
   for (const [, ref] of text.matchAll(/uses: \S+@(\S+)/g)) assert.match(ref, /^[0-9a-f]{40}$/);
   assert.match(jobs.tests, /node-version: '\d+\.\d+\.\d+'/);
 });
