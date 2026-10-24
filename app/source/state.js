@@ -98,7 +98,7 @@
   async function start() {
     try {
       const record = await A.Storage.load();
-      token = record?.token ?? null;
+      token = record?.token ?? null; opened = true;
       if (record) A.library = M.copy(M.library(record.library));
       A.selected = A.doc().blocks[0]?.id || null;
       show(record ? "Bibliothèque restaurée depuis ce navigateur." : "Aucune sauvegarde : créez ou personnalisez une composition.", true);
@@ -113,7 +113,8 @@
     A.ready = true; get("workspace").disabled = false; A.UI.refresh();
   }
   async function recover() {
-    guard(); restoring = true; pending++; get("workspace").disabled = true;
+    guard(); if (A.recoveryOnly && !opened) { offerReopen(); return; }
+    restoring = true; pending++; get("workspace").disabled = true;
     try {
       await queue; const previous = await A.Storage.load("previous");
       if (!previous) throw new Error("Aucun état précédent disponible.");
@@ -124,6 +125,27 @@
       A.notice("État précédent relu. Contrôlez les compositions avant de poursuivre.");
     } catch (cause) { show("Récupération impossible ; le travail actuel est conservé.", true); throw cause; }
     finally { restoring = false; pending--; get("workspace").disabled = false; }
+  }
+  // Le jeton du stockage n'est connu qu'après une lecture réussie. Après un refus initial, une restauration écrirait avec un jeton nul
+  // et signalerait un faux conflit ; relire le jeton pour forcer l'écriture écraserait une autre fenêtre. La page n'écrit donc rien :
+  // elle propose d'exporter le travail temporaire, puis de recharger pour relire la bibliothèque enregistrée avec son vrai jeton.
+  let opened = false;
+  function offerReopen() {
+    let box = document.getElementById("reopen-offer");
+    if (!box) {
+      box = document.createElement("section"); box.id = "reopen-offer"; box.className = "save-panel"; box.setAttribute("aria-labelledby", "reopen-title");
+      box.innerHTML = '<h2 class="fr-h5" id="reopen-title" tabindex="-1">Exporter le travail temporaire, puis recharger</h2><p id="reopen-text"></p><div class="actions"><button class="fr-btn" type="button" id="reopen-export">Exporter le travail temporaire</button><button class="fr-btn fr-btn--secondary" type="button" id="reopen-reload">Recharger l’atelier</button></div>';
+      document.getElementById("error").insertAdjacentElement("afterend", box);
+      document.getElementById("reopen-export").addEventListener("click", () => { try { A.Actions["export-library"](); } catch (cause) { A.error(cause.message); } });
+      document.getElementById("reopen-reload").addEventListener("click", () => location.reload());
+    }
+    const storage = !!window.indexedDB;
+    document.getElementById("reopen-text").textContent = storage
+      ? "Le navigateur a refusé l’ouverture de la bibliothèque enregistrée au démarrage. Cette page n’y a rien écrit et ne peut pas la restaurer sans risquer d’écraser une autre fenêtre. Exportez d’abord le travail temporaire affiché ici, puis rechargez l’atelier : il relira la bibliothèque enregistrée. Le navigateur peut demander une confirmation avant de recharger ; confirmez une fois le fichier exporté, puis importez-le pour retrouver ce travail."
+      : "Aucun stockage n’est disponible dans ce navigateur : cette page n’a rien à restaurer. Exportez le travail temporaire pour le conserver, la fermeture de cette page l’efface.";
+    document.getElementById("reopen-reload").hidden = !storage; box.hidden = false;
+    document.getElementById("reopen-title").focus();
+    A.notice("Restauration non lancée : aucune écriture n’a été faite dans la bibliothèque enregistrée.");
   }
   window.addEventListener("beforeunload", event => { if (pending || failed || A.invalid.size || A.drafts.size || A.pendingInputs) { event.preventDefault(); event.returnValue = ""; } });
   // Les vues internes attendent les écritures en cours sans exiger leur succès : le travail reste en mémoire.
