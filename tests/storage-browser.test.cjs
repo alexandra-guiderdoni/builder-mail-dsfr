@@ -158,7 +158,9 @@ test('quota asynchrone : la transaction est abandonnée après les écritures, c
     await page.locator('#document-name').fill('Travail en mémoire');
     await page.locator('#save-state').filter({hasText: 'Modifications non sauvegardées'}).waitFor();
     assert.equal(await page.evaluate(() => window.abortedAfterPut), 1, 'l’abandon doit survenir après l’écriture de current');
-    assert.match(await page.locator('#error').innerText(), /stockage refusé ou saturé/);
+    // Depuis #32, un abandon sans erreur nommée est classé « inaccessible » ; un vrai QuotaExceededError est classé
+    // « saturé » (couvert par save-rescue-browser). Le message nomme l’un de ces cas et propose l’export.
+    assert.match(await page.locator('#error').innerText(), /inaccessible|saturé/);
     assert.deepEqual(await both(page), before);
     await expand(page, 'Fichiers et récupération');
     const output = await download(page, '[data-action=export-document]', 'quota-asynchrone-composition.json');
