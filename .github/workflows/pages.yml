@@ -29,8 +29,8 @@ jobs:
           node-version: '24.18.0'
       - name: Installer Playwright depuis le verrou
         run: npm ci --ignore-scripts
-      - name: Installer Chromium et ses dépendances système
-        run: npx --no-install playwright install --with-deps chromium
+      - name: Installer Chromium, WebKit et leurs dépendances système
+        run: npx --no-install playwright install --with-deps chromium webkit
       - name: Contrôler les distributions et la provenance
         run: npm run check
       - name: Exécuter la suite de tests
