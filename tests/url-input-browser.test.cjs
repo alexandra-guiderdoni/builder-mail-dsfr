@@ -180,3 +180,41 @@ test('un brouillon d’URL n’est diffusé depuis aucune autre composition', as
     assert.equal(await page.locator('#library-home').isVisible(), false, 'L’accueil, et donc la duplication de X, restent fermés tant que le brouillon existe.');
   } finally { await browser.close(); }
 });
+
+async function importFooter(page, links) {
+  const doc = await page.evaluate(links => { const doc = MailBuilder.Model.create('Pied de recette', [50]); doc.blocks[0].additionalLinks = links; return doc; }, links);
+  await expand(page, 'Fichiers et récupération');
+  const count = (await state(page)).documents.length;
+  await page.locator('#project-input').setInputFiles({name: 'pied.courriel.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(doc))});
+  await page.waitForFunction(count => MailBuilder.library.documents.length === count + 1, count); await saved(page);
+  const id = await page.evaluate(() => MailBuilder.doc().blocks[0].id); await selectBlock(page, id);
+  return id;
+}
+
+test('retirer un lien supplémentaire de pied recale les brouillons avant de redessiner les champs', async () => {
+  const browser = await chromium.launch();
+  try {
+    const {page} = await open(browser);
+    const links = [{url: 'https://exemple.invalid/premier', label: 'Premier lien'}, {url: 'https://exemple.invalid/second', label: 'Second lien'}];
+    const extras = () => page.evaluate(() => MailBuilder.doc().blocks[0].additionalLinks);
+    // Brouillon du lien retiré : il disparaît avec lui et ne s’affiche pas sur le lien suivant.
+    await importFooter(page, links);
+    await page.locator('#field-footer-url-0').fill('https://'); await page.locator('#field-footer-url-0').blur();
+    await click(page, '[data-block-action=remove-footer-link][data-footer-link-index="0"]');
+    await page.waitForFunction(() => MailBuilder.doc().blocks[0].additionalLinks.length === 1);
+    assert.deepEqual(await extras(), [links[1]]);
+    assert.equal(await page.locator('#field-footer-url-0').inputValue(), links[1].url, 'Le lien restant affiche sa propre adresse.');
+    assert.equal(await page.locator('#field-footer-url-0').getAttribute('aria-invalid'), null);
+    assert.equal(await page.evaluate(() => MailBuilder.drafts.size), 0);
+    await saved(page);
+    // Brouillon du lien suivant : il le suit à sa nouvelle place, toujours signalé.
+    await importFooter(page, links);
+    await page.locator('#field-footer-url-1').fill('https://'); await page.locator('#field-footer-url-1').blur();
+    await click(page, '[data-block-action=remove-footer-link][data-footer-link-index="0"]');
+    await page.waitForFunction(() => MailBuilder.doc().blocks[0].additionalLinks.length === 1);
+    assert.deepEqual(await extras(), [links[1]], 'Le modèle garde la dernière adresse valide du lien déplacé.');
+    assert.equal(await page.locator('#field-footer-url-0').inputValue(), 'https://', 'La saisie temporaire suit son lien.');
+    assert.equal(await page.locator('#field-footer-url-0').getAttribute('aria-invalid'), 'true');
+    assert.deepEqual(await page.evaluate(() => [...MailBuilder.drafts.values()].map(d => d.input)), ['field-footer-url-0']);
+  } finally { await browser.close(); }
+});
