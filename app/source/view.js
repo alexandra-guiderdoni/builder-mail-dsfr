@@ -36,6 +36,13 @@
     get("undo-remove-zone").hidden = !available;
     get("undo-remove").textContent = available ? `Annuler le retrait du bloc « ${blockName(entry.block)} »` : "Annuler le retrait du bloc";
   }
+  // Rang d’un bloc tel que la liste l’affiche, pour les messages de statut des actions sur les blocs.
+  const blockPlace = id => { const blocks = A.doc().blocks; return `en position ${blocks.findIndex(b => b.id === id) + 1} sur ${blocks.length}`; };
+  function focusBlock(id) {
+    const target = [...get("block-list").querySelectorAll("[data-select]")].find(button => button.dataset.select === id);
+    if (!target) return false;
+    target.closest("details").open = true; target.focus(); return true;
+  }
   function selections() {
     const doc = A.doc(), template = get("saved-templates").value, identity = get("identities").value;
     get("documents").innerHTML = A.library.documents.map(d => option(d.id, d.name, d.id === doc.id)).join("");
@@ -124,5 +131,5 @@
     if (width !== editorWidth) { editorWidth = width; if (width) fitFields(); }
   }).observe(get("block-editor"));
   document.fonts.ready.then(fitFields);
-  A.UI = Object.freeze({refresh, preview, summary, fields, blockList, selections, catalogue, fieldError, clearFieldErrors, showLinkIssue, removal, blockName});
+  A.UI = Object.freeze({refresh, preview, summary, fields, blockList, selections, catalogue, fieldError, clearFieldErrors, showLinkIssue, removal, blockName, blockPlace, focusBlock});
 })();

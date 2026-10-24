@@ -5,10 +5,7 @@
   document.addEventListener("click", event => {
     const action = event.target.closest("[data-action]");
     if (action && !action.disabled) attempt(async () => { await A.Actions[action.dataset.action](); if (["new-document", "use-template"].includes(action.dataset.action)) await A.Library.open(A.library.activeId); });
-    if (event.target.closest("[data-return-to-block]")) {
-      const target = [...get("block-list").querySelectorAll("[data-select]")].find(button => button.dataset.select === A.selected);
-      if (target) { target.closest("details").open = true; target.focus(); }
-    }
+    if (event.target.closest("[data-return-to-block]")) A.UI.focusBlock(A.selected);
     const selected = event.target.closest("[data-select]");
     if (selected) attempt(() => { A.State.guardEdit(); A.selected = selected.dataset.select; A.UI.blockList(); A.UI.fields(); get("block-editor").querySelector("textarea,input")?.focus(); });
     const operation = event.target.closest("[data-block-action]");
@@ -17,11 +14,11 @@
       // Garde unique (décision du 24 octobre) : Monter, Descendre, Retirer et Dupliquer sont refusés pendant un brouillon d’URL ;
       // les liens de pied et l’image restent des éditions de champ, qui ignorent les brouillons.
       const mode = ["up", "down", "remove", "duplicate"].includes(actionName) ? false : "edit";
-      let removed;
+      let removed, name;
       const saving = A.State.change(lib => {
         const blocks = lib.documents.find(d => d.id === lib.activeId).blocks, index = blocks.findIndex(b => b.id === id);
         if (index < 0) throw new Error("Le bloc sélectionné a changé.");
-        const block = blocks[index];
+        const block = blocks[index]; name = `«\u00a0${A.UI.blockName(block)}\u00a0»`;
         if (actionName === "remove-image" && block.component === "mail-31") { block.values.f0 = ""; block.values.f1 = ""; }
         if (actionName === "add-footer-link" && block.component === "mail-50") {
           if ((block.additionalLinks?.length || 0) >= 2) throw new Error("Le pied de page accepte deux liens supplémentaires au maximum.");
@@ -40,12 +37,28 @@
       if (removed) {
         // Chaque retrait remplace le précédent de cette composition seulement.
         A.removed.set(A.library.activeId, removed); A.UI.removal();
-        A.notice(`Bloc « ${A.UI.blockName(removed.block)} » retiré. « Annuler le retrait » le rétablit à sa place.`);
+      }
+      // Le rendu a remplacé le bouton activé : le focus est replacé tout de suite, sans attendre la sauvegarde (#43).
+      const editor = get("block-editor"), catalogue = get("catalogue").closest("details").querySelector("summary"), selected = A.doc().blocks.find(b => b.id === A.selected);
+      if (["up", "down"].includes(actionName)) {
+        const buttons = [actionName, actionName === "up" ? "down" : "up"].map(action => editor.querySelector(`[data-block-action="${action}"]`));
+        (buttons.find(button => button && !button.disabled) || editor.querySelector("textarea,input")).focus();
+        A.notice(`Bloc ${name} déplacé ${A.UI.blockPlace(id)}.`);
+      } else if (actionName === "remove") {
+        if (selected) {
+          if (!A.UI.focusBlock(selected.id)) editor.querySelector("textarea,input")?.focus();
+          A.notice(`Bloc ${name} retiré. « Annuler le retrait » le rétablit à sa place. Bloc «\u00a0${A.UI.blockName(selected)}\u00a0» sélectionné, ${A.UI.blockPlace(selected.id)}.`);
+        } else { catalogue.focus(); A.notice(`Bloc ${name} retiré. « Annuler le retrait » le rétablit à sa place. La composition ne contient plus de bloc\u00a0: ajoutez un composant depuis le catalogue.`); }
+      } else {
+        const links = selected?.additionalLinks;
+        const target = (actionName === "add-footer-link" && get(`field-footer-url-${links.length - 1}`)) || editor.querySelector("textarea,input") || catalogue;
+        target.focus();
+        if (actionName === "duplicate") A.notice(`Bloc ${name} dupliqué\u00a0: la copie est sélectionnée, ${A.UI.blockPlace(A.selected)}.`);
+        if (actionName === "remove-image") A.notice(`Image retirée du bloc ${name}.`);
+        if (actionName === "add-footer-link") A.notice(`Lien supplémentaire ${links.length} ajouté au bloc ${name}.`);
+        if (actionName === "remove-footer-link") A.notice(`Lien supplémentaire ${Number(operation.dataset.footerLinkIndex) + 1} retiré du bloc ${name}.`);
       }
       await saving;
-      const links = A.doc().blocks.find(b => b.id === A.selected)?.additionalLinks;
-      const target = (actionName === "add-footer-link" && get(`field-footer-url-${links.length - 1}`)) || get("block-editor").querySelector("textarea,input") || get("catalogue").closest("details").querySelector("summary");
-      target.focus();
     });
   });
   function edit(input, mutator) {
