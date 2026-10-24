@@ -34,7 +34,8 @@ async def main(root):
             if not config["phases"].get(kind + "_checks"):
                 continue
             relative = f"{kind}/pages-html/{page['id']}.html"
-            assert relative in outputs and (root / relative).is_file(), relative
+            if relative not in outputs or not (root / relative).is_file():
+                raise SystemExit(f"Rapport attendu absent de la construction : {relative}")
             reports.append(
                 {
                     "key": kind + "-" + page["id"],
@@ -43,7 +44,8 @@ async def main(root):
                     "path": root / relative,
                 }
             )
-    assert "PORTAIL-AUDITS.html" in outputs
+    if "PORTAIL-AUDITS.html" not in outputs:
+        raise SystemExit("Portail absent de la construction : PORTAIL-AUDITS.html")
     directory = root / "rapport-dsfr/captures-validation"
     directory.mkdir(parents=True, exist_ok=True)
     result = {
