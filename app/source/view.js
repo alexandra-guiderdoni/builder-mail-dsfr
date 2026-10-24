@@ -99,9 +99,14 @@
     }
     fitFields(); restore(saved);
   }
+  // Titre de page propre à la vue (RGAA 8.6) ; les dialogues gardent leur nom accessible.
+  function pageTitle() {
+    const brand = "Atelier de courriels DSFR", name = A.doc()?.name?.trim();
+    document.title = get("editor-page").hidden ? `Mes newsletters – ${brand}` : `${name ? `${name} – ` : ""}Éditeur – ${brand}`;
+  }
   function summary() { get("composition-summary").textContent = `${A.doc().blocks.length} blocs dans « ${A.doc().name} »`; }
   function preview() {
-    A.Preview.show(A.doc());
+    pageTitle(); A.Preview.show(A.doc());
     summary();
   }
   function refresh() {
@@ -131,5 +136,5 @@
     if (width !== editorWidth) { editorWidth = width; if (width) fitFields(); }
   }).observe(get("block-editor"));
   document.fonts.ready.then(fitFields);
-  A.UI = Object.freeze({refresh, preview, summary, fields, blockList, selections, catalogue, fieldError, clearFieldErrors, showLinkIssue, removal, blockName, blockPlace, focusBlock});
+  A.UI = Object.freeze({refresh, preview, summary, fields, blockList, selections, catalogue, pageTitle, fieldError, clearFieldErrors, showLinkIssue, removal, blockName, blockPlace, focusBlock});
 })();
