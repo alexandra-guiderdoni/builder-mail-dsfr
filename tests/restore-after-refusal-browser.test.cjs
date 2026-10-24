@@ -1,0 +1,100 @@
+const test = require('node:test');
+const {click, open, enterEditor, saved, expand, store, portable, chromium, fs, assert} = require('./browser-support.cjs');
+
+// Fenêtre dont la première ouverture d'IndexedDB est refusée (une seule fois par onglet, donc pas après un rechargement) ; toute écriture ultérieure dans le stockage est comptée.
+async function refusedWindow(context) {
+  const page = await context.newPage(), errors = []; page.setDefaultTimeout(8000);
+  page.on('pageerror', e => errors.push(e.message));
+  await page.addInitScript(() => {
+    if (window !== window.top) return;
+    const open = IDBFactory.prototype.open; let attempts = 0; window.writes = 0; const refused = sessionStorage.getItem('refus-initial') === '1'; sessionStorage.setItem('refus-initial', '1');
+    IDBFactory.prototype.open = function(...args) {
+      if (!refused && ++attempts === 1) { const request = {}; queueMicrotask(() => request.onerror?.()); return request; }
+      return open.apply(this, args);
+    };
+    for (const method of ['put', 'add', 'delete', 'clear']) { const original = IDBObjectStore.prototype[method]; IDBObjectStore.prototype[method] = function(...args) { window.writes++; return original.apply(this, args); }; }
+  });
+  await page.goto(portable); await page.waitForFunction(() => window.MailBuilder?.ready);
+  assert.equal(await page.evaluate(() => MailBuilder.recoveryOnly), true, 'le refus initial doit placer la page en mode récupération');
+  return {page, errors};
+}
+const activeName = async page => { const {library} = await store(page); return library.documents.find(d => d.id === library.activeId).name; };
+const raw = page => page.evaluate(async () => ({current: await MailBuilder.Storage.load(), previous: await MailBuilder.Storage.load('previous')}));
+async function seed(browser) {
+  const {page: writer, context} = await open(browser);
+  await writer.locator('#document-name').fill('Premier état'); await saved(writer);
+  await writer.locator('#document-name').fill('Second état'); await saved(writer);
+  return {writer, context};
+}
+async function exportTemporary(page) {
+  const event = page.waitForEvent('download'); await click(page, '#reopen-export');
+  const result = await event; return JSON.parse(await fs.readFile(await result.path(), 'utf8'));
+}
+
+test('refus initial d’IndexedDB : « Restaurer l’état précédent » propose export puis rechargement, sans faux conflit ni écriture', async () => {
+  const browser = await chromium.launch({headless: true});
+  try {
+    const {writer, context} = await seed(browser), before = await raw(writer);
+    const {page, errors} = await refusedWindow(context); page.on('dialog', dialog => dialog.accept());
+    await enterEditor(page); await page.locator('#document-name').fill('Travail temporaire');
+    await expand(page, 'Fichiers et récupération'); await click(page, '[data-action=recover]');
+    await page.locator('#reopen-offer').waitFor({state: 'visible'});
+    assert.doesNotMatch(await page.locator('#error').innerText(), /Une autre fenêtre/, 'aucun conflit n’existe');
+    assert.doesNotMatch(await page.locator('#save-state').innerText(), /Récupération impossible/);
+    const offer = await page.locator('#reopen-offer').innerText();
+    assert.match(offer, /Exporter le travail temporaire/); assert.match(offer, /Recharger l’atelier/); assert.match(offer, /n’y a rien écrit|aucune écriture/i);
+    assert.equal(await page.evaluate(() => window.writes), 0, 'aucune écriture dans le stockage existant');
+    assert.deepEqual(await raw(writer), before);
+    assert.equal(await page.locator('#document-name').inputValue(), 'Travail temporaire', 'le travail temporaire reste en mémoire');
+    const library = await exportTemporary(page);
+    assert(JSON.stringify(library).includes('Travail temporaire'), 'l’export contient le travail temporaire');
+    assert.deepEqual(await raw(writer), before);
+    await Promise.all([page.waitForEvent('load'), click(page, '#reopen-reload')]); await page.waitForFunction(() => window.MailBuilder?.ready);
+    assert.equal(await page.evaluate(() => MailBuilder.recoveryOnly), false);
+    assert.match(await page.locator('#save-state').innerText(), /restaurée depuis ce navigateur/);
+    await enterEditor(page); assert.equal(await page.locator('#document-name').inputValue(), 'Second état');
+    assert.deepEqual(errors, []);
+  } finally { await browser.close(); }
+});
+
+test('écriture concurrente pendant la récupération : rien n’est écrasé, le rechargement relit l’état concurrent et le contrôle de conflit reste actif', async () => {
+  const browser = await chromium.launch({headless: true});
+  try {
+    const {writer, context} = await seed(browser);
+    const {page} = await refusedWindow(context); page.on('dialog', dialog => dialog.accept());
+    await enterEditor(page); await page.locator('#document-name').fill('Travail temporaire');
+    await expand(page, 'Fichiers et récupération'); await click(page, '[data-action=recover]');
+    await page.locator('#reopen-offer').waitFor({state: 'visible'});
+    await writer.locator('#document-name').fill('Écriture concurrente'); await saved(writer);
+    const concurrent = await raw(writer);
+    const library = await exportTemporary(page);
+    assert(JSON.stringify(library).includes('Travail temporaire'));
+    await click(page, '[data-action=recover]');
+    assert.doesNotMatch(await page.locator('#error').innerText(), /Une autre fenêtre/, 'toujours aucun faux conflit');
+    assert.equal(await page.evaluate(() => window.writes), 0);
+    assert.deepEqual(await raw(writer), concurrent, 'l’écriture concurrente est intacte');
+    await Promise.all([page.waitForEvent('load'), click(page, '#reopen-reload')]); await page.waitForFunction(() => window.MailBuilder?.ready);
+    await enterEditor(page); assert.equal(await page.locator('#document-name').inputValue(), 'Écriture concurrente', 'le rechargement relit le jeton et l’état concurrents');
+    assert.deepEqual(await raw(writer), concurrent);
+    // Le contrôle de conflit fonctionne dans les deux sens après le rechargement.
+    await page.locator('#document-name').fill('Après rechargement'); await saved(page);
+    assert.equal(await activeName(writer), 'Après rechargement');
+    await writer.locator('#document-name').fill('Écriture périmée'); await writer.locator('#error').filter({hasText: 'Une autre fenêtre'}).waitFor();
+    assert.equal(await activeName(page), 'Après rechargement');
+  } finally { await browser.close(); }
+});
+
+test('sans IndexedDB : l’export du travail est proposé, sans rechargement trompeur', async () => {
+  const browser = await chromium.launch({headless: true});
+  try {
+    const context = await browser.newContext({acceptDownloads: true}), page = await context.newPage();
+    await page.addInitScript(() => { Object.defineProperty(window, 'indexedDB', {value: undefined}); });
+    await page.goto(portable); await page.waitForFunction(() => window.MailBuilder?.ready);
+    await enterEditor(page); await page.locator('#document-name').fill('Travail sans stockage');
+    await expand(page, 'Fichiers et récupération'); await click(page, '[data-action=recover]');
+    await page.locator('#reopen-offer').waitFor({state: 'visible'});
+    assert.equal(await page.locator('#reopen-reload').isVisible(), false);
+    assert.match(await page.locator('#reopen-offer').innerText(), /Aucun stockage/);
+    assert(JSON.stringify(await exportTemporary(page)).includes('Travail sans stockage'));
+  } finally { await browser.close(); }
+});

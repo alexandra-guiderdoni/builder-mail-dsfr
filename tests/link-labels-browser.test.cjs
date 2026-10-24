@@ -1,7 +1,7 @@
 const test = require('node:test');
 const path = require('node:path');
 const {createHash} = require('node:crypto');
-const {root, evidence, open, click, enterEditor, expand, saved, state, download, chromium, fs, assert} = require('./browser-support.cjs');
+const {root, evidence, open, click, enterEditor, expand, saved, state, download, chromium, nativeAx, nativeAxTree, nativeAxNode, fs, assert} = require('./browser-support.cjs');
 const pairs = [[1, 'f2'], [31, 'f4'], [33, 'f3'], [40, 'f1'], [41, 'f1'], [42, 'f1'], [43, 'f1'], [43, 'f3'], [45, 'f3'], [47, 'f2'], [48, 'f2'], [49, 'f2'], [50, 'f2']];
 const directory = path.join(evidence, 'link-labels');
 async function receipt(name, observations, completed) {
@@ -11,15 +11,15 @@ async function receipt(name, observations, completed) {
   await fs.writeFile(path.join(directory, name + '.json'), JSON.stringify({completed, method: 'Distribution réelle, CSP conservée, profil neuf ; AX natif Chromium', screenReaderExecuted: false, humanQualification: false, sourceSha256, observations}, null, 2));
 }
 async function field(page, key) {
-  const selector = '#field-' + key, cdp = await page.context().newCDPSession(page);
-  try {
-    const current = await page.locator(selector).evaluate(e => ({value: e.value, invalid: e.getAttribute('aria-invalid'), required: e.getAttribute('aria-required'), focused: e === document.activeElement,
-      labels: [...e.labels].map(l => l.textContent.trim()), descriptions: (e.getAttribute('aria-describedby') || '').split(/\s+/).filter(Boolean).map(id => ({id, text: document.getElementById(id)?.textContent, visible: document.getElementById(id)?.checkVisibility()}))}));
-    const {result} = await cdp.send('Runtime.evaluate', {expression: `document.querySelector(${JSON.stringify(selector)})`});
-    const {node} = await cdp.send('DOM.describeNode', {objectId: result.objectId});
-    const {nodes} = await cdp.send('Accessibility.getPartialAXTree', {backendNodeId: node.backendNodeId});
-    current.ax = nodes.find(n => n.backendDOMNodeId === node.backendNodeId); return current;
-  } finally { await cdp.detach(); }
+  const selector = '#field-' + key;
+  const current = await page.locator(selector).evaluate(e => ({value: e.value, invalid: e.getAttribute('aria-invalid'), required: e.getAttribute('aria-required'), focused: e === document.activeElement,
+    labels: [...e.labels].map(l => l.textContent.trim()), descriptions: (e.getAttribute('aria-describedby') || '').split(/\s+/).filter(Boolean).map(id => ({id, text: document.getElementById(id)?.textContent, visible: document.getElementById(id)?.checkVisibility()}))}));
+  // Natif sous Chromium (CDP) ; ailleurs, aria-required du DOM, vrai dans tous les moteurs.
+  const ax = await nativeAxNode(page, selector);
+  if (nativeAx) assert(ax, 'Le champ doit figurer dans l’arbre natif.');
+  current.exposedRequired = ax ? !!ax.properties?.some(p => p.name === 'required' && p.value.value === true) : current.required === 'true';
+  if (ax) current.ax = ax;
+  return current;
 }
 async function imported(page, fixture, file = false) {
   await expand(page, 'Importer du JSON');
@@ -38,7 +38,7 @@ test('les 13 intitulés sont prévisibles, refusent le vide sans perte puis se c
       await click(page, `[data-select="${block.id}"]`);
       const before = await state(page), initial = await field(page, key);
       assert.equal(initial.required, 'true'); assert(initial.labels.some(s => /intitulé.*obligatoire/i.test(s)));
-      assert(initial.ax.properties.some(p => p.name === 'required' && p.value.value === true));
+      assert(initial.exposedRequired);
       for (const value of ['', ' \n\t ']) {
         await page.locator('#field-' + key).fill(value);
         const current = await field(page, key); observations.push({component: block.component, key, step: 'rejected', ...current});
@@ -72,11 +72,11 @@ test('un ancien JSON reste récupérable et corrigeable ; les sorties attendent 
       emptyLinks: [...body.querySelectorAll('a[href]')].filter(a => !a.textContent.trim()).length,
       activablePlaceholders: [...body.querySelectorAll('a:not([href])')].filter(a => { a.focus(); return body.ownerDocument.activeElement === a || a.hasAttribute('tabindex') || a.getAttribute('role') === 'link' || [...a.attributes].some(v => v.name.startsWith('on')); }).length}));
     assert.deepEqual(preview, {placeholders: 13, emptyLinks: 0, activablePlaceholders: 0});
-    const cdp = await page.context().newCDPSession(page.frames().find(f => f.parentFrame() && f.url().startsWith('blob:')));
-    const {nodes} = await cdp.send('Accessibility.getFullAXTree'); await cdp.detach();
-    assert(nodes.some(n => !n.ignored && n.name?.value.includes('Intitulé du lien à renseigner')));
-    assert.equal(nodes.filter(n => !n.ignored && n.role?.value === 'link').length, 0);
-    observations.push({step: 'legacy-preview', ...preview, nativeAXLinks: 0, nativeAXPlaceholderObserved: true, sandbox: await page.locator('#preview').getAttribute('sandbox')});
+    const previewFrame = page.frames().find(f => f.parentFrame() && f.url().startsWith('blob:'));
+    const nodes = await nativeAxTree(page.context(), previewFrame);
+    if (nodes) { assert(nodes.some(n => !n.ignored && n.name?.value.includes('Intitulé du lien à renseigner'))); assert.equal(nodes.filter(n => !n.ignored && n.role?.value === 'link').length, 0); }
+    else { const outline = await previewFrame.locator('body').ariaSnapshot(); assert(outline.includes('Intitulé du lien à renseigner')); assert.equal(outline.split('\n').filter(l => /^\s*- link\b/.test(l)).length, 0); }
+    observations.push({step: 'legacy-preview', ...preview, ...(nodes ? {nativeAXLinks: 0, nativeAXPlaceholderObserved: true} : {ariaSnapshotLinks: 0, ariaSnapshotPlaceholderObserved: true}), sandbox: await page.locator('#preview').getAttribute('sandbox')});
     assert.equal(await page.evaluate(() => MailBuilder.invalid.size), 0);
     await page.reload(); await page.waitForFunction(() => MailBuilder.ready); await enterEditor(page); assert.deepEqual(await state(page), original);
     await expand(page, 'Fichiers et récupération');
