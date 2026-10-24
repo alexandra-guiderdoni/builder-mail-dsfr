@@ -75,10 +75,22 @@
     });
     return queue;
   }
+  // L’aperçu relit tout le courriel et ses images. Après une frappe, il suit l’affichage du caractère ; si sa dernière
+  // mise à jour complète a dépassé 50 ms, il attend en plus une pause de frappe triple de cette durée.
+  // Un rafraîchissement complet remplace l’aperçu encore en attente ; le résumé de la composition suit aussitôt.
+  let previewTimer, previewCost = 0;
+  function previewAfterInput() {
+    clearTimeout(previewTimer);
+    previewTimer = setTimeout(() => requestAnimationFrame(() => setTimeout(() => {
+      const started = performance.now();
+      document.getElementById("preview").addEventListener("load", () => { previewCost = performance.now() - started; }, {once: true});
+      A.UI.preview();
+    })), previewCost > 50 ? 3 * previewCost : 0);
+  }
   function change(mutator, redraw = true, input = false) {
     if (input === "edit") guardEdit(); else if (restoring || !input) guard(); const next = M.copy(A.library); mutator(next); M.library(next); A.library = next; revision++; lastChange = Date.now(); pruneDrafts();
     if (!A.doc().blocks.some(b => b.id === A.selected)) A.selected = A.doc().blocks[0]?.id || null;
-    if (redraw) A.UI.refresh(); else A.UI.preview();
+    if (redraw) { clearTimeout(previewTimer); A.UI.refresh(); } else { A.UI.summary(); previewAfterInput(); }
     return save();
   }
   // Une restauration n’est annoncée qu’après relecture et validation de l’état précédent.

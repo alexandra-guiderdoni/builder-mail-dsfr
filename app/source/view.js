@@ -92,9 +92,10 @@
     }
     fitFields(); restore(saved);
   }
+  function summary() { get("composition-summary").textContent = `${A.doc().blocks.length} blocs dans « ${A.doc().name} »`; }
   function preview() {
     A.Preview.show(A.doc());
-    get("composition-summary").textContent = `${A.doc().blocks.length} blocs dans « ${A.doc().name} »`;
+    summary();
   }
   function refresh() {
     selections();
@@ -123,5 +124,5 @@
     if (width !== editorWidth) { editorWidth = width; if (width) fitFields(); }
   }).observe(get("block-editor"));
   document.fonts.ready.then(fitFields);
-  A.UI = Object.freeze({refresh, preview, fields, blockList, selections, catalogue, fieldError, clearFieldErrors, showLinkIssue, removal, blockName});
+  A.UI = Object.freeze({refresh, preview, summary, fields, blockList, selections, catalogue, fieldError, clearFieldErrors, showLinkIssue, removal, blockName});
 })();
