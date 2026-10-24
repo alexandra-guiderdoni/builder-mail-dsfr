@@ -143,7 +143,8 @@ test('la copie sépare les conteneurs ; une image acceptée ne dispense pas de c
   const lib = {...M.initial(), documents: [doc], activeId: doc.id}, copied = M.copy(lib);
   assert.deepEqual(copied, lib);
   copied.documents[0].blocks[0].values.f1 = 'Texte modifié'; copied.documents[0].blocks[1].additionalLinks.push({url: 'https://exemple.invalid/b', label: 'B'}); copied.templates.push(M.create('Modèle'));
-  assert.equal(lib.documents[0].blocks[0].values.f1, doc.blocks[0].values.f1); assert.equal(lib.documents[0].blocks[1].additionalLinks.length, 1); assert.equal(lib.templates.length, 0);
+  assert.notEqual(lib.documents[0].blocks[0].values.f1, 'Texte modifié'); assert.notStrictEqual(copied.documents[0].blocks[0].values, lib.documents[0].blocks[0].values);
+  assert.equal(lib.documents[0].blocks[1].additionalLinks.length, 1); assert.equal(lib.templates.length, 0);
   assert.equal(M.library(lib), lib);
   for (const variant of [image => image.replace('image/png', 'image/jpeg'), image => image.slice(0, 30) + 'A' + image.slice(31)]) {
     const altered = M.copy(lib); altered.documents[0].blocks[0].values.f0 = variant(lib.documents[0].blocks[0].values.f0);

@@ -6,10 +6,12 @@ const zlib = require('node:zlib');
 const {open, enterEditor, saved, store, chromium, assert} = require('./browser-support.cjs');
 
 // PNG RVB de bruit pseudo-aléatoire : incompressible, reproductible, sans métadonnée ni contenu réel.
+const crcTable = Array.from({length: 256}, (_, n) => { for (let k = 0; k < 8; k++) n = n & 1 ? 0xedb88320 ^ (n >>> 1) : n >>> 1; return n >>> 0; });
+const crc32 = bytes => { let crc = 0xffffffff; for (const byte of bytes) crc = crcTable[(crc ^ byte) & 255] ^ (crc >>> 8); return (crc ^ 0xffffffff) >>> 0; };
 function noisePng(side, seed) {
   const row = side * 3 + 1, raw = Buffer.alloc(row * side); let state = seed >>> 0 || 1;
   for (let y = 0; y < side; y++) for (let x = 1; x < row; x++) { state ^= state << 13; state >>>= 0; state ^= state >>> 17; state ^= state << 5; state >>>= 0; raw[y * row + x] = state & 255; }
-  const chunk = (tag, data) => { const head = Buffer.alloc(4), body = Buffer.concat([Buffer.from(tag), data]), crc = Buffer.alloc(4); head.writeUInt32BE(data.length); crc.writeUInt32BE(zlib.crc32(body)); return Buffer.concat([head, body, crc]); };
+  const chunk = (tag, data) => { const head = Buffer.alloc(4), body = Buffer.concat([Buffer.from(tag), data]), crc = Buffer.alloc(4); head.writeUInt32BE(data.length); crc.writeUInt32BE(crc32(body)); return Buffer.concat([head, body, crc]); };
   const header = Buffer.alloc(13); header.writeUInt32BE(side, 0); header.writeUInt32BE(side, 4); header[8] = 8; header[9] = 2;
   return Buffer.concat([Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]), chunk('IHDR', header), chunk('IDAT', zlib.deflateSync(raw, {level: 1})), chunk('IEND', Buffer.alloc(0))]);
 }
@@ -63,7 +65,7 @@ async function typeIntoExistingLibrary(t, page, library, blockIndex, warmup = 10
   }).filter(Number.isFinite);
   t.diagnostic(`traitement de saisie : ${summary(processing)}`);
   t.diagnostic(`frappe jusqu’au traitement terminé, attente comprise : ${summary(latency)}`);
-  const finalRender = probe.renders.find(r => r.length >= typed.length), finalShown = probe.shown.find(v => v.src === finalRender.src);
+  const finalShown = probe.shown.find(v => probe.renders.some(r => r.src === v.src && r.length >= typed.length));
   t.diagnostic(`frappe jusqu’à l’aperçu visible : ${summary(visible)} ; ${probe.renders.length} rendus d’aperçu pour ${probe.samples.length} frappes`);
   t.diagnostic(`dernière frappe jusqu’à l’aperçu final visible : ${(finalShown.at - probe.samples.at(-1).down).toFixed(1)} ms`);
   assert.equal(probe.samples.length, count);
@@ -110,7 +112,7 @@ test('la saisie reste fluide dans une bibliothèque de dix compositions illustr�
 test('après la saisie, l’import, la restauration et le changement d’image contrôlent toujours les images', async () => {
   const browser = await chromium.launch({headless: true});
   try {
-    const {page} = await open(browser);
+    const {page, observations} = await open(browser);
     const good = await page.evaluate(async () => {
       const canvas = document.createElement('canvas'); canvas.width = canvas.height = 64;
       const context = canvas.getContext('2d'), pixels = context.createImageData(64, 64); let seed = 7;
@@ -156,5 +158,45 @@ test('après la saisie, l’import, la restauration et le changement d’image c
     await fresh.page.locator('[data-image-field]').setInputFiles({name: 'valide.png', mimeType: 'image/png', buffer: Buffer.from(good.slice(good.indexOf(',') + 1), 'base64')});
     await fresh.page.locator('#notice').filter({hasText: 'Image locale incorporée'}).waitFor();
     assert.equal(await fresh.page.evaluate(() => MailBuilder.doc().blocks.at(-1).values.f0), good);
+    // Mêmes octets annoncés en JPEG : le décodage natif réussit, le contrôle du modèle doit refuser la chaîne.
+    await fresh.page.evaluate(() => MailBuilder.notice(''));
+    await fresh.page.locator('[data-image-field]').setInputFiles({name: 'annonce.jpg', mimeType: 'image/jpeg', buffer: Buffer.from(good.slice(good.indexOf(',') + 1), 'base64')});
+    await fresh.page.locator('#error').filter({hasText: 'ne correspond pas au format annoncé'}).waitFor();
+    assert.equal(await fresh.page.evaluate(() => MailBuilder.doc().blocks.at(-1).values.f0), good);
+    assert.deepEqual(observations.errors, []); assert.deepEqual(fresh.observations.errors, []);
+  } finally { await browser.close(); }
+});
+
+test('après une frappe, le résumé de la composition suit aussitôt la saisie', async () => {
+  const browser = await chromium.launch({headless: true});
+  try {
+    const {page, observations} = await open(browser);
+    const summary = await page.evaluate(() => {
+      const input = document.getElementById('document-name'); input.value = 'Résumé immédiat'; input.dispatchEvent(new Event('input', {bubbles: true}));
+      return document.getElementById('composition-summary').textContent;
+    });
+    assert.equal(summary, `${await page.evaluate(() => MailBuilder.doc().blocks.length)} blocs dans « Résumé immédiat »`);
+    await saved(page);
+    assert.deepEqual(observations.errors, []);
+  } finally { await browser.close(); }
+});
+
+test('un rafraîchissement complet remplace l’aperçu différé d’une frappe', async () => {
+  const browser = await chromium.launch({headless: true});
+  try {
+    const {page, observations} = await open(browser);
+    const renders = await page.evaluate(async () => {
+      const frame = document.getElementById('preview'); let count = 0;
+      const observer = new MutationObserver(records => { count += records.length; }); observer.observe(frame, {attributes: true, attributeFilter: ['src']});
+      const input = document.getElementById('subject'); input.value += ' puis bloc déplacé'; input.dispatchEvent(new Event('input', {bubbles: true}));
+      await MailBuilder.State.change(() => {});
+      // L’aperçu différé passe par une minuterie, une image puis une tâche : deux images et une tâche suffisent à l’observer.
+      await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(() => setTimeout(resolve, 100))));
+      observer.disconnect(); return count;
+    });
+    assert.equal(renders, 1);
+    const frame = await (await page.locator('#preview').elementHandle()).contentFrame();
+    await frame.waitForFunction(() => document.title.endsWith('puis bloc déplacé'));
+    assert.deepEqual(observations.errors, []);
   } finally { await browser.close(); }
 });
