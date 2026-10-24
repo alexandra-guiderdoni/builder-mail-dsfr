@@ -27,10 +27,12 @@
     show(true); A.UI.refresh();
   }
   async function home() { A.State.guard(); await A.State.flush(); refresh(); show(false); }
+  // Message commun : signale un objet daté qui n'a pas été repris tel quel.
+  const subjectNotice = (done, replaced) => replaced === null ? `${done}.` : `${done}. L’objet d’origine contenait une date (« ${replaced} ») : il est remplacé par le nom de la composition. Mettez-le à jour avant l’envoi.`;
   async function duplicate(id) {
-    A.State.guard(); const clone = M.clone(find(id), `${find(id).name} · copie`);
+    A.State.guard(); const made = M.derive(find(id), M.uniqueName(`${find(id).name} · copie`, A.library.documents)), clone = made.doc;
     A.notice(""); await A.State.change(lib => { lib.documents.push(clone); lib.activeId = clone.id; });
-    await A.State.flush(); focusRow(clone.id); A.notice("Copie indépendante ajoutée et sauvegardée dans la bibliothèque.");
+    await A.State.flush(); focusRow(clone.id); A.notice(subjectNotice("Copie indépendante ajoutée et sauvegardée dans la bibliothèque", made.replacedSubject));
   }
   function ask(kind, id) {
     A.State.guard(); const doc = find(id), removing = kind === "remove";
@@ -83,5 +85,5 @@
     } catch (cause) { if (get("library-dialog").open) get("library-dialog-error").textContent = cause.message; else A.error(cause.message); }
     finally { busy = false; get("library-confirm").disabled = get("library-cancel").disabled = false; }
   });
-  A.Library = Object.freeze({refresh, open, home, duplicate, ask});
+  A.Library = Object.freeze({subjectNotice, refresh, open, home, duplicate, ask});
 })();

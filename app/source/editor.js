@@ -4,7 +4,7 @@
   const attempt = async action => { try { await action(); } catch (cause) { if (cause.linkIssue) A.UI.showLinkIssue(cause.linkIssue); A.error(cause.message); } };
   document.addEventListener("click", event => {
     const action = event.target.closest("[data-action]");
-    if (action && !action.disabled) attempt(async () => { await A.Actions[action.dataset.action](); if (["new-document", "use-template"].includes(action.dataset.action)) await A.Library.open(A.library.activeId); });
+    if (action && !action.disabled) attempt(async () => { await A.Actions[action.dataset.action](); if (["new-document", "use-template"].includes(action.dataset.action)) { await A.Library.open(A.library.activeId); get("document-name").focus(); get("document-name").select(); } });
     if (event.target.closest("[data-return-to-block]")) {
       const target = [...get("block-list").querySelectorAll("[data-select]")].find(button => button.dataset.select === A.selected);
       if (target) { target.closest("details").open = true; target.focus(); }

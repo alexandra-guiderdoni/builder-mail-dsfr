@@ -5,13 +5,21 @@
   const name = field => { const result = get(field).value.trim(); if (!result) throw new Error("Renseignez un nom pour cet élément."); return result; };
   const starters = {information: [2, 5, 8, 19, 40, 47, 49], lettre: [2, 5, 10, 31, 35, 46, 47, 49], invitation: [2, 6, 19, 39, 40, 47, 49]};
   A.Actions = {
-    "new-document": () => A.State.change(lib => { const doc = M.create("Nouvelle composition", starters[get("starter").value]); lib.documents.push(doc); lib.activeId = doc.id; }),
+    "new-document": () => {
+      const label = get("starter").selectedOptions[0].textContent.trim();
+      return A.State.change(lib => { const doc = M.create(M.uniqueName(label, lib.documents), starters[get("starter").value]); lib.documents.push(doc); lib.activeId = doc.id; })
+        .then(() => A.notice("Composition créée : vérifiez son nom et l’objet du courriel, modifiables ci-dessous."));
+    },
     "duplicate-document": () => A.Library.duplicate(A.library.activeId),
     "remove-document": () => A.Library.ask("remove", A.library.activeId),
     "library-home": () => A.Library.home(),
     "resume-document": () => A.Library.open(A.library.activeId),
     "save-template": () => { const label = name("template-name"); return A.State.change(lib => { lib.templates.push(M.clone(A.doc(), label)); }); },
-    "use-template": () => { const template = selected(A.library.templates, "saved-templates"); return A.State.change(lib => { const doc = M.clone(template, `${template.name} · composition`); lib.documents.push(doc); lib.activeId = doc.id; }); },
+    "use-template": () => {
+      const template = selected(A.library.templates, "saved-templates"); let replaced = null;
+      return A.State.change(lib => { const made = M.derive(template, M.uniqueName(`${template.name} · composition`, lib.documents)); replaced = made.replacedSubject; lib.documents.push(made.doc); lib.activeId = made.doc.id; })
+        .then(() => A.notice(A.Library.subjectNotice("Composition créée depuis le modèle", replaced)));
+    },
     "remove-template": () => { const target = selected(A.library.templates, "saved-templates"); return A.State.change(lib => { lib.templates = lib.templates.filter(t => t.id !== target.id); }); },
     "save-identity": () => {
       const label = name("identity-name"), blocks = A.doc().blocks.filter(b => ["En-têtes", "Pieds de page"].includes(M.component(b.component).family));
