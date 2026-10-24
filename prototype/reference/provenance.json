@@ -17,11 +17,14 @@
     {
       "source": "_source/mail-tool-render.js",
       "copy": "snum-packet.js",
-      "sha256": "c58ede03622a97bc2a48da6a330d20d19efa3d37669993e03b3a0481d17f084b"
+      "sha256": "c58ede03622a97bc2a48da6a330d20d19efa3d37669993e03b3a0481d17f084b",
+      "sha256_scope": "amont historique : empreinte du fichier SNUM tel que copié à l’origine, avant adaptation",
+      "adapted_sha256": "ca834f805037a96bad381d488cf957bb9801a13201440eb5b5899f4a34ffd396",
+      "adaptation": "Copie locale adaptée pour #24 : contrôle du jour de semaine contre la date (UTC) et commentaire d’en-tête ; le projet SNUM source reste intact."
     }
   ],
   "adaptations": [
     "Rendu prototype adapté par l’application : styles inline et trois familles de blocs ; aucune modification de l’amont.",
-    "Module SNUM copié sans modification ; seule sa fonction parse est appelée."
+    "Module SNUM copié sans modification à l’origine (empreinte amont historique `sha256`), puis adapté pour #24 ; l’empreinte de la copie actuelle est `adapted_sha256`, contrôlée par `npm run check`. Seule sa fonction parse est appelée."
   ]
 }

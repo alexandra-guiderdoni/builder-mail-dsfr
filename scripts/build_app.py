@@ -54,6 +54,7 @@ def build():
                 "preview.js",
                 "catalogue-search.js",
                 "view.js",
+                "images.js",
                 "files.js",
                 "library-actions.js",
                 "library.js",
