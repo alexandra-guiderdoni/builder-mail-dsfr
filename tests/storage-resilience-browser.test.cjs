@@ -85,23 +85,22 @@ test('un changement de composition refusé rétablit toujours le sélecteur', as
     await click(page, '#library-back'); await click(page, '[data-action=new-document]'); await saved(page);
     const before = await state(page), other = before.documents.find(d => d.id !== before.activeId).id;
     await page.evaluate(() => { MailBuilder.pendingInputs = 1; });
-    await page.locator('#documents').selectOption(other);
-    assert.equal(await page.locator('#documents').inputValue(), before.activeId);
+    await page.locator('#documents').selectOption(other); await click(page, '[data-action=open-document]');
     assert.equal((await state(page)).activeId, before.activeId); assert.equal((await store(page)).library.activeId, before.activeId);
     await page.evaluate(() => { MailBuilder.pendingInputs = 0; });
-    await page.locator('#documents').selectOption(other); await saved(page);
+    await click(page, '[data-action=open-document]'); await saved(page);
     assert.equal((await state(page)).activeId, other); assert.equal(await page.locator('#documents').inputValue(), other);
     for (const outcome of ['success', 'error']) {
       const active = (await state(page)).activeId, target = (await state(page)).documents.find(d => d.id !== active).id;
       await page.evaluate(outcome => { const files = MailBuilder.Files; const gate = new Promise(resolve => { window.finishFile = resolve; }); MailBuilder.Files = {...files, image: async file => { await gate; MailBuilder.Files = files; if (outcome === 'error') throw new Error('Image refusée pour la recette'); return files.image(file); }}; }, outcome);
       await page.locator('[data-image-field]').first().setInputFiles(path.join(root, 'app/assets/icon-192.png')); await page.waitForFunction(() => MailBuilder.pendingInputs === 1);
-      await page.locator('#documents').selectOption(target); assert.equal(await page.locator('#documents').inputValue(), active);
+      await page.locator('#documents').selectOption(target); await click(page, '[data-action=open-document]');
       await page.evaluate(() => finishFile()); await page.waitForFunction(() => MailBuilder.pendingInputs === 0);
       if (outcome === 'success') await saved(page); else await page.locator('#error').filter({hasText: 'Image refusée pour la recette'}).waitFor();
       assert.equal((await state(page)).activeId, active); assert.equal((await store(page)).library.activeId, active);
     }
-    await page.locator('#document-name').fill(''); await page.locator('#documents').selectOption(before.activeId);
-    assert.equal(await page.locator('#documents').inputValue(), other); assert.equal((await state(page)).activeId, other);
+    await page.locator('#document-name').fill(''); await page.locator('#documents').selectOption(before.activeId); await click(page, '[data-action=open-document]');
+    assert.equal((await state(page)).activeId, other);
     await click(page, '[data-action=cancel-fields]');
     await page.evaluate(() => {
       const storage = MailBuilder.Storage, gate = new Promise(resolve => { window.finishRecovery = resolve; });
@@ -109,9 +108,11 @@ test('un changement de composition refusé rétablit toujours le sélecteur', as
       window.recovery = MailBuilder.State.recover();
     });
     await page.waitForFunction(() => window.recovering);
-    await page.evaluate(value => { const select = document.querySelector('#documents'); select.value = value; select.dispatchEvent(new Event('change')); }, before.activeId);
-    assert.equal(await page.locator('#documents').inputValue(), other);
+    // Depuis #57, le sélecteur et le bouton d'ouverture sont désactivés pendant la recovery : aucune bascule possible.
+    assert.equal(await page.locator('#documents').isDisabled(), true, 'Le sélecteur est désactivé pendant la recovery.');
+    assert.equal(await page.locator('[data-action=open-document]').isDisabled(), true, 'Le bouton d’ouverture est désactivé pendant la recovery.');
+    assert.equal((await state(page)).activeId, other);
     await page.evaluate(async () => { finishRecovery(); await recovery; });
-    assert.equal(await page.locator('#documents').inputValue(), (await state(page)).activeId);
+    assert.equal((await state(page)).activeId, other);
   } finally { await browser.close(); }
 });

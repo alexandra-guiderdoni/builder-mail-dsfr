@@ -111,12 +111,9 @@
       A.notice(A.Images.describe(image));
     });
   });
-  get("documents").addEventListener("change", async event => {
-    const selected = event.target.value;
-    // Garde complète : quitter une composition qui porte un brouillon d’URL la rendrait injoignable depuis l’accueil.
-    await attempt(() => A.State.change(lib => { lib.activeId = selected; }));
-    event.target.value = A.library.activeId;
-  });
+  // Depuis #57, la bascule de composition active passe par une action explicite (bouton « Ouvrir cette composition »)
+  // et jamais par un `change` du sélecteur, qui serait aussi déclenché par la recherche par frappe sous Firefox et WebKit.
+
   let readings = 0; const reading = "Lecture du fichier de travail…";
   get("project-input").addEventListener("change", event => {
     const file = event.target.files[0]; if (!file) return;

@@ -138,9 +138,8 @@ test('un brouillon d’URL refuse le changement de composition avec le même mes
   try {
     const {page} = await open(browser); const {X, Y} = await twoCompositions(page);
     await page.locator('#article-source').fill('https://');
-    await page.locator('#documents').selectOption(Y); await settled(page, X);
+    await page.locator('#documents').selectOption(Y); await click(page, '[data-action=open-document]'); await settled(page, X);
     assert.equal((await state(page)).activeId, X, 'La composition active ne change pas.');
-    assert.equal(await page.locator('#documents').inputValue(), X, 'Le sélecteur est rétabli sur la composition en cours.');
     assert.equal(await page.locator('#error').textContent(), refusal);
     assert.equal(await page.locator('#article-source').inputValue(), 'https://', 'La saisie temporaire est conservée.');
     assert.equal(await page.locator('#article-source').getAttribute('aria-invalid'), 'true');
@@ -149,7 +148,7 @@ test('un brouillon d’URL refuse le changement de composition avec le même mes
     await click(page, '[data-action=export-mail]'); await page.locator('#error').filter({hasText: 'Corrigez ce lien'}).waitFor();
     assert.equal(await page.locator('#error').textContent(), refusal, 'Même refus que pour les autres actions.');
     await page.locator('#article-source').fill(NEW); await saved(page);
-    await page.locator('#documents').selectOption(Y); await page.waitForFunction(y => MailBuilder.library.activeId === y, Y); await saved(page);
+    await page.locator('#documents').selectOption(Y); await click(page, '[data-action=open-document]'); await page.waitForFunction(y => MailBuilder.library.activeId === y, Y); await saved(page);
     await click(page, '#library-back'); await page.locator('#library-home').waitFor({state: 'visible'});
     await click(page, `[data-document="${X}"] [data-library-action=open]`); await page.locator('#editor-page').waitFor({state: 'visible'});
     assert.equal((await state(page)).activeId, X, 'Après correction, la composition se rouvre.');
@@ -168,7 +167,7 @@ test('un brouillon d’URL n’est diffusé depuis aucune autre composition', as
       return [...window.__out.map(o => o.data), ...texts].filter(text => text.includes('ancien')).length;
     });
     await page.locator('#article-source').fill('https://');
-    await page.locator('#documents').selectOption(Y); await settled(page, X);
+    await page.locator('#documents').selectOption(Y); await click(page, '[data-action=open-document]'); await settled(page, X);
     await page.locator('#error').evaluate(e => { e.textContent = ''; e.hidden = true; });
     for (const action of ['export-library', 'export-document', 'copy']) {
       await click(page, `[data-action=${action}]`);

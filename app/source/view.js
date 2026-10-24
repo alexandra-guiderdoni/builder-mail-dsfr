@@ -45,7 +45,10 @@
   }
   function selections() {
     const doc = A.doc(), template = get("saved-templates").value, identity = get("identities").value;
-    get("documents").innerHTML = A.library.documents.map(d => option(d.id, d.name, d.id === doc.id)).join("");
+    // Depuis #57, la bascule passe par le bouton « Ouvrir cette composition » : préserver la sélection en attente du
+    // sélecteur, comme pour saved-templates et identities, sinon un rafraîchissement perd le choix non confirmé.
+    const document_ = get("documents").value, preservedDoc = A.library.documents.some(d => d.id === document_) ? document_ : doc.id;
+    get("documents").innerHTML = A.library.documents.map(d => option(d.id, d.name, d.id === preservedDoc)).join("");
     get("saved-templates").innerHTML = option("", "Choisir un modèle enregistré") + labelled(A.library.templates).map(([id, label]) => option(id, label, id === template)).join("");
     get("identities").innerHTML = option("", "Choisir une identité enregistrée") + labelled(A.library.identities).map(([id, label]) => option(id, label, id === identity)).join("");
     get("library-count").textContent = `${A.library.documents.length} compositions · ${A.library.templates.length} modèles · ${A.library.identities.length} identités`;
