@@ -1,7 +1,7 @@
 const test=require('node:test');
 const path=require('node:path');
 const {createHash}=require('node:crypto');
-const {root,evidence,open,chromium,fs,assert}=require('./browser-support.cjs');
+const {root, evidence, open, chromium, nativeAxTree, ariaHeadings, fs, assert, confirmChecks} = require('./browser-support.cjs');
 const output=path.join(evidence,'mail-semantics');
 const digest=value=>createHash('sha256').update(value).digest('hex');
 const outline=page=>page.locator('h1,h2,h3,h4,h5,h6').evaluateAll(nodes=>nodes.map(e=>({level:Number(e.tagName[1]),text:e.textContent.trim()})));
@@ -13,6 +13,7 @@ test('les titres natifs préservent le visuel canonique des 52 composants en cla
   const pairs=await page.evaluate(lib=>lib.documents.map(doc=>{
    if(doc.blocks.some(b=>b.source))throw Error('La référence visuelle doit utiliser les sources canoniques sans ajout');
    const current=MailBuilder.Render.html(doc),canonical=doc.blocks.map(b=>{
+    if(b.component==='mail-00')return '';// #41 : le pré-en-tête masqué n'a aucune emprise visuelle
     const c=MailBuilder.Model.component(b.component),types=new Map(c.fields.map(f=>[f.key,f.type]));
     return c.template.replace(/\{\{(f\d+)\}\}/g,(_,key)=>{const text=MailBuilder.Render.escape(b.values[key]);return types.get(key)==='text'?text.replace(/\n/g,'<br>'):text;});
    }).join('\n');
@@ -42,20 +43,22 @@ test('aperçu, export et presse-papiers conservent les niveaux natifs et le lien
   const frame=page.frameLocator('#preview');await frame.locator('h1').waitFor();
   const expected=await frame.locator('h1,h2,h3,h4,h5,h6').evaluateAll(nodes=>nodes.map(e=>({level:Number(e.tagName[1]),text:e.textContent.trim()})));
   assert.deepEqual(expected.map(h=>h.level),[1,2,3,4,4,4,2,3,3]);
-  const event=page.waitForEvent('download');await page.locator('[data-action=export-mail]').focus();await page.keyboard.press('Enter');
+  const event=page.waitForEvent('download');await page.locator('[data-action=export-mail]').focus();await page.keyboard.press('Enter');await confirmChecks(page);
   const downloaded=await event;await fs.mkdir(output,{recursive:true});const destination=path.join(output,'titres-exportes.html');await downloaded.saveAs(destination);
   const html=await fs.readFile(destination,'utf8');
   const exported=await context.newPage();await exported.setContent(html);assert.deepEqual(await outline(exported),expected);
-  const cdp=await context.newCDPSession(exported),ax=await cdp.send('Accessibility.getFullAXTree');await cdp.detach();
-  const nodes=new Map(ax.nodes.map(n=>[n.nodeId,n])),accessible=[];
+  // Arbre natif sous Chromium (CDP) ; ailleurs, la structure ARIA calculée par Playwright, identique dans les trois moteurs.
+  const ax=await nativeAxTree(context,exported),accessible=[];
+  if(ax){const nodes=new Map(ax.map(n=>[n.nodeId,n]));
   function visit(id){const n=nodes.get(id);if(!n)return;if(!n.ignored&&n.role?.value==='heading')accessible.push({level:n.properties.find(p=>p.name==='level')?.value.value,text:n.name.value.trim()});for(const child of n.childIds||[])visit(child);}
-  visit(ax.nodes[0].nodeId);
+  visit(ax[0].nodeId);}
+  else accessible.push(...await ariaHeadings(exported));
   assert.deepEqual(accessible,expected);
-  await page.locator('[data-action=copy]').focus();await page.keyboard.press('Enter');await page.locator('#notice').filter({hasText:'Courriel copié en HTML et texte.'}).waitFor();
+  await page.locator('[data-action=copy]').focus();await page.keyboard.press('Enter');await confirmChecks(page);await page.locator('#notice').filter({hasText:'Courriel copié en HTML et texte.'}).waitFor();
   const copied=await page.evaluate(async()=>{const [item]=await navigator.clipboard.read();return (await item.getType('text/html')).text();});
   const received=await context.newPage();await received.setContent(copied);await received.locator('style,link').evaluateAll(nodes=>nodes.forEach(e=>e.remove()));
   assert.deepEqual(await outline(received),expected);
   assert.equal(await received.locator('h4 a').getAttribute('href'),'https://exemple.invalid/dossier');
-  await fs.mkdir(output,{recursive:true});await fs.writeFile(path.join(output,'sorties.json'),JSON.stringify({nativeHeadings:true,download:{name:downloaded.suggestedFilename(),sha256:digest(html)},expected,accessibleTree:accessible,copied:await outline(received),screenReaderExecuted:false,mailClientsVerified:false},null,2));
+  await fs.mkdir(output,{recursive:true});await fs.writeFile(path.join(output,'sorties.json'),JSON.stringify({nativeHeadings:!!ax,accessibleTreeSource:ax?'arbre natif (CDP)':'ariaSnapshot',download:{name:downloaded.suggestedFilename(),sha256:digest(html)},expected,accessibleTree:accessible,copied:await outline(received),screenReaderExecuted:false,mailClientsVerified:false},null,2));
  }finally{await browser.close();}
 });

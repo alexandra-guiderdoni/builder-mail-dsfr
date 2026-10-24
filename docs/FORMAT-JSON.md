@@ -55,7 +55,7 @@ Pour produire un JSON avec un autre outil, partir d’un modèle exporté du bui
 
 Les textes restent du texte : aucun HTML ni script fourni par le JSON n’est exécuté. Pour plusieurs paragraphes réorganisables, créer plusieurs blocs. Les images sont incorporées en données PNG, JPEG, GIF ou WebP ; un chemin de fichier ou une URL d’image distante ne convient pas. Pour ajouter un visuel manuellement, utiliser le chargement local dans le builder puis exporter la composition.
 
-## Variantes du prototype éditorial
+## Variantes éditoriales
 
 Le seul champ image `mail-31.values.f0` accepte une chaîne vide pour un article
 sans vignette. Son alternative `f1` est vidée par le bouton de retrait. Le titre
@@ -74,10 +74,11 @@ Les URL des pieds de page `mail-47` à `mail-50` acceptent HTTPS et `mailto:`
 vers une adresse ASCII unique, avec le seul paramètre facultatif `subject`.
 Les liens `source` et les autres composants restent limités à HTTPS.
 
-Cette copie prototype conserve la version 1 et l’empreinte du catalogue. Elle
+Ces variantes conservent la version 1 et l’empreinte du catalogue. L’atelier
 lit les compositions anciennes et conserve leur rendu par défaut. Les anciennes
 versions peuvent refuser `additionalLinks`, une image vide dans `mail-31`, ou
-les liens `mailto:` : employer le portable de ce prototype pour ces fichiers.
+les liens `mailto:` : employer l’atelier à jour, dans sa variante web ou
+portable, pour ouvrir ces fichiers.
 
 ## Validation et compatibilité
 
@@ -91,7 +92,7 @@ L’ajout facultatif de `sourceLabel` conserve la version 1, le catalogue et la 
 
 À l’import et au chargement d’une nouvelle image, le navigateur contrôle le contenu Base64, le format annoncé et le décodage réel. Chaque image est limitée à **10 Mio de données encodées dans le fichier image**, **8192 pixels par côté** et **16 777 216 pixels au total**. La limite d’octets concerne les données de l’image, avant leur expansion Base64 ; elle ne concerne pas la taille totale de la bibliothèque. Le refus nomme l’image et conserve le fichier original ainsi que le travail déjà présent. Le navigateur peut refuser un fichier plus petit si ses propres capacités de décodage ou de stockage sont dépassées.
 
-Ces contrôles ne redimensionnent aucune image et ne migrent aucun document. Les bibliothèques v1 déjà enregistrées restent lisibles et exportables ; une image ancienne dépassant ces limites nécessite une copie réduite pour un nouvel import. Les modèles et identités importés passent les mêmes contrôles que les compositions.
+Ces contrôles ne redimensionnent aucune image et ne migrent aucun document : un fichier importé garde ses images octet pour octet. Seul le chargement d’une nouvelle image locale dans l’éditeur la réduit et la recompresse, selon le contrat décrit dans [le guide d’utilisation](UTILISATION.md#images-et-identité-du-service). Les bibliothèques v1 déjà enregistrées restent lisibles et exportables ; une image ancienne dépassant ces limites nécessite une copie réduite pour un nouvel import. Les modèles et identités importés passent les mêmes contrôles que les compositions.
 
 ## Collecte SNUM séparée
 
