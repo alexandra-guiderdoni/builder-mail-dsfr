@@ -115,11 +115,14 @@
     if (!A.invalid.has("subject")) get("subject").value = A.doc().subject;
     blockList(); fields(); preview(); removal();
   }
+  // Sous 576 px, les libellés dépassent la largeur d’une liste à plusieurs lignes : liste déroulante native.
+  const narrowWindow = window.matchMedia("(max-width: 575px)");
+  narrowWindow.addEventListener("change", () => catalogue());
   function catalogue() {
     const select = get("catalogue"), previous = select.value, visible = A.CatalogueSearch.filter(A.catalog.components, get("catalogue-search").value);
     const families = [...new Set(visible.map(c => c.family))];
     select.innerHTML = families.map(f => `<optgroup label="${esc(f)}">${visible.filter(c => c.family === f).map(c => option(c.id, c.label)).join("")}</optgroup>`).join("");
-    select.size = Math.max(2, visible.length + families.length);
+    select.size = narrowWindow.matches ? 1 : Math.max(2, visible.length + families.length);
     if (visible.some(c => c.id === previous)) select.value = previous;
     get("catalogue-count").textContent = `${visible.length} composants sur ${A.catalog.components.length}`;
     catalogPreview();
