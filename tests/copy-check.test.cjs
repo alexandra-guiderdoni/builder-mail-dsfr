@@ -71,6 +71,29 @@ test('(2) texte de démonstration du catalogue resté inchangé', () => {
   assert.deepEqual(rules(article), []);
 });
 
+// 8b92433 (#120) : une adresse de lien laissée à sa valeur par défaut du catalogue est une valeur de démonstration,
+// sauf si elle est déjà signalée comme domaine de démonstration (pas de double avertissement sur le même lien).
+test('(2 bis) adresse de lien du catalogue restée inchangée', () => {
+  const doc = M.create('Liens', [index('mail-43')]), block = doc.blocks[0], definition = M.component(block.component);
+  const urls = definition.fields.filter(f => f.type === 'url');
+  assert.ok(urls.length >= 2 && urls.every(f => /^https:\/\/www\.info\.gouv\.fr\//.test(f.default)), 'mail-43 porte des adresses par défaut réelles, hors domaines de démonstration');
+  // Bloc intact : un seul avertissement demo-text, aucun demo-domain, libellé « valeur de démonstration ».
+  let warnings = C.warnings(doc, ok);
+  assert.deepEqual(warnings.map(w => [w.rule, w.field]), [['demo-text', `field-${definition.fields[0].key}`]]);
+  assert.match(warnings[0].message, /valeur de démonstration du catalogue inchangée/);
+  // Textes rédigés, adresses inchangées : l’avertissement subsiste et cite les libellés des adresses.
+  for (const field of definition.fields) if (field.type === 'text') block.values[field.key] = 'Texte rédigé ' + field.key;
+  warnings = C.warnings(doc, ok);
+  assert.deepEqual(warnings.map(w => [w.rule, w.field]), [['demo-text', `field-${urls[0].key}`]]);
+  for (const field of urls) assert.ok(warnings[0].message.includes(field.label), field.label);
+  // Adresses rédigées : plus rien.
+  for (const field of urls) block.values[field.key] = 'https://www.exemple-info.gouv.fr/' + field.key;
+  assert.deepEqual(rules(doc), []);
+  // Adresse par défaut déjà de démonstration (mail-50, exemple.invalid) : demo-domain seul, sans doublon demo-text.
+  const subscription = footer(M.component(footer('https://www.exemple-info.gouv.fr/').blocks[0].component).fields.find(f => f.key === 'f1').default);
+  assert.deepEqual(C.warnings(subscription, ok).map(w => [w.rule, w.field]), [['demo-domain', 'field-f1']]);
+});
+
 test('(3) poids au-delà de 90 Kio, vers le bloc le plus lourd', () => {
   const doc = footer('https://www.exemple-info.gouv.fr/');
   const heavy = M.create('Lourd', [index('mail-31')]).blocks[0];

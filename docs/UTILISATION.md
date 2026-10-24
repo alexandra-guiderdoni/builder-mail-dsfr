@@ -98,7 +98,7 @@ Sous ce bouton, le poids du courriel à copier s’affiche en Kio et en octets :
 Avant la copie ou le téléchargement du HTML, l’atelier contrôle la composition sans aucun accès au réseau. Une composition sans composant est refusée, comme un intitulé de lien manquant. Une composition saine se copie directement. Sinon, une fenêtre liste les points à vérifier, dans une liste fermée :
 
 - lien vers un domaine de démonstration : `.invalid`, `.example`, `.test` ou `example.*` ;
-- texte de démonstration du catalogue resté inchangé ;
+- texte ou adresse de lien égal à la valeur par défaut du catalogue ;
 - poids au-delà de 90 Kio ;
 - intitulé qui affiche un autre domaine que la destination réelle du lien ;
 - caractère de contrôle bidirectionnel dans l’adresse ;
