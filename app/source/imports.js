@@ -21,11 +21,17 @@
     }
     doc.blocks.push(M.setTexts(M.createBlock(19), [value.footer])); return M.document(doc);
   }
+  // Un article sans image ne garde aucune alternative : normalisation à l’import, sur la copie validée.
+  function normalize(blocks) { for (const b of blocks) if (b.component === "mail-31" && b.values.f0 === "") b.values.f1 = ""; }
+  function normalized(type, value) {
+    if (type === "library") [...value.documents, ...value.templates].forEach(d => normalize(d.blocks)); else normalize(value.blocks);
+    return {type, value: M.copy(type === "library" ? M.library(value) : M.document(value))};
+  }
   function parse(input) {
     let value; try { value = JSON.parse(input); } catch { throw new Error("Le fichier JSON est invalide ou incomplet."); }
-    if (value?.schema === "dsfr-mail/library") return {type: "library", value: M.copy(M.library(value))};
-    if (value?.schema === "builder-mail-prototype/1") return {type: "document", value: legacy(value)};
-    return {type: "document", value: M.copy(M.document(value))};
+    if (value?.schema === "dsfr-mail/library") return normalized("library", M.copy(M.library(value)));
+    if (value?.schema === "builder-mail-prototype/1") return normalized("document", legacy(value));
+    return normalized("document", M.copy(M.document(value)));
   }
   function merge(current, incoming) {
     const next = M.copy(M.library(current));
