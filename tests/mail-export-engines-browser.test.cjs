@@ -32,12 +32,13 @@ function inspectBare({ratios, inherited}) {
     else if (rects.some(outside)) problems.push('texte hors champ « ' + value.slice(0, 40) + ' »');
   }
   // Une table imbriquée plus large que sa cellule empiète sur ses voisines sans déborder de la page.
-  // Seuls restent admis les dépassements que le gabarit présente déjà à sa largeur de conception.
+  // Seuls restent admis, sans les dépasser, les débords que le gabarit présente déjà à sa largeur de conception.
+  const allowed = new Map(inherited);
   for (const [index, table] of [...document.body.querySelectorAll('table')].entries()) {
     const cell = table.parentElement.closest('td');
-    if (!cell || intended(table) || inherited.includes(index)) continue;
-    const r = table.getBoundingClientRect(), c = cell.getBoundingClientRect();
-    if (r.left < c.left - 1 || r.right > c.right + 1) problems.push(`table de ${Math.round(r.width)} px dans une cellule de ${Math.round(c.width)} px`);
+    if (!cell || intended(table)) continue;
+    const r = table.getBoundingClientRect(), c = cell.getBoundingClientRect(), excess = Math.max(c.left - r.left, r.right - c.right);
+    if (excess > (allowed.get(index) ?? 0) + 1) problems.push(`table de ${Math.round(r.width)} px dans une cellule de ${Math.round(c.width)} px`);
   }
   let images = 0;
   for (const [index, image] of [...document.images].entries()) {
@@ -138,7 +139,7 @@ test('l’export téléchargé tient sans styles de tête et garde son rendu ave
           await display.setContent(item.derived); await loaded();
           const design = await display.evaluate(() => ({
             ratios: [...document.images].map(i => { const r = i.getBoundingClientRect(); return r.width && r.height ? r.width / r.height : null; }),
-            inherited: [...document.body.querySelectorAll('table')].flatMap((table, index) => { const cell = table.parentElement.closest('td'); if (!cell) return []; const r = table.getBoundingClientRect(), c = cell.getBoundingClientRect(); return r.left < c.left - 1 || r.right > c.right + 1 ? [index] : []; })}));
+            inherited: [...document.body.querySelectorAll('table')].flatMap((table, index) => { const cell = table.parentElement.closest('td'); if (!cell) return []; const r = table.getBoundingClientRect(), c = cell.getBoundingClientRect(), excess = Math.max(c.left - r.left, r.right - c.right); return excess > 1 ? [[index, excess]] : []; })}));
           const degradedHtml = shapes[0].markup === shapes[1].markup ? await page.evaluate(fallback, [exported, item.derived]) : null;
           for (const width of bareWidths) {
             await display.emulateMedia({colorScheme: 'light'}); await display.setViewportSize({width, height: 900});
