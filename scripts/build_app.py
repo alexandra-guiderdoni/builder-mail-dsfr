@@ -52,6 +52,7 @@ def build():
                 "storage.js",
                 "state.js",
                 "preview.js",
+                "catalogue-search.js",
                 "view.js",
                 "images.js",
                 "files.js",

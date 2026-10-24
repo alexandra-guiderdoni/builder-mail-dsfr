@@ -116,12 +116,22 @@
     blockList(); fields(); preview(); removal();
   }
   function catalogue() {
-    const select = get("catalogue"), previous = select.value, query = get("catalogue-search").value.toLocaleLowerCase("fr");
-    const visible = A.catalog.components.filter(c => `${c.family} ${c.label}`.toLocaleLowerCase("fr").includes(query));
-    select.innerHTML = visible.map(c => option(c.id, `${c.family} — ${c.label}`)).join("");
-    select.size = Math.max(2, visible.length);
+    const select = get("catalogue"), previous = select.value, visible = A.CatalogueSearch.filter(A.catalog.components, get("catalogue-search").value);
+    const families = [...new Set(visible.map(c => c.family))];
+    select.innerHTML = families.map(f => `<optgroup label="${esc(f)}">${visible.filter(c => c.family === f).map(c => option(c.id, c.label)).join("")}</optgroup>`).join("");
+    select.size = Math.max(2, visible.length + families.length);
     if (visible.some(c => c.id === previous)) select.value = previous;
     get("catalogue-count").textContent = `${visible.length} composants sur ${A.catalog.components.length}`;
+    catalogPreview();
+  }
+  // Aperçu d’un composant avant insertion : une composition jetable d’un seul bloc, jamais enregistrée.
+  function catalogPreview() {
+    const frame = get("catalogue-preview"), id = get("catalogue").value, skip = get("catalogue-preview-skip");
+    frame.hidden = skip.hidden = !id;
+    if (!id) { frame.removeAttribute("srcdoc"); frame.dataset.component = ""; return; }
+    if (frame.dataset.component === id) return;
+    frame.dataset.component = id;
+    frame.srcdoc = A.Render.html(M.create("Aperçu du composant", [id]), true);
   }
   get("block-editor").addEventListener("input", event => fitField(event.target));
   // Pendant une composition IME, le champ n’est pas remplacé ; le redessin attend compositionend.
@@ -129,7 +139,7 @@
   get("block-editor").addEventListener("compositionstart", () => { composing = true; });
   get("block-editor").addEventListener("compositionend", endComposition);
   get("block-editor").addEventListener("focusout", endComposition);
-  get("catalogue").addEventListener("change", () => get("catalogue").selectedOptions[0]?.scrollIntoView({block: "nearest"}));
+  get("catalogue").addEventListener("change", () => { get("catalogue").selectedOptions[0]?.scrollIntoView({block: "nearest"}); catalogPreview(); });
   let editorWidth;
   new ResizeObserver(entries => {
     const width = entries[0].contentRect.width;

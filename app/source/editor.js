@@ -130,5 +130,10 @@
     event.target.value = "";
   });
   get("catalogue-search").addEventListener("input", A.UI.catalogue);
+  // Accès rapide : le lien passe l’aperçu sans le rendre inaccessible, ses propres liens restent tabulables.
+  document.addEventListener("click", event => {
+    const link = event.target.closest?.("a[data-skip-to]");
+    if (link) { event.preventDefault(); get(link.dataset.skipTo)?.focus(); }
+  });
   A.UI.catalogue(); A.State.start();
 })();
