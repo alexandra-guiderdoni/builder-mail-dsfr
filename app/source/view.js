@@ -136,6 +136,27 @@
     frame.dataset.component = id;
     frame.srcdoc = A.Render.html(M.create("Aperçu du composant", [id]), true);
   }
+  // Aperçu d’un composant avant insertion : une composition jetable d’un seul bloc, jamais enregistrée.
+  function catalogPreview() {
+    const frame = get("catalogue-preview"), id = get("catalogue").value, skip = get("catalogue-preview-skip");
+    frame.hidden = skip.hidden = !id;
+    if (!id) { frame.removeAttribute("srcdoc"); frame.dataset.component = ""; return; }
+    if (frame.dataset.component === id) return;
+    frame.dataset.component = id;
+    frame.srcdoc = A.Render.html(M.create("Aperçu du composant", [id]), true);
+  }
+  // Annonce vocale du nombre de résultats : 500 ms de repos après la dernière frappe, soit plus que l’intervalle
+  // entre deux touches d’une saisie courante, pour ne dire que le résultat final et non chaque lettre.
+  const ANNOUNCE_DELAY = 500;
+  let announceTimer;
+  function announceCatalogueCount() {
+    clearTimeout(announceTimer);
+    announceTimer = setTimeout(() => {
+      const n = get("catalogue").options.length, total = A.catalog.components.length;
+      get("catalogue-status").textContent = n === 0 ? `Aucun composant trouvé sur ${total}.` : `${n} composant${n > 1 ? "s" : ""} trouvé${n > 1 ? "s" : ""} sur ${total}.`;
+    }, ANNOUNCE_DELAY);
+  }
+  get("catalogue-search").addEventListener("input", announceCatalogueCount);
   get("block-editor").addEventListener("input", event => fitField(event.target));
   // Pendant une composition IME, le champ n’est pas remplacé ; le redessin attend compositionend.
   const endComposition = () => { composing = false; if (deferredFields) { deferredFields = false; setTimeout(fields, 0); } };
