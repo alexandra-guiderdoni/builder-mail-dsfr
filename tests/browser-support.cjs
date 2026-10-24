@@ -86,7 +86,28 @@ async function download(page, selector, filename) {
   const event = page.waitForEvent('download'); await click(page, selector);
   const result = await event, destination = path.join(evidence, filename); await result.saveAs(destination); return destination;
 }
+/* Attend que l’aperçu affiche le texte donné : cadre chargé, document complet, texte présent au moins `count` fois. */
+async function previewShows(page, text, count = 1) {
+  await page.waitForFunction(() => document.querySelector('#preview')?.src.startsWith('blob:'));
+  const frame = page.frames().find(f => f !== page.mainFrame() && f.url().startsWith('blob:'));
+  await frame.waitForFunction(({text, count}) => document.readyState === 'complete' && [...document.body.querySelectorAll('*')].filter(e => e.children.length === 0 && e.textContent.includes(text)).length >= count, {text, count});
+}
+/* Duplique le bloc sélectionné en n’agissant qu’après la fin du rendu, puis attend le bloc dupliqué, la sauvegarde et le nouveau rendu. */
+async function duplicateBlock(page) {
+  const title = (await page.evaluate(() => document.querySelector('#block-editor textarea')?.value ?? '')).trim();
+  if (title) await previewShows(page, title);
+  const before = await page.evaluate(() => ({count: MailBuilder.doc().blocks.length, selected: MailBuilder.selected}));
+  await click(page, '[data-block-action=duplicate]');
+  await page.waitForFunction(({count, selected}) => MailBuilder.doc().blocks.length === count + 1 && MailBuilder.selected !== selected && MailBuilder.doc().blocks.some(b => b.id === MailBuilder.selected) && document.querySelector(`[data-select="${MailBuilder.selected}"]`), before);
+  await saved(page);
+  if (title) await previewShows(page, title, 2);
+  return before;
+}
 async function selectBlock(page, id) { await click(page, `[data-select="${id}"]`); }
+/* Sélectionne un bloc et attend que la sélection soit effective ; un clic perdu échoue ici, pas plus loin. */
+async function selectBlockEffective(page, id) { await selectBlock(page, id); await page.waitForFunction(blockId => MailBuilder.selected === blockId && document.querySelector('#block-editor textarea,#block-editor input'), id); }
+/* Ramène la page au premier plan : Firefox ne traite pas l’activation d’un bouton par Entrée dans un onglet sans focus. */
+async function focusPage(page) { await page.bringToFront(); await page.waitForFunction(() => document.hasFocus()); }
 const state = page => page.evaluate(() => JSON.parse(JSON.stringify(MailBuilder.library)));
 const store = page => page.evaluate(() => MailBuilder.Storage.load());
-module.exports = {engines, engineName, note, nativeAx, nativeAxTree, nativeAxNode, ariaHeadings, root, evidence, portable, click, open, enterEditor, saved, expand, download, selectBlock, state, store, chromium, fs, assert};
+module.exports = {root, evidence, portable, click, open, enterEditor, saved, expand, download, selectBlock, selectBlockEffective, focusPage, duplicateBlock, state, store, chromium, fs, assert, engines, engineName, note, nativeAx, nativeAxTree, nativeAxNode, ariaHeadings};
