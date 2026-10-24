@@ -20,6 +20,9 @@ LAYOUT_CSS = """
 @media(600px < width < 620px){
  table.wlkm-mw{width:100%!important}
 }
+@media(prefers-color-scheme:dark){
+ td.wlkm-cl[style*="#585858"]{color:#CECECE!important}
+}
 """
 
 
