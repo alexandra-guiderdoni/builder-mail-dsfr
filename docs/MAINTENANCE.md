@@ -119,7 +119,7 @@ ne change ni les champs, ni la version, ni l’empreinte du catalogue. Un ancien
 lecteur strict peut refuser une nouvelle composition contenant `mailto:` :
 ouvrir celle-ci avec la livraison qui prend en charge ces pieds de page.
 
-Le schéma JSON Schema 2020-12 vérifie la structure ; les contrôles d’URL, d’unicité et de référence active restent aussi dans le moteur. Il ne crée aucune dépendance d’exécution. Lors de cette recette, le validateur Python local `jsonschema` 4.26.0 a contrôlé le métaschéma et les deux fichiers d’exemple ; il n’est pas requis pour ouvrir l’application.
+Le schéma JSON Schema 2020-12 vérifie la structure ; les contrôles d’URL, d’unicité et de référence active restent aussi dans le moteur. Il ne crée aucune dépendance d’exécution. La suite utilise `tests/schema-validation.test.cjs`, via `tests/validate-schema.cjs`, pour valider les deux exemples livrés, un export de composition et un export de bibliothèque produits par l’application, et pour rejeter des témoins invalides. Le validateur s’appuie sur `ajv` 8 et `ajv-formats` 3, inscrits en `devDependencies` et installés par `npm ci --ignore-scripts` ; sans eux le test échoue explicitement avec le code 2, il n’est jamais ignoré. Aucune dépendance Python n’est requise.
 
 IndexedDB utilise `builder-mail-dsfr-library`, version 1, magasin `library`. L’enregistrement courant et l’état précédent sont écrits dans la même transaction. Le token courant empêche une fenêtre obsolète d’écraser silencieusement une autre fenêtre. Chaque sauvegarde réussie remplace l’unique état précédent.
 
@@ -139,7 +139,7 @@ Une modification des champs, gabarits ou CSS change l’empreinte du catalogue. 
 4. Régénérer, relire le diff, exécuter les vérifications adaptées et qualifier chaque famille concernée dans le mail reçu.
 5. Fournir le dossier de recette et les limites. Tout push ou déploiement exige le mandat correspondant.
 
-Servir uniquement le contenu de `app/distribution/web/` sur l’origine HTTPS autorisée, dans un périmètre stable. Ne pas mettre un profil navigateur ou `evidence/` en ligne. La recette de mise à jour locale utilise une variation contrôlée du cache ; elle ne prouve pas une migration de schéma ni les politiques d’un hébergeur réel.
+Publier trois variantes : le contenu de `app/distribution/web/` (atelier web), `app/distribution/snum.html` (publié sous `snum.html`) et `app/distribution/portable.html` (publié sous `atelier-portable.html`). Seule la variante web est installable et hors connexion ; SNUM et le portable sont des fichiers autonomes servis à côté d’elle. Les servir sur l’origine HTTPS autorisée, dans un périmètre stable. Ne pas mettre un profil navigateur ou `evidence/` en ligne. La recette de mise à jour locale utilise une variation contrôlée du cache ; elle ne prouve pas une migration de schéma ni les politiques d’un hébergeur réel.
 
 GitHub Pages est l’hébergement choisi par l’utilisateur. `.github/workflows/pages.yml` vérifie les octets générés puis publie seulement la variante web, `snum.html` et `atelier-portable.html`. Les Actions officielles sont épinglées par SHA ; aucun secret personnel n’est requis. Activer Pages avec la source « GitHub Actions » dans les paramètres du dépôt et utiliser `main` comme branche par défaut. Cette activation exige les droits d’administration ou de gestion de Pages ; un accès Git en écriture ne suffit pas. Voir la [procédure GitHub](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages).
 
