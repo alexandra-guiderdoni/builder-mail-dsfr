@@ -69,6 +69,8 @@
     });
   }
   function assertOutput(value) {
+    // Une composition sans bloc ne produit qu’un document vide : copie et téléchargement sont refusés (#36).
+    if (!value.blocks.length) throw new Error("Ajoutez au moins un composant avant de copier ou de télécharger le courriel.");
     const issue = linkIssues(value)[0];
     if (issue) { const error = new Error(issue.message); error.linkIssue = issue; throw error; }
   }

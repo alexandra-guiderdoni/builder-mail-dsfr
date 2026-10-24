@@ -54,6 +54,8 @@
     // Le poids affiché est celui du HTML remis au presse-papiers ; une annonce de copie précédente ne survit pas à un échec.
     const html = A.Render.clipboardHtml(A.doc()), result = A.Render.weight(html);
     clearTimeout(weightTimer); showWeight(result); A.notice("");
+    // Avertissements confirmables du contrôle avant copie (#36), absents du convertisseur SNUM.
+    if (A.Checks && !(await A.Checks.confirm("copy", A.Checks.warnings(A.doc(), result)))) return;
     await navigator.clipboard.write([new ClipboardItem({"text/html": new Blob([html], {type: "text/html"}), "text/plain": new Blob([A.Render.plain(A.doc())], {type: "text/plain"})})]);
     A.notice(`Courriel copié en HTML et texte. ${result.level === "ok" ? "" : `${WARNINGS[result.level]} ${CAUTION} `}Contrôlez le collage et les images dans votre messagerie.`);
   }

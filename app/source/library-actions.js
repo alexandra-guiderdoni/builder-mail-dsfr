@@ -37,7 +37,11 @@
     "export-document": () => { A.State.guard(); A.Files.json(M.document(A.doc()), "composition.courriel.json"); A.notice("Composition proposée au téléchargement avec ses images."); },
     "export-library": () => { A.State.guard(); A.Files.json(M.library(A.library), "bibliotheque.courriels.json"); A.notice("Bibliothèque proposée au téléchargement, avec modèles et identités."); },
     "export-stored": async () => { const record = await A.Storage.load(); if (!record) throw new Error("Aucune donnée enregistrée."); A.Files.json(record, "recuperation.stockage.json"); A.notice("Copie brute du stockage proposée au téléchargement pour récupération."); },
-    "export-mail": () => { A.State.guard(); A.Files.download(A.Render.exportHtml(A.doc()), "text/html;charset=utf-8", "courriel.html"); A.notice("Courriel proposé au téléchargement."); },
+    "export-mail": async () => {
+      A.State.guard(); const html = A.Render.exportHtml(A.doc());
+      if (!(await A.Checks.confirm("export", A.Checks.warnings(A.doc(), A.Render.weight(html))))) return;
+      A.Files.download(html, "text/html;charset=utf-8", "courriel.html"); A.notice("Courriel proposé au téléchargement.");
+    },
     "copy": A.Files.copy,
     "example-json": () => { A.State.guard(); A.Files.json(M.create("Exemple de composition", [5, 19, 40]), "exemple.courriel.json"); A.notice("Exemple JSON proposé au téléchargement. Votre composition actuelle est conservée."); },
     "json-import": async () => {

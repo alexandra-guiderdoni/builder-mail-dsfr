@@ -54,6 +54,7 @@ def build():
                 "preview.js",
                 "view.js",
                 "files.js",
+                "checks.js",
                 "library-actions.js",
                 "library.js",
                 "editor.js",
