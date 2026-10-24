@@ -176,6 +176,7 @@
   // 90 et 102 Kio sont des repères prudents : ni la taille reçue ni une troncature par Gmail ne sont garanties.
   const WEIGHT_NOTICE = 90 * 1024, WEIGHT_ALERT = 102 * 1024;
   function weight(markup) {
+    if (typeof markup !== "string") throw new TypeError("Seul un HTML sous forme de chaîne se pèse.");
     const bytes = new TextEncoder().encode(markup).byteLength;
     return {bytes, level: bytes >= WEIGHT_ALERT ? "alert" : bytes >= WEIGHT_NOTICE ? "notice" : "ok"};
   }
