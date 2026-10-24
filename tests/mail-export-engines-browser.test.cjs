@@ -1,11 +1,13 @@
 const test = require('node:test'), path = require('node:path');
-const {root, evidence, open, expand, click, fs, assert} = require('./browser-support.cjs');
+const {evidence, open, expand, click, fs, assert} = require('./browser-support.cjs');
 const playwright = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
 
 // Largeurs de l’issue #38 sans styles de tête ; seuils responsive du gabarit avec ces styles.
 const bareWidths = [320, 600, 800], styledWidths = [1024, 800, 620, 619, 601, 600, 481, 480, 390, 320], longStyledWidths = [1024, 619, 601, 320];
+// Repli d’un moteur qui lit les styles de tête mais ignore min() et aspect-ratio.
+const fallbackWidths = [1024, 619, 600, 480, 320];
 
-function inspectBare(ratios) {
+function inspectBare({ratios, inherited}) {
   const width = document.documentElement.clientWidth, problems = [];
   const describe = e => e.tagName.toLowerCase() + (typeof e.className === 'string' && e.className.trim() ? '.' + e.className.trim().split(/\s+/)[0] : '');
   // Sans styles de tête, seules les variantes du logo pour fond sombre restent masquées.
@@ -28,6 +30,14 @@ function inspectBare(ratios) {
     texts++;
     if (!rects.length) problems.push('texte non rendu « ' + value.slice(0, 40) + ' »');
     else if (rects.some(outside)) problems.push('texte hors champ « ' + value.slice(0, 40) + ' »');
+  }
+  // Une table imbriquée plus large que sa cellule empiète sur ses voisines sans déborder de la page.
+  // Seuls restent admis les dépassements que le gabarit présente déjà à sa largeur de conception.
+  for (const [index, table] of [...document.body.querySelectorAll('table')].entries()) {
+    const cell = table.parentElement.closest('td');
+    if (!cell || intended(table) || inherited.includes(index)) continue;
+    const r = table.getBoundingClientRect(), c = cell.getBoundingClientRect();
+    if (r.left < c.left - 1 || r.right > c.right + 1) problems.push(`table de ${Math.round(r.width)} px dans une cellule de ${Math.round(c.width)} px`);
   }
   let images = 0;
   for (const [index, image] of [...document.images].entries()) {
@@ -68,19 +78,32 @@ function structure(html) {
   return {markup: doc.documentElement.outerHTML, styles};
 }
 
+// Retire de l’export les déclarations ajoutées qui emploient min() ou aspect-ratio.
+function fallback([exported, derived]) {
+  const doc = new DOMParser().parseFromString(exported, 'text/html'), origin = [...new DOMParser().parseFromString(derived, 'text/html').querySelectorAll('*')];
+  [...doc.querySelectorAll('*')].forEach((element, i) => {
+    const base = origin[i].getAttribute('style') || '', style = element.getAttribute('style') || '';
+    if (style !== base) element.setAttribute('style', base + style.slice(base.length).split(';').filter(d => !/min\(|aspect-ratio/i.test(d)).join(';'));
+  });
+  return '<!doctype html>' + doc.documentElement.outerHTML;
+}
+
 test('l’export téléchargé tient sans styles de tête et garde son rendu avec ces styles sous Chromium et WebKit', async t => {
-  const image = 'data:image/png;base64,' + (await fs.readFile(path.join(root, 'app/assets/icon-192.png'))).toString('base64');
-  const receipt = {bareWidths, styledWidths, longStyledWidths, variants: ['normal', 'long', 'mail-31 texte seul', 'mail-50 liens supplémentaires'], source: 'bouton « Télécharger le HTML »', comparedWith: 'Render.html, rendu dérivé', mailClientExecuted: false, engines: {}};
+  const receipt = {bareWidths, styledWidths, longStyledWidths, fallbackWidths, fallback: 'déclarations ajoutées avec min() ou aspect-ratio retirées, styles de tête présents', variants: ['normal', 'long avec images synthétiques de proportion 2:1', 'mail-31 texte seul', 'mail-50 liens supplémentaires'], source: 'bouton « Télécharger le HTML »', comparedWith: 'Render.html, rendu dérivé', mailClientExecuted: false, engines: {}};
   try {
     for (const engine of ['chromium', 'webkit']) await t.test(engine, async () => {
       const browser = await playwright[engine].launch();
       const failures = [], logoCounts = {};
-      let bare = 0, styled = 0, identical = 0;
+      let bare = 0, styled = 0, identical = 0, degraded = 0;
       try {
         const {page, context} = await open(browser, {offline: true});
         await expand(page, 'Fichiers et récupération');
-        const cases = await page.evaluate(image => {
+        const cases = await page.evaluate(() => {
           const M = MailBuilder.Model, entries = [];
+          // Image synthétique non carrée : un gabarit qui la recadre ne doit pas changer de proportion.
+          const canvas = document.createElement('canvas'), g = canvas.getContext('2d'); canvas.width = 240; canvas.height = 120;
+          g.fillStyle = '#000091'; g.fillRect(0, 0, 120, 120); g.fillStyle = '#e1000f'; g.fillRect(120, 0, 120, 120);
+          const image = canvas.toDataURL('image/png');
           const index = id => MailBuilder.catalog.components.findIndex(c => c.id === id);
           for (let component = 0; component < 52; component++) {
             const normal = M.create('Recette d’export', [component]), doc = M.create('Recette d’export longue', [component]);
@@ -98,7 +121,7 @@ test('l’export téléchargé tient sans styles de tête et garde son rendu ave
           footer.blocks[0].additionalLinks = [{url: 'https://exemple.invalid/desabonnement', label: 'Se désabonner'}, {url: 'mailto:contact@exemple.invalid', label: 'Nous contacter'}];
           entries.push({component: 'mail-31', variant: 'texte seul', doc: article}, {component: 'mail-50', variant: 'liens supplémentaires', doc: footer});
           return entries;
-        }, image);
+        });
         const display = await context.newPage();
         const loaded = () => display.waitForFunction(() => [...document.images].every(i => i.complete));
         for (const item of cases) {
@@ -110,14 +133,17 @@ test('l’export téléchargé tient sans styles de tête et garde son rendu ave
           const shapes = await page.evaluate(([structure, a, b]) => { const f = (0, eval)('(' + structure + ')'); return [f(a), f(b)]; }, [structure.toString(), exported, item.derived]);
           if (shapes[0].markup !== shapes[1].markup) failures.push(`${name} : balisage, textes, liens ou images modifiés`);
           else if (shapes[0].styles.some((style, i) => !style.startsWith(shapes[1].styles[i]))) failures.push(`${name} : déclaration de style d’origine modifiée`);
-          // Proportions des images dans le rendu dérivé, styles de tête présents.
+          // Proportions des images et dépassements de tables du rendu dérivé, styles de tête présents.
           await display.emulateMedia({colorScheme: 'light'}); await display.setViewportSize({width: 1024, height: 900});
           await display.setContent(item.derived); await loaded();
-          const ratios = await display.evaluate(() => [...document.images].map(i => { const r = i.getBoundingClientRect(); return r.width && r.height ? r.width / r.height : null; }));
+          const design = await display.evaluate(() => ({
+            ratios: [...document.images].map(i => { const r = i.getBoundingClientRect(); return r.width && r.height ? r.width / r.height : null; }),
+            inherited: [...document.body.querySelectorAll('table')].flatMap((table, index) => { const cell = table.parentElement.closest('td'); if (!cell) return []; const r = table.getBoundingClientRect(), c = cell.getBoundingClientRect(); return r.left < c.left - 1 || r.right > c.right + 1 ? [index] : []; })}));
+          const degradedHtml = shapes[0].markup === shapes[1].markup ? await page.evaluate(fallback, [exported, item.derived]) : null;
           for (const width of bareWidths) {
             await display.emulateMedia({colorScheme: 'light'}); await display.setViewportSize({width, height: 900});
             await display.setContent(exported); await display.locator('style,link').evaluateAll(nodes => nodes.forEach(e => e.remove())); await loaded();
-            const result = await display.evaluate(inspectBare, ratios); bare++;
+            const result = await display.evaluate(inspectBare, design); bare++;
             if (result.logos.light) logoCounts[item.component] = result.logos;
             const reasons = [...(result.overflow > 1 ? [`débordement de ${result.overflow} px`] : []), ...(result.texts ? [] : ['aucun texte rendu']), ...result.problems];
             if (reasons.length) failures.push(`${name} ${width} px sans styles de tête : ${reasons.slice(0, 3).join(' ; ')}`);
@@ -127,6 +153,10 @@ test('l’export téléchargé tient sans styles de tête et garde son rendu ave
             await display.setContent(item.derived); await loaded(); const before = await display.screenshot({fullPage: true});
             await display.setContent(exported); await loaded(); const after = await display.screenshot({fullPage: true}); styled++;
             if (before.equals(after)) identical++; else failures.push(`${name} ${scheme} ${width} px avec styles de tête : rendu différent du rendu dérivé`);
+            if (degradedHtml && fallbackWidths.includes(width)) {
+              await display.setContent(degradedHtml); await loaded(); degraded++;
+              if (!before.equals(await display.screenshot({fullPage: true}))) failures.push(`${name} ${scheme} ${width} px avec styles de tête, sans min() ni aspect-ratio : rendu différent du rendu dérivé`);
+            }
             if (scheme === 'dark' && width === 390) {
               const logos = await display.evaluate(() => ({light: [...document.querySelectorAll('img.hide-black')].filter(i => i.getClientRects().length).length, dark: [...document.querySelectorAll('img.hide-white')].filter(i => i.getClientRects().length).length, total: document.querySelectorAll('img.hide-white').length}));
               if (logos.light || logos.dark !== logos.total) failures.push(`${name} sombre avec styles de tête : variantes du logo inversées`);
@@ -140,7 +170,7 @@ test('l’export téléchargé tient sans styles de tête et garde son rendu ave
         await display.setContent(derived); const witness = await display.screenshot({fullPage: true});
         await display.setContent(copy); assert(!witness.equals(await display.screenshot({fullPage: true})), `${engine} : la comparaison ne distingue pas la forme copiée`);
         await context.close();
-        receipt.engines[engine] = {version: browser.version(), bareCases: bare, styledCases: styled, pixelIdentical: identical, logos: logoCounts, failures: failures.length, examples: failures.slice(0, 10)};
+        receipt.engines[engine] = {version: browser.version(), bareCases: bare, styledCases: styled, pixelIdentical: identical, fallbackCases: degraded, logos: logoCounts, failures: failures.length, examples: failures.slice(0, 10)};
       } finally { await browser.close(); }
       assert.equal(failures.length, 0, `${engine} : ${failures.length} échecs (${bare} cas sans styles de tête, ${styled} avec), dont ${failures.slice(0, 4).join(' | ')}`);
     });
