@@ -20,17 +20,19 @@
     if (get("editor-page").hidden) (item?.querySelector(`[data-library-action="${action}"]`) || get("home-title")).focus();
     else get("composition-title").focus();
   }
+  // Changer de vue attend les écritures en cours sans exiger leur succès : après un échec, le travail reste en mémoire.
   async function open(id) {
-    A.State.guard(); find(id); if (!A.recoveryOnly) await A.State.flush();
-    if (id !== A.library.activeId) { await A.State.change(lib => { lib.activeId = id; }); if (!A.recoveryOnly) await A.State.flush(); }
+    A.State.guard(); find(id); await A.State.settle();
+    if (id !== A.library.activeId) { await A.State.change(lib => { lib.activeId = id; }); await A.State.settle(); }
     // Le cadre doit être visible avant de charger son document d’aperçu.
     show(true); A.UI.refresh();
   }
-  async function home() { A.State.guard(); await A.State.flush(); refresh(); show(false); }
+  async function home() { A.State.guard(); await A.State.settle(); refresh(); show(false); }
   async function duplicate(id) {
     A.State.guard(); const clone = M.clone(find(id), `${find(id).name} · copie`);
     A.notice(""); await A.State.change(lib => { lib.documents.push(clone); lib.activeId = clone.id; });
-    await A.State.flush(); focusRow(clone.id); A.notice("Copie indépendante ajoutée et sauvegardée dans la bibliothèque.");
+    await A.State.settle(); focusRow(clone.id);
+    A.notice(A.State.saved() ? "Copie indépendante ajoutée et sauvegardée dans la bibliothèque." : "Copie indépendante ajoutée en mémoire, non sauvegardée : exportez la bibliothèque pour la conserver.");
   }
   function ask(kind, id) {
     A.State.guard(); const doc = find(id), removing = kind === "remove";
@@ -76,10 +78,11 @@
           if (lib.activeId === target.id) lib.activeId = lib.documents[0].id;
         }
       });
-      get("library-dialog").close(); await A.State.flush();
+      get("library-dialog").close(); await A.State.settle();
       const fallback = A.library.documents[Math.min(target.index, A.library.documents.length - 1)].id;
       focusRow(target.kind === "rename" ? target.id : fallback, target.kind === "rename" ? "rename" : "open");
-      A.notice(target.kind === "rename" ? "Nom enregistré dans la bibliothèque." : emptied ? "Dernière composition supprimée. Une composition de départ avec six blocs est prête pour la suite." : "Composition supprimée ; les autres éditions sont conservées.");
+      if (A.State.saved()) A.notice(target.kind === "rename" ? "Nom enregistré dans la bibliothèque." : emptied ? "Dernière composition supprimée. Une composition de départ avec six blocs est prête pour la suite." : "Composition supprimée ; les autres éditions sont conservées.");
+      else A.notice(`${target.kind === "rename" ? "Nom modifié en mémoire, non sauvegardé" : emptied ? "Dernière composition retirée en mémoire, retrait non sauvegardé ; une composition de départ avec six blocs est prête" : "Composition retirée en mémoire, retrait non sauvegardé"} : exportez la bibliothèque pour conserver cet état.`);
     } catch (cause) { if (get("library-dialog").open) get("library-dialog-error").textContent = cause.message; else A.error(cause.message); }
     finally { busy = false; get("library-confirm").disabled = get("library-cancel").disabled = false; }
   });
