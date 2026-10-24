@@ -1,6 +1,6 @@
 const test = require('node:test');
 const {createHash} = require('node:crypto');
-const {open, chromium, assert} = require('./browser-support.cjs');
+const {open, confirmChecks, chromium, assert} = require('./browser-support.cjs');
 
 test('le courriel copié tient dans un message étroit après retrait des styles de tête', async () => {
   const browser = await chromium.launch({headless: true});
@@ -10,7 +10,7 @@ test('le courriel copié tient dans un message étroit après retrait des styles
       const A = MailBuilder;
       A.library.documents.find(d => d.id === A.library.activeId).blocks = A.Model.create('Recette largeur', [2, 5, 19, 21, 27, 47]).blocks;
     });
-    await page.locator('[data-action=copy]').click();
+    await page.locator('[data-action=copy]').click(); await confirmChecks(page);
     await page.locator('#notice').filter({hasText: 'Courriel copié en HTML et texte.'}).waitFor();
     const html = await page.evaluate(async () => {
       const [item] = await navigator.clipboard.read();
@@ -37,7 +37,7 @@ test('la copie conserve les filets décoratifs de trois pixels des mises en avan
   try {
     const {page, context} = await open(browser, {permissions: ['clipboard-read', 'clipboard-write']});
     await page.evaluate(() => { MailBuilder.library.documents.find(d => d.id === MailBuilder.library.activeId).blocks = MailBuilder.Model.create('Filets', [35, 36]).blocks; });
-    await page.locator('[data-action=copy]').click();
+    await page.locator('[data-action=copy]').click(); await confirmChecks(page);
     await page.locator('#notice').filter({hasText: 'Courriel copié en HTML et texte.'}).waitFor();
     const html = await page.evaluate(async () => { const [item] = await navigator.clipboard.read(); return (await item.getType('text/html')).text(); });
     const rendered = await context.newPage();
@@ -70,7 +70,7 @@ test('les 52 composants copiés conservent texte, liens et images sans déborder
       // Chromium omet les variantes blanches masquées dans sa copie en mode clair.
       return {text, images: [...original.images].filter(i => !i.closest('.hide-white')).map(i => [i.src, i.alt]), links: [...original.querySelectorAll('a')].map(a => a.getAttribute('href')), plain: A.Render.plain(A.doc())};
     });
-    await page.locator('[data-action=copy]').click();
+    await page.locator('[data-action=copy]').click(); await confirmChecks(page);
     await page.locator('#notice').filter({hasText: 'Courriel copié en HTML et texte.'}).waitFor();
     const clipboard = await page.evaluate(async () => {
       const [item] = await navigator.clipboard.read();

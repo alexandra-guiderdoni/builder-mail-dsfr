@@ -20,7 +20,7 @@ async function setBlocks(page, build) {
     const doc = lib.documents.find(d => d.id === lib.activeId), M = MailBuilder.Model;
     const index = id => MailBuilder.catalog.components.findIndex(c => c.id === id);
     const footer = (values, extra = {}) => Object.assign(M.createBlock(index('mail-50')), extra, {values: {...M.createBlock(index('mail-50')).values, ...values}});
-    const noise = (w, h) => { const c = document.createElement('canvas'); c.width = w; c.height = h; const x = c.getContext('2d'), d = x.createImageData(w, h); let s = 7; for (let i = 0; i < d.data.length; i++) { s = (s * 1103515245 + 12345) % 2147483648; d.data[i] = i % 4 === 3 ? 255 : s % 256; } x.putImageData(d, 0, 0); return c.toDataURL('image/png'); };
+    const noise = (w, h) => { const c = document.createElement('canvas'); c.width = w; c.height = h; const x = c.getContext('2d'), d = x.createImageData(w, h); let s = 7; for (let i = 0; i < d.data.length; i++) { s ^= s << 13; s ^= s >>> 17; s ^= s << 5; d.data[i] = i % 4 === 3 ? 255 : s & 255; } x.putImageData(d, 0, 0); return c.toDataURL('image/png'); };
     const healthy = () => footer({f0: 'Pour vos abonnements,', f1: 'https://www.info.gouv.fr/abonnements', f2: 'Gérer mon abonnement'});
     const sets = {
       empty: () => [],
@@ -28,7 +28,7 @@ async function setBlocks(page, build) {
       starter: () => M.create('Départ').blocks,
       rules: () => {
         const article = M.createBlock(index('mail-31'));
-        Object.assign(article.values, {f0: noise(220, 220), f1: 'Motif synthétique', f2: 'Avant-titre rédigé', f3: 'https://www.info.gouv.fr/article', f4: 'Titre rédigé', f5: 'Détail rédigé', f6: 'Fin rédigée'});
+        Object.assign(article.values, {f0: noise(300, 300), f1: 'Motif synthétique', f2: 'Avant-titre rédigé', f3: 'https://www.info.gouv.fr/article', f4: 'Titre rédigé', f5: 'Détail rédigé', f6: 'Fin rédigée'});
         return [
           footer({f0: 'Pour vos abonnements,', f1: 'https://exemple.invalid/abonnement', f2: 'Gérer mon abonnement'}),
           footer({f1: 'https://www.info.gouv.fr/abonnements'}),

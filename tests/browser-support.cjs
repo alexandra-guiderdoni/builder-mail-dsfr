@@ -27,12 +27,16 @@ async function expand(page, text) {
     await page.waitForFunction(label => [...document.querySelectorAll('summary')].some(e => e.textContent.includes(label) && e.parentElement.open), text, {timeout: 3000});
   }
 }
+// Depuis #36, une composition qui garde des contenus de démonstration demande une confirmation avant copie ou téléchargement.
+async function confirmChecks(page) {
+  if (await page.evaluate(() => document.getElementById('check-dialog')?.open === true)) await page.locator('#check-confirm').click();
+}
 async function download(page, selector, filename) {
   await fs.mkdir(evidence, {recursive: true});
-  const event = page.waitForEvent('download'); await click(page, selector);
+  const event = page.waitForEvent('download'); await click(page, selector); await confirmChecks(page);
   const result = await event, destination = path.join(evidence, filename); await result.saveAs(destination); return destination;
 }
 async function selectBlock(page, id) { await click(page, `[data-select="${id}"]`); }
 const state = page => page.evaluate(() => JSON.parse(JSON.stringify(MailBuilder.library)));
 const store = page => page.evaluate(() => MailBuilder.Storage.load());
-module.exports = {root, evidence, portable, click, open, enterEditor, saved, expand, download, selectBlock, state, store, chromium, fs, assert};
+module.exports = {root, evidence, portable, click, open, enterEditor, saved, expand, download, confirmChecks, selectBlock, state, store, chromium, fs, assert};

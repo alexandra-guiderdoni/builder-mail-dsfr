@@ -1,6 +1,6 @@
 const test = require('node:test');
 const path = require('node:path');
-const {open, enterEditor, click, saved, expand, download, selectBlock, state, chromium, fs, evidence, assert} = require('./browser-support.cjs');
+const {open, enterEditor, click, saved, expand, download, confirmChecks, selectBlock, state, chromium, fs, evidence, assert} = require('./browser-support.cjs');
 
 test('intitulé source : saisie, aperçu, presse-papiers, fichier, rechargement et transfert hors connexion', async () => {
   const browser = await chromium.launch({headless: true});
@@ -15,7 +15,7 @@ test('intitulé source : saisie, aperçu, presse-papiers, fichier, rechargement 
     await page.locator('#preview').scrollIntoViewIfNeeded();
     const link = page.frameLocator('#preview').locator(`a[href="${url}"]`);
     await link.waitFor({state: 'visible'}); assert.equal(await link.textContent(), label);
-    await click(page, '[data-action=copy]');
+    await click(page, '[data-action=copy]'); await confirmChecks(page);
     await page.locator('#notice').filter({hasText: 'Courriel copié en HTML et texte.'}).waitFor();
     const copied = await page.evaluate(async () => {
       const [item] = await navigator.clipboard.read();
