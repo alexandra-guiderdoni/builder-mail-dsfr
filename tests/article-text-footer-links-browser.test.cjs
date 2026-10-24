@@ -48,12 +48,15 @@ test('article sans image et trois actions de pied de page : import, édition, re
     const validURL = 'mailto:abonnement@example.invalid?subject=Modifier';
     await page.locator('#field-footer-url-0').fill(validURL); await saved(page);
     const beforeInvalid = await state(page);
-    await page.locator('#field-footer-url-0').fill(validURL + '&bcc=autre@example.invalid');
+    await page.locator('#field-footer-url-0').fill(validURL + '&bcc=autre@example.invalid'); await page.locator('#field-footer-url-0').blur();
     assert.equal(await page.locator('#field-footer-url-0').getAttribute('aria-invalid'), 'true');
     assert.match(await page.locator('#error-field-footer-url-0').textContent(), /Erreur/);
     assert.deepEqual(await state(page), beforeInvalid);
     await selectBlock(page, article.id);
-    assert.equal(await page.locator(`[data-select="${footer.id}"]`).getAttribute('aria-pressed'), 'true');
+    assert.equal(await page.locator(`[data-select="${article.id}"]`).getAttribute('aria-pressed'), 'true', 'Une URL en cours de saisie ne bloque pas le changement de bloc.');
+    await selectBlock(page, footer.id);
+    assert.equal(await page.locator('#field-footer-url-0').inputValue(), validURL + '&bcc=autre@example.invalid', 'La saisie temporaire est conservée.');
+    assert.equal(await page.locator('#field-footer-url-0').getAttribute('aria-invalid'), 'true');
     await click(page, '[data-action=cancel-fields]');
     assert.equal(await page.locator('#field-footer-url-0').inputValue(), validURL);
     await page.locator('#field-footer-label-0').fill('   ');
