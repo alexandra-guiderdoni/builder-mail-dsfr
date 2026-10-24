@@ -1,5 +1,5 @@
 const test = require('node:test'), path = require('node:path');
-const {evidence, open, expand, click, fs, assert} = require('./browser-support.cjs');
+const {evidence, open, expand, click, confirmChecks, fs, assert} = require('./browser-support.cjs');
 const playwright = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
 
 // Largeurs de l’issue #38 sans styles de tête ; seuils responsive du gabarit avec ces styles.
@@ -129,7 +129,7 @@ test('l’export téléchargé tient sans styles de tête et garde son rendu ave
           const name = `${item.component} ${item.variant}`;
           // Rendu dérivé du document actif, celui que le bouton exporte.
           item.derived = await page.evaluate(doc => { const A = MailBuilder; A.library.documents.find(d => d.id === A.library.activeId).blocks = doc.blocks; return A.Render.html(A.doc()); }, item.doc);
-          const event = page.waitForEvent('download'); await click(page, '[data-action=export-mail]');
+          const event = page.waitForEvent('download'); await click(page, '[data-action=export-mail]'); await confirmChecks(page);
           const exported = await fs.readFile(await (await event).path(), 'utf8');
           const shapes = await page.evaluate(([structure, a, b]) => { const f = (0, eval)('(' + structure + ')'); return [f(a), f(b)]; }, [structure.toString(), exported, item.derived]);
           if (shapes[0].markup !== shapes[1].markup) failures.push(`${name} : balisage, textes, liens ou images modifiés`);

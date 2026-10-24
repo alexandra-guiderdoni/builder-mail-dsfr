@@ -1,5 +1,5 @@
 const test = require('node:test'), path = require('node:path');
-const {root, evidence, open, expand, click, saved, chromium, fs, assert} = require('./browser-support.cjs');
+const {root, evidence, open, expand, click, saved, confirmChecks, chromium, fs, assert} = require('./browser-support.cjs');
 
 function inspect() {
   const forbidden = new Set('align alink background bgcolor border cellpadding cellspacing char charoff clear color compact frameborder hspace link marginheight marginwidth text valign vlink vspace size width height'.split(' '));
@@ -105,7 +105,7 @@ test('la copie système des 52 composants conserve le HTML strict, les styles Of
     await expand(page, 'Fichiers et récupération');
     await page.locator('#project-input').setInputFiles({name:'presentation.courriel.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(packet))});
     await page.locator('#notice').filter({hasText:'Import ajouté à la bibliothèque'}).waitFor(); await saved(page);
-    await click(page, '[data-action=copy]'); await page.locator('#notice').filter({hasText:'Courriel copié en HTML et texte.'}).waitFor();
+    await click(page, '[data-action=copy]'); await confirmChecks(page); await page.locator('#notice').filter({hasText:'Courriel copié en HTML et texte.'}).waitFor();
     const copied = await page.evaluate(async () => {
       const [item] = await navigator.clipboard.read({unsanitized:['text/html']}), html = await (await item.getType('text/html')).text(), plain = await (await item.getType('text/plain')).text();
       const [filtered] = await navigator.clipboard.read(), sanitizedHtml = await (await filtered.getType('text/html')).text();

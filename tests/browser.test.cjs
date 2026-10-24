@@ -1,6 +1,6 @@
 const test = require('node:test');
 const path = require('node:path');
-const {root, evidence, click, open, enterEditor, saved, expand, download, selectBlock, selectBlockEffective, focusPage, duplicateBlock, state, chromium, fs, assert, engineName} = require('./browser-support.cjs');
+const {root, evidence, click, open, enterEditor, saved, expand, download, confirmChecks, selectBlock, selectBlockEffective, focusPage, duplicateBlock, state, chromium, fs, assert, engineName} = require('./browser-support.cjs');
 
 test('les 52 gabarits canoniques conservent le DOM officiel et le rendu dérivé porte les titres attendus', async () => {
   const browser = await chromium.launch({headless: true});
@@ -70,7 +70,7 @@ test('parcours complet par les contrôles : bibliothèque, identités, modèles,
     const image = (await fs.readFile(path.join(root, 'app/assets/icon-192.png'))).toString('base64');
     assert(JSON.stringify(project).includes(image)); assert(html.includes(image)); assert(!/<script[\s>]/i.test(html));
     assert(html.includes('&lt;script&gt;')); assert.equal(lib.templates.length, 1); assert.equal(lib.identities.length, 1); assert.equal(lib.documents.length, 4);
-    await click(page, '[data-action=copy]'); await page.locator('#notice').filter({hasText: 'Courriel copié en HTML et texte.'}).waitFor();
+    await click(page, '[data-action=copy]'); await confirmChecks(page); await page.locator('#notice').filter({hasText: 'Courriel copié en HTML et texte.'}).waitFor();
     const clipboard = await page.evaluate(async () => { const [item] = await navigator.clipboard.read(); return {types: item.types, html: await (await item.getType('text/html')).text(), plain: await (await item.getType('text/plain')).text()}; });
     assert.equal(clipboard.plain.split(packet.articles[0].url).length - 1, 2); assert(clipboard.html.includes('data:image/png;base64,')); assert(!clipboard.plain.includes(packet.watch[0].summary));
     const before = await state(page), bad = {...project, version: 99};

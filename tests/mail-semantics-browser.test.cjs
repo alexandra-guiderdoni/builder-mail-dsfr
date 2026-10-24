@@ -1,7 +1,7 @@
 const test=require('node:test');
 const path=require('node:path');
 const {createHash}=require('node:crypto');
-const {root,evidence,open,chromium,nativeAxTree,ariaHeadings,fs,assert}=require('./browser-support.cjs');
+const {root, evidence, open, chromium, nativeAxTree, ariaHeadings, fs, assert, confirmChecks} = require('./browser-support.cjs');
 const output=path.join(evidence,'mail-semantics');
 const digest=value=>createHash('sha256').update(value).digest('hex');
 const outline=page=>page.locator('h1,h2,h3,h4,h5,h6').evaluateAll(nodes=>nodes.map(e=>({level:Number(e.tagName[1]),text:e.textContent.trim()})));
@@ -42,7 +42,7 @@ test('aperçu, export et presse-papiers conservent les niveaux natifs et le lien
   const frame=page.frameLocator('#preview');await frame.locator('h1').waitFor();
   const expected=await frame.locator('h1,h2,h3,h4,h5,h6').evaluateAll(nodes=>nodes.map(e=>({level:Number(e.tagName[1]),text:e.textContent.trim()})));
   assert.deepEqual(expected.map(h=>h.level),[1,2,3,4,4,4,2,3,3]);
-  const event=page.waitForEvent('download');await page.locator('[data-action=export-mail]').focus();await page.keyboard.press('Enter');
+  const event=page.waitForEvent('download');await page.locator('[data-action=export-mail]').focus();await page.keyboard.press('Enter');await confirmChecks(page);
   const downloaded=await event;await fs.mkdir(output,{recursive:true});const destination=path.join(output,'titres-exportes.html');await downloaded.saveAs(destination);
   const html=await fs.readFile(destination,'utf8');
   const exported=await context.newPage();await exported.setContent(html);assert.deepEqual(await outline(exported),expected);
@@ -53,7 +53,7 @@ test('aperçu, export et presse-papiers conservent les niveaux natifs et le lien
   visit(ax[0].nodeId);}
   else accessible.push(...await ariaHeadings(exported));
   assert.deepEqual(accessible,expected);
-  await page.locator('[data-action=copy]').focus();await page.keyboard.press('Enter');await page.locator('#notice').filter({hasText:'Courriel copié en HTML et texte.'}).waitFor();
+  await page.locator('[data-action=copy]').focus();await page.keyboard.press('Enter');await confirmChecks(page);await page.locator('#notice').filter({hasText:'Courriel copié en HTML et texte.'}).waitFor();
   const copied=await page.evaluate(async()=>{const [item]=await navigator.clipboard.read();return (await item.getType('text/html')).text();});
   const received=await context.newPage();await received.setContent(copied);await received.locator('style,link').evaluateAll(nodes=>nodes.forEach(e=>e.remove()));
   assert.deepEqual(await outline(received),expected);

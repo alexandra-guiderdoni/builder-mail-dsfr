@@ -81,9 +81,13 @@ async function expand(page, text) {
     await page.waitForFunction(label => [...document.querySelectorAll('summary')].some(e => e.textContent.includes(label) && e.parentElement.open), text, {timeout: 3000});
   }
 }
+// Depuis #36, une composition qui garde des contenus de démonstration demande une confirmation avant copie ou téléchargement.
+async function confirmChecks(page) {
+  if (await page.evaluate(() => document.getElementById('check-dialog')?.open === true)) await page.locator('#check-confirm').click();
+}
 async function download(page, selector, filename) {
   await fs.mkdir(evidence, {recursive: true});
-  const event = page.waitForEvent('download'); await click(page, selector);
+  const event = page.waitForEvent('download'); await click(page, selector); await confirmChecks(page);
   const result = await event, destination = path.join(evidence, filename); await result.saveAs(destination); return destination;
 }
 /* Attend que l’aperçu affiche le texte donné : cadre chargé, document complet, texte présent au moins `count` fois. */
@@ -110,4 +114,4 @@ async function selectBlockEffective(page, id) { await selectBlock(page, id); awa
 async function focusPage(page) { await page.bringToFront(); await page.waitForFunction(() => document.hasFocus()); }
 const state = page => page.evaluate(() => JSON.parse(JSON.stringify(MailBuilder.library)));
 const store = page => page.evaluate(() => MailBuilder.Storage.load());
-module.exports = {root, evidence, portable, click, open, enterEditor, saved, expand, download, selectBlock, selectBlockEffective, focusPage, duplicateBlock, state, store, chromium, fs, assert, engines, engineName, note, nativeAx, nativeAxTree, nativeAxNode, ariaHeadings};
+module.exports = {root, evidence, portable, click, open, enterEditor, saved, expand, download, confirmChecks, selectBlock, selectBlockEffective, focusPage, duplicateBlock, state, store, chromium, fs, assert, engines, engineName, note, nativeAx, nativeAxTree, nativeAxNode, ariaHeadings};

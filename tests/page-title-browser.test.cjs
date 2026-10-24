@@ -1,6 +1,6 @@
 const test = require('node:test'), path = require('node:path'), {createHash} = require('node:crypto');
 const {pathToFileURL} = require('node:url');
-const {root, evidence, open, click, expand, saved, state, download, chromium, nativeAxTree, fs, assert} = require('./browser-support.cjs');
+const {root, evidence, open, click, expand, saved, state, download, confirmChecks, chromium, nativeAxTree, fs, assert} = require('./browser-support.cjs');
 const output = path.join(evidence, 'page-title');
 async function receipt(name, observations, completed) {
   await fs.mkdir(output, {recursive: true});
@@ -44,7 +44,7 @@ test('objet facultatif : aperçu et téléchargement titrés ; transformation du
       assert.equal(json.subject, subject); assert.equal(json.name, name);
       const producedTitle = await page.evaluate(() => new DOMParser().parseFromString(MailBuilder.Render.clipboardHtml(MailBuilder.doc()), 'text/html').title);
       assert.equal(producedTitle, expected);
-      await click(page, '[data-action=copy]'); await page.locator('#notice').filter({hasText: 'Courriel copié en HTML et texte.'}).waitFor();
+      await click(page, '[data-action=copy]'); await confirmChecks(page); await page.locator('#notice').filter({hasText: 'Courriel copié en HTML et texte.'}).waitFor();
       const clipboard = await page.evaluate(async () => {
         const [raw] = await navigator.clipboard.read({unsanitized: ['text/html']}), [filtered] = await navigator.clipboard.read();
         const title = async item => new DOMParser().parseFromString(await (await item.getType('text/html')).text(), 'text/html').title;

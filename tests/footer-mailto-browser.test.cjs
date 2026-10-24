@@ -1,5 +1,5 @@
 const test = require('node:test');
-const {chromium,open,click,expand,saved,state,enterEditor,selectBlock,download,fs,assert} = require('./browser-support.cjs');
+const {chromium,open,click,expand,saved,state,enterEditor,selectBlock,download,confirmChecks,fs,assert} = require('./browser-support.cjs');
 
 test('pieds de page mailto : import natif, saisie, refus ciblé, sauvegarde, copie et exports', async () => {
   const browser=await chromium.launch();
@@ -33,7 +33,7 @@ test('pieds de page mailto : import natif, saisie, refus ciblé, sauvegarde, cop
     assert.deepEqual(await page.frameLocator('#preview').locator('a[href^="mailto:"]').evaluateAll(links=>links.map(a=>a.getAttribute('href'))),expected);
     await page.locator('#article-source').fill(expected[0]);await page.locator('#article-source').blur();assert.equal(await page.locator('#article-source').getAttribute('aria-invalid'),'true');
     await click(page,'[data-action=cancel-fields]');
-    await click(page,'[data-action=copy]');await page.locator('#notice').filter({hasText:'Courriel copié en HTML et texte.'}).waitFor();
+    await click(page,'[data-action=copy]');await confirmChecks(page);await page.locator('#notice').filter({hasText:'Courriel copié en HTML et texte.'}).waitFor();
     const copied=await page.evaluate(async()=>{const [item]=await navigator.clipboard.read();return (await item.getType('text/html')).text();});
     for(const value of expected) assert.ok(copied.includes(value));
     await expand(page,'Fichiers et récupération');

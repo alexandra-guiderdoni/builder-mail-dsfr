@@ -93,6 +93,17 @@ Les remarques de collecte restent dans le paquet source, hors du courriel. Conse
 
 Sous ce bouton, le poids du courriel à copier s’affiche en Kio et en octets : il compte le HTML que la copie remet au presse-papiers, images incorporées comprises. Il se met à jour après une pause de saisie, et à chaque copie. À partir de 90 Kio, un avertissement signale l’approche du repère de 102 Kio au-delà duquel Gmail peut tronquer un message ; à partir de 102 Kio, l’alerte se renforce. Ces repères sont prudents : la taille reçue par la messagerie peut différer, et aucune troncature n’est garantie ni exclue. La copie reste toujours possible. Pour alléger un courriel, réduire ou retirer des images, ou répartir les blocs sur plusieurs envois. Le convertisseur SNUM affiche le même poids après chaque conversion.
 
+Avant la copie ou le téléchargement du HTML, l’atelier contrôle la composition sans aucun accès au réseau. Une composition sans composant est refusée, comme un intitulé de lien manquant. Une composition saine se copie directement. Sinon, une fenêtre liste les points à vérifier, dans une liste fermée :
+
+- lien vers un domaine de démonstration : `.invalid`, `.example`, `.test` ou `example.*` ;
+- texte de démonstration du catalogue resté inchangé ;
+- poids au-delà de 90 Kio ;
+- intitulé qui affiche un autre domaine que la destination réelle du lien ;
+- caractère de contrôle bidirectionnel dans l’adresse ;
+- domaine qui mélange plusieurs alphabets, par exemple des lettres cyrilliques et latines. Un domaine accentué écrit dans un seul alphabet, comme `société.fr`, n’est jamais signalé.
+
+Chaque point propose « Aller au bloc », qui ferme la fenêtre et place le curseur dans le champ concerné. « Copier quand même » ou « Télécharger quand même » confirme pour cette seule sortie : la copie suivante refait le contrôle. « Annuler » ou Échap ne copie rien. À l’ouverture, le focus est placé sur le titre de la fenêtre, avant la liste. Le convertisseur SNUM ne propose pas ce contrôle.
+
 Dans Gmail ou Mélissa, utiliser la rédaction enrichie du nouveau message. Cliquer dans le corps puis coller avec `⌘V` sur Mac ou `Ctrl+V` sur Windows. La copie sans mise en forme retire les tableaux, couleurs et images. Il faut copier depuis le bouton du builder, sans coller le code source HTML comme du texte. Ajouter le pied de page dans la composition avant la copie.
 
 La copie ajoute des bornes de largeur pour les clients qui retirent les styles de tête ou figent les tableaux en pixels. Les groupes de contenu à deux colonnes utilisent alors des largeurs égales et gardent leur gouttière ; les filets décoratifs gardent leur épaisseur. L’export HTML et l’aperçu conservent les proportions du gabarit et ses modes clair/sombre, avec une adaptation accessible dérivée. Le HTML téléchargé ajoute ses propres bornes, sans effet tant que les styles de tête sont lus. Affiché sans ces styles dans un navigateur, comme le ferait une messagerie qui les retire, il tient dans une fenêtre étroite : une colonne qui porte une image de largeur fixe garde sa largeur et la colonne voisine se resserre, deux colonnes sans image fixe se partagent la place, et seul le logo pour fond clair s’affiche. Une messagerie qui ignore aussi la fonction CSS `min()` garde les largeurs fixes d’origine. Ce comportement n’est pas encore vérifié dans une messagerie. Les logos masqués peuvent être éliminés par le presse-papiers de Chromium en mode clair. Contrôler le message reçu dans le client réellement utilisé.

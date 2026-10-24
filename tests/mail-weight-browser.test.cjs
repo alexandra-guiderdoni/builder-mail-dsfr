@@ -1,5 +1,5 @@
 const test = require('node:test'), path = require('node:path');
-const {root, open, click, fs, assert} = require('./browser-support.cjs');
+const {root, open, click, confirmChecks, fs, assert} = require('./browser-support.cjs');
 const playwright = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
 
 // #35 : le poids affiché est celui du HTML réellement remis au presse-papiers, en octets UTF-8.
@@ -51,7 +51,7 @@ for (const engine of ['chromium', 'webkit']) {
       assert.ok(count(second, replacement) >= 1);
       assert.equal(bytes(second) - bytes(first), count(second, replacement) * (replacement.length - image.length));
       assert.equal(await page.locator('#mail-weight').getAttribute('data-level'), 'ok');
-      await click(page, '[data-action=copy]');
+      await click(page, '[data-action=copy]'); await confirmChecks(page);
       await page.locator('#notice').filter({hasText: 'Courriel copié en HTML et texte.'}).waitFor();
       const result = await copied(page);
       assert.equal(result.text, second, 'le HTML remis au presse-papiers est celui qui a été pesé');
@@ -60,7 +60,7 @@ for (const engine of ['chromium', 'webkit']) {
       // Écriture refusée après une copie réussie : l’erreur s’affiche, sans annonce de succès périmée.
       await page.evaluate(() => Object.defineProperty(navigator.clipboard, 'write', {configurable: true, value: () => Promise.reject(new DOMException('Écriture refusée pour la recette.', 'NotAllowedError'))}));
       await compose(page, () => MailBuilder.State.change(lib => { lib.documents.find(d => d.id === lib.activeId).subject += ' modifié'; }));
-      await click(page, '[data-action=copy]');
+      await click(page, '[data-action=copy]'); await confirmChecks(page);
       await page.locator('#error').filter({hasText: 'Écriture refusée pour la recette.'}).waitFor();
       assert.equal(await page.locator('#notice').textContent(), '', 'aucune annonce « Courriel copié » périmée');
       assert.deepEqual(observations.errors, []);
@@ -88,7 +88,7 @@ for (const engine of ['chromium', 'webkit']) {
         else assert.match(label, new RegExp((level === 'alert' ? 'Alerte' : 'Attention') + '.*Repères prudents, sans garantie'));
         const before = (await copied(page)).count;
         await page.evaluate(() => { document.getElementById('notice').textContent = ''; });
-        await click(page, '[data-action=copy]');
+        await click(page, '[data-action=copy]'); await confirmChecks(page);
         const notice = page.locator('#notice').filter({hasText: 'Courriel copié en HTML et texte.'});
         await notice.waitFor();
         const result = await copied(page);
@@ -141,6 +141,8 @@ for (const engine of ['chromium', 'webkit']) {
         MailBuilder.State.change(lib => { lib.documents.find(d => d.id === lib.activeId).subject += ' — copie immédiate'; });
         const before = document.getElementById('mail-weight').dataset.bytes, copying = MailBuilder.Files.copy();
         const shown = document.getElementById('mail-weight').dataset.bytes;
+        // Depuis #36, la composition de démonstration demande une confirmation avant l’écriture.
+        if (document.getElementById('check-dialog')?.open) document.getElementById('check-confirm').click();
         await copying;
         return {before, shown, html: MailBuilder.Render.clipboardHtml(MailBuilder.doc())};
       });
