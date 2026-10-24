@@ -77,13 +77,17 @@ for (const engine of ['chromium', 'webkit']) {
       const {page, observations} = await open(browser, {offline: true, ...permissions(engine)}, capture);
       let downloads = 0; page.on('download', () => downloads++);
       await setBlocks(page, 'starter');
+      // Largeur étroite : la liste dépasse la hauteur de la fenêtre.
+      await page.setViewportSize({width: 320, height: 700});
       await click(page, '[data-action=copy]');
       await page.locator('#check-dialog').waitFor({state: 'visible', timeout: 5000});
       const warnings = await expectedWarnings(page);
       assert.ok(warnings.some(w => w.rule === 'demo-domain') && warnings.some(w => w.rule === 'demo-text'));
       assert.equal(await page.locator('#check-dialog-title').textContent(), 'Vérifier avant de copier');
       assert.deepEqual(await page.locator('#check-list li p').allTextContents(), warnings.map(w => w.message));
-      assert.equal(await page.evaluate(() => document.activeElement.id), 'check-cancel');
+      // Liste longue : le focus part du titre, en haut de la fenêtre, avant les points à lire et les boutons.
+      assert.equal(await page.evaluate(() => document.activeElement.id), 'check-dialog-title');
+      assert.equal(await page.locator('#check-dialog').evaluate(e => e.scrollTop), 0);
       assert.equal(await copies(page), 0, 'rien n’est copié avant confirmation');
       await page.keyboard.press('Escape');
       await page.waitForFunction(() => !document.getElementById('check-dialog').open);

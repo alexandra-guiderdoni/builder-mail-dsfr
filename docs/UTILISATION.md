@@ -100,7 +100,7 @@ Avant la copie ou le téléchargement du HTML, l’atelier contrôle la composit
 - caractère de contrôle bidirectionnel dans l’adresse ;
 - domaine qui mélange plusieurs alphabets, par exemple des lettres cyrilliques et latines. Un domaine accentué écrit dans un seul alphabet, comme `société.fr`, n’est jamais signalé.
 
-Chaque point propose « Aller au bloc », qui ferme la fenêtre et place le curseur dans le champ concerné. « Copier quand même » ou « Télécharger quand même » confirme pour cette seule sortie : la copie suivante refait le contrôle. « Annuler » ou Échap ne copie rien. Le convertisseur SNUM ne propose pas ce contrôle.
+Chaque point propose « Aller au bloc », qui ferme la fenêtre et place le curseur dans le champ concerné. « Copier quand même » ou « Télécharger quand même » confirme pour cette seule sortie : la copie suivante refait le contrôle. « Annuler » ou Échap ne copie rien. À l’ouverture, le focus est placé sur le titre de la fenêtre, avant la liste. Le convertisseur SNUM ne propose pas ce contrôle.
 
 Dans Gmail ou Mélissa, utiliser la rédaction enrichie du nouveau message. Cliquer dans le corps puis coller avec `⌘V` sur Mac ou `Ctrl+V` sur Windows. La copie sans mise en forme retire les tableaux, couleurs et images. Il faut copier depuis le bouton du builder, sans coller le code source HTML comme du texte. Ajouter le pied de page dans la composition avant la copie.
 

@@ -113,7 +113,8 @@
     get("check-confirm").textContent = copy ? "Copier quand même" : "Télécharger quand même";
     return new Promise(resolve => {
       pending = {resolve, list, origin: document.activeElement};
-      get("check-dialog").showModal(); get("check-cancel").focus();
+      // Le focus part du titre : la liste peut dépasser l’écran, et les points se lisent avant les boutons.
+      get("check-dialog").showModal(); get("check-dialog").scrollTop = 0; get("check-dialog-title").focus();
     });
   }
   if (typeof document !== "undefined" && document.getElementById("check-dialog")) {
