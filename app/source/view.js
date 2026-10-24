@@ -68,11 +68,14 @@
     selections(); get("document-name").value = A.doc().name; get("subject").value = A.doc().subject;
     blockList(); fields(); preview();
   }
+  // Sous 576 px, les libellés dépassent la largeur d’une liste à plusieurs lignes : liste déroulante native.
+  const narrowWindow = window.matchMedia("(max-width: 575px)");
+  narrowWindow.addEventListener("change", () => catalogue());
   function catalogue() {
     const select = get("catalogue"), previous = select.value, query = get("catalogue-search").value.toLocaleLowerCase("fr");
     const visible = A.catalog.components.filter(c => `${c.family} ${c.label}`.toLocaleLowerCase("fr").includes(query));
     select.innerHTML = visible.map(c => option(c.id, `${c.family} — ${c.label}`)).join("");
-    select.size = Math.max(2, visible.length);
+    select.size = narrowWindow.matches ? 1 : Math.max(2, visible.length);
     if (visible.some(c => c.id === previous)) select.value = previous;
     get("catalogue-count").textContent = `${visible.length} composants sur ${A.catalog.components.length}`;
   }
