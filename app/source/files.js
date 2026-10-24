@@ -19,9 +19,10 @@
   const exportDate = (now = new Date()) => `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
   const exportName = (base, extension, now) => `${safeName(base)}-${exportDate(now)}.${extension}`;
   const json = (value, filename) => download(JSON.stringify(value, null, 2), "application/json", filename);
-  async function image(file) {
-    const data = await MailImages.read(file, ["image/png", "image/jpeg", "image/gif", "image/webp"]);
-    A.Model.image(data); return data;
+  // Nouvelle image locale seulement : réduite et recompressée selon le contrat de A.Images.
+  async function image(file, displayWidth) {
+    const result = await A.Images.prepare(file, displayWidth);
+    A.Model.image(result.value); return result;
   }
   async function validate(value) {
     const items = value.schema === "dsfr-mail/library" ? [...value.documents, ...value.templates, ...value.identities] : [value];
