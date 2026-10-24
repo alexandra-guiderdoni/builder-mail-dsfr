@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- PDG-LARGE-FILE-JUSTIFICATION: page autonome générée ; parseur, moteur et ressources incorporés depuis les sources séparées. -->
-<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none';script-src 'sha256-tiMyLYt4/qGkUqh+83VId9ZRb3yAW1wZGXAf9ETKLrQ=';style-src 'unsafe-inline';img-src data: blob:;frame-src blob:;base-uri 'none';form-action 'none';connect-src 'none';worker-src 'none'"><title>Collecte SNUM · Convertisseur de courriels</title><style>:root { color-scheme:light; font:100%/1.5 Arial,Helvetica,sans-serif; color:#161616; background:#f6f6f6; }
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none';script-src 'sha256-F5mgOG6wj1P+v949MqHLnlPV4ZBJbwdEvjtIkCtpSic=';style-src 'unsafe-inline';img-src data: blob:;frame-src blob:;base-uri 'none';form-action 'none';connect-src 'none';worker-src 'none'"><title>Collecte SNUM · Convertisseur de courriels</title><style>:root { color-scheme:light; font:100%/1.5 Arial,Helvetica,sans-serif; color:#161616; background:#f6f6f6; }
 * { box-sizing:border-box; } body { margin:0; } button,input,select,textarea { font:inherit; }
 header { display:flex; justify-content:space-between; gap:24px; background:#fff; border-top:6px solid #000091; border-bottom:1px solid #ddd; padding:24px 3vw; }
 h1 { margin:0 0 8px; color:#000091; font-size:1.9rem; line-height:1.25; } h2 { font-size:1.25rem; margin:0 0 18px; } h3 { font-size:1.15rem; margin:0 0 8px; }
@@ -217,6 +217,18 @@ window.MailBuilder.catalog = {"id":"6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278
     const question = value.values.f0.trim() ? `<div style="margin:0 0 6px">${escape(value.values.f0).replace(/\n/g, "<br>")}</div>` : "";
     return editorialFrame(`<tr><td class="darkmode-1" style="padding:16px 10px 24px;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:20px;color:#666666;text-align:center">${question}<div style="text-align:center">${actions}</div></td></tr>`);
   }
+  // Pré-en-tête (#41) : texte masqué par la technique usuelle, compatible Outlook (mso-hide).
+  const PREHEADER = "mail-00", preheaderTemplate = '<div style="display:none;max-height:0;overflow:hidden;mso-hide:all;">{{f0}}</div>';
+  // Seul le premier mail-00 est utilisé ; il passe en tête du corps, où les messageries lisent l'aperçu.
+  function used(value) {
+    const first = value.blocks.find(b => b.component === PREHEADER);
+    return first ? [first, ...value.blocks.filter(b => b.component !== PREHEADER)] : value.blocks;
+  }
+  function warnings(value) {
+    M.document(value);
+    const count = value.blocks.filter(b => b.component === PREHEADER).length;
+    return count > 1 ? [`${count} pré-en-têtes masqués dans la composition : seul le premier est utilisé.`] : [];
+  }
   function block(value, context = [], preview = false) {
     M.block(value);
     const definition = M.component(value.component);
@@ -229,7 +241,7 @@ window.MailBuilder.catalog = {"id":"6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278
       levels.set(heading.field, level);
       if (rank && level) context.push({rank, level});
     }
-    const sourceTemplate = value.component === "mail-31" && value.values.f0 === "" ? articleTextTemplate(value.values) : definition.semanticTemplate;
+    const sourceTemplate = value.component === "mail-31" && value.values.f0 === "" ? articleTextTemplate(value.values) : value.component === PREHEADER ? preheaderTemplate : definition.semanticTemplate;
     let template = sourceTemplate.replace(/\{\{heading_(open|close)_(f\d+)\}\}/g, (_, edge, key) => {
       const level = levels.get(key);
       return !level ? "" : edge === "close" ? `</h${level}>` : `<h${level} style="display:inline;margin:0;font-size:inherit;line-height:inherit;font-weight:inherit;">`;
@@ -247,7 +259,7 @@ window.MailBuilder.catalog = {"id":"6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278
     if (value.source) result += `<table role="presentation" style="text-align:left;text-align:start;width:100%;border-spacing:0;border:0"><tr><td style="padding:0;text-align:center;overflow-wrap:anywhere;word-break:break-word"><table role="presentation" style="text-align:left;text-align:start;width:100%;max-width:600px;margin-left:auto;margin-right:auto"><tr><td style="padding:8px 52px 20px;font-family:Tahoma,Geneva,sans-serif;font-size:14px;overflow-wrap:anywhere;word-break:break-word"><a href="${escape(value.source)}" style="color:#000091">${escape(value.sourceLabel?.trim() || "Consulter la source")}</a></td></tr></table></td></tr></table>`;
     return result;
   }
-  function body(value, preview = false) { M.document(value); const context = []; return value.blocks.map(b => block(b, context, preview)).join("\n"); }
+  function body(value, preview = false) { M.document(value); const context = []; return used(value).map(b => block(b, context, preview)).join("\n"); }
   function linkIssues(value) {
     M.document(value);
     return value.blocks.flatMap((b, index) => {
@@ -268,7 +280,7 @@ window.MailBuilder.catalog = {"id":"6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278
   }
   function plain(value) {
     M.document(value);
-    return [value.subject, ...value.blocks.map(b => [...M.component(b.component).fields.map(f => f.type === "image" ? "" : b.values[f.key]), ...(b.additionalLinks || []).flatMap(link => [link.label, link.url]), ...(b.source && b.sourceLabel?.trim() ? [b.sourceLabel.trim()] : []), b.source].filter(Boolean).join("\n"))].join("\n\n");
+    return [value.subject, ...used(value).map(b => [...M.component(b.component).fields.map(f => f.type === "image" ? "" : b.values[f.key]), ...(b.additionalLinks || []).flatMap(link => [link.label, link.url]), ...(b.source && b.sourceLabel?.trim() ? [b.sourceLabel.trim()] : []), b.source].filter(Boolean).join("\n"))].join("\n\n");
   }
   function clipboardHtml(value) {
     const markup = html(value), doc = new DOMParser().parseFromString(markup, "text/html");
@@ -316,7 +328,7 @@ window.MailBuilder.catalog = {"id":"6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278
     for (const element of doc.querySelectorAll(".hide-black")) add(element, "display:block;");
     return "<!doctype html>" + doc.documentElement.outerHTML;
   }
-  A.Render = Object.freeze({escape, block, body, html, plain, clipboardHtml, linkIssues, assertOutput});
+  A.Render = Object.freeze({escape, block, body, html, plain, clipboardHtml, linkIssues, assertOutput, warnings});
 })();
 
 /* Copie locale V519 : contrôle du jour ajouté pour #24 ; projet SNUM source intact. */
@@ -508,7 +520,7 @@ window.MailBuilder.catalog = {"id":"6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278
     A.Render.assertOutput(A.doc());
     if (!navigator.clipboard?.write || !window.ClipboardItem) throw new Error("La copie enrichie est indisponible ici. Téléchargez le mail HTML pour sa reprise sur votre poste.");
     await navigator.clipboard.write([new ClipboardItem({"text/html": new Blob([A.Render.clipboardHtml(A.doc())], {type: "text/html"}), "text/plain": new Blob([A.Render.plain(A.doc())], {type: "text/plain"})})]);
-    A.notice("Courriel copié en HTML et texte. Contrôlez le collage et les images dans votre messagerie.");
+    A.notice(["Courriel copié en HTML et texte. Contrôlez le collage et les images dans votre messagerie.", ...A.Render.warnings(A.doc())].join(" "));
   }
   A.Files = Object.freeze({download, json, image, validate, copy});
 })();

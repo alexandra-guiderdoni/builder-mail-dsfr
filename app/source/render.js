@@ -23,6 +23,18 @@
     const question = value.values.f0.trim() ? `<div style="margin:0 0 6px">${escape(value.values.f0).replace(/\n/g, "<br>")}</div>` : "";
     return editorialFrame(`<tr><td class="darkmode-1" style="padding:16px 10px 24px;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:20px;color:#666666;text-align:center">${question}<div style="text-align:center">${actions}</div></td></tr>`);
   }
+  // Pré-en-tête (#41) : texte masqué par la technique usuelle, compatible Outlook (mso-hide).
+  const PREHEADER = "mail-00", preheaderTemplate = '<div style="display:none;max-height:0;overflow:hidden;mso-hide:all;">{{f0}}</div>';
+  // Seul le premier mail-00 est utilisé ; il passe en tête du corps, où les messageries lisent l'aperçu.
+  function used(value) {
+    const first = value.blocks.find(b => b.component === PREHEADER);
+    return first ? [first, ...value.blocks.filter(b => b.component !== PREHEADER)] : value.blocks;
+  }
+  function warnings(value) {
+    M.document(value);
+    const count = value.blocks.filter(b => b.component === PREHEADER).length;
+    return count > 1 ? [`${count} pré-en-têtes masqués dans la composition : seul le premier est utilisé.`] : [];
+  }
   function block(value, context = [], preview = false) {
     M.block(value);
     const definition = M.component(value.component);
@@ -35,7 +47,7 @@
       levels.set(heading.field, level);
       if (rank && level) context.push({rank, level});
     }
-    const sourceTemplate = value.component === "mail-31" && value.values.f0 === "" ? articleTextTemplate(value.values) : definition.semanticTemplate;
+    const sourceTemplate = value.component === "mail-31" && value.values.f0 === "" ? articleTextTemplate(value.values) : value.component === PREHEADER ? preheaderTemplate : definition.semanticTemplate;
     let template = sourceTemplate.replace(/\{\{heading_(open|close)_(f\d+)\}\}/g, (_, edge, key) => {
       const level = levels.get(key);
       return !level ? "" : edge === "close" ? `</h${level}>` : `<h${level} style="display:inline;margin:0;font-size:inherit;line-height:inherit;font-weight:inherit;">`;
@@ -53,7 +65,7 @@
     if (value.source) result += `<table role="presentation" style="text-align:left;text-align:start;width:100%;border-spacing:0;border:0"><tr><td style="padding:0;text-align:center;overflow-wrap:anywhere;word-break:break-word"><table role="presentation" style="text-align:left;text-align:start;width:100%;max-width:600px;margin-left:auto;margin-right:auto"><tr><td style="padding:8px 52px 20px;font-family:Tahoma,Geneva,sans-serif;font-size:14px;overflow-wrap:anywhere;word-break:break-word"><a href="${escape(value.source)}" style="color:#000091">${escape(value.sourceLabel?.trim() || "Consulter la source")}</a></td></tr></table></td></tr></table>`;
     return result;
   }
-  function body(value, preview = false) { M.document(value); const context = []; return value.blocks.map(b => block(b, context, preview)).join("\n"); }
+  function body(value, preview = false) { M.document(value); const context = []; return used(value).map(b => block(b, context, preview)).join("\n"); }
   function linkIssues(value) {
     M.document(value);
     return value.blocks.flatMap((b, index) => {
@@ -74,7 +86,7 @@
   }
   function plain(value) {
     M.document(value);
-    return [value.subject, ...value.blocks.map(b => [...M.component(b.component).fields.map(f => f.type === "image" ? "" : b.values[f.key]), ...(b.additionalLinks || []).flatMap(link => [link.label, link.url]), ...(b.source && b.sourceLabel?.trim() ? [b.sourceLabel.trim()] : []), b.source].filter(Boolean).join("\n"))].join("\n\n");
+    return [value.subject, ...used(value).map(b => [...M.component(b.component).fields.map(f => f.type === "image" ? "" : b.values[f.key]), ...(b.additionalLinks || []).flatMap(link => [link.label, link.url]), ...(b.source && b.sourceLabel?.trim() ? [b.sourceLabel.trim()] : []), b.source].filter(Boolean).join("\n"))].join("\n\n");
   }
   function clipboardHtml(value) {
     const markup = html(value), doc = new DOMParser().parseFromString(markup, "text/html");
@@ -122,5 +134,5 @@
     for (const element of doc.querySelectorAll(".hide-black")) add(element, "display:block;");
     return "<!doctype html>" + doc.documentElement.outerHTML;
   }
-  A.Render = Object.freeze({escape, block, body, html, plain, clipboardHtml, linkIssues, assertOutput});
+  A.Render = Object.freeze({escape, block, body, html, plain, clipboardHtml, linkIssues, assertOutput, warnings});
 })();

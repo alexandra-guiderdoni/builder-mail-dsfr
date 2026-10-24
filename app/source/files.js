@@ -21,7 +21,7 @@
     A.Render.assertOutput(A.doc());
     if (!navigator.clipboard?.write || !window.ClipboardItem) throw new Error("La copie enrichie est indisponible ici. Téléchargez le mail HTML pour sa reprise sur votre poste.");
     await navigator.clipboard.write([new ClipboardItem({"text/html": new Blob([A.Render.clipboardHtml(A.doc())], {type: "text/html"}), "text/plain": new Blob([A.Render.plain(A.doc())], {type: "text/plain"})})]);
-    A.notice("Courriel copié en HTML et texte. Contrôlez le collage et les images dans votre messagerie.");
+    A.notice(["Courriel copié en HTML et texte. Contrôlez le collage et les images dans votre messagerie.", ...A.Render.warnings(A.doc())].join(" "));
   }
   A.Files = Object.freeze({download, json, image, validate, copy});
 })();

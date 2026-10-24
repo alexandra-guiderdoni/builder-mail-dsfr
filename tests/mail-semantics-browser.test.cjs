@@ -13,6 +13,7 @@ test('les titres natifs préservent le visuel canonique des 52 composants en cla
   const pairs=await page.evaluate(lib=>lib.documents.map(doc=>{
    if(doc.blocks.some(b=>b.source))throw Error('La référence visuelle doit utiliser les sources canoniques sans ajout');
    const current=MailBuilder.Render.html(doc),canonical=doc.blocks.map(b=>{
+    if(b.component==='mail-00')return '';// #41 : le pré-en-tête masqué n'a aucune emprise visuelle
     const c=MailBuilder.Model.component(b.component),types=new Map(c.fields.map(f=>[f.key,f.type]));
     return c.template.replace(/\{\{(f\d+)\}\}/g,(_,key)=>{const text=MailBuilder.Render.escape(b.values[key]);return types.get(key)==='text'?text.replace(/\n/g,'<br>'):text;});
    }).join('\n');

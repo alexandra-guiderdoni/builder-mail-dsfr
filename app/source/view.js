@@ -62,7 +62,7 @@
   }
   function preview() {
     A.Preview.show(A.doc());
-    get("composition-summary").textContent = `${A.doc().blocks.length} blocs dans « ${A.doc().name} »`;
+    get("composition-summary").textContent = [`${A.doc().blocks.length} blocs dans « ${A.doc().name} »`, ...A.Render.warnings(A.doc())].join(". ");
   }
   function refresh() {
     selections(); get("document-name").value = A.doc().name; get("subject").value = A.doc().subject;
