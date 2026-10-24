@@ -1,0 +1,146 @@
+{
+  "schema_version": "SNUM_PAQUET_RENDU_V519",
+  "edition_date": "2027-03-16",
+  "edition_date_long": "mardi 16 mars 2027",
+  "window_start": "2027-03-02",
+  "window_end": "2027-03-15",
+  "articles": [
+    {
+      "id": "fictif-01",
+      "rubric": "numerique",
+      "title": "Un référentiel imaginaire d’écoconception pour les formulaires en ligne",
+      "source": "Lettre de démonstration du numérique",
+      "publication_date_iso": "2027-03-09",
+      "publication_date_long": "9 mars 2027",
+      "url": "https://lettre-demo.exemple.invalid/referentiel-formulaires",
+      "fact": "Le référentiel fictif propose vingt critères répartis en quatre familles.",
+      "keywords": [
+        "écoconception",
+        "formulaires",
+        "sobriété",
+        "référentiel"
+      ],
+      "takeaway": "Les critères les plus simples concernent le poids des pages et le nombre d’étapes.",
+      "snum_interest": "Vérifier lesquels de ces critères nos formulaires respectent déjà.",
+      "essential": false
+    },
+    {
+      "id": "fictif-02",
+      "rubric": "ia",
+      "title": "L’Agence fictive des registres expérimente un assistant de relecture",
+      "source": "Gazette fictive de l’innovation",
+      "publication_date_iso": "2027-03-12",
+      "publication_date_long": "12 mars 2027",
+      "url": "https://gazette-fictive.exemple.invalid/2027/03/assistant-relecture",
+      "fact": "L’agence imaginaire a ouvert un essai de six semaines à quarante agents volontaires.",
+      "keywords": [
+        "assistant de relecture",
+        "expérimentation",
+        "évaluation"
+      ],
+      "takeaway": "Les gains mesurés portent sur la relecture et non sur la rédaction initiale.",
+      "snum_interest": "Comparer ce protocole d’essai à nos propres critères d’évaluation.",
+      "essential": true
+    },
+    {
+      "id": "fictif-03",
+      "rubric": "numerique",
+      "title": "Messagerie : une administration fictive simplifie ses listes de diffusion",
+      "source": "Journal de démonstration",
+      "publication_date_iso": "2027-03-03",
+      "publication_date_long": "3 mars 2027",
+      "url": "https://journal-demo.exemple.invalid/listes-diffusion",
+      "fact": "Trois cents listes inactives ont été archivées après un appel à confirmation.",
+      "keywords": [
+        "messagerie",
+        "listes de diffusion",
+        "gouvernance"
+      ],
+      "takeaway": "Un propriétaire nommé par liste évite le retour des doublons.",
+      "snum_interest": "Piste pour le nettoyage annuel de nos propres listes.",
+      "essential": false
+    },
+    {
+      "id": "fictif-04",
+      "rubric": "commande",
+      "title": "Achats numériques : un guide fictif sur les clauses de réversibilité",
+      "source": "Revue imaginaire des achats publics",
+      "publication_date_iso": "2027-03-15",
+      "publication_date_long": "15 mars 2027",
+      "url": "https://achats-imaginaires.exemple.invalid/guide-reversibilite",
+      "fact": "Le guide inventé propose six clauses types et un calendrier de sortie.",
+      "keywords": [
+        "réversibilité",
+        "clauses types",
+        "marchés publics"
+      ],
+      "takeaway": "La réversibilité se prépare dès la rédaction du cahier des charges.",
+      "snum_interest": "Utile pour les prochains renouvellements de nos marchés d’hébergement.",
+      "essential": true
+    },
+    {
+      "id": "fictif-05",
+      "rubric": "ia",
+      "title": "Une collectivité inventée publie le registre de ses algorithmes",
+      "source": "Observatoire imaginaire des données",
+      "publication_date_iso": "2027-03-05",
+      "publication_date_long": "5 mars 2027",
+      "url": "https://observatoire-imaginaire.exemple.invalid/registre-algorithmes",
+      "fact": "Le registre fictif décrit onze traitements et leur responsable.",
+      "keywords": [
+        "transparence",
+        "algorithmes publics",
+        "registre"
+      ],
+      "takeaway": "Chaque fiche indique la finalité, les données utilisées et le recours possible.",
+      "snum_interest": "Un format de fiche réutilisable pour notre propre inventaire.",
+      "essential": false
+    },
+    {
+      "id": "fictif-06",
+      "rubric": "rh",
+      "title": "Un parcours imaginaire de formation aux métiers de la donnée",
+      "source": "Bulletin fictif des ressources humaines",
+      "publication_date_iso": "2027-03-10",
+      "publication_date_long": "10 mars 2027",
+      "url": "https://bulletin-rh.exemple.invalid/parcours-donnee",
+      "fact": "Le parcours fictif compte quatre modules et un projet tutoré.",
+      "keywords": [
+        "formation",
+        "métiers de la donnée",
+        "compétences"
+      ],
+      "takeaway": "Le projet tutoré est jugé plus formateur que les modules théoriques.",
+      "snum_interest": "Inspirer le plan de formation de nos équipes techniques.",
+      "essential": false
+    },
+    {
+      "id": "fictif-07",
+      "rubric": "bercy",
+      "title": "Une note fictive sur la mutualisation des outils collaboratifs",
+      "source": "Chronique inventée des ministères",
+      "publication_date_iso": "2027-03-11",
+      "publication_date_long": "11 mars 2027",
+      "url": "https://chronique-inventee.exemple.invalid/mutualisation-outils",
+      "fact": "La note imaginaire recense cinq outils et leurs usages croisés.",
+      "keywords": [
+        "mutualisation",
+        "outils collaboratifs",
+        "coordination"
+      ],
+      "takeaway": "La mutualisation suppose un référent par direction.",
+      "snum_interest": "Point d’appui pour les échanges avec les directions métiers.",
+      "essential": false
+    }
+  ],
+  "watch": [
+    {
+      "title": "Remarque fictive de collecte",
+      "summary": "Source imaginaire à confirmer avant la prochaine édition."
+    },
+    {
+      "title": "Doublon fictif écarté",
+      "summary": "Deux articles inventés traitaient du même sujet."
+    }
+  ]
+}

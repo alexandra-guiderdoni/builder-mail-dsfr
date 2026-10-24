@@ -80,12 +80,12 @@ test('tous les liens sont validés indépendamment des identifiants de blocs', (
   }
 });
 
-test('le convertisseur SNUM crée les rubriques et des blocs distincts sans perdre les sources à la duplication', () => {
+test('le convertisseur SNUM crée les rubriques et un bloc par article sans perdre l’URL à la duplication', () => {
   const packet = payload(), result = MailBuilder.SnumAdapter.convert(JSON.stringify(packet)), doc = result.document;
-  assert.equal(doc.blocks.filter(b => b.component === 'mail-12').length, 5);
-  assert.equal(doc.blocks.filter(b => b.component === 'mail-15').length, 5);
-  const article = doc.blocks.find(b => b.source === packet.articles[0].url);
-  assert.equal(article.values.f0, packet.articles[0].title); assert(!Object.values(article.values).includes(packet.articles[0].takeaway));
+  assert.equal(doc.blocks.filter(b => b.component === 'mail-17').length, 5);
+  assert.equal(doc.blocks.filter(b => b.component === 'mail-31').length, 5);
+  const article = doc.blocks.find(b => b.component === 'mail-31' && b.values.f3 === packet.articles[0].url);
+  assert.equal(article.values.f4, packet.articles[0].title); assert.equal(article.source, ''); assert(article.values.f6.includes(packet.articles[0].takeaway));
   doc.blocks.push({...M.copy(article), id: M.id()});
   assert.equal(R.plain(doc).split(packet.articles[0].url).length - 1, 2);
   assert.equal(R.html(doc).split(packet.articles[0].url).length - 1, 2);

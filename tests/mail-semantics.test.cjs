@@ -10,14 +10,14 @@ const {Model:M,Render:R,Imports:I}=MailBuilder;
 const headings = html => [...html.matchAll(/<h([1-6])\b[^>]*>([\s\S]*?)<\/h\1>/g)].map(m=>({level:Number(m[1]),text:m[2].replace(/<[^>]*>/g,'').trim()}));
 const levels = indices => headings(R.html(M.create('Structure',indices))).map(h=>h.level);
 
-test('SNUM : principal, rubriques, articles et deux sous-titres frères ont des titres natifs',()=>{
+test('SNUM : principal, rubriques et articles ont des titres natifs ; « À retenir » et « Pour le SNUM » restent du texte (#46)',()=>{
   const packet=require('./fixtures/snum.cjs')(),doc=MailBuilder.SnumAdapter.convert(JSON.stringify(packet)).document;
   const before=JSON.stringify(doc),actual=headings(R.html(doc));
   assert.equal(actual[0]?.level,1);
   const article=actual.findIndex(h=>h.text===packet.articles[0].title);
-  assert(article>1);assert.deepEqual(actual.slice(article-1,article+3).map(h=>h.level),[2,3,4,4]);
-  assert.equal(actual[article+1].text,'À retenir');assert.equal(actual[article+2].text,'Pour le SNUM');
-  assert.equal(actual.length,1+new Set(packet.articles.map(a=>a.rubric)).size+packet.articles.length*3);
+  assert(article>1);assert.deepEqual(actual.slice(article-1,article+1).map(h=>h.level),[2,3]);assert(!actual.some(h=>h.level>3));
+  assert(!actual.some(h=>['À retenir','Pour le SNUM'].includes(h.text)));assert(R.html(doc).includes('À retenir : ')&&R.html(doc).includes('Pour le SNUM : '));
+  assert.equal(actual.length,1+new Set(packet.articles.map(a=>a.rubric)).size+packet.articles.length);
   assert.equal(JSON.stringify(doc),before);
 });
 

@@ -46,7 +46,7 @@ test('parcours complet par les contrôles : bibliothèque, identités, modèles,
     const converted = await download(converter, '#export-json', 'snum.composition.courriel.json');
     await expand(page, 'Fichiers et récupération'); await page.locator('#project-input').setInputFiles(converted);
     await page.locator('#notice').filter({hasText: 'Import ajouté à la bibliothèque'}).waitFor(); await saved(page);
-    const articleId = await page.evaluate(url => MailBuilder.doc().blocks.find(b => b.source === url).id, packet.articles[0].url);
+    const articleId = await page.evaluate(url => MailBuilder.doc().blocks.find(b => b.component === 'mail-31' && b.values.f3 === url).id, packet.articles[0].url);
     await focusPage(page); await selectBlockEffective(page, articleId); await page.locator('#block-editor textarea').first().fill('Titre <script>window.injected=1</script>');
     await duplicateBlock(page);
     const order = await page.evaluate(() => MailBuilder.doc().blocks.map(b => b.id)), selected = await page.evaluate(() => MailBuilder.selected);
