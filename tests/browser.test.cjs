@@ -46,9 +46,15 @@ test('parcours complet par les contrôles : bibliothèque, identités, modèles,
     const converted = await download(converter, '#export-json', 'snum.composition.courriel.json');
     await expand(page, 'Fichiers et récupération'); await page.locator('#project-input').setInputFiles(converted);
     await page.locator('#notice').filter({hasText: 'Import ajouté à la bibliothèque'}).waitFor(); await saved(page);
-    const articleId = await page.evaluate(url => MailBuilder.doc().blocks.find(b => b.source === url).id, packet.articles[0].url);
-    await focusPage(page); await selectBlockEffective(page, articleId); await page.locator('#block-editor textarea').first().fill('Titre <script>window.injected=1</script>');
+    const articleId = await page.evaluate(url => MailBuilder.doc().blocks.find(b => b.component === 'mail-31' && b.values.f3 === url).id, packet.articles[0].url);
+    await focusPage(page); await selectBlockEffective(page, articleId); await page.locator('#field-f4').fill('Titre <script>window.injected=1</script>');
+    const rendered = (p, id) => p.evaluate(blockId => { const b = MailBuilder.doc().blocks.find(x => x.id === blockId), raw = MailBuilder.Render.block(b), el = new DOMParser().parseFromString(raw, 'text/html'); return {f4: b.values.f4, h1: el.querySelector('h1 a')?.textContent.trim(), scripts: el.querySelectorAll('script').length, raw}; }, id);
+    const editedTitle = 'Titre <script>window.injected=1</script>', escapedTitle = 'Titre &lt;script&gt;window.injected=1&lt;/script&gt;';
+    const edited = await rendered(page, articleId);
+    assert.equal(edited.f4, editedTitle); assert.equal(edited.h1, editedTitle); assert.equal(edited.scripts, 0); assert(edited.raw.includes(escapedTitle));
     await duplicateBlock(page);
+    const copyId = await page.evaluate(() => MailBuilder.selected), copy = await rendered(page, copyId);
+    assert.notEqual(copyId, articleId); assert.equal(copy.f4, editedTitle); assert.equal(copy.h1, editedTitle); assert.equal(copy.scripts, 0);
     const order = await page.evaluate(() => MailBuilder.doc().blocks.map(b => b.id)), selected = await page.evaluate(() => MailBuilder.selected);
     await click(page, '[data-block-action=up]'); await saved(page);
     assert.equal(await page.evaluate(id => MailBuilder.doc().blocks.findIndex(b => b.id === id), selected), order.indexOf(selected) - 1);
@@ -69,7 +75,7 @@ test('parcours complet par les contrôles : bibliothèque, identités, modèles,
     const project = JSON.parse(await fs.readFile(projectPath, 'utf8')), lib = JSON.parse(await fs.readFile(libraryPath, 'utf8')), html = await fs.readFile(mailPath, 'utf8');
     const image = (await fs.readFile(path.join(root, 'app/assets/icon-192.png'))).toString('base64');
     assert(JSON.stringify(project).includes(image)); assert(html.includes(image)); assert(!/<script[\s>]/i.test(html));
-    assert(html.includes('&lt;script&gt;')); assert.equal(lib.templates.length, 1); assert.equal(lib.identities.length, 1); assert.equal(lib.documents.length, 4);
+    assert(html.includes('&lt;script&gt;')); assert.equal(html.split(escapedTitle).length - 1, 2); assert.equal(JSON.stringify(project).split(JSON.stringify(editedTitle)).length - 1, 2); assert.equal(lib.templates.length, 1); assert.equal(lib.identities.length, 1); assert.equal(lib.documents.length, 4);
     await click(page, '[data-action=copy]'); await confirmChecks(page); await page.locator('#notice').filter({hasText: 'Courriel copié en HTML et texte.'}).waitFor();
     const clipboard = await page.evaluate(async () => { const [item] = await navigator.clipboard.read(); return {types: item.types, html: await (await item.getType('text/html')).text(), plain: await (await item.getType('text/plain')).text()}; });
     assert.equal(clipboard.plain.split(packet.articles[0].url).length - 1, 2); assert(clipboard.html.includes('data:image/png;base64,')); assert(!clipboard.plain.includes(packet.watch[0].summary));

@@ -42,7 +42,17 @@ test('accueil et gestion ciblée : ancienne composition, images, renommage, copi
     await page.setViewportSize({width: 390, height: 844});
     assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
     await page.screenshot({path: path.join(evidence, 'accueil-newsletters-mobile.png'), fullPage: true});
-    for (const id of [b, clone.id, a]) { await click(page, `${row(id)} [data-library-action=remove]`); await click(page, '#library-confirm'); await saved(page); await page.waitForFunction(() => document.activeElement?.dataset.libraryAction === 'open'); }
+    /* Après une suppression, le focus est posé deux fois sur « Ouvrir » : par le gestionnaire de soumission, puis par celui de
+       l’événement `close` de la fenêtre, qui arrive dans une tâche ultérieure. Un clic parti entre les deux (focus sur « Supprimer »,
+       puis Entrée après le second déplacement) ouvre la composition au lieu de la fenêtre : on attend donc que `close` soit passé. */
+    await page.evaluate(() => { window.libraryClosed = 0; document.getElementById('library-dialog').addEventListener('close', () => { window.libraryClosed++; }); });
+    for (const id of [b, clone.id, a]) {
+      const closed = await page.evaluate(() => window.libraryClosed);
+      await click(page, `${row(id)} [data-library-action=remove]`);
+      assert(await page.evaluate(() => document.getElementById('library-dialog').open), `la fenêtre de suppression doit s’ouvrir ; focus : ${await page.evaluate(() => document.activeElement?.outerHTML.slice(0, 120))}`);
+      await click(page, '#library-confirm'); await saved(page);
+      await page.waitForFunction(n => window.libraryClosed > n && document.activeElement?.dataset.libraryAction === 'open', closed);
+    }
     const last = await state(page); assert.equal(last.documents.length, 1); assert(last.documents.some(d => d.id === last.activeId));
     assert(!last.documents.some(d => [a, b, clone.id].includes(d.id)));
     assert.equal(last.documents[0].blocks.length, 6);
