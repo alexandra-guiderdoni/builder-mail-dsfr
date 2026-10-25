@@ -1,0 +1,94 @@
+{
+  "run": 40216251444,
+  "headSHA": "f3aa8324dbcd255bddafeeb2eec559e698f6065c",
+  "url": "https://github.com/alexandra-guiderdoni/builder-mail-dsfr/actions/runs/40216251444",
+  "conclusion": "failure",
+  "counts": {
+    "tests": 397,
+    "pass": 396,
+    "fail": 1,
+    "cancelled": 0,
+    "skipped": 0
+  },
+  "jobs": [
+    {
+      "name": "tests",
+      "conclusion": "failure",
+      "status": "completed"
+    },
+    {
+      "name": "deploy",
+      "conclusion": "skipped",
+      "status": "completed"
+    }
+  ],
+  "fullLogArchive": "/Users/alex/Claude-worktrees/builder-goal-six-raw-20261025-v1/ci-f3aa832-40216251444.log",
+  "fullLogSHA256": "ea7819539b8730f3459c019fe182fd09317e8f2e653d6f1d0167097dcd03181c",
+  "failureDiagnostic": {
+    "label": "nom « 😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀 »",
+    "selector": "[data-action=export-mail]",
+    "lastPhase": "await-download",
+    "original": {
+      "name": "TimeoutError",
+      "message": "page.waitForEvent: Timeout 30000ms exceeded while waiting for event \"download\"\n=========================== logs ===========================\nwaiting for event \"download\"\n============================================================",
+      "stack": "page.waitForEvent: Timeout 30000ms exceeded while waiting for event \"download\"\n=========================== logs ===========================\nwaiting for event \"download\"\n============================================================\n    at suggested (/home/runner/work/builder-mail-dsfr/builder-mail-dsfr/tests/export-names-browser.test.cjs:25:22)\n    at exportNames (/home/runner/work/builder-mail-dsfr/builder-mail-dsfr/tests/export-names-browser.test.cjs:47:61)\n    at async TestContext.<anonymous> (/home/runner/work/builder-mail-dsfr/builder-mail-dsfr/tests/export-names-browser.test.cjs:64:21)"
+    },
+    "phases": [
+      {
+        "phase": "before-click",
+        "selector": "[data-action=export-mail]",
+        "time": 1792949130902
+      },
+      {
+        "phase": "after-click",
+        "selector": "[data-action=export-mail]",
+        "time": 1792949130932
+      },
+      {
+        "phase": "before-confirm",
+        "selector": "[data-action=export-mail]",
+        "time": 1792949130932
+      },
+      {
+        "phase": "after-confirm",
+        "selector": "[data-action=export-mail]",
+        "time": 1792949131003
+      },
+      {
+        "phase": "await-download",
+        "selector": "[data-action=export-mail]",
+        "time": 1792949131003
+      }
+    ],
+    "browser": {
+      "events": [
+        {
+          "event": "click",
+          "time": 338,
+          "target": "export-mail",
+          "active": "export-mail",
+          "dialog": false,
+          "focused": true
+        },
+        {
+          "event": "toggle",
+          "time": 400,
+          "target": "check-dialog",
+          "active": "check-dialog-title",
+          "dialog": true,
+          "focused": true
+        }
+      ],
+      "active": "preview",
+      "dialog": true,
+      "focused": true
+    },
+    "state": {
+      "notice": "",
+      "error": "",
+      "checkDialog": true,
+      "focused": true
+    },
+    "outside": []
+  }
+}

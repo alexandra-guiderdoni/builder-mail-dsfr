@@ -1,0 +1,32 @@
+{
+  "status": "installed; native qualification blocked; native trust unknown",
+  "native_turns_started": 1,
+  "native_turn2_started": false,
+  "browser_launches": 0,
+  "candidate_manifest_sha256": "b558aa8fc1e6f5d01a42befe08a3c07c3d84b18e9d971ffebd006c3a5069bf18",
+  "installed_version": "2.18.0+codex.local-20261025-lease-probe-2",
+  "files_sha256": {
+    "installation-20261025/RESULTAT.md": "8c8512f92bc3f45511b9f497582c4becf3c2b38b71d00ebd218eed2861360d99",
+    "installation-20261025/activation-apply.json": "0ce025cef1b81aabd5bb2e7a1062564878bde3ebd7ba65a4e08a2e7b50d78ed1",
+    "installation-20261025/activation-apply.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "installation-20261025/after-turn1-package.json": "3fc27ad6e2ba3e3e67016a539b3deeca8ca0e6f69cd54ad1d10f2adb2be8387e",
+    "installation-20261025/installation-receipt.json": "422974511776dbe04ca205ec106ca39b6b15e3ada908497ba03c6a15515e1143",
+    "installation-20261025/native-plugin-add.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "installation-20261025/plugin-list-after.json": "5ba69fd62d8a7abda7b9022677cda1472c416ed479c1efe67dea537ebed822bd",
+    "installation-20261025/plugin-list-before.json": "a0760da97e4ed4d39eb55c5d493f25318ebb6c69a2b31eced41bcd11f1e3ca4d",
+    "installation-20261025/plugin-list-before.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "installation-20261025/preflight.json": "49d6b8b10a352e8d9f6aab2896b8195f5b50e4c136dd4226201466994e2b9938",
+    "installation-20261025/protect-marketplace-push.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "installation-20261025/protect-marketplace-push.stdout": "5e52ce57745946b9ae54ee523b3885b24e9b6e36bce9c122a0ee04a0169dd63d",
+    "installation-20261025/turn1-events.jsonl": "ce0d13adf25d5110e6890a6ed7854acbf603e06bd1218c7f93fac60e724b4cbe",
+    "installation-20261025/turn1-invocation.json": "b8479b706e07dc806d13aa392823dd13eeb06032444c332820938c92d7836f38",
+    "installation-20261025/turn1-summary.json": "471b2b7e60c622b5b7a5983ee62ba8cbc7beb1e7b6e5c2dca4d469ddbb7179bf",
+    "package/native-plugin-add.json": "d07583fc29d39da8efe8751540afa641bec29b93b48ef427fde75e8e4a1ada15",
+    "package/native-installed-verification.json": "3fc27ad6e2ba3e3e67016a539b3deeca8ca0e6f69cd54ad1d10f2adb2be8387e",
+    "package/activation-receipts/activate-0fbbfdbd4c530963.marketplace-before.json": "9f6cba476e5b03b1913641febbfa1fc720e50d95c3208e01f11b14d2517d44f7",
+    "package/activation-receipts/activate-0fbbfdbd4c530963.receipt.json": "0ce025cef1b81aabd5bb2e7a1062564878bde3ebd7ba65a4e08a2e7b50d78ed1"
+  },
+  "no_full_prompts_or_transcripts_retained": true,
+  "first_engine_error_detail_lost": true,
+  "local_only": true
+}

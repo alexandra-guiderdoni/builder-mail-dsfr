@@ -1,0 +1,38 @@
+{
+  "run": "40221895564",
+  "nativeVerdict": "candidate-supported-in-this-pair",
+  "productValidation": "suspended-on-counter-signal",
+  "rawDirectory": "/Users/alex/Claude-worktrees/builder-goal-six-raw-20261025-v1/40221895564",
+  "nativeManifest": {
+    "path": "/Users/alex/Claude-worktrees/builder-goal-six-raw-20261025-v1/40221895564/NATIVE-MANIFEST.json",
+    "sha256": "33f492d70945a2176946cd8bf566901a0ba514ad8cf5898ce729ef40623caf37"
+  },
+  "validationManifest": {
+    "path": "/Users/alex/Claude-worktrees/builder-goal-six-raw-20261025-v1/40221895564/product-validation/VALIDATION-MANIFEST.json",
+    "sha256": "32ca27b1a447fbe474828318e6a5bb7c30dac8388aaf205e625a2e7277ec143f"
+  },
+  "selectedSHA256": {
+    "RESULTAT.md": "5610f096d6197c5779774cd8a9370e5db33beb812d64b0147d70e059779ecd15",
+    "verified-summary.json": "c598c9b8fd23ece86dcc710b44cd56275063112a1f2f1fa82e20d39a0e79a9cb",
+    "collect.py": "e48494fe2f6e4633608891b262052d29e5c9fda88a6334a2c9637d7214b9887f",
+    "analyse.py": "d005496e8b9f43c93db5a3bd55cfdb734050cbef539236e7e3e83bb6af55a83e",
+    "run.json": "c3aa8903bd8f9317cb7358adb855883796b9ac81fec1cdcbf6b99f8560d414d3",
+    "artifacts-index.json": "43365cabc87c11bf6669d9352664b553f7fbf93bc1d8b9c653855d96c1ace664",
+    "download-complete.json": "8d2206d7d48ecfa9207102b0041045912a17ebfc0621711027c45fb6b7e29c88"
+  },
+  "candidateSHA256": {
+    "app/source/style.css": "d6398e12efff66a03715625ad7a1f0b10af626a69d11c37f6529173ac36a5f04",
+    "app/distribution/portable.html": "69b0d0ad06742ffd6e77df9a573238afd849c37628878aadcae9ee9dc5736ab9",
+    "app/distribution/web/index.html": "a34ec36adaf511032c4bba7326c8d0ded13c4c418b8f28aeff82e00108aded34",
+    "app/distribution/web/sw.js": "8f63a962c00790b1bc9714a339142f050fd5ee43efa007af8639859a7552f61a",
+    "tests/check-dialog-interaction-browser.test.cjs": "62107496cad0da834c806d1fafb763d22d0718902b286ada221fb9a3babe9ab4"
+  },
+  "trackedDiff": [
+    "app/distribution/portable.html",
+    "app/distribution/web/index.html",
+    "app/distribution/web/sw.js",
+    "app/source/style.css"
+  ],
+  "untrackedTest": "tests/check-dialog-interaction-browser.test.cjs",
+  "automaticReplay": false
+}

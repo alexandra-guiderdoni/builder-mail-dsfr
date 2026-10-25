@@ -1,0 +1,16 @@
+TAP version 13
+# Subtest: confirmation : aperçu bloqué pendant la modale puis utilisable après annulation et validation clavier
+ok 1 - confirmation : aperçu bloqué pendant la modale puis utilisable après annulation et validation clavier
+  ---
+  duration_ms: 419.060541
+  type: 'test'
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 595.248792

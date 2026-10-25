@@ -1,0 +1,92 @@
+{
+  "version": "2.18.0+codex.local-20261025-lease-probe-2",
+  "manifest_sha256": "b558aa8fc1e6f5d01a42befe08a3c07c3d84b18e9d971ffebd006c3a5069bf18",
+  "package_receipt_sha256": "822b592ec05883fc1331b1075a8617b6eb0a8289135a4c8166c1ff2d881212af",
+  "installed_verification": {
+    "target": "/Users/alex/.codex/plugins/cache/personal/shipguard-codex/2.18.0+codex.local-20261025-lease-probe-2",
+    "files_verified": 165,
+    "version": "2.18.0+codex.local-20261025-lease-probe-2",
+    "manifest_sha256": "813e25a606c13e9335c1b35606c4b63915ba84f9f4a7c30608f43e79341e9a06",
+    "native_gate": false,
+    "native_trust_verified": false,
+    "browser_qualification": false
+  },
+  "configuration_fingerprints": {
+    "/Users/alex/.codex/config.toml": {
+      "before": {
+        "exists": true,
+        "sha256": "338f1393b3591b6ca789db599791eab8c3b6d73a3b48a6b82932e024e0401104"
+      },
+      "after": {
+        "exists": true,
+        "sha256": "338f1393b3591b6ca789db599791eab8c3b6d73a3b48a6b82932e024e0401104"
+      },
+      "unchanged": true
+    },
+    "/Users/alex/.codex/hooks.state": {
+      "before": {
+        "exists": false,
+        "sha256": null
+      },
+      "after": {
+        "exists": false,
+        "sha256": null
+      },
+      "unchanged": true
+    },
+    "/Users/alex/.claude/settings.json": {
+      "before": {
+        "exists": true,
+        "sha256": "28d69a5dfd976aadb725833704b225f9bfd1c5f116dd18b9ecb38b6f79dfff25"
+      },
+      "after": {
+        "exists": true,
+        "sha256": "28d69a5dfd976aadb725833704b225f9bfd1c5f116dd18b9ecb38b6f79dfff25"
+      },
+      "unchanged": true
+    },
+    "/Users/alex/.agents/plugins/marketplace.json": {
+      "before": {
+        "exists": true,
+        "sha256": "9f6cba476e5b03b1913641febbfa1fc720e50d95c3208e01f11b14d2517d44f7"
+      },
+      "after": {
+        "exists": true,
+        "sha256": "f4514a905530dc34333b4b6a5060c9ab503fbb27541d79ea168002887a2d2edc"
+      },
+      "unchanged": false
+    }
+  },
+  "other_personal_plugins_unchanged": true,
+  "native_turns_started": 0,
+  "native_trust": "not_observed",
+  "hook_state_direct_edits": 0,
+  "browser_launches": 0,
+  "other_mac_touched": false,
+  "rollback_executed": false,
+  "command_sequence": [
+    [
+      "python3",
+      "packaging/activate.py",
+      "--apply"
+    ],
+    [
+      "codex",
+      "plugin",
+      "add",
+      "shipguard-codex@personal",
+      "--json"
+    ],
+    [
+      "bash",
+      "/Users/alex/Claude/scripts/sync-shipguard-codex-adapter.sh",
+      "/Users/alex/Claude",
+      "--protect-marketplace-push"
+    ],
+    [
+      "python3",
+      "packaging/verify_package.py",
+      "--installed"
+    ]
+  ]
+}

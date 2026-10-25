@@ -1,0 +1,18 @@
+{
+  "run": 40219553464,
+  "files_sha256": {
+    "collect.py": "6ee3582500d504c095b2044e9fc606e38c6ccd59b4fc964d044bb866d6d30f9a",
+    "analyse.py": "73f555316a0decae53858e8784d70426827c0b22b564fde335689a45f3fac640",
+    "run.json": "425d8b065d744c7e3cbd5464d2aa1f4d60f25407e678c80a7f6574fbda3e884c",
+    "run.log": "8f0a8616d2c66d1031e76ec49e67f0d81faf596194f9546526d518766fee4369",
+    "job-direct.log": "dc9bc0a11fb73970c09f3852e8ce6d6cfac0c296a5a0eedd58af3d981091f306",
+    "artifacts-index.json": "cc442edf7240efe187277978aca8d364a65ff65c6d6ceeacf4f03029901dfe5e",
+    "download-complete.json": "5cc0e165ee82d084777c059dcc77b007a25be4d1ac7d6d18dd48ffee756ce2f6",
+    "verified-summary.json": "c39ee47d7a0cbafde96e33f33ed59d0ce2f58083f909aa6f18da51b500a925f0",
+    "comparison-timeline.json": "5e8a91790ab87994bec65250f5759c6a44396eaa9ebcdfd7177825df91b5f845",
+    "RESULTAT.md": "9174a6a92a822f4a83584f569bc1142b87a62c8e62b1c20f9247f94d972b0aee"
+  },
+  "no_new_job": true,
+  "tracked_changes": [],
+  "claim": "persistent wrong-target click observed in preview; engine cause remains unproven"
+}

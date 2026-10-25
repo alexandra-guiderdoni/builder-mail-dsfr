@@ -1,0 +1,47 @@
+diff --git a/app/distribution/portable.html b/app/distribution/portable.html
+index 81dd4d0..719607b 100644
+--- a/app/distribution/portable.html
++++ b/app/distribution/portable.html
+@@ -117,6 +117,8 @@ iframe { display:block; width:100%; height:760px; border:1px solid var(--border-
+ .mail-weight { color:var(--text-mention-grey); font-size:.875rem; line-height:1.5rem; margin:0 0 16px; overflow-wrap:anywhere; }
+ .mail-weight[data-level=notice] { color:var(--text-default-warning); background:var(--background-contrast-warning); border-left:4px solid var(--border-plain-warning); padding:8px 12px; }
+ .mail-weight[data-level=alert] { color:var(--text-default-error); background:var(--background-contrast-error); border-left:4px solid var(--border-plain-error); padding:8px 12px; font-weight:700; }
++
++body:has(#check-dialog[open]) #preview { pointer-events: none; }
+ #home-title { color:var(--text-title-blue-france); }
+ .home-create { display:flex; align-items:end; flex-wrap:wrap; gap:16px; margin:24px 0 32px; } .home-create>div { flex:1; min-width:224px; max-width:416px; }
+ .newsletter-list { list-style:none; padding:0; margin-bottom:0; }
+diff --git a/app/distribution/web/index.html b/app/distribution/web/index.html
+index b3c73f2..066852a 100644
+--- a/app/distribution/web/index.html
++++ b/app/distribution/web/index.html
+@@ -117,6 +117,8 @@ iframe { display:block; width:100%; height:760px; border:1px solid var(--border-
+ .mail-weight { color:var(--text-mention-grey); font-size:.875rem; line-height:1.5rem; margin:0 0 16px; overflow-wrap:anywhere; }
+ .mail-weight[data-level=notice] { color:var(--text-default-warning); background:var(--background-contrast-warning); border-left:4px solid var(--border-plain-warning); padding:8px 12px; }
+ .mail-weight[data-level=alert] { color:var(--text-default-error); background:var(--background-contrast-error); border-left:4px solid var(--border-plain-error); padding:8px 12px; font-weight:700; }
++
++body:has(#check-dialog[open]) #preview { pointer-events: none; }
+ #home-title { color:var(--text-title-blue-france); }
+ .home-create { display:flex; align-items:end; flex-wrap:wrap; gap:16px; margin:24px 0 32px; } .home-create>div { flex:1; min-width:224px; max-width:416px; }
+ .newsletter-list { list-style:none; padding:0; margin-bottom:0; }
+diff --git a/app/distribution/web/sw.js b/app/distribution/web/sw.js
+index 8a9cfa8..701dba8 100644
+--- a/app/distribution/web/sw.js
++++ b/app/distribution/web/sw.js
+@@ -1,5 +1,5 @@
+ const PREFIX = "atelier-courriels-" + encodeURIComponent(self.registration.scope) + "-";
+-const CACHE = PREFIX + "9543c5a897478ae9";
++const CACHE = PREFIX + "cdd55d72aca6de98";
+ const FILES = ["./", "./index.html", "./manifest.webmanifest", "./icon.svg", "./icon-192.png", "./icon-512.png"];
+ self.addEventListener("install", event => event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(FILES.map(url => new Request(url, {cache: "reload"}))))));
+ self.addEventListener("message", event => { if (event.data?.type === "ACTIVATE_UPDATE") self.skipWaiting(); });
+diff --git a/app/source/style.css b/app/source/style.css
+index f7b6c6c..d13ed49 100644
+--- a/app/source/style.css
++++ b/app/source/style.css
+@@ -55,3 +55,5 @@ iframe { display:block; width:100%; height:760px; border:1px solid var(--border-
+ .mail-weight { color:var(--text-mention-grey); font-size:.875rem; line-height:1.5rem; margin:0 0 16px; overflow-wrap:anywhere; }
+ .mail-weight[data-level=notice] { color:var(--text-default-warning); background:var(--background-contrast-warning); border-left:4px solid var(--border-plain-warning); padding:8px 12px; }
+ .mail-weight[data-level=alert] { color:var(--text-default-error); background:var(--background-contrast-error); border-left:4px solid var(--border-plain-error); padding:8px 12px; font-weight:700; }
++
++body:has(#check-dialog[open]) #preview { pointer-events: none; }

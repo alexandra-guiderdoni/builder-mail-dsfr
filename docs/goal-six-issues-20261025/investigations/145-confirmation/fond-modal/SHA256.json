@@ -1,0 +1,14 @@
+{
+  "rawArchive": "/Users/alex/Claude-worktrees/builder-goal-six-raw-20261025-v1/40221895564/product-validation",
+  "qualification": "UNKNOWN; neither instrumentation defect nor CSS regression established",
+  "files": {
+    "EXPERIMENTAL-TEST-ARCHIVE.json": "aa56e680d2ce919cd8eb3950818e7abf37199bfa8f3f3f51cb0a0259156c9074",
+    "interaction-test-before-stable-observation.cjs": "e67e06f0d551b538bb222bb0ef2ded55abb38575f02eef46d64cafdf811b54f1",
+    "interaction-test-parent-counter-before-event-details.cjs": "09cc8f887eca0217823224f98a0b6653879db71398b3df95e11c22573334bf96",
+    "interaction-test-final-experimental-62107496.cjs": "62107496cad0da834c806d1fafb763d22d0718902b286ada221fb9a3babe9ab4",
+    "chromium/run.log": "7692086bc6170fa929755dd45c6241b1b52baaf6701efc8d77b8dff0ce63897f",
+    "chromium/interaction-failure-details.log": "61b5c82025ac349a2a33eba8be74a944a274a2f08294e2e3d805772aec688f7b",
+    "chromium-final/run.log": "1f5bdfefe20aa9fc2d101c917575374a690b506801467b3e31b269ae7bf768d3",
+    "interaction-event-diagnostic.log": "8cc6a43651e4c80b08fbbf4d82aeecfc02af49a575aa1c5efbe10c449f418805"
+  }
+}

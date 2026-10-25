@@ -107,7 +107,16 @@
     "github-40213040087/forensic-130-40213040087-1/natural.log": "44161f131da0b1e5e9588a2c3543c7f198ae75a72326b1ad49200f19ead0095a",
     "github-40213040087/forensic-130-40213040087-1/results.json": "e550d2f40dd181fd0678d9e005b5c06c945e30689121cadc589885751e2b8659",
     "github-40213040087/forensic-130-40213040087-1/snapshot-manifest.json": "6d477979891d756ff1e001d8235428bcf2a7eae9dc324707e6671c543ace3116",
-    "REJEU-GITHUB.md": "5ef9b7ac364acda13d70e6e346bf20cfad39acd000fff52861f4cbe0845aa8e5"
+    "REJEU-GITHUB.md": "f379a2cf57777cbca3e301f7416c6847cb996ca0fda0769c9573a66bfcd08788"
   },
-  "interpretation": "Bounded spontaneous non-reproduction; controlled fixture failure demonstrated; original cause unknown."
+  "interpretation": "Bounded spontaneous non-reproduction; controlled fixture failure demonstrated; original cause unknown.",
+  "runnerImageSource": "environment variable ImageVersion in replay host.log",
+  "historicalRunnerImageSource": "Runner Image Version in incident Set up job",
+  "imageComparisonCorrection": {
+    "review": "image-metadata-review/RECEIPT.json",
+    "sameSetupMetadata": true,
+    "binaryIdentityProven": false,
+    "imageDifferenceProven": false,
+    "intraRunSourceDiscrepancyResolved": false
+  }
 }

@@ -1,0 +1,4 @@
+Rapport multi-moteur
+
+chromium : 12 réussis sur 13 ; 1 échecs produit non expliqués, 0 échecs produit connus, 0 limitations d’automatisation, 0 ignorés explicitement.
+  - [échec produit non expliqué] check-dialog-interaction-browser.test.cjs : confirmation : aperçu bloqué pendant la modale puis utilisable après annulation et validation clavier — le fond modal ne transmet pas le clic à l’aperçu

@@ -1,0 +1,26 @@
+{
+  "run": "40221156125",
+  "headSHA": "94533707fa819a343f08aded029410b0fa6a60a3",
+  "verdict": "non-reproduction-no-fix-proof",
+  "automaticReplay": false,
+  "productChanged": false,
+  "filesSHA256": {
+    "collect.py": "f28f1ca7d4778ae5053d09fe4a58212b5427a41f54a160229a9ff8c2cb395403",
+    "analyse.py": "6398e7966fa47d31e814eb67d719efb34225991668be96ad58bb4a261785e25f",
+    "run.json": "2dbfa710b9b79c823ebe6daceb50ac707b5e786d7e1bfa466c239df408f74337",
+    "run.log": "9c8979329bf9a3b1c990f2728a5047ac2eba2ea6f5b846059ac8b563db89d0e0",
+    "job-direct.log": "50a50c879c3a2b65832bd4ed01502d1b794207d1fdf8a6a3b13adfeabab169c0",
+    "artifacts-index.json": "a5dc27236722a1fbef56cad5dd4caa554c7e3311df60e59469e241c45c8ee2ad",
+    "download-complete.json": "5f76971634b226904c47cb29ab27f512ae75476f1d32e103fb263055f75a0999",
+    "verified-summary.json": "3aa3c48847ce400e3b17618c57e57014f1152848675d834a00891f4c3ed0f960",
+    "red-comparison-details.json": "c30080ebb244136549e77740277788aff8cbb46579b1bf7019770a90b85c6bb0",
+    "observer-R1-R2.diff": "53836d8887b7bc865ed587d7a13236b082768ddd802ad58720463ff489042c8c",
+    "analysis.log": "3aa3c48847ce400e3b17618c57e57014f1152848675d834a00891f4c3ed0f960",
+    "RESULTAT.md": "3cc7a9bb7ed13fc3e96cae28791efc646a82ee1a44de315301cd12e4c4ecd4d9"
+  },
+  "commands": [
+    "python3 /Users/alex/Claude-worktrees/builder-confirmation-145-20261025/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/github-40221156125/collect.py",
+    "python3 /Users/alex/Claude-worktrees/builder-confirmation-145-20261025/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/github-40221156125/analyse.py"
+  ],
+  "trackedDiff": []
+}

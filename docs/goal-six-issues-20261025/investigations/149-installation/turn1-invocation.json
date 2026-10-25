@@ -1,0 +1,25 @@
+{
+  "turn_counter": 1,
+  "nonce": "510036fcecc73fc672b8c5c8dcab9b6d",
+  "commands_requested": [
+    "python3 -c 'import json,os; print(json.dumps({\"CODEX_THREAD_ID\":os.environ.get(\"CODEX_THREAD_ID\"),\"PLUGIN_DATA_present\":bool(os.environ.get(\"PLUGIN_DATA\"))}))'",
+    "python3 /Users/alex/.codex/plugins/cache/personal/shipguard-codex/2.18.0+codex.local-20261025-lease-probe-2/hooks/browser-lease/lease.py begin --nonce 510036fcecc73fc672b8c5c8dcab9b6d"
+  ],
+  "argv": [
+    "codex",
+    "exec",
+    "--model",
+    "gpt-6-astra",
+    "--ephemeral",
+    "--json",
+    "--cd",
+    "/Users/alex/Claude-worktrees/shipguard-session-ownership-20261025",
+    "-"
+  ],
+  "started_at_utc": "2026-10-25T18:57:38.088815+00:00",
+  "ephemeral_reason": "No full native conversation persisted; normal user configuration and policies remain loaded.",
+  "approval_or_sandbox_or_trust_overrides": false,
+  "turn2_started": false,
+  "exit_code": 0,
+  "finished_at_utc": "2026-10-25T18:57:55.544056+00:00"
+}

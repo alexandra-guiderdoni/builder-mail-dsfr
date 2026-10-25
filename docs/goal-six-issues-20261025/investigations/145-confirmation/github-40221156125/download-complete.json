@@ -1,0 +1,18 @@
+{
+  "directory": "/Users/alex/Claude-worktrees/builder-confirmation-145-20261025/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/github-40221156125/artifacts",
+  "files_sha256": {
+    "artifacts/confirmation-145-40221156125-1/harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/comparator-preparation.json": "2474971ddfd40708ccf564465adc8689c1fbcf1c9c36ffb00ebf9eecc0749c60",
+    "artifacts/confirmation-145-40221156125-1/harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/comparator-preparation.log": "437d42880810820e0d54bdf8775b41f43b903a7cab5365a8300f1021bda92034",
+    "artifacts/confirmation-145-40221156125-1/harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/linux-baseline.json": "5410fbccd8efc7207d5f0709048bed0b3192bf99f80583479741206b01a7e7d6",
+    "artifacts/confirmation-145-40221156125-1/harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/linux-baseline.log": "19d55017411966d1bce2320fdb4ecaa886e710041cc03e50c7a8745a54cc301d",
+    "artifacts/confirmation-145-40221156125-1/harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/linux-comparator.json": "004a73b53dac23600fbea56131aaf5b61e4ed7bf9f8d5d4755b102cf12bf5dc1",
+    "artifacts/confirmation-145-40221156125-1/harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/linux-comparator.log": "19d55017411966d1bce2320fdb4ecaa886e710041cc03e50c7a8745a54cc301d",
+    "artifacts/confirmation-145-40221156125-1/harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/loop-confirmation.cjs": "aa867d501e76aae28e4ad0387ee5e81e2c8e119ad1b52896134cbca6f6afe094",
+    "artifacts/confirmation-145-40221156125-1/harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/pair-exit-status.json": "bcaa2bcf083523bbf915c6694898bcdb7accf790f3bfee4c0260b2722d331ae7",
+    "artifacts/confirmation-145-40221156125-1/harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/prepare-comparator.py": "e74d8d9aa39359e4fb5ce7d447090c5ddc77181f0376e6aad60d9d2599e980d8",
+    "artifacts/confirmation-145-40221156125-1/harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/proposal-pages.yml": "5a506a3c4c85e5c50a94db069aa19dd6f14533d43aa257d109f4a72370e6b637",
+    "artifacts/confirmation-145-40221156125-1/harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/trace-confirmation.cjs": "efb3c7edc3ef49e78e542969c47b4349d9624a6ae93012770c013fd83dbc38d6",
+    "artifacts/confirmation-145-40221156125-1/host-145.json": "6b2c3e7130fcd3abfa500e9c22bfbe62cd52a1da9ecb18b73c7f89ad96005a75",
+    "artifacts/confirmation-145-40221156125-1/receipt-145.json": "b8f6b1da740300005c61fda07aac4d8cd40470adf246c7e7269cfcb8cfbb6216"
+  }
+}

@@ -1,0 +1,772 @@
+[
+  {
+    "label": "red",
+    "clock": {
+      "nodeBefore": 1792951547701,
+      "nodeAfter": 1792951547707,
+      "browserPerformanceNow": 431
+    },
+    "rows": [
+      {
+        "seq": 12,
+        "time": 355,
+        "kind": "focusin",
+        "target": "check-dialog-title",
+        "x": null,
+        "y": null,
+        "active": "check-dialog-title",
+        "dialog": true,
+        "buttonUid": 1,
+        "buttonRect": {
+          "x": 653,
+          "y": 1303,
+          "width": 228,
+          "height": 40
+        }
+      },
+      {
+        "seq": 13,
+        "time": 356,
+        "kind": "keyup",
+        "target": "check-dialog-title",
+        "x": null,
+        "y": null,
+        "active": "check-dialog-title",
+        "dialog": true,
+        "buttonUid": 1,
+        "buttonRect": {
+          "x": 653,
+          "y": 1303,
+          "width": 228,
+          "height": 40
+        }
+      },
+      {
+        "seq": 14,
+        "time": 409,
+        "kind": "pointerover",
+        "target": "LI",
+        "x": 800,
+        "y": 809,
+        "active": "check-dialog-title",
+        "dialog": true,
+        "buttonUid": 1,
+        "buttonRect": {
+          "x": 653,
+          "y": 1303,
+          "width": 228,
+          "height": 40
+        }
+      },
+      {
+        "seq": 15,
+        "time": 409,
+        "kind": "mouseover",
+        "target": "LI",
+        "x": 800,
+        "y": 809,
+        "active": "check-dialog-title",
+        "dialog": true,
+        "buttonUid": 1,
+        "buttonRect": {
+          "x": 653,
+          "y": 1303,
+          "width": 228,
+          "height": 40
+        }
+      },
+      {
+        "seq": 16,
+        "time": 409,
+        "kind": "resize",
+        "target": "check-dialog",
+        "x": null,
+        "y": null,
+        "active": "check-dialog-title",
+        "dialog": true,
+        "buttonUid": 1,
+        "buttonRect": {
+          "x": 653,
+          "y": 1303,
+          "width": 228,
+          "height": 40
+        }
+      },
+      {
+        "seq": 17,
+        "time": 409,
+        "kind": "resize",
+        "target": "check-confirm",
+        "x": null,
+        "y": null,
+        "active": "check-dialog-title",
+        "dialog": true,
+        "buttonUid": 1,
+        "buttonRect": {
+          "x": 653,
+          "y": 1303,
+          "width": 228,
+          "height": 40
+        }
+      },
+      {
+        "seq": 18,
+        "time": 410,
+        "kind": "toggle",
+        "target": "check-dialog",
+        "x": null,
+        "y": null,
+        "active": "check-dialog-title",
+        "dialog": true,
+        "buttonUid": 1,
+        "buttonRect": {
+          "x": 653,
+          "y": 1303,
+          "width": 228,
+          "height": 40
+        }
+      },
+      {
+        "seq": 19,
+        "time": 429,
+        "kind": "window-blur",
+        "target": null,
+        "x": null,
+        "y": null,
+        "active": "preview",
+        "dialog": true,
+        "buttonUid": 1,
+        "buttonRect": {
+          "x": 653,
+          "y": 837,
+          "width": 228,
+          "height": 40
+        }
+      }
+    ],
+    "final_state": {
+      "active": "preview",
+      "focused": true,
+      "dialog": true,
+      "buttonUid": 1,
+      "buttonConnected": true,
+      "buttonRect": {
+        "x": 653,
+        "y": 837,
+        "width": 228,
+        "height": 40
+      },
+      "previewRect": {
+        "x": 735,
+        "y": 648,
+        "width": 639.984375,
+        "height": 569
+      },
+      "previewSrc": "blob:null/8931dbe3-d842-408b-8aad-0928877aa5a3#7060da4c-0857-43ae-80e5-421cbfebeaa4"
+    }
+  },
+  {
+    "label": "same-case-green",
+    "clock": {
+      "nodeBefore": 1792951543269,
+      "nodeAfter": 1792951543277,
+      "browserPerformanceNow": 382
+    },
+    "rows": [
+      {
+        "seq": 12,
+        "time": 341,
+        "kind": "focusin",
+        "target": "check-dialog-title",
+        "x": null,
+        "y": null,
+        "active": "check-dialog-title",
+        "dialog": true,
+        "buttonUid": 1,
+        "buttonRect": {
+          "x": 653,
+          "y": 1303,
+          "width": 228,
+          "height": 40
+        }
+      },
+      {
+        "seq": 13,
+        "time": 342,
+        "kind": "pointerover",
+        "target": "LI",
+        "x": 800,
+        "y": 809,
+        "active": "check-dialog-title",
+        "dialog": true,
+        "buttonUid": 1,
+        "buttonRect": {
+          "x": 653,
+          "y": 1303,
+          "width": 228,
+          "height": 40
+        }
+      },
+      {
+        "seq": 14,
+        "time": 342,
+        "kind": "mouseover",
+        "target": "LI",
+        "x": 800,
+        "y": 809,
+        "active": "check-dialog-title",
+        "dialog": true,
+        "buttonUid": 1,
+        "buttonRect": {
+          "x": 653,
+          "y": 1303,
+          "width": 228,
+          "height": 40
+        }
+      },
+      {
+        "seq": 15,
+        "time": 342,
+        "kind": "resize",
+        "target": "check-dialog",
+        "x": null,
+        "y": null,
+        "active": "check-dialog-title",
+        "dialog": true,
+        "buttonUid": 1,
+        "buttonRect": {
+          "x": 653,
+          "y": 1303,
+          "width": 228,
+          "height": 40
+        }
+      },
+      {
+        "seq": 16,
+        "time": 342,
+        "kind": "resize",
+        "target": "check-confirm",
+        "x": null,
+        "y": null,
+        "active": "check-dialog-title",
+        "dialog": true,
+        "buttonUid": 1,
+        "buttonRect": {
+          "x": 653,
+          "y": 1303,
+          "width": 228,
+          "height": 40
+        }
+      },
+      {
+        "seq": 17,
+        "time": 343,
+        "kind": "keyup",
+        "target": "check-dialog-title",
+        "x": null,
+        "y": null,
+        "active": "check-dialog-title",
+        "dialog": true,
+        "buttonUid": 1,
+        "buttonRect": {
+          "x": 653,
+          "y": 1303,
+          "width": 228,
+          "height": 40
+        }
+      },
+      {
+        "seq": 18,
+        "time": 343,
+        "kind": "toggle",
+        "target": "check-dialog",
+        "x": null,
+        "y": null,
+        "active": "check-dialog-title",
+        "dialog": true,
+        "buttonUid": 1,
+        "buttonRect": {
+          "x": 653,
+          "y": 1303,
+          "width": 228,
+          "height": 40
+        }
+      },
+      {
+        "seq": 19,
+        "time": 374,
+        "kind": "pointerover",
+        "target": "check-confirm",
+        "x": 767,
+        "y": 857,
+        "active": "check-dialog-title",
+        "dialog": true,
+        "buttonUid": 1,
+        "buttonRect": {
+          "x": 653,
+          "y": 837,
+          "width": 228,
+          "height": 40
+        }
+      },
+      {
+        "seq": 20,
+        "time": 374,
+        "kind": "mouseover",
+        "target": "check-confirm",
+        "x": 767,
+        "y": 857,
+        "active": "check-dialog-title",
+        "dialog": true,
+        "buttonUid": 1,
+        "buttonRect": {
+          "x": 653,
+          "y": 837,
+          "width": 228,
+          "height": 40
+        }
+      },
+      {
+        "seq": 21,
+        "time": 375,
+        "kind": "pointerdown",
+        "target": "check-confirm",
+        "x": 767,
+        "y": 857,
+        "active": "check-dialog-title",
+        "dialog": true,
+        "buttonUid": 1,
+        "buttonRect": {
+          "x": 653,
+          "y": 837,
+          "width": 228,
+          "height": 40
+        }
+      },
+      {
+        "seq": 22,
+        "time": 375,
+        "kind": "mousedown",
+        "target": "check-confirm",
+        "x": 767,
+        "y": 857,
+        "active": "check-dialog-title",
+        "dialog": true,
+        "buttonUid": 1,
+        "buttonRect": {
+          "x": 653,
+          "y": 837,
+          "width": 228,
+          "height": 40
+        }
+      },
+      {
+        "seq": 23,
+        "time": 375,
+        "kind": "focusin",
+        "target": "check-confirm",
+        "x": null,
+        "y": null,
+        "active": "check-confirm",
+        "dialog": true,
+        "buttonUid": 1,
+        "buttonRect": {
+          "x": 653,
+          "y": 837,
+          "width": 228,
+          "height": 40
+        }
+      },
+      {
+        "seq": 24,
+        "time": 375,
+        "kind": "pointerup",
+        "target": "check-confirm",
+        "x": 767,
+        "y": 857,
+        "active": "check-confirm",
+        "dialog": true,
+        "buttonUid": 1,
+        "buttonRect": {
+          "x": 653,
+          "y": 837,
+          "width": 228,
+          "height": 40
+        }
+      },
+      {
+        "seq": 25,
+        "time": 375,
+        "kind": "mouseup",
+        "target": "check-confirm",
+        "x": 767,
+        "y": 857,
+        "active": "check-confirm",
+        "dialog": true,
+        "buttonUid": 1,
+        "buttonRect": {
+          "x": 653,
+          "y": 837,
+          "width": 228,
+          "height": 40
+        }
+      },
+      {
+        "seq": 26,
+        "time": 375,
+        "kind": "click",
+        "target": "check-confirm",
+        "x": 767,
+        "y": 857,
+        "active": "check-confirm",
+        "dialog": true,
+        "buttonUid": 1,
+        "buttonRect": {
+          "x": 653,
+          "y": 837,
+          "width": 228,
+          "height": 40
+        }
+      },
+      {
+        "seq": 27,
+        "time": 376,
+        "kind": "submit",
+        "target": "check-form",
+        "x": null,
+        "y": null,
+        "active": "check-confirm",
+        "dialog": true,
+        "buttonUid": 1,
+        "buttonRect": {
+          "x": 653,
+          "y": 837,
+          "width": 228,
+          "height": 40
+        }
+      }
+    ],
+    "final_state": {
+      "active": "export-mail",
+      "focused": true,
+      "dialog": false,
+      "buttonUid": 1,
+      "buttonConnected": true,
+      "buttonRect": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "previewRect": {
+        "x": 735,
+        "y": 648,
+        "width": 639.984375,
+        "height": 569
+      },
+      "previewSrc": "blob:null/f669aa6a-7213-43f9-a464-2948f772e6de#b1e7b395-7fc0-4dcd-89f8-551dfa28c2fa"
+    }
+  },
+  {
+    "label": "preceding-green",
+    "clock": {
+      "nodeBefore": 1792951547170,
+      "nodeAfter": 1792951547183,
+      "browserPerformanceNow": 388
+    },
+    "rows": [
+      {
+        "seq": 12,
+        "time": 351,
+        "kind": "focusin",
+        "target": "check-dialog-title",
+        "x": null,
+        "y": null,
+        "active": "check-dialog-title",
+        "dialog": true,
+        "buttonUid": 1,
+        "buttonRect": {
+          "x": 653,
+          "y": 1303,
+          "width": 228,
+          "height": 40
+        }
+      },
+      {
+        "seq": 13,
+        "time": 352,
+        "kind": "keyup",
+        "target": "check-dialog-title",
+        "x": null,
+        "y": null,
+        "active": "check-dialog-title",
+        "dialog": true,
+        "buttonUid": 1,
+        "buttonRect": {
+          "x": 653,
+          "y": 1303,
+          "width": 228,
+          "height": 40
+        }
+      },
+      {
+        "seq": 14,
+        "time": 353,
+        "kind": "pointerover",
+        "target": "LI",
+        "x": 800,
+        "y": 809,
+        "active": "check-dialog-title",
+        "dialog": true,
+        "buttonUid": 1,
+        "buttonRect": {
+          "x": 653,
+          "y": 1303,
+          "width": 228,
+          "height": 40
+        }
+      },
+      {
+        "seq": 15,
+        "time": 353,
+        "kind": "mouseover",
+        "target": "LI",
+        "x": 800,
+        "y": 809,
+        "active": "check-dialog-title",
+        "dialog": true,
+        "buttonUid": 1,
+        "buttonRect": {
+          "x": 653,
+          "y": 1303,
+          "width": 228,
+          "height": 40
+        }
+      },
+      {
+        "seq": 16,
+        "time": 353,
+        "kind": "resize",
+        "target": "check-dialog",
+        "x": null,
+        "y": null,
+        "active": "check-dialog-title",
+        "dialog": true,
+        "buttonUid": 1,
+        "buttonRect": {
+          "x": 653,
+          "y": 1303,
+          "width": 228,
+          "height": 40
+        }
+      },
+      {
+        "seq": 17,
+        "time": 353,
+        "kind": "resize",
+        "target": "check-confirm",
+        "x": null,
+        "y": null,
+        "active": "check-dialog-title",
+        "dialog": true,
+        "buttonUid": 1,
+        "buttonRect": {
+          "x": 653,
+          "y": 1303,
+          "width": 228,
+          "height": 40
+        }
+      },
+      {
+        "seq": 18,
+        "time": 354,
+        "kind": "toggle",
+        "target": "check-dialog",
+        "x": null,
+        "y": null,
+        "active": "check-dialog-title",
+        "dialog": true,
+        "buttonUid": 1,
+        "buttonRect": {
+          "x": 653,
+          "y": 1303,
+          "width": 228,
+          "height": 40
+        }
+      },
+      {
+        "seq": 19,
+        "time": 380,
+        "kind": "pointerover",
+        "target": "check-confirm",
+        "x": 767,
+        "y": 857,
+        "active": "check-dialog-title",
+        "dialog": true,
+        "buttonUid": 1,
+        "buttonRect": {
+          "x": 653,
+          "y": 837,
+          "width": 228,
+          "height": 40
+        }
+      },
+      {
+        "seq": 20,
+        "time": 380,
+        "kind": "mouseover",
+        "target": "check-confirm",
+        "x": 767,
+        "y": 857,
+        "active": "check-dialog-title",
+        "dialog": true,
+        "buttonUid": 1,
+        "buttonRect": {
+          "x": 653,
+          "y": 837,
+          "width": 228,
+          "height": 40
+        }
+      },
+      {
+        "seq": 21,
+        "time": 380,
+        "kind": "pointerdown",
+        "target": "check-confirm",
+        "x": 767,
+        "y": 857,
+        "active": "check-dialog-title",
+        "dialog": true,
+        "buttonUid": 1,
+        "buttonRect": {
+          "x": 653,
+          "y": 837,
+          "width": 228,
+          "height": 40
+        }
+      },
+      {
+        "seq": 22,
+        "time": 380,
+        "kind": "mousedown",
+        "target": "check-confirm",
+        "x": 767,
+        "y": 857,
+        "active": "check-dialog-title",
+        "dialog": true,
+        "buttonUid": 1,
+        "buttonRect": {
+          "x": 653,
+          "y": 837,
+          "width": 228,
+          "height": 40
+        }
+      },
+      {
+        "seq": 23,
+        "time": 381,
+        "kind": "focusin",
+        "target": "check-confirm",
+        "x": null,
+        "y": null,
+        "active": "check-confirm",
+        "dialog": true,
+        "buttonUid": 1,
+        "buttonRect": {
+          "x": 653,
+          "y": 837,
+          "width": 228,
+          "height": 40
+        }
+      },
+      {
+        "seq": 24,
+        "time": 381,
+        "kind": "pointerup",
+        "target": "check-confirm",
+        "x": 767,
+        "y": 857,
+        "active": "check-confirm",
+        "dialog": true,
+        "buttonUid": 1,
+        "buttonRect": {
+          "x": 653,
+          "y": 837,
+          "width": 228,
+          "height": 40
+        }
+      },
+      {
+        "seq": 25,
+        "time": 381,
+        "kind": "mouseup",
+        "target": "check-confirm",
+        "x": 767,
+        "y": 857,
+        "active": "check-confirm",
+        "dialog": true,
+        "buttonUid": 1,
+        "buttonRect": {
+          "x": 653,
+          "y": 837,
+          "width": 228,
+          "height": 40
+        }
+      },
+      {
+        "seq": 26,
+        "time": 381,
+        "kind": "click",
+        "target": "check-confirm",
+        "x": 767,
+        "y": 857,
+        "active": "check-confirm",
+        "dialog": true,
+        "buttonUid": 1,
+        "buttonRect": {
+          "x": 653,
+          "y": 837,
+          "width": 228,
+          "height": 40
+        }
+      },
+      {
+        "seq": 27,
+        "time": 381,
+        "kind": "submit",
+        "target": "check-form",
+        "x": null,
+        "y": null,
+        "active": "check-confirm",
+        "dialog": true,
+        "buttonUid": 1,
+        "buttonRect": {
+          "x": 653,
+          "y": 837,
+          "width": 228,
+          "height": 40
+        }
+      }
+    ],
+    "final_state": {
+      "active": "export-mail",
+      "focused": true,
+      "dialog": false,
+      "buttonUid": 1,
+      "buttonConnected": true,
+      "buttonRect": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      },
+      "previewRect": {
+        "x": 735,
+        "y": 648,
+        "width": 639.984375,
+        "height": 569
+      },
+      "previewSrc": "blob:null/e704a1f8-0362-4bd7-ac90-f0d75227d0e4#f4e4d4f9-27ef-4a95-83cb-de9b42642a87"
+    }
+  }
+]

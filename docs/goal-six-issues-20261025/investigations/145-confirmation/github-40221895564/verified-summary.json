@@ -1,0 +1,60 @@
+{
+  "run": "40221895564",
+  "host": {
+    "os": "ubuntu",
+    "release": "26.04",
+    "architecture": "x86_64",
+    "ImageOS": "ubuntu26",
+    "ImageVersion": "20261023.163.3",
+    "source": "f3aa8324dbcd255bddafeeb2eec559e698f6065c",
+    "harness": "7d4fcf3d12b203e309f8342c0ce76bc40ebfd427"
+  },
+  "setupImageVersion": "20261012.163.1",
+  "imageVersionDisagreement": true,
+  "sourceSHA256Verified": {
+    "confirmation-r1-145-40221895564-1/harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/r1-pair/loop-confirmation.cjs": "127fec761916ef3962176b981588df37443a9baaa3bf03a2de7b36fdabcefda4",
+    "confirmation-r1-145-40221895564-1/harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/r1-pair/evidence/comparator/loop-confirmation.cjs": "127fec761916ef3962176b981588df37443a9baaa3bf03a2de7b36fdabcefda4",
+    "confirmation-r1-145-40221895564-1/harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/r1-pair/evidence/baseline/loop-confirmation.cjs": "127fec761916ef3962176b981588df37443a9baaa3bf03a2de7b36fdabcefda4",
+    "confirmation-r1-145-40221895564-1/harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/r1-pair/trace-confirmation.cjs": "065c9d06fd804c7f8adbeb5bed0210d4f6b848d8d4d310ffadc2214a533550d5",
+    "confirmation-r1-145-40221895564-1/harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/r1-pair/evidence/comparator/trace-confirmation.cjs": "065c9d06fd804c7f8adbeb5bed0210d4f6b848d8d4d310ffadc2214a533550d5",
+    "confirmation-r1-145-40221895564-1/harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/r1-pair/evidence/baseline/trace-confirmation.cjs": "065c9d06fd804c7f8adbeb5bed0210d4f6b848d8d4d310ffadc2214a533550d5",
+    "confirmation-r1-145-40221895564-1/harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/r1-pair/prepare-comparator.py": "e74d8d9aa39359e4fb5ce7d447090c5ddc77181f0376e6aad60d9d2599e980d8",
+    "confirmation-r1-145-40221895564-1/harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/r1-pair/parse-pair.py": "0951c91e7646b8db1a495677280fd4a22d0cc7881d74e1a23158afa7a9a974aa",
+    "confirmation-r1-145-40221895564-1/harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/r1-pair/proposal-pages.yml": "a0c39e427e2d2501151055a88ae04d5e530ca4b9bbd6f429b2fa8791b8e030d7"
+  },
+  "preparationVerified": true,
+  "receiptVerdict": "candidate-supported-in-this-pair",
+  "arms": {
+    "baseline": {
+      "passesObserved": 3,
+      "green": 2,
+      "red": 1,
+      "contexts": 22,
+      "exports": 64,
+      "downloads": 63,
+      "initialSuspicions": 1,
+      "transientACK": 0,
+      "persistentRed": 1,
+      "browserVersions": [
+        "156.0.8078.4"
+      ],
+      "frameMouseEvents": 5
+    },
+    "comparator": {
+      "passesObserved": 30,
+      "green": 30,
+      "red": 0,
+      "contexts": 270,
+      "exports": 810,
+      "downloads": 810,
+      "initialSuspicions": 0,
+      "transientACK": 0,
+      "persistentRed": 0,
+      "browserVersions": [
+        "156.0.8078.4"
+      ],
+      "frameMouseEvents": 0
+    }
+  },
+  "automaticReplay": false
+}

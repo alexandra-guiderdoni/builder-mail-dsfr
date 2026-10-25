@@ -1,0 +1,53 @@
+{
+  "reviewed_at_utc": "2026-10-25T18:26:54.607084+00:00",
+  "published_base_commit": "f3aa8324dbcd255bddafeeb2eec559e698f6065c",
+  "target_report": "docs/goal-six-issues-20261025/investigations/130/REJEU-GITHUB.md",
+  "sources": [
+    {
+      "run": 40185188187,
+      "job": 121144378637,
+      "url": "https://github.com/alexandra-guiderdoni/builder-mail-dsfr/actions/runs/40185188187/job/121144378637",
+      "source": "GitHub connector fetch_workflow_job_logs; first 21 decoded lines, preserved without normalization",
+      "file": "setup-40185188187-job-121144378637.log"
+    },
+    {
+      "run": 40213040087,
+      "job": 121228189622,
+      "url": "https://github.com/alexandra-guiderdoni/builder-mail-dsfr/actions/runs/40213040087/job/121228189622",
+      "source": "GitHub connector fetch_workflow_job_logs; first 21 decoded lines, preserved without normalization",
+      "file": "setup-40213040087-job-121228189622.log"
+    },
+    {
+      "file": "host-40213040087.log",
+      "source": "published artifact file",
+      "git_path": "docs/goal-six-issues-20261025/investigations/130/github-40213040087/forensic-130-40213040087-1/host.log",
+      "git_commit": "f3aa8324dbcd255bddafeeb2eec559e698f6065c"
+    }
+  ],
+  "facts": {
+    "setup_incident": {
+      "image": "ubuntu-26.04",
+      "version": "20261012.163.1"
+    },
+    "setup_replay": {
+      "image": "ubuntu-26.04",
+      "version": "20261012.163.1"
+    },
+    "env_replay_ImageVersion": "20261023.163.3",
+    "env_incident_ImageVersion": "not recorded in examined evidence",
+    "same_setup_metadata": true,
+    "binary_image_identity_proven": false,
+    "image_difference_proven": false,
+    "intra_run_source_discrepancy_resolved": false,
+    "historical_cause_proven": false
+  },
+  "mutation_scope": "proposal and receipt only; no source checkout edited, no tests or workflows rerun",
+  "files_sha256": {
+    "REJEU-GITHUB.original.md": "5ef9b7ac364acda13d70e6e346bf20cfad39acd000fff52861f4cbe0845aa8e5",
+    "REJEU-GITHUB.proposed.md": "f379a2cf57777cbca3e301f7416c6847cb996ca0fda0769c9573a66bfcd08788",
+    "host-40213040087.log": "c75f9f8a6e1dbc8db2e596d435416cd0a6bd1970fdb04e21d3fa019019e634e6",
+    "report-only.patch": "926f09f73ac5a3188778cdc466707371884b201014566968dd8e9d60598a4f22",
+    "setup-40185188187-job-121144378637.log": "fe49abda323a782b5f186086e6e2b1e307c518e12e7598bb29fe6de5d6c20e95",
+    "setup-40213040087-job-121228189622.log": "6d90017a0dc98f174ea40262d1dc2fa309f562bdf18fd2b6be47a5be99f3ca6d"
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "native_turns_started": 1,
+  "native_turns_completed": 1,
+  "native_turn2_started": false,
+  "native_thread_id": "01a1746c-eda1-7d00-8a47-de4bc24d8c2f",
+  "codeX_thread_id_matches_engine_thread": true,
+  "plugin_data_in_shell": false,
+  "command_results": [
+    {
+      "exit_code": 0,
+      "output": "{\"CODEX_THREAD_ID\": \"01a1746c-eda1-7d00-8a47-de4bc24d8c2f\", \"PLUGIN_DATA_present\": false}\n"
+    },
+    {
+      "exit_code": 2,
+      "output": "usage: lease.py [-h] --nonce NONCE --ticket TICKET [--status {PASS,ERROR}]\n                {begin,action,finish,_helper} [args ...]\nlease.py: error: the following arguments are required: --ticket\n"
+    }
+  ],
+  "updated_input_ticket_observed": false,
+  "gate_refusal_reached": false,
+  "native_hook_events_observed": false,
+  "hook_trust_observed": false,
+  "initial_engine_error_item_seen": true,
+  "initial_engine_error_message_retained": false,
+  "collector_limitation": "item.error detail omitted by metadata-only whitelist; no attribution of missing ticket to trust can be proven from this receipt. No histories reread or extra turn started.",
+  "browser_launches": 0,
+  "native_qualification": "blocked: PLUGIN_DATA missing; no injected ticket/rewrite proof",
+  "configuration_fingerprints": {
+    "/Users/alex/.codex/config.toml": {
+      "before_turn1": {
+        "exists": true,
+        "sha256": "338f1393b3591b6ca789db599791eab8c3b6d73a3b48a6b82932e024e0401104"
+      },
+      "after_turn1": {
+        "exists": true,
+        "sha256": "338f1393b3591b6ca789db599791eab8c3b6d73a3b48a6b82932e024e0401104"
+      },
+      "unchanged": true
+    },
+    "/Users/alex/.codex/hooks.state": {
+      "before_turn1": {
+        "exists": false,
+        "sha256": null
+      },
+      "after_turn1": {
+        "exists": false,
+        "sha256": null
+      },
+      "unchanged": true
+    },
+    "/Users/alex/.claude/settings.json": {
+      "before_turn1": {
+        "exists": true,
+        "sha256": "28d69a5dfd976aadb725833704b225f9bfd1c5f116dd18b9ecb38b6f79dfff25"
+      },
+      "after_turn1": {
+        "exists": true,
+        "sha256": "28d69a5dfd976aadb725833704b225f9bfd1c5f116dd18b9ecb38b6f79dfff25"
+      },
+      "unchanged": true
+    },
+    "/Users/alex/.agents/plugins/marketplace.json": {
+      "before_turn1": {
+        "exists": true,
+        "sha256": "f4514a905530dc34333b4b6a5060c9ab503fbb27541d79ea168002887a2d2edc"
+      },
+      "after_turn1": {
+        "exists": true,
+        "sha256": "f4514a905530dc34333b4b6a5060c9ab503fbb27541d79ea168002887a2d2edc"
+      },
+      "unchanged": true
+    }
+  },
+  "installed_after": {
+    "target": "/Users/alex/.codex/plugins/cache/personal/shipguard-codex/2.18.0+codex.local-20261025-lease-probe-2",
+    "files_verified": 165,
+    "version": "2.18.0+codex.local-20261025-lease-probe-2",
+    "manifest_sha256": "813e25a606c13e9335c1b35606c4b63915ba84f9f4a7c30608f43e79341e9a06",
+    "native_gate": false,
+    "native_trust_verified": false,
+    "browser_qualification": false
+  },
+  "events_sha256": "ce0d13adf25d5110e6890a6ed7854acbf603e06bd1218c7f93fac60e724b4cbe",
+  "invocation_sha256": "b8479b706e07dc806d13aa392823dd13eeb06032444c332820938c92d7836f38"
+}

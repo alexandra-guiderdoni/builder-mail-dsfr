@@ -1,0 +1,35 @@
+{
+  "authorizedAction": "archive owned untracked experimental test after byte equality, then remove identical original only",
+  "original": "/Users/alex/Claude-worktrees/builder-confirmation-145-20261025/tests/check-dialog-interaction-browser.test.cjs",
+  "archive": "/Users/alex/Claude-worktrees/builder-goal-six-raw-20261025-v1/40221895564/product-validation/interaction-test-final-experimental-62107496.cjs",
+  "sha256": "62107496cad0da834c806d1fafb763d22d0718902b286ada221fb9a3babe9ab4",
+  "byteEqualityBeforeRemoval": true,
+  "versions": {
+    "interaction-test-before-stable-observation.cjs": "e67e06f0d551b538bb222bb0ef2ded55abb38575f02eef46d64cafdf811b54f1",
+    "interaction-test-parent-counter-before-event-details.cjs": "09cc8f887eca0217823224f98a0b6653879db71398b3df95e11c22573334bf96",
+    "interaction-test-final-experimental-62107496.cjs": "62107496cad0da834c806d1fafb763d22d0718902b286ada221fb9a3babe9ab4"
+  },
+  "meaning": "counter-signal unresolved; neither instrumentation defect nor CSS regression established",
+  "runs": [
+    {
+      "source": "interaction-test-before-stable-observation.cjs",
+      "log": "chromium/run.log",
+      "outcome": "new test red;12 other existing cases green; expected/actual not retained by runner"
+    },
+    {
+      "source": "interaction-test-before-stable-observation.cjs",
+      "log": "chromium/interaction-failure-details.log",
+      "outcome": "single detailed replay green"
+    },
+    {
+      "source": "interaction-test-parent-counter-before-event-details.cjs",
+      "log": "chromium-final/run.log",
+      "outcome": "red expected2 actual3"
+    },
+    {
+      "source": "interaction-test-final-experimental-62107496.cjs",
+      "log": "interaction-event-diagnostic.log",
+      "outcome": "single diagnostic replay green"
+    }
+  ]
+}

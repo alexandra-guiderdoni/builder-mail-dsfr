@@ -1,5 +1,4 @@
 {
-  "builderMain": "7c78822872b8e159fd884836828d5b7ce3f75544",
   "issues": {
     "13": {
       "state": "OPEN",
@@ -24,8 +23,8 @@
     },
     "145": {
       "state": "OPEN",
-      "run": 40213294190,
-      "result": "partial durable diagnostics reviewed; historical cause unknown; remains OPEN",
+      "run": 40216251444,
+      "result": "targeted CSS mitigation supported by exact R1 pair;397/397 local and10/10 independent;publicationCI pending",
       "replays": [
         {
           "run": 40213294190,
@@ -46,23 +45,61 @@
           "instrumentedFail": 0
         }
       ],
-      "localCpuStressPass": 3
+      "localCpuStressPass": 3,
+      "reducedNativeRun": 40219553464,
+      "pairedComparatorRun": 40221156125,
+      "pairedComparatorResult": "baseline30/30 comparator30/30; non-reproduction-no-fix-proof",
+      "exactR1PairRun": 40221895564,
+      "exactR1PairResult": {
+        "baselineGreen": 2,
+        "baselinePersistentRed": 1,
+        "comparatorGreen": 30,
+        "comparatorDownloads": 810
+      },
+      "productFilesChanged": 4,
+      "permanentTestsChanged": false,
+      "independentReview": "GO targeted mitigation; modal background counter-signal UNKNOWN"
     },
     "149": {
       "state": "OPEN",
-      "adapterVersion": "2.18.0+codex.local-20261025164729",
-      "result": "native success/error/abort/cleanup_error observed, real SIGINT leaks; standalone supervisor studies passed within documented bounds; no new lifecycle hook active",
+      "adapterVersion": "2.18.0+codex.local-20261025-lease-probe-2",
+      "result": "dormant R3 installed;165 files verified; metadata turn1 nonqualifying; original SIGINT leak remains open",
       "localMaintainedSourceCommit": "f010bf260",
-      "parentPushed": false
+      "parentPushed": false,
+      "dormantCandidate": {
+        "revision": "R3",
+        "manifestSHA256": "b558aa8fc1e6f5d01a42befe08a3c07c3d84b18e9d971ffebd006c3a5069bf18",
+        "testsPass": 68,
+        "independentReview": "GO only dormant installation and metadata qualification after explicit user decision and native trust",
+        "installed": true,
+        "nativeBrowserGate": false,
+        "nativeTurnsConsumed": 1,
+        "nativeTurnsMaximum": 2,
+        "pluginDataInClient": false,
+        "ticketInjected": false,
+        "nativeTrust": "unknown;user sees no approval request",
+        "qualification": "blocked",
+        "browserLaunches": 0
+      }
     }
   },
-  "ciPublishedMain": {
-    "run": 40213203335,
+  "builderMainAtPreparation": "f3aa8324dbcd255bddafeeb2eec559e698f6065c",
+  "publicationCIStatus": "pending own commit; prior CI is historical evidence only",
+  "followups": {
+    "modalBackground": {
+      "state": "UNKNOWN",
+      "issuePublication": "pending",
+      "proof": "investigations/145-confirmation/fond-modal/INVESTIGATION.md"
+    }
+  },
+  "ciReferenceMainBeforeFix": {
+    "run": 40216251444,
     "tests": 397,
-    "pass": 397,
-    "fail": 0,
+    "pass": 396,
+    "fail": 1,
     "cancelled": 0,
     "skipped": 0,
-    "pages": "success"
+    "pages": "skipped",
+    "conclusion": "failure"
   }
 }

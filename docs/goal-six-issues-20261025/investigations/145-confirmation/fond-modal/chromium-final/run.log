@@ -1,0 +1,32 @@
+TAP version 13
+# Subtest: confirmation : aperçu bloqué pendant la modale puis utilisable après annulation et validation clavier
+not ok 1 - confirmation : aperçu bloqué pendant la modale puis utilisable après annulation et validation clavier
+  ---
+  duration_ms: 361.66525
+  type: 'test'
+  location: '/Users/alex/Claude-worktrees/builder-confirmation-145-20261025/tests/check-dialog-interaction-browser.test.cjs:5:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    le fond modal ne transmet pas le clic à l’aperçu
+    
+    3 !== 2
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 2
+  actual: 3
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/Users/alex/Claude-worktrees/builder-confirmation-145-20261025/tests/check-dialog-interaction-browser.test.cjs:39:14)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 533.785833

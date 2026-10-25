@@ -1,0 +1,72 @@
+{
+  "rawArchive": "/Users/alex/Claude-worktrees/builder-goal-six-raw-20261025-v1/145-collected-runs",
+  "runs": {
+    "40219553464": {
+      "rawFiles": {
+        "download-complete.json": "5cc0e165ee82d084777c059dcc77b007a25be4d1ac7d6d18dd48ffee756ce2f6",
+        "RESULTAT.md": "9174a6a92a822f4a83584f569bc1142b87a62c8e62b1c20f9247f94d972b0aee",
+        "collect.py": "6ee3582500d504c095b2044e9fc606e38c6ccd59b4fc964d044bb866d6d30f9a",
+        "analyse.py": "73f555316a0decae53858e8784d70426827c0b22b564fde335689a45f3fac640",
+        "run.log": "8f0a8616d2c66d1031e76ec49e67f0d81faf596194f9546526d518766fee4369",
+        "comparison-timeline.json": "5e8a91790ab87994bec65250f5759c6a44396eaa9ebcdfd7177825df91b5f845",
+        "job-direct.log": "dc9bc0a11fb73970c09f3852e8ce6d6cfac0c296a5a0eedd58af3d981091f306",
+        "artifacts-index.json": "cc442edf7240efe187277978aca8d364a65ff65c6d6ceeacf4f03029901dfe5e",
+        "run.json": "425d8b065d744c7e3cbd5464d2aa1f4d60f25407e678c80a7f6574fbda3e884c",
+        "ANALYSIS-RECEIPT.json": "1292d9d1576d539b14ee7cd99c70e12fe8208723dabc65bce510c0e099257045",
+        "verified-summary.json": "c39ee47d7a0cbafde96e33f33ed59d0ce2f58083f909aa6f18da51b500a925f0",
+        "artifacts/confirmation-145-40219553464-1/receipt-145.json": "601815c7969fcd92ecc266440836087232de843fed8151ef8cc4a54d27c453fa",
+        "artifacts/confirmation-145-40219553464-1/host-145.json": "d27ee04604f27b145b75739afb6da855edfc6ff1fcc646b1509e90f360c8d337",
+        "artifacts/confirmation-145-40219553464-1/harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/loop-confirmation.cjs": "127fec761916ef3962176b981588df37443a9baaa3bf03a2de7b36fdabcefda4",
+        "artifacts/confirmation-145-40219553464-1/harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/red-full-1.png": "bb852bb0e0e9224b1352c9226809d538dc34ca2323d607023da2cceeab2c200c",
+        "artifacts/confirmation-145-40219553464-1/harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/trace-confirmation.cjs": "065c9d06fd804c7f8adbeb5bed0210d4f6b848d8d4d310ffadc2214a533550d5",
+        "artifacts/confirmation-145-40219553464-1/harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/linux-confirmation.log": "7ee95d1c88595023a02f48b00102f7208495bd66b7d5460dded1cd30b4c94fff",
+        "artifacts/confirmation-145-40219553464-1/harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/linux-confirmation.json": "51c5c9beb6811907615baf7eda1a951d6ca2871cd6af4676e696c24f11d9d1b2"
+      },
+      "publishedFiles": {
+        "verified-summary.json": "c39ee47d7a0cbafde96e33f33ed59d0ce2f58083f909aa6f18da51b500a925f0",
+        "comparison-timeline.json": "5e8a91790ab87994bec65250f5759c6a44396eaa9ebcdfd7177825df91b5f845",
+        "RESULTAT.md": "9174a6a92a822f4a83584f569bc1142b87a62c8e62b1c20f9247f94d972b0aee",
+        "ANALYSIS-RECEIPT.json": "1292d9d1576d539b14ee7cd99c70e12fe8208723dabc65bce510c0e099257045",
+        "download-complete.json": "5cc0e165ee82d084777c059dcc77b007a25be4d1ac7d6d18dd48ffee756ce2f6"
+      }
+    },
+    "40221156125": {
+      "rawFiles": {
+        "analysis.log": "3aa3c48847ce400e3b17618c57e57014f1152848675d834a00891f4c3ed0f960",
+        "download-complete.json": "5f76971634b226904c47cb29ab27f512ae75476f1d32e103fb263055f75a0999",
+        "RESULTAT.md": "3cc7a9bb7ed13fc3e96cae28791efc646a82ee1a44de315301cd12e4c4ecd4d9",
+        "collect.py": "f28f1ca7d4778ae5053d09fe4a58212b5427a41f54a160229a9ff8c2cb395403",
+        "analyse.py": "6398e7966fa47d31e814eb67d719efb34225991668be96ad58bb4a261785e25f",
+        "run.log": "9c8979329bf9a3b1c990f2728a5047ac2eba2ea6f5b846059ac8b563db89d0e0",
+        "red-comparison-details.json": "c30080ebb244136549e77740277788aff8cbb46579b1bf7019770a90b85c6bb0",
+        "job-direct.log": "50a50c879c3a2b65832bd4ed01502d1b794207d1fdf8a6a3b13adfeabab169c0",
+        "artifacts-index.json": "a5dc27236722a1fbef56cad5dd4caa554c7e3311df60e59469e241c45c8ee2ad",
+        "run.json": "2dbfa710b9b79c823ebe6daceb50ac707b5e786d7e1bfa466c239df408f74337",
+        "observer-R1-R2.diff": "53836d8887b7bc865ed587d7a13236b082768ddd802ad58720463ff489042c8c",
+        "ANALYSIS-RECEIPT.json": "eba9f5359c81dc65558affffb39a379e8eb766c40b8a1972603479ff1be4f48a",
+        "verified-summary.json": "3aa3c48847ce400e3b17618c57e57014f1152848675d834a00891f4c3ed0f960",
+        "artifacts/confirmation-145-40221156125-1/receipt-145.json": "b8f6b1da740300005c61fda07aac4d8cd40470adf246c7e7269cfcb8cfbb6216",
+        "artifacts/confirmation-145-40221156125-1/host-145.json": "6b2c3e7130fcd3abfa500e9c22bfbe62cd52a1da9ecb18b73c7f89ad96005a75",
+        "artifacts/confirmation-145-40221156125-1/harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/linux-baseline.log": "19d55017411966d1bce2320fdb4ecaa886e710041cc03e50c7a8745a54cc301d",
+        "artifacts/confirmation-145-40221156125-1/harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/loop-confirmation.cjs": "aa867d501e76aae28e4ad0387ee5e81e2c8e119ad1b52896134cbca6f6afe094",
+        "artifacts/confirmation-145-40221156125-1/harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/proposal-pages.yml": "5a506a3c4c85e5c50a94db069aa19dd6f14533d43aa257d109f4a72370e6b637",
+        "artifacts/confirmation-145-40221156125-1/harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/comparator-preparation.json": "2474971ddfd40708ccf564465adc8689c1fbcf1c9c36ffb00ebf9eecc0749c60",
+        "artifacts/confirmation-145-40221156125-1/harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/comparator-preparation.log": "437d42880810820e0d54bdf8775b41f43b903a7cab5365a8300f1021bda92034",
+        "artifacts/confirmation-145-40221156125-1/harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/trace-confirmation.cjs": "efb3c7edc3ef49e78e542969c47b4349d9624a6ae93012770c013fd83dbc38d6",
+        "artifacts/confirmation-145-40221156125-1/harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/linux-comparator.log": "19d55017411966d1bce2320fdb4ecaa886e710041cc03e50c7a8745a54cc301d",
+        "artifacts/confirmation-145-40221156125-1/harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/prepare-comparator.py": "e74d8d9aa39359e4fb5ce7d447090c5ddc77181f0376e6aad60d9d2599e980d8",
+        "artifacts/confirmation-145-40221156125-1/harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/linux-comparator.json": "004a73b53dac23600fbea56131aaf5b61e4ed7bf9f8d5d4755b102cf12bf5dc1",
+        "artifacts/confirmation-145-40221156125-1/harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/linux-baseline.json": "5410fbccd8efc7207d5f0709048bed0b3192bf99f80583479741206b01a7e7d6",
+        "artifacts/confirmation-145-40221156125-1/harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/pair-exit-status.json": "bcaa2bcf083523bbf915c6694898bcdb7accf790f3bfee4c0260b2722d331ae7"
+      },
+      "publishedFiles": {
+        "verified-summary.json": "3aa3c48847ce400e3b17618c57e57014f1152848675d834a00891f4c3ed0f960",
+        "red-comparison-details.json": "c30080ebb244136549e77740277788aff8cbb46579b1bf7019770a90b85c6bb0",
+        "RESULTAT.md": "3cc7a9bb7ed13fc3e96cae28791efc646a82ee1a44de315301cd12e4c4ecd4d9",
+        "ANALYSIS-RECEIPT.json": "eba9f5359c81dc65558affffb39a379e8eb766c40b8a1972603479ff1be4f48a",
+        "download-complete.json": "5f76971634b226904c47cb29ab27f512ae75476f1d32e103fb263055f75a0999",
+        "observer-R1-R2.diff": "53836d8887b7bc865ed587d7a13236b082768ddd802ad58720463ff489042c8c"
+      }
+    }
+  }
+}

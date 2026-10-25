@@ -1,0 +1,176 @@
+{
+  "run": 40219553464,
+  "run_url": "https://github.com/alexandra-guiderdoni/builder-mail-dsfr/actions/runs/40219553464",
+  "source": "f3aa8324dbcd255bddafeeb2eec559e698f6065c",
+  "harness": "4249c2f2ec091526e1413bc70b39917c5e6e845e",
+  "os": {
+    "os": "ubuntu",
+    "release": "26.04",
+    "architecture": "x86_64",
+    "ImageOS": "ubuntu26",
+    "ImageVersion": "20261023.163.3",
+    "source": "f3aa8324dbcd255bddafeeb2eec559e698f6065c",
+    "harness": "4249c2f2ec091526e1413bc70b39917c5e6e845e"
+  },
+  "image_metadata_disagreement": {
+    "host_env": "20261023.163.3",
+    "setup_job_and_direct_job_log": "20261012.163.1",
+    "resolved": false
+  },
+  "node": "v24.18.0",
+  "playwright": "1.64.1",
+  "chromium": "156.0.8078.4",
+  "passes_requested": 30,
+  "passes_observed": 2,
+  "green": 1,
+  "persistent_red": 1,
+  "initial_candidates": 1,
+  "transient_ack": 0,
+  "export_attempts": 43,
+  "downloads_observed": 42,
+  "failed_case": {
+    "context": 6,
+    "name": "Eté",
+    "name_utf16_length": 4,
+    "selector": "[data-action=export-mail]"
+  },
+  "confirmation_duration_ms": 74,
+  "input_receipt_after_confirm_start_ms": [
+    72,
+    72,
+    73,
+    73,
+    73,
+    73
+  ],
+  "final_observation_after_download_wait_start_ms": 30004,
+  "button_uid_observed": [
+    1
+  ],
+  "button_rect_initial_modal": {
+    "x": 653,
+    "y": 1303,
+    "width": 228,
+    "height": 40
+  },
+  "button_rect_after_click": {
+    "x": 653,
+    "y": 837,
+    "width": 228,
+    "height": 40
+  },
+  "preview_rect": {
+    "x": 735,
+    "y": 648,
+    "width": 639.984375,
+    "height": 569
+  },
+  "frame_input_events": [
+    {
+      "contextIndex": 6,
+      "wall": 1792951547699,
+      "kind": "frame-input",
+      "event": "pointerdown",
+      "time": 529,
+      "timeOrigin": 1792881000000,
+      "url": "blob:null/8931dbe3-d842-408b-8aad-0928877aa5a3#7060da4c-0857-43ae-80e5-421cbfebeaa4",
+      "target": "TD",
+      "trusted": true
+    },
+    {
+      "contextIndex": 6,
+      "wall": 1792951547699,
+      "kind": "frame-input",
+      "event": "mousedown",
+      "time": 529,
+      "timeOrigin": 1792881000000,
+      "url": "blob:null/8931dbe3-d842-408b-8aad-0928877aa5a3#7060da4c-0857-43ae-80e5-421cbfebeaa4",
+      "target": "TD",
+      "trusted": true
+    },
+    {
+      "contextIndex": 6,
+      "wall": 1792951547700,
+      "kind": "frame-input",
+      "event": "window-focus",
+      "time": 529,
+      "timeOrigin": 1792881000000,
+      "url": "blob:null/8931dbe3-d842-408b-8aad-0928877aa5a3#7060da4c-0857-43ae-80e5-421cbfebeaa4"
+    },
+    {
+      "contextIndex": 6,
+      "wall": 1792951547700,
+      "kind": "frame-input",
+      "event": "pointerup",
+      "time": 530,
+      "timeOrigin": 1792881000000,
+      "url": "blob:null/8931dbe3-d842-408b-8aad-0928877aa5a3#7060da4c-0857-43ae-80e5-421cbfebeaa4",
+      "target": "TD",
+      "trusted": true
+    },
+    {
+      "contextIndex": 6,
+      "wall": 1792951547700,
+      "kind": "frame-input",
+      "event": "mouseup",
+      "time": 530,
+      "timeOrigin": 1792881000000,
+      "url": "blob:null/8931dbe3-d842-408b-8aad-0928877aa5a3#7060da4c-0857-43ae-80e5-421cbfebeaa4",
+      "target": "TD",
+      "trusted": true
+    },
+    {
+      "contextIndex": 6,
+      "wall": 1792951547700,
+      "kind": "frame-input",
+      "event": "click",
+      "time": 530,
+      "timeOrigin": 1792881000000,
+      "url": "blob:null/8931dbe3-d842-408b-8aad-0928877aa5a3#7060da4c-0857-43ae-80e5-421cbfebeaa4",
+      "target": "TD",
+      "trusted": true
+    }
+  ],
+  "phases": [
+    {
+      "contextIndex": 6,
+      "selector": "[data-action=export-mail]",
+      "phase": "before-click",
+      "wall": 1792951547579
+    },
+    {
+      "contextIndex": 6,
+      "selector": "[data-action=export-mail]",
+      "phase": "after-click",
+      "wall": 1792951547627
+    },
+    {
+      "contextIndex": 6,
+      "selector": "[data-action=export-mail]",
+      "phase": "before-confirm",
+      "wall": 1792951547627
+    },
+    {
+      "contextIndex": 6,
+      "selector": "[data-action=export-mail]",
+      "phase": "after-confirm",
+      "wall": 1792951547701
+    },
+    {
+      "contextIndex": 6,
+      "selector": "[data-action=export-mail]",
+      "phase": "await-download",
+      "wall": 1792951547707
+    }
+  ],
+  "primary_error": {
+    "name": "TimeoutError",
+    "message": "page.waitForEvent: Timeout 30000ms exceeded while waiting for event \"download\"\n=========================== logs ===========================\nwaiting for event \"download\"\n============================================================",
+    "stack": "page.waitForEvent: Timeout 30000ms exceeded while waiting for event \"download\"\n=========================== logs ===========================\nwaiting for event \"download\"\n============================================================\n    at /home/runner/work/builder-mail-dsfr/builder-mail-dsfr/harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/loop-confirmation.cjs:41:28"
+  },
+  "source_receipt_verified": true,
+  "artifact_files_verified": true,
+  "input_coordinates_in_frame_recorded": false,
+  "no_product_edit": true,
+  "no_new_job": true
+}

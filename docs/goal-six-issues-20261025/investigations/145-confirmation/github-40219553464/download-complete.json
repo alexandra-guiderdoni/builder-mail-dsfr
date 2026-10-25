@@ -1,0 +1,12 @@
+{
+  "directory": "/Users/alex/Claude-worktrees/builder-confirmation-145-20261025/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/github-40219553464/artifacts",
+  "files_sha256": {
+    "artifacts/confirmation-145-40219553464-1/harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/linux-confirmation.json": "51c5c9beb6811907615baf7eda1a951d6ca2871cd6af4676e696c24f11d9d1b2",
+    "artifacts/confirmation-145-40219553464-1/harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/linux-confirmation.log": "7ee95d1c88595023a02f48b00102f7208495bd66b7d5460dded1cd30b4c94fff",
+    "artifacts/confirmation-145-40219553464-1/harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/loop-confirmation.cjs": "127fec761916ef3962176b981588df37443a9baaa3bf03a2de7b36fdabcefda4",
+    "artifacts/confirmation-145-40219553464-1/harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/red-full-1.png": "bb852bb0e0e9224b1352c9226809d538dc34ca2323d607023da2cceeab2c200c",
+    "artifacts/confirmation-145-40219553464-1/harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/trace-confirmation.cjs": "065c9d06fd804c7f8adbeb5bed0210d4f6b848d8d4d310ffadc2214a533550d5",
+    "artifacts/confirmation-145-40219553464-1/host-145.json": "d27ee04604f27b145b75739afb6da855edfc6ff1fcc646b1509e90f360c8d337",
+    "artifacts/confirmation-145-40219553464-1/receipt-145.json": "601815c7969fcd92ecc266440836087232de843fed8151ef8cc4a54d27c453fa"
+  }
+}

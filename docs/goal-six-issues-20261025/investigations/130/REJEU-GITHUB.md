@@ -6,11 +6,12 @@ Le [run 40213040087](https://github.com/alexandra-guiderdoni/builder-mail-dsfr/a
 |---|---|---|
 | Produit/fixture | `395c08d1dfa4d0b8e41416da798bf0313a8bd379` | même SHA ; six empreintes du manifeste confrontées aux blobs Git |
 | Système/architecture | Ubuntu 26.04.1 / x64 | Ubuntu 26.04.1 / x64 |
-| Image GitHub | `20261012.163.1` | **`20261023.163.3`** |
+| Runner Image — métadonnées `Set up job` | `ubuntu-26.04` / `20261012.163.1` | mêmes métadonnées : `ubuntu-26.04` / `20261012.163.1` |
+| Variable d’environnement `ImageVersion` | non relevée dans les preuves examinées | `20261023.163.3` dans `host.log` |
 | Node / Playwright | 24.18.0 / 1.64.1 | identiques |
 | Chromium | 156.0.8078.4 | identique |
 
-Le rejeu corrige donc l’écart de système et d’architecture des essais Noble/arm64 ; **il ne restaure pas l’image exacte du runner incident**, ni son état d’exécution. `host.log` relève le noyau `7.0.0-1017-azure` et `RunnerArch=X64` ; `browser.json` confirme les versions runtime.
+Le rejeu corrige l’écart de système et d’architecture des essais Noble/arm64. Les métadonnées `Runner Image` de `Set up job` sont identiques dans les [logs de l’incident](https://github.com/alexandra-guiderdoni/builder-mail-dsfr/actions/runs/40185188187/job/121144378637) et les [logs du rejeu](https://github.com/alexandra-guiderdoni/builder-mail-dsfr/actions/runs/40213040087/job/121228189622). Dans le rejeu, elles diffèrent toutefois de la variable `ImageVersion` conservée dans `host.log` : ce désaccord entre sources reste non résolu. La comparaison initiale mélangeait ces deux sources ; elle ne démontrait donc pas une image différente. Les métadonnées identiques ne prouvent pas davantage l’identité binaire de l’image ni celle de l’état d’exécution. Aucune cause de l’incident n’en est déduite. `host.log` relève le noyau `7.0.0-1017-azure` et `RunnerArch=X64` ; `browser.json` confirme les versions runtime.
 
 | Scénario | Résultat vérifié |
 |---|---|

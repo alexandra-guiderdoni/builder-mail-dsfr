@@ -1,0 +1,143 @@
+{
+  "baseSHA": "f3aa8324dbcd255bddafeeb2eec559e698f6065c",
+  "nativeRun": "40221895564",
+  "nativeHarnessSHA": "7d4fcf3d12b203e309f8342c0ce76bc40ebfd427",
+  "nativeVerdict": "candidate-supported-in-this-pair",
+  "status": "ready-for-independent-review-not-published",
+  "sourceSHA256": {
+    "app/distribution/portable.html": "69b0d0ad06742ffd6e77df9a573238afd849c37628878aadcae9ee9dc5736ab9",
+    "app/distribution/web/index.html": "a34ec36adaf511032c4bba7326c8d0ded13c4c418b8f28aeff82e00108aded34",
+    "app/distribution/web/sw.js": "8f63a962c00790b1bc9714a339142f050fd5ee43efa007af8639859a7552f61a",
+    "app/source/style.css": "d6398e12efff66a03715625ad7a1f0b10af626a69d11c37f6529173ac36a5f04"
+  },
+  "trackedDiff": [
+    "app/distribution/portable.html",
+    "app/distribution/web/index.html",
+    "app/distribution/web/sw.js",
+    "app/source/style.css"
+  ],
+  "unchangedTestsSHA256": {
+    "browser-support.cjs": "d56fc80d3c569c93301aea1a2e7022c9cb1a2fccc7240d3162fba7ddb65d3c3e",
+    "copy-check-browser.test.cjs": "4db68ef15485e7b1b6fa87181d40d06bba25cc4bbc2706b296d83236ae1b3038",
+    "export-names-browser.test.cjs": "e61e34e08b9a825e0f8ddf590445ba2360ad690a9654e735966c840ef57dc108",
+    "editor-dsfr-browser.test.cjs": "cafc85b8201d6ba4c05ccb0e938774dfc4d4f4c0fb1a3e0d90c5bf7be95ed4b2"
+  },
+  "experimentalPermanentTestAbsent": true,
+  "experimentalFollowup": "UNKNOWN; no established instrumentation defect; no established CSS regression",
+  "nativeManifest": {
+    "path": "/Users/alex/Claude-worktrees/builder-goal-six-raw-20261025-v1/40221895564/NATIVE-MANIFEST.json",
+    "sha256": "33f492d70945a2176946cd8bf566901a0ba514ad8cf5898ce729ef40623caf37"
+  },
+  "validationManifest": {
+    "path": "/Users/alex/Claude-worktrees/builder-goal-six-raw-20261025-v1/40221895564/product-validation/FINAL-VALIDATION-MANIFEST.json",
+    "sha256": "6a652ed23bceb2ec2effbed835b1f7b7c48bd8640cb316272efd26b76fbb796f"
+  },
+  "experimentalArchiveReceipt": {
+    "path": "/Users/alex/Claude-worktrees/builder-goal-six-raw-20261025-v1/40221895564/product-validation/EXPERIMENTAL-TEST-ARCHIVE.json",
+    "sha256": "aa56e680d2ce919cd8eb3950818e7abf37199bfa8f3f3f51cb0a0259156c9074"
+  },
+  "validationCommands": [
+    {
+      "label": "existing-chromium",
+      "cwd": "/Users/alex/Claude-worktrees/builder-confirmation-145-20261025",
+      "command": [
+        "node",
+        "tests/run-engines.cjs",
+        "--engines=chromium",
+        "--files=copy-check-browser.test.cjs,export-names-browser.test.cjs,editor-dsfr-browser.test.cjs",
+        "--json=/Users/alex/Claude-worktrees/builder-goal-six-raw-20261025-v1/40221895564/product-validation/existing-chromium/report.json"
+      ],
+      "env": {
+        "PLAYWRIGHT_MODULE": "/Users/alex/Claude/git-hors-workflow/builder-mail-dsfr/node_modules/playwright",
+        "NODE_PATH": "/Users/alex/Claude/git-hors-workflow/builder-mail-dsfr/node_modules",
+        "MAIL_BUILDER_EVIDENCE": "/Users/alex/Claude-worktrees/builder-goal-six-raw-20261025-v1/40221895564/product-validation/existing-chromium/evidence"
+      },
+      "exit": 0,
+      "elapsedSeconds": 14.551862001419067
+    },
+    {
+      "label": "existing-webkit",
+      "cwd": "/Users/alex/Claude-worktrees/builder-confirmation-145-20261025",
+      "command": [
+        "node",
+        "tests/run-engines.cjs",
+        "--engines=webkit",
+        "--files=copy-check-browser.test.cjs,export-names-browser.test.cjs,editor-dsfr-browser.test.cjs",
+        "--json=/Users/alex/Claude-worktrees/builder-goal-six-raw-20261025-v1/40221895564/product-validation/existing-webkit/report.json"
+      ],
+      "env": {
+        "PLAYWRIGHT_MODULE": "/Users/alex/Claude/git-hors-workflow/builder-mail-dsfr/node_modules/playwright",
+        "NODE_PATH": "/Users/alex/Claude/git-hors-workflow/builder-mail-dsfr/node_modules",
+        "MAIL_BUILDER_EVIDENCE": "/Users/alex/Claude-worktrees/builder-goal-six-raw-20261025-v1/40221895564/product-validation/existing-webkit/evidence"
+      },
+      "exit": 0,
+      "elapsedSeconds": 17.48928999900818
+    },
+    {
+      "label": "existing-firefox",
+      "cwd": "/Users/alex/Claude-worktrees/builder-confirmation-145-20261025",
+      "command": [
+        "node",
+        "tests/run-engines.cjs",
+        "--engines=firefox",
+        "--files=copy-check-browser.test.cjs,export-names-browser.test.cjs,editor-dsfr-browser.test.cjs",
+        "--json=/Users/alex/Claude-worktrees/builder-goal-six-raw-20261025-v1/40221895564/product-validation/existing-firefox/report.json"
+      ],
+      "env": {
+        "PLAYWRIGHT_MODULE": "/Users/alex/Claude/git-hors-workflow/builder-mail-dsfr/node_modules/playwright",
+        "NODE_PATH": "/Users/alex/Claude/git-hors-workflow/builder-mail-dsfr/node_modules",
+        "MAIL_BUILDER_EVIDENCE": "/Users/alex/Claude-worktrees/builder-goal-six-raw-20261025-v1/40221895564/product-validation/existing-firefox/evidence"
+      },
+      "exit": 0,
+      "elapsedSeconds": 22.17230224609375
+    },
+    {
+      "label": "npm-check",
+      "cwd": "/Users/alex/Claude-worktrees/builder-confirmation-145-20261025",
+      "command": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "env": {
+        "PLAYWRIGHT_MODULE": "/Users/alex/Claude/git-hors-workflow/builder-mail-dsfr/node_modules/playwright",
+        "NODE_PATH": "/Users/alex/Claude/git-hors-workflow/builder-mail-dsfr/node_modules",
+        "MAIL_BUILDER_EVIDENCE": "/Users/alex/Claude-worktrees/builder-goal-six-raw-20261025-v1/40221895564/product-validation/npm-check/evidence"
+      },
+      "exit": 0,
+      "elapsedSeconds": 0.34575724601745605
+    },
+    {
+      "label": "npm-test",
+      "cwd": "/Users/alex/Claude-worktrees/builder-confirmation-145-20261025",
+      "command": [
+        "npm",
+        "test"
+      ],
+      "env": {
+        "PLAYWRIGHT_MODULE": "/Users/alex/Claude/git-hors-workflow/builder-mail-dsfr/node_modules/playwright",
+        "NODE_PATH": "/Users/alex/Claude/git-hors-workflow/builder-mail-dsfr/node_modules",
+        "MAIL_BUILDER_EVIDENCE": "/Users/alex/Claude-worktrees/builder-goal-six-raw-20261025-v1/40221895564/product-validation/npm-test/evidence"
+      },
+      "exit": 0,
+      "elapsedSeconds": 415.15885305404663
+    }
+  ],
+  "fullTestCounts": {
+    "tests": 397,
+    "pass": 397,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0
+  },
+  "selectedDocumentsSHA256": {
+    "FIX-VALIDATION.md": "3b492f2deb4a1ca875c361077b8c38380d4f0f5b27c7e8665b93ea93fe81c36b",
+    "RESULTAT.md": "4e0324d5fe4c3c4bebfd99ec3422deba0c651a1d1f927c2579d6d0ab1a8abc94",
+    "verified-summary.json": "c598c9b8fd23ece86dcc710b44cd56275063112a1f2f1fa82e20d39a0e79a9cb",
+    "CONTRE-SIGNAL-APERCU.md": "7ecd530a2a57058c44350c3c7bc34aa73012c0f074c77afe010d2118ce3c125d",
+    "APP-FIX.diff": "d7fbf49bfd3b6ebca43e73e907832442b2e89ebaff9f6875c7653e7b9adc593c"
+  },
+  "committed": false,
+  "pushed": false,
+  "automaticDiagnosticReplay": false
+}
