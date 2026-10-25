@@ -25,7 +25,7 @@ for name in files:
         changed = changed.replace("test(`noms des fichiers exportés, trois types d’export (${engine})`,", "for (let replay = 1; replay <= Number(process.env.EXPORT_REPLAYS || 1); replay++) test(`rejeu ${replay} — noms des fichiers exportés, trois types d’export (${engine})`,")
         anchor = '  } catch (error) { await context.close(); throw error; }'
         assert changed.count(anchor) == 1
-        changed = changed.replace(anchor, "  } catch (error) { const trace = await page.__readExportTrace145(); await context.close(); throw new Error(`Forensic145 ${JSON.stringify(trace)}`, {cause: error}); }")
+        changed = changed.replace(anchor, "  } catch (error) { const trace = await page.__readExportTrace145(); await context.close(); throw new Error(`Forensic145 ${JSON.stringify({original: {name: error.name, message: error.message, stack: error.stack}, ...trace})}`, {cause: error}); }")
     target = args.output / name
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(changed)

@@ -78,7 +78,7 @@ jobs:
                   assert restored.count(new) == 1
                   restored = restored.replace(new, old)
                   old = '  } catch (error) { await context.close(); throw error; }'
-                  new = '  } catch (error) { const trace = await page.__readExportTrace145(); await context.close(); throw new Error(`Forensic145 ${JSON.stringify(trace)}`, {cause: error}); }'
+                  new = '  } catch (error) { const trace = await page.__readExportTrace145(); await context.close(); throw new Error(`Forensic145 ${JSON.stringify({original: {name: error.name, message: error.message, stack: error.stack}, ...trace})}`, {cause: error}); }'
                   assert restored.count(new) == 1
                   restored = restored.replace(new, old)
               assert restored.encode() == original, name
