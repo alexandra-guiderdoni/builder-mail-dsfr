@@ -101,7 +101,8 @@
     "cancel-fields": () => {
       // Les brouillons d’URL (#37) comptent parmi les champs restaurés.
       const restored = new Set([...A.invalid, ...[...A.drafts.values()].map(d => d.input)]);
-      A.UI.clearFieldErrors(); A.invalid.clear(); A.drafts.clear(); A.error(""); A.UI.refresh();
+      // L’erreur ponctuelle est effacée, puis l’alerte persistante (échec ou lecture seule) est restaurée si elle existe (#122).
+      A.UI.clearFieldErrors(); A.invalid.clear(); A.drafts.clear(); A.error(""); A.State.restoreErrorFromState(); A.UI.refresh();
       // Le rendu a remplacé le bouton activé : le focus va au premier champ restauré dans l’ordre du document (#43).
       const first = [...document.querySelectorAll("input[id],textarea[id]")].find(input => restored.has(input.id));
       (first || get("block-editor").querySelector('[data-action="cancel-fields"]'))?.focus();
@@ -116,7 +117,8 @@
     "reload-page": A.State.reload,
     // Décision #32/#37 : le secours exporte la bibliothèque en mémoire même pendant une saisie d’URL invalide (le brouillon n’en fait pas partie).
     "rescue-export": () => { A.State.guardEdit(); A.Files.json(M.library(A.library), "bibliotheque.courriels.json"); A.State.exported(); A.notice("Bibliothèque en mémoire proposée au téléchargement, avec modèles et identités."); },
-    "export-stored": async () => { const record = await A.Storage.load(); if (!record) throw new Error("Aucune donnée enregistrée."); A.Files.json(record, "recuperation.stockage.json"); A.notice("Copie brute du stockage proposée au téléchargement pour récupération."); },
+    // Jeton relevé au départ : la copie brute n’écrase pas une annonce plus récente posée pendant la lecture du stockage (#122).
+    "export-stored": async () => { const ticket = A.State.noticeTicket(); const record = await A.Storage.load(); if (!record) throw new Error("Aucune donnée enregistrée."); A.Files.json(record, "recuperation.stockage.json"); A.notice("Copie brute du stockage proposée au téléchargement pour récupération.", ticket); },
     "export-mail": async () => {
       A.State.guard(); const html = A.Render.exportHtml(A.doc());
       if (!(await A.Checks.confirm("export", A.Checks.warnings(A.doc(), A.Render.weight(html))))) return;

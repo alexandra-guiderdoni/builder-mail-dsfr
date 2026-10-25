@@ -66,11 +66,13 @@
     if (!navigator.clipboard?.write || !window.ClipboardItem) throw new Error("La copie enrichie est indisponible ici. Téléchargez le mail HTML pour sa reprise sur votre poste.");
     // Le poids affiché est celui du HTML remis au presse-papiers ; une annonce de copie précédente ne survit pas à un échec.
     const html = A.Render.clipboardHtml(A.doc()), result = A.Render.weight(html);
-    clearTimeout(weightTimer); showWeight(result); A.notice("");
+    // Le convertisseur SNUM utilise un A.State réduit sans jeton d’annonce : le ticket vaut undefined, ce qui laisse
+     // A.notice écrire sans contrôle (comportement d’avant #122, suffisant pour ce flux à un seul écrivain).
+    clearTimeout(weightTimer); showWeight(result); A.notice(""); const ticket = A.State.noticeTicket?.();
     // Avertissements confirmables du contrôle avant copie (#36), absents du convertisseur SNUM.
     if (A.Checks && !(await A.Checks.confirm("copy", A.Checks.warnings(A.doc(), result)))) return;
     await navigator.clipboard.write([new ClipboardItem({"text/html": new Blob([html], {type: "text/html"}), "text/plain": new Blob([A.Render.plain(A.doc())], {type: "text/plain"})})]);
-    A.notice([`Courriel copié en HTML et texte. ${result.level === "ok" ? "" : `${WARNINGS[result.level]} ${CAUTION} `}Contrôlez le collage et les images dans votre messagerie.`, ...A.Render.warnings(A.doc())].join(" "));
+    A.notice([`Courriel copié en HTML et texte. ${result.level === "ok" ? "" : `${WARNINGS[result.level]} ${CAUTION} `}Contrôlez le collage et les images dans votre messagerie.`, ...A.Render.warnings(A.doc())].join(" "), ticket);
   }
   A.Files = Object.freeze({download, json, safeName, exportDate, exportName, image, validate, copy, weightText, measureWeight, scheduleWeight, staleWeight});
 })();
