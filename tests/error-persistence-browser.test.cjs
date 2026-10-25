@@ -50,6 +50,33 @@ test('cancel-fields n’éteint pas l’alerte persistante de lecture seule', as
   } finally { await browser.close(); }
 });
 
+test('failing(false) préserve l’alerte persistante tant que la lecture seule reste active', async () => {
+  const browser = await chromium.launch({headless: true});
+  try {
+    const {page} = await open(browser);
+    await page.locator('#document-name').fill('Avant outdated'); await saved(page);
+    // Suspendre la prochaine sauvegarde pour pouvoir déclencher outdated() pendant qu'elle est en cours.
+    await page.evaluate(() => {
+      if (!window.__real) window.__real = MailBuilder.Storage.save;
+      window.__release = null;
+      MailBuilder.Storage = {...MailBuilder.Storage, save: (v, t) => window.__release ? window.__real(v, t) : new Promise((res, rej) => { window.__release = () => window.__real(v, t).then(res, rej); })};
+    });
+    await page.locator('#document-name').fill('Pendant outdated');
+    await page.waitForFunction(() => window.__release);
+    // Pendant la sauvegarde en cours : outdated() place l'alerte persistante de lecture seule.
+    await page.evaluate(() => MailBuilder.State.outdated());
+    const persistent = await page.locator('#error').innerText();
+    assert.match(persistent, /nouvelle version/, 'outdated pose l’alerte persistante');
+    // Fin de la sauvegarde : succès → failing(false) ne doit pas effacer la persistante tant que readOnly reste actif.
+    await page.evaluate(() => window.__release());
+    await saved(page);
+    // Vérification directe de restoreErrorFromState : l'alerte doit se replacer dans #error.
+    await page.evaluate(() => { MailBuilder.State.restoreErrorFromState?.() ?? null; });
+    const restored = await page.locator('#error').innerText();
+    assert.equal(restored, persistent, 'la persistante de lecture seule survit à la fin de la sauvegarde');
+  } finally { await browser.close(); }
+});
+
 test('une sauvegarde réussie éteint durablement l’alerte persistante', async () => {
   const browser = await chromium.launch({headless: true});
   try {

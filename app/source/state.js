@@ -30,7 +30,8 @@
   // Un écrivain différé passe le jeton relevé au départ : si une autre annonce est passée entre-temps, il se tait.
   A.notice = (message, since) => { if (since !== undefined && since !== noticeTicket) return; get("notice").textContent = message; noticeTicket++; };
   // Tant que le travail n’est pas sauvegardé, l’export de secours suit le message d’échec.
-  function failing(value) { failed = value; get("save-rescue").hidden = !value || !!readOnly; if (!value) persistentError = ""; }
+  // L’alerte persistante efface sa mémoire seulement quand plus aucune cause (échec ou lecture seule) ne la soutient (#122).
+  function failing(value) { failed = value; get("save-rescue").hidden = !value || !!readOnly; if (!value && !readOnly) persistentError = ""; }
   const readOnlyError = () => new Error(readOnly === "version" ? "Cette fenêtre utilise une autre version de l’atelier : exportez la bibliothèque en mémoire, puis rechargez la page avant de reprendre la main." : "Une autre fenêtre détient la bibliothèque : cette fenêtre est en lecture seule. Exportez la bibliothèque en mémoire ou reprenez la main.");
   function lock(kind, reason) {
     if (readOnly === "version") return;
