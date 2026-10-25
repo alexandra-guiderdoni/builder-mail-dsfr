@@ -1,0 +1,127 @@
+name: Diagnostic causal confirmation export 145
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: diagnostic-confirmation-145
+  cancel-in-progress: false
+jobs:
+  forensic:
+    if: github.ref == 'refs/heads/diag/issue-145-confirmation-causal'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Lire le harnais de la branche diagnostic
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          path: harness
+          persist-credentials: false
+      - name: Lire le snapshot applicatif exact du rouge
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: f3aa8324dbcd255bddafeeb2eec559e698f6065c
+          path: snapshot
+          persist-credentials: false
+      - name: Fixer Node
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: '24.18.0'
+      - name: Vérifier Ubuntu 26 x64 et enregistrer l’image sans la sélectionner
+        run: |
+          python3 - <<'PY'
+          import os,json,platform,pathlib,subprocess
+          data=dict(line.split('=',1) for line in pathlib.Path('/etc/os-release').read_text().splitlines() if '=' in line)
+          info={'os':data.get('ID','').strip('"'),'release':data.get('VERSION_ID','').strip('"'),'architecture':platform.machine(),'ImageOS':os.environ.get('ImageOS'),'ImageVersion':os.environ.get('ImageVersion'),'source':subprocess.check_output(['git','-C','snapshot','rev-parse','HEAD'],text=True).strip(),'harness':subprocess.check_output(['git','-C','harness','rev-parse','HEAD'],text=True).strip()}
+          pathlib.Path('host-145.json').write_text(json.dumps(info,indent=2)+'\n')
+          assert info['os']=='ubuntu' and info['release']=='26.04' and info['architecture']=='x86_64', info
+          assert info['source']=='f3aa8324dbcd255bddafeeb2eec559e698f6065c'
+          PY
+      - name: Installer le verrou Playwright du snapshot
+        working-directory: snapshot
+        run: npm ci --ignore-scripts
+      - name: Installer uniquement Chromium
+        working-directory: snapshot
+        run: npx --no-install playwright install --with-deps chromium
+      - name: Préparer le comparateur CSS depuis le snapshot immuable
+        run: |
+          diag_dir="$GITHUB_WORKSPACE/harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444"
+          python3 "$diag_dir/prepare-comparator.py" --repo "$GITHUB_WORKSPACE/snapshot" --output "$GITHUB_WORKSPACE/comparator" --receipt "$diag_dir/comparator-preparation.json" > "$diag_dir/comparator-preparation.log" 2>&1
+      - name: Paire bornée, témoin puis comparateur même si le témoin échoue
+        env:
+          PASSES: '30'
+          SCENARIO: full
+        run: |
+          set -uo pipefail
+          export PLAYWRIGHT_MODULE="$GITHUB_WORKSPACE/snapshot/node_modules/playwright"
+          diag_dir="$GITHUB_WORKSPACE/harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444"
+          set +e
+          MAIL_BUILDER_ROOT="$GITHUB_WORKSPACE/snapshot" ARM=baseline RESULT=linux-baseline.json node "$diag_dir/loop-confirmation.cjs" > "$diag_dir/linux-baseline.log" 2>&1
+          baseline_status=$?
+          MAIL_BUILDER_ROOT="$GITHUB_WORKSPACE/comparator" ARM=comparator RESULT=linux-comparator.json node "$diag_dir/loop-confirmation.cjs" > "$diag_dir/linux-comparator.log" 2>&1
+          comparator_status=$?
+          set -e
+          printf '{"baseline":%s,"comparator":%s}\n' "$baseline_status" "$comparator_status" > "$diag_dir/pair-exit-status.json"
+          cat "$diag_dir/linux-baseline.log" "$diag_dir/linux-comparator.log"
+      - name: Reçu strict, aucun GO sur un témoin non reproduit
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import json,hashlib,pathlib
+          root=pathlib.Path('harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444')
+          files=[root/n for n in ('loop-confirmation.cjs','trace-confirmation.cjs','prepare-comparator.py','proposal-pages.yml')]
+          files += [pathlib.Path(arm)/name for arm in ('snapshot','comparator') for name in ('tests/browser-support.cjs','app/distribution/portable.html')]
+          receipt={'sha256':{str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in files if p.is_file()},'arms':{},'verdict':'invalid-or-incomplete'}
+          try:
+              prep=json.loads((root/'comparator-preparation.json').read_text())
+              exits=json.loads((root/'pair-exit-status.json').read_text())
+              receipt['preparation']=prep; receipt['exitStatuses']=exits
+              for arm in ('baseline','comparator'):
+                  data=json.loads((root/f'linux-{arm}.json').read_text()); runs=data['runs']
+                  assert data['arm']==arm and data['passes']==30 and data['scenario']=='full'
+                  assert data['platform']=='linux' and data['node']=='v24.18.0' and data['playwright']=='1.64.1'
+                  assert data['source']=='f3aa8324dbcd255bddafeeb2eec559e698f6065c'
+                  green=sum(r['status']=='green' for r in runs); red=sum(r['status']=='red' for r in runs)
+                  for run in runs:
+                      if run['status']=='green':
+                          assert len(run['contexts'])==9
+                          assert all(len(c['exports'])==3 and all(e.get('filename') for e in c['exports']) and c['exports'][0].get('confirmationDOMObserved') is True for c in run['contexts'])
+                  assert (green==30 and red==0 and exits[arm]==0) or (red==1 and runs[-1]['status']=='red' and len(runs)<=30 and exits[arm]==1)
+                  exports=[e for r in runs for c in r['contexts'] for e in c['exports']]
+                  rows=[row for e in exports for t in [e,e.get('finalTrace',{}),e.get('afterDownloadTrace',{})] for row in t.get('rows',[])]
+                  states=rows+[t['state'] for e in exports for t in [e,e.get('finalTrace',{}),e.get('afterDownloadTrace',{})] if 'state' in t]
+                  assert not any(row['kind']=='csp-violation' for row in rows)
+                  assert any(s.get('dialog') for s in states) and any(s.get('dialog') is False for s in states)
+                  for state in states:
+                      if state.get('previewPointerEvents'):
+                          assert state['previewPointerEvents']==('none' if arm=='comparator' and state.get('dialog') else 'auto'), state
+                  receipt['arms'][arm]={'green':green,'red':red,'passesObserved':len(runs),'exports':len(exports),'downloads':sum('filename' in e for e in exports),'initialSuspicions':sum(bool(e.get('initialCandidate')) for e in exports),'transientACK':sum(bool(e.get('transientAck')) for e in exports),'persistentRed':sum(r.get('red',{}).get('kind')=='persistent-confirmation-without-DOM-activation' for r in runs),'browserVersions':sorted(set(r['browserVersion'] for r in runs)),'styleStatesVerified':True,'cspViolations':0}
+              base,variant=receipt['arms']['baseline'],receipt['arms']['comparator']
+              assert base['browserVersions']==variant['browserVersions']
+              receipt['verdict']=('candidate-supported-in-this-pair' if base['persistentRed']==1 and variant['green']==30 else 'non-reproduction-no-fix-proof' if base['green']==30 else 'comparator-not-supported')
+          except Exception as error:
+              receipt['validationError']=str(error); raise
+          finally:
+              pathlib.Path('receipt-145.json').write_text(json.dumps(receipt,indent=2)+'\n')
+              print(json.dumps(receipt,indent=2))
+          assert receipt['verdict']!='comparator-not-supported', receipt['verdict']
+          PY
+      - name: Conserver traces et reçus même sur échec
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: confirmation-145-${{ github.run_id }}-${{ github.run_attempt }}
+          if-no-files-found: error
+          retention-days: 7
+          path: |
+            host-145.json
+            receipt-145.json
+            harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/loop-confirmation.cjs
+            harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/trace-confirmation.cjs
+            harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/prepare-comparator.py
+            harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/proposal-pages.yml
+            harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/comparator-preparation.*
+            harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/pair-exit-status.json
+            harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/linux-*.json
+            harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/linux-*.log
+            harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/red-*.png

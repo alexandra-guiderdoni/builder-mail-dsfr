@@ -8,20 +8,22 @@ assert(Number.isInteger(passes) && passes > 0 && passes <= 30);
 assert(['full','emoji','ascii'].includes(scenario));
 const names = ['Édition & <dossier> "suivi"','Bulletin n°3 : été / automne ?','a\\b*c|d','  ..Rentrée--','***','Eté','a'.repeat(300),'é'.repeat(300),'😀'.repeat(300)];
 const selectors = ['[data-action=export-mail]','[data-action=export-document]','[data-action=export-library]'];
+const arm = process.env.ARM || 'baseline';
+assert(['baseline','comparator'].includes(arm));
 const output = path.join(__dirname, process.env.RESULT || 'loop-full.json');
 const activated = trace => trace?.rows?.some(x=>(x.kind==='click'&&x.target==='check-confirm')||x.kind==='submit');
 async function snapshot(page, start) {
   const nodeBefore=Date.now(); let timer;
   // Borne du diagnostic seul ; aucune attente fonctionnelle ni délai d’input modifiés.
   const trace=await Promise.race([
-    page.evaluate(start=>({rows:window.__confirmationTrace.rows.filter(x=>x.seq>start),state:window.__confirmationTrace.state(),performanceNow:performance.now(),timeOrigin:performance.timeOrigin}),start),
+    page.evaluate(start=>({rows:window.__confirmationTrace.rows.filter(x=>x.seq>start),state:window.__confirmationTrace.state(true),performanceNow:performance.now(),timeOrigin:performance.timeOrigin}),start),
     new Promise((_,reject)=>{timer=setTimeout(()=>reject(new Error('Diagnostic snapshot unavailable after 1000ms')),1000);})
   ]).finally(()=>clearTimeout(timer));
   trace.clockAlignment={nodeBefore,nodeAfter:Date.now(),browserPerformanceNow:trace.performanceNow};
   return trace;
 }
 
-const results = {node:process.version,playwright:require(path.join(process.env.PLAYWRIGHT_MODULE || 'playwright','package.json')).version,source:'f3aa8324dbcd255bddafeeb2eec559e698f6065c',platform:process.platform,scenario,passes,observerOnly:true,timeoutChanged:false,runs:[]};
+const results = {node:process.version,playwright:require(path.join(process.env.PLAYWRIGHT_MODULE || 'playwright','package.json')).version,source:'f3aa8324dbcd255bddafeeb2eec559e698f6065c',platform:process.platform,scenario,passes,arm,observerOnly:true,cssComparator:arm==='comparator',timeoutChanged:false,runs:[]};
 (async()=>{
   for(let pass=0;pass<passes;pass++){
     const browser = await chromium.launch();
@@ -56,7 +58,7 @@ const results = {node:process.version,playwright:require(path.join(process.env.P
               catch(snapshotError){record.finalSnapshotError=snapshotError.message;}
               const persistent=record.finalTrace ? record.finalTrace.state.dialog&&!activated(record.finalTrace) : null;
               run.red={kind:persistent===true?'persistent-confirmation-without-DOM-activation':'download-failed-without-confirmed-persistent-signal',contextIndex:index,selector,persistent};
-              if(persistent===true)await page.screenshot({path:path.join(__dirname,`red-${scenario}-${pass}.png`),timeout:1000}).catch(cause=>{record.screenshotError=cause.message;});
+              if(persistent===true)await page.screenshot({path:path.join(__dirname,`red-${arm}-${scenario}-${pass}.png`),timeout:1000}).catch(cause=>{record.screenshotError=cause.message;});
             }
             throw error; // préserver le TimeoutError primaire, pas un message de snapshot
           }
@@ -65,6 +67,19 @@ const results = {node:process.version,playwright:require(path.join(process.env.P
             try { record.afterDownloadTrace=await snapshot(page,activationStart); start=record.afterDownloadTrace.rows.at(-1)?.seq ?? start; }
             catch(snapshotError){record.afterDownloadSnapshotError=snapshotError.message;}
           }
+          // A received download cannot stand in for the mail confirmation's DOM activation.
+          if(selector==='[data-action=export-mail]'){
+            record.confirmationDOMObserved=!!activated(record.afterDownloadTrace||record);
+            assert(record.confirmationDOMObserved, 'Mail download without observed confirmation activation');
+            const inputs=run.outside.filter(row=>row.contextIndex===index);
+            const confirmation=inputs.findIndex(row=>row.kind==='confirmation-dom'&&row.event==='submit');
+            const delivered=inputs.findIndex(row=>row.kind==='download');
+            record.confirmationReceivedBeforeDownload=confirmation>=0&&delivered>confirmation;
+            // Receipt order is observational only: separate CDP sessions may reorder delivery.
+          }
+          const allRows=[...record.rows,...(record.afterDownloadTrace?.rows||[])];
+          assert(!allRows.some(row=>row.kind==='csp-violation'), 'Unexpected CSP violation');
+          for(const row of allRows)if(row.previewPointerEvents)assert.equal(row.previewPointerEvents,arm==='comparator'&&row.dialog?'none':'auto','Preview pointer CSS does not match arm/modal state');
           record.filename=download.suggestedFilename();
           assert(record.filename && !record.filename.includes('�'));
         }
