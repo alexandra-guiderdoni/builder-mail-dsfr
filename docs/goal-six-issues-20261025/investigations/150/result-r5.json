@@ -1,0 +1,780 @@
+{
+  "synthetic": true,
+  "cycles": [
+    {
+      "action": "cancel",
+      "prior": 0,
+      "before": 1,
+      "state": {
+        "frame": {
+          "left": 735,
+          "top": 458,
+          "right": 1375,
+          "bottom": 1029,
+          "width": 640,
+          "height": 571
+        },
+        "dialog": {
+          "left": 517,
+          "top": 432.59375,
+          "right": 1083,
+          "bottom": 567.40625,
+          "width": 566,
+          "height": 134.8125
+        },
+        "open": true,
+        "modal": true,
+        "inert": false,
+        "pointerEvents": "none",
+        "active": {
+          "tag": "H2",
+          "id": "title"
+        },
+        "viewport": {
+          "width": 1600,
+          "height": 1000,
+          "scrollY": 577
+        },
+        "src": "blob:null/a59901a6-6c32-43cf-8587-a1b28abffff4",
+        "childClicks": 1,
+        "confirms": 0,
+        "elementFromPoint": {
+          "tag": "DIALOG",
+          "id": "dialog"
+        },
+        "measurement": "INTRUSIVE READ: computed style/layout and elementFromPoint may change scheduling; not compositor proof"
+      },
+      "immediate": 1,
+      "modalCount": 1,
+      "after": 2
+    },
+    {
+      "action": "confirm",
+      "prior": 2,
+      "before": 3,
+      "state": {
+        "frame": {
+          "left": 735,
+          "top": 458,
+          "right": 1375,
+          "bottom": 1029,
+          "width": 640,
+          "height": 571
+        },
+        "dialog": {
+          "left": 517,
+          "top": 432.59375,
+          "right": 1083,
+          "bottom": 567.40625,
+          "width": 566,
+          "height": 134.8125
+        },
+        "open": true,
+        "modal": true,
+        "inert": false,
+        "pointerEvents": "none",
+        "active": {
+          "tag": "H2",
+          "id": "title"
+        },
+        "viewport": {
+          "width": 1600,
+          "height": 1000,
+          "scrollY": 577
+        },
+        "src": "blob:null/a59901a6-6c32-43cf-8587-a1b28abffff4",
+        "childClicks": 3,
+        "confirms": 0,
+        "elementFromPoint": {
+          "tag": "DIALOG",
+          "id": "dialog"
+        },
+        "measurement": "INTRUSIVE READ: computed style/layout and elementFromPoint may change scheduling; not compositor proof"
+      },
+      "immediate": 3,
+      "modalCount": 3,
+      "after": 4
+    }
+  ],
+  "errors": [],
+  "cleanupError": null,
+  "executed": true,
+  "browserVersion": "156.0.8078.4",
+  "trace": {
+    "rows": [
+      {
+        "sequence": 1,
+        "protocol": "minimal150",
+        "document": "child-1",
+        "url": "blob:null/a59901a6-6c32-43cf-8587-a1b28abffff4",
+        "kind": "child-event-received",
+        "event": "child-1:1",
+        "type": "pointerdown",
+        "isTrusted": true,
+        "x": 528,
+        "y": 41,
+        "time": 83.10000002384186,
+        "target": {
+          "tag": "BUTTON",
+          "id": "control"
+        },
+        "origin": "null",
+        "parentModalAtReceipt": {
+          "open": false,
+          "modal": false
+        },
+        "modalTiming": "parent reception, not child event timestamp"
+      },
+      {
+        "sequence": 2,
+        "protocol": "minimal150",
+        "document": "child-1",
+        "url": "blob:null/a59901a6-6c32-43cf-8587-a1b28abffff4",
+        "kind": "child-event-received",
+        "event": "child-1:2",
+        "type": "mousedown",
+        "isTrusted": true,
+        "x": 528,
+        "y": 41,
+        "time": 83.10000002384186,
+        "target": {
+          "tag": "BUTTON",
+          "id": "control"
+        },
+        "origin": "null",
+        "parentModalAtReceipt": {
+          "open": false,
+          "modal": false
+        },
+        "modalTiming": "parent reception, not child event timestamp"
+      },
+      {
+        "sequence": 3,
+        "protocol": "minimal150",
+        "document": "child-1",
+        "url": "blob:null/a59901a6-6c32-43cf-8587-a1b28abffff4",
+        "kind": "child-event-received",
+        "event": "child-1:3",
+        "type": "pointerup",
+        "isTrusted": true,
+        "x": 528,
+        "y": 41,
+        "time": 83.20000004768372,
+        "target": {
+          "tag": "BUTTON",
+          "id": "control"
+        },
+        "origin": "null",
+        "parentModalAtReceipt": {
+          "open": false,
+          "modal": false
+        },
+        "modalTiming": "parent reception, not child event timestamp"
+      },
+      {
+        "sequence": 4,
+        "protocol": "minimal150",
+        "document": "child-1",
+        "url": "blob:null/a59901a6-6c32-43cf-8587-a1b28abffff4",
+        "kind": "child-event-received",
+        "event": "child-1:4",
+        "type": "mouseup",
+        "isTrusted": true,
+        "x": 528,
+        "y": 41,
+        "time": 83.20000004768372,
+        "target": {
+          "tag": "BUTTON",
+          "id": "control"
+        },
+        "origin": "null",
+        "parentModalAtReceipt": {
+          "open": false,
+          "modal": false
+        },
+        "modalTiming": "parent reception, not child event timestamp"
+      },
+      {
+        "sequence": 5,
+        "protocol": "minimal150",
+        "document": "child-1",
+        "url": "blob:null/a59901a6-6c32-43cf-8587-a1b28abffff4",
+        "kind": "child-event-received",
+        "event": "child-1:5",
+        "type": "click",
+        "isTrusted": true,
+        "x": 528,
+        "y": 41,
+        "time": 83.20000004768372,
+        "target": {
+          "tag": "BUTTON",
+          "id": "control"
+        },
+        "origin": "null",
+        "parentModalAtReceipt": {
+          "open": false,
+          "modal": false
+        },
+        "modalTiming": "parent reception, not child event timestamp"
+      },
+      {
+        "sequence": 6,
+        "kind": "parent-event",
+        "document": "parent-1",
+        "event": "parent-1:1",
+        "type": "click",
+        "isTrusted": true,
+        "x": 0,
+        "y": 0,
+        "target": {
+          "tag": "BUTTON",
+          "id": "open"
+        },
+        "open": false,
+        "modal": false
+      },
+      {
+        "sequence": 7,
+        "kind": "parent-event",
+        "document": "parent-1",
+        "event": "parent-1:2",
+        "type": "pointerdown",
+        "isTrusted": true,
+        "x": 1365,
+        "y": 990,
+        "target": {
+          "tag": "DIALOG",
+          "id": "dialog"
+        },
+        "open": true,
+        "modal": true
+      },
+      {
+        "sequence": 8,
+        "kind": "parent-event",
+        "document": "parent-1",
+        "event": "parent-1:3",
+        "type": "mousedown",
+        "isTrusted": true,
+        "x": 1365,
+        "y": 990,
+        "target": {
+          "tag": "DIALOG",
+          "id": "dialog"
+        },
+        "open": true,
+        "modal": true
+      },
+      {
+        "sequence": 9,
+        "kind": "parent-event",
+        "document": "parent-1",
+        "event": "parent-1:4",
+        "type": "pointerup",
+        "isTrusted": true,
+        "x": 1365,
+        "y": 990,
+        "target": {
+          "tag": "DIALOG",
+          "id": "dialog"
+        },
+        "open": true,
+        "modal": true
+      },
+      {
+        "sequence": 10,
+        "kind": "parent-event",
+        "document": "parent-1",
+        "event": "parent-1:5",
+        "type": "mouseup",
+        "isTrusted": true,
+        "x": 1365,
+        "y": 990,
+        "target": {
+          "tag": "DIALOG",
+          "id": "dialog"
+        },
+        "open": true,
+        "modal": true
+      },
+      {
+        "sequence": 11,
+        "kind": "parent-event",
+        "document": "parent-1",
+        "event": "parent-1:6",
+        "type": "click",
+        "isTrusted": true,
+        "x": 1365,
+        "y": 990,
+        "target": {
+          "tag": "DIALOG",
+          "id": "dialog"
+        },
+        "open": true,
+        "modal": true
+      },
+      {
+        "sequence": 12,
+        "protocol": "minimal150",
+        "document": "child-1",
+        "url": "blob:null/a59901a6-6c32-43cf-8587-a1b28abffff4",
+        "kind": "child-event-received",
+        "event": "child-1:6",
+        "type": "pointerdown",
+        "isTrusted": true,
+        "x": 528,
+        "y": 41,
+        "time": 139.70000004768372,
+        "target": {
+          "tag": "BUTTON",
+          "id": "control"
+        },
+        "origin": "null",
+        "parentModalAtReceipt": {
+          "open": false,
+          "modal": false
+        },
+        "modalTiming": "parent reception, not child event timestamp"
+      },
+      {
+        "sequence": 13,
+        "protocol": "minimal150",
+        "document": "child-1",
+        "url": "blob:null/a59901a6-6c32-43cf-8587-a1b28abffff4",
+        "kind": "child-event-received",
+        "event": "child-1:7",
+        "type": "mousedown",
+        "isTrusted": true,
+        "x": 528,
+        "y": 41,
+        "time": 139.70000004768372,
+        "target": {
+          "tag": "BUTTON",
+          "id": "control"
+        },
+        "origin": "null",
+        "parentModalAtReceipt": {
+          "open": false,
+          "modal": false
+        },
+        "modalTiming": "parent reception, not child event timestamp"
+      },
+      {
+        "sequence": 14,
+        "protocol": "minimal150",
+        "document": "child-1",
+        "url": "blob:null/a59901a6-6c32-43cf-8587-a1b28abffff4",
+        "kind": "child-event-received",
+        "event": "child-1:8",
+        "type": "pointerup",
+        "isTrusted": true,
+        "x": 528,
+        "y": 41,
+        "time": 139.70000004768372,
+        "target": {
+          "tag": "BUTTON",
+          "id": "control"
+        },
+        "origin": "null",
+        "parentModalAtReceipt": {
+          "open": false,
+          "modal": false
+        },
+        "modalTiming": "parent reception, not child event timestamp"
+      },
+      {
+        "sequence": 15,
+        "protocol": "minimal150",
+        "document": "child-1",
+        "url": "blob:null/a59901a6-6c32-43cf-8587-a1b28abffff4",
+        "kind": "child-event-received",
+        "event": "child-1:9",
+        "type": "mouseup",
+        "isTrusted": true,
+        "x": 528,
+        "y": 41,
+        "time": 139.70000004768372,
+        "target": {
+          "tag": "BUTTON",
+          "id": "control"
+        },
+        "origin": "null",
+        "parentModalAtReceipt": {
+          "open": false,
+          "modal": false
+        },
+        "modalTiming": "parent reception, not child event timestamp"
+      },
+      {
+        "sequence": 16,
+        "protocol": "minimal150",
+        "document": "child-1",
+        "url": "blob:null/a59901a6-6c32-43cf-8587-a1b28abffff4",
+        "kind": "child-event-received",
+        "event": "child-1:10",
+        "type": "click",
+        "isTrusted": true,
+        "x": 528,
+        "y": 41,
+        "time": 139.70000004768372,
+        "target": {
+          "tag": "BUTTON",
+          "id": "control"
+        },
+        "origin": "null",
+        "parentModalAtReceipt": {
+          "open": false,
+          "modal": false
+        },
+        "modalTiming": "parent reception, not child event timestamp"
+      },
+      {
+        "sequence": 17,
+        "protocol": "minimal150",
+        "document": "child-1",
+        "url": "blob:null/a59901a6-6c32-43cf-8587-a1b28abffff4",
+        "kind": "child-event-received",
+        "event": "child-1:11",
+        "type": "pointerdown",
+        "isTrusted": true,
+        "x": 528,
+        "y": 41,
+        "time": 164.60000002384186,
+        "target": {
+          "tag": "BUTTON",
+          "id": "control"
+        },
+        "origin": "null",
+        "parentModalAtReceipt": {
+          "open": false,
+          "modal": false
+        },
+        "modalTiming": "parent reception, not child event timestamp"
+      },
+      {
+        "sequence": 18,
+        "protocol": "minimal150",
+        "document": "child-1",
+        "url": "blob:null/a59901a6-6c32-43cf-8587-a1b28abffff4",
+        "kind": "child-event-received",
+        "event": "child-1:12",
+        "type": "mousedown",
+        "isTrusted": true,
+        "x": 528,
+        "y": 41,
+        "time": 164.60000002384186,
+        "target": {
+          "tag": "BUTTON",
+          "id": "control"
+        },
+        "origin": "null",
+        "parentModalAtReceipt": {
+          "open": false,
+          "modal": false
+        },
+        "modalTiming": "parent reception, not child event timestamp"
+      },
+      {
+        "sequence": 19,
+        "protocol": "minimal150",
+        "document": "child-1",
+        "url": "blob:null/a59901a6-6c32-43cf-8587-a1b28abffff4",
+        "kind": "child-event-received",
+        "event": "child-1:13",
+        "type": "pointerup",
+        "isTrusted": true,
+        "x": 528,
+        "y": 41,
+        "time": 164.60000002384186,
+        "target": {
+          "tag": "BUTTON",
+          "id": "control"
+        },
+        "origin": "null",
+        "parentModalAtReceipt": {
+          "open": false,
+          "modal": false
+        },
+        "modalTiming": "parent reception, not child event timestamp"
+      },
+      {
+        "sequence": 20,
+        "protocol": "minimal150",
+        "document": "child-1",
+        "url": "blob:null/a59901a6-6c32-43cf-8587-a1b28abffff4",
+        "kind": "child-event-received",
+        "event": "child-1:14",
+        "type": "mouseup",
+        "isTrusted": true,
+        "x": 528,
+        "y": 41,
+        "time": 164.60000002384186,
+        "target": {
+          "tag": "BUTTON",
+          "id": "control"
+        },
+        "origin": "null",
+        "parentModalAtReceipt": {
+          "open": false,
+          "modal": false
+        },
+        "modalTiming": "parent reception, not child event timestamp"
+      },
+      {
+        "sequence": 21,
+        "protocol": "minimal150",
+        "document": "child-1",
+        "url": "blob:null/a59901a6-6c32-43cf-8587-a1b28abffff4",
+        "kind": "child-event-received",
+        "event": "child-1:15",
+        "type": "click",
+        "isTrusted": true,
+        "x": 528,
+        "y": 41,
+        "time": 164.60000002384186,
+        "target": {
+          "tag": "BUTTON",
+          "id": "control"
+        },
+        "origin": "null",
+        "parentModalAtReceipt": {
+          "open": false,
+          "modal": false
+        },
+        "modalTiming": "parent reception, not child event timestamp"
+      },
+      {
+        "sequence": 22,
+        "kind": "parent-event",
+        "document": "parent-1",
+        "event": "parent-1:7",
+        "type": "click",
+        "isTrusted": true,
+        "x": 0,
+        "y": 0,
+        "target": {
+          "tag": "BUTTON",
+          "id": "open"
+        },
+        "open": false,
+        "modal": false
+      },
+      {
+        "sequence": 23,
+        "protocol": "minimal150",
+        "document": "child-1",
+        "url": "blob:null/a59901a6-6c32-43cf-8587-a1b28abffff4",
+        "kind": "child-event-received",
+        "event": "child-1:16",
+        "type": "pointerdown",
+        "isTrusted": true,
+        "x": 630,
+        "y": 532,
+        "time": 178.89999997615814,
+        "target": {
+          "tag": "BUTTON",
+          "id": "target"
+        },
+        "origin": "null",
+        "parentModalAtReceipt": {
+          "open": true,
+          "modal": true
+        },
+        "modalTiming": "parent reception, not child event timestamp"
+      },
+      {
+        "sequence": 24,
+        "protocol": "minimal150",
+        "document": "child-1",
+        "url": "blob:null/a59901a6-6c32-43cf-8587-a1b28abffff4",
+        "kind": "child-event-received",
+        "event": "child-1:17",
+        "type": "mousedown",
+        "isTrusted": true,
+        "x": 630,
+        "y": 532,
+        "time": 178.89999997615814,
+        "target": {
+          "tag": "BUTTON",
+          "id": "target"
+        },
+        "origin": "null",
+        "parentModalAtReceipt": {
+          "open": true,
+          "modal": true
+        },
+        "modalTiming": "parent reception, not child event timestamp"
+      },
+      {
+        "sequence": 25,
+        "kind": "parent-event",
+        "document": "parent-1",
+        "event": "parent-1:8",
+        "type": "pointerup",
+        "isTrusted": true,
+        "x": 1365,
+        "y": 990,
+        "target": {
+          "tag": "DIALOG",
+          "id": "dialog"
+        },
+        "open": true,
+        "modal": true
+      },
+      {
+        "sequence": 26,
+        "kind": "parent-event",
+        "document": "parent-1",
+        "event": "parent-1:9",
+        "type": "mouseup",
+        "isTrusted": true,
+        "x": 1365,
+        "y": 990,
+        "target": {
+          "tag": "DIALOG",
+          "id": "dialog"
+        },
+        "open": true,
+        "modal": true
+      },
+      {
+        "sequence": 27,
+        "kind": "parent-event",
+        "document": "parent-1",
+        "event": "parent-1:10",
+        "type": "click",
+        "isTrusted": true,
+        "x": 0,
+        "y": 0,
+        "target": {
+          "tag": "BUTTON",
+          "id": "confirm"
+        },
+        "open": true,
+        "modal": true
+      },
+      {
+        "sequence": 28,
+        "protocol": "minimal150",
+        "document": "child-1",
+        "url": "blob:null/a59901a6-6c32-43cf-8587-a1b28abffff4",
+        "kind": "child-event-received",
+        "event": "child-1:18",
+        "type": "pointerdown",
+        "isTrusted": true,
+        "x": 528,
+        "y": 41,
+        "time": 214.80000007152557,
+        "target": {
+          "tag": "BUTTON",
+          "id": "control"
+        },
+        "origin": "null",
+        "parentModalAtReceipt": {
+          "open": false,
+          "modal": false
+        },
+        "modalTiming": "parent reception, not child event timestamp"
+      },
+      {
+        "sequence": 29,
+        "protocol": "minimal150",
+        "document": "child-1",
+        "url": "blob:null/a59901a6-6c32-43cf-8587-a1b28abffff4",
+        "kind": "child-event-received",
+        "event": "child-1:19",
+        "type": "mousedown",
+        "isTrusted": true,
+        "x": 528,
+        "y": 41,
+        "time": 214.80000007152557,
+        "target": {
+          "tag": "BUTTON",
+          "id": "control"
+        },
+        "origin": "null",
+        "parentModalAtReceipt": {
+          "open": false,
+          "modal": false
+        },
+        "modalTiming": "parent reception, not child event timestamp"
+      },
+      {
+        "sequence": 30,
+        "protocol": "minimal150",
+        "document": "child-1",
+        "url": "blob:null/a59901a6-6c32-43cf-8587-a1b28abffff4",
+        "kind": "child-event-received",
+        "event": "child-1:20",
+        "type": "pointerup",
+        "isTrusted": true,
+        "x": 528,
+        "y": 41,
+        "time": 214.80000007152557,
+        "target": {
+          "tag": "BUTTON",
+          "id": "control"
+        },
+        "origin": "null",
+        "parentModalAtReceipt": {
+          "open": false,
+          "modal": false
+        },
+        "modalTiming": "parent reception, not child event timestamp"
+      },
+      {
+        "sequence": 31,
+        "protocol": "minimal150",
+        "document": "child-1",
+        "url": "blob:null/a59901a6-6c32-43cf-8587-a1b28abffff4",
+        "kind": "child-event-received",
+        "event": "child-1:21",
+        "type": "mouseup",
+        "isTrusted": true,
+        "x": 528,
+        "y": 41,
+        "time": 214.80000007152557,
+        "target": {
+          "tag": "BUTTON",
+          "id": "control"
+        },
+        "origin": "null",
+        "parentModalAtReceipt": {
+          "open": false,
+          "modal": false
+        },
+        "modalTiming": "parent reception, not child event timestamp"
+      },
+      {
+        "sequence": 32,
+        "protocol": "minimal150",
+        "document": "child-1",
+        "url": "blob:null/a59901a6-6c32-43cf-8587-a1b28abffff4",
+        "kind": "child-event-received",
+        "event": "child-1:22",
+        "type": "click",
+        "isTrusted": true,
+        "x": 528,
+        "y": 41,
+        "time": 214.80000007152557,
+        "target": {
+          "tag": "BUTTON",
+          "id": "control"
+        },
+        "origin": "null",
+        "parentModalAtReceipt": {
+          "open": false,
+          "modal": false
+        },
+        "modalTiming": "parent reception, not child event timestamp"
+      }
+    ],
+    "dropped": 0,
+    "childClicks": 4,
+    "confirms": 1
+  },
+  "finding": {
+    "routingObserved": false,
+    "qualification": "synthetic standalone only; absence does not exonerate application; no Chromium cause attribution"
+  }
+}

@@ -1,0 +1,61 @@
+<!doctype html><meta charset="utf-8"><title>150 isolated synthetic parent</title>
+<style>
+body {margin:0; height:2400px; font:16px sans-serif}
+#open {position:fixed; left:20px; top:20px}
+iframe {position:absolute; left:735px; top:1035px; width:640px; height:571px; border:0}
+body:has(dialog[open]) iframe {pointer-events:none}
+dialog {width:520px; padding:20px} dialog::backdrop {background:#0005}
+</style>
+<button id="open">Open modal</button><iframe id="preview" sandbox="allow-scripts"></iframe>
+<dialog id="dialog" aria-labelledby="title"><h2 id="title" tabindex="-1">Synthetic confirmation</h2>
+<button id="cancel">Cancel</button><button id="confirm">Confirm</button></dialog>
+<script>
+'use strict';
+const dialog=document.querySelector('#dialog'), frame=document.querySelector('#preview');
+const rows=[], seen=new WeakMap(); let eventSequence=0, childClicks=0, confirms=0, dropped=0;
+const emit=row=>{if(rows.length<500)rows.push({sequence:rows.length+1,...row});else dropped++};
+const modal=()=>({open:dialog.open,modal:dialog.matches(':modal')});
+const identity=element=>element?{tag:element.tagName,id:element.id}:null;
+for(const type of ['pointerdown','pointerup','mousedown','mouseup','click']) {
+ document.addEventListener(type,event=>{
+  if(!seen.has(event))seen.set(event,++eventSequence);
+  emit({kind:'parent-event',document:'parent-1',event:'parent-1:'+seen.get(event),type,
+   isTrusted:event.isTrusted,x:event.clientX,y:event.clientY,target:identity(event.target),...modal()});
+ },true);
+}
+document.querySelector('#open').onclick=()=>{dialog.showModal();document.querySelector('#title').focus({preventScroll:true})};
+document.querySelector('#cancel').onclick=()=>dialog.close('cancel');
+document.querySelector('#confirm').onclick=()=>{confirms++;dialog.close('confirm')};
+const pending=new Map(); let probe=0;
+window.addEventListener('message',event=>{
+ if(event.source!==frame.contentWindow||event.origin!=='null'||event.data?.protocol!=='minimal150')return;
+ const data=event.data;
+ if(data.kind==='ready')window.childReady=true;
+ if(data.kind==='event') {
+  if(data.type==='click')childClicks++;
+  emit({...data,kind:'child-event-received',origin:event.origin,
+   parentModalAtReceipt:modal(),modalTiming:'parent reception, not child event timestamp'});
+ }
+ if(data.kind==='probe'&&pending.has(data.probe)) {
+  pending.get(data.probe)(data);pending.delete(data.probe);
+ }
+});
+window.fixture={
+ mount(html){frame.src=URL.createObjectURL(new Blob([html],{type:'text/html'}))},
+ snapshot(point){
+  const rect=element=>{const r=element.getBoundingClientRect();return {left:r.left,top:r.top,right:r.right,bottom:r.bottom,width:r.width,height:r.height}};
+  return {frame:rect(frame),dialog:rect(dialog),...modal(),inert:frame.inert,
+   pointerEvents:getComputedStyle(frame).pointerEvents,active:identity(document.activeElement),
+   viewport:{width:innerWidth,height:innerHeight,scrollY},src:frame.src,childClicks,confirms,
+   elementFromPoint:identity(document.elementFromPoint(point.x,point.y)),
+   measurement:'INTRUSIVE READ: computed style/layout and elementFromPoint may change scheduling; not compositor proof'};
+ },
+ probeChild(){return new Promise((resolve,reject)=>{
+  const id=++probe;
+  const timeout=setTimeout(()=>{pending.delete(id);reject(Error('child counter acknowledgement timed out'))},5000);
+  pending.set(id,data=>{clearTimeout(timeout);resolve(data)});
+  frame.contentWindow.postMessage({protocol:'minimal150',kind:'probe',probe:id},'*');
+ })},
+ trace(){return {rows,dropped,childClicks,confirms}}
+};
+</script>
