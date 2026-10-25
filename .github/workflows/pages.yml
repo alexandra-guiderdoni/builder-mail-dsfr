@@ -1,68 +1,86 @@
-name: Publier l’atelier sur GitHub Pages
+name: 'Diagnostic unique export Chromium #145'
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: github-pages
+  group: export-145-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
-  tests:
+  diagnostic:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
-    permissions:
-      contents: read
+    timeout-minutes: 30
     steps:
-      - name: Lire les sources
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Préparer les preuves du seul essai prévu
+        shell: bash
+        run: |
+          mkdir -p evidence145
+          printf '{"plannedSource":"0d97442b5681d04d7b0cbb4cb640825efd4388a4","workflowSha":"%s","maxTestInvocations":1}\n' "$GITHUB_SHA" > evidence145/plan.json
+      - name: Lire la révision exacte du nouvel échec
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
+          ref: 0d97442b5681d04d7b0cbb4cb640825efd4388a4
+          path: subject
           persist-credentials: false
-      - name: Fixer la version de Node
-        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+      - name: Fixer Node
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
         with:
           node-version: '24.18.0'
-      - name: Installer Playwright depuis le verrou
-        run: npm ci --ignore-scripts
-      - name: Installer Chromium, WebKit et leurs dépendances système
-        run: npx --no-install playwright install --with-deps chromium webkit
-      - name: Contrôler les distributions et la provenance
-        run: npm run check
-      - name: Exécuter la suite de tests
-        run: npm test
-
-  deploy:
-    needs: tests
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
-    steps:
-      - name: Lire les sources
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - name: Vérifier les distributions et préparer le site
+      - name: Consigner et vérifier les sources et l’environnement
+        shell: bash
         run: |
-          python3 scripts/build_app.py --check
-          python3 scripts/build.py --check
-          mkdir _site
-          cp -R app/distribution/web/. _site/
-          cp app/distribution/snum.html _site/snum.html
-          cp app/distribution/portable.html _site/atelier-portable.html
-      - name: Déposer les seuls fichiers publics
-        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+          {
+            cat /etc/os-release
+            printf 'ImageOS=%s\nImageVersion=%s\nRunnerArch=%s\n' "$ImageOS" "$ImageVersion" "$RUNNER_ARCH"
+            node --version
+            git -C subject rev-parse HEAD
+          } > evidence145/host.log
+          . /etc/os-release
+          test "$ID" = ubuntu
+          test "$VERSION_ID" = 26.04
+          test "$RUNNER_ARCH" = X64
+          test "$(node --version)" = v24.18.0
+          test "$(git -C subject rev-parse HEAD)" = 0d97442b5681d04d7b0cbb4cb640825efd4388a4
+          cd subject
+          sha256sum tests/export-names-browser.test.cjs tests/browser-support.cjs tests/export-diagnostics.cjs app/distribution/portable.html package.json package-lock.json > ../evidence145/source.sha256
+      - name: Installer les dépendances verrouillées
+        working-directory: subject
+        shell: bash
+        run: |
+          set -o pipefail
+          npm ci --ignore-scripts 2>&1 | tee ../evidence145/npm-ci.log
+          node -e 'const p=require("playwright/package.json"); if(p.version!=="1.64.1")process.exit(1); console.log(JSON.stringify({node:process.version,platform:process.platform,arch:process.arch,playwright:p.version}));' > ../evidence145/packages.json
+      - name: Installer le même périmètre de navigateurs et dépendances système
+        working-directory: subject
+        shell: bash
+        run: |
+          set -o pipefail
+          npx --no-install playwright install --with-deps chromium webkit 2>&1 | tee ../evidence145/browser-install.log
+      - name: Exécuter une fois le test Chromium original inchangé
+        working-directory: subject
+        shell: bash
+        env:
+          MAIL_BUILDER_ENGINE: chromium
+        run: |
+          git diff --exit-code HEAD -- tests/export-names-browser.test.cjs tests/browser-support.cjs tests/export-diagnostics.cjs app/distribution/portable.html package.json package-lock.json
+          sha256sum -c ../evidence145/source.sha256
+          set -o pipefail
+          set +e
+          node --test --test-concurrency=1 --test-reporter=tap --test-name-pattern='^noms des fichiers exportés, trois types d’export \(Chromium\)$' tests/export-names-browser.test.cjs 2>&1 | tee ../evidence145/export-names-chromium.tap
+          export145_statuses=("${PIPESTATUS[@]}")
+          set -e
+          printf '{"testExit":%s,"teeExit":%s,"invocations":1,"retries":0}\n' "${export145_statuses[0]}" "${export145_statuses[1]}" > ../evidence145/result.json
+          if test "${export145_statuses[0]}" != 0; then exit "${export145_statuses[0]}"; fi
+          exit "${export145_statuses[1]}"
+      - name: Conserver les preuves même en échec
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          path: _site
-      - name: Publier
-        id: deployment
-        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
+          name: export-145-${{ github.run_id }}-${{ github.run_attempt }}
+          path: evidence145/
+          if-no-files-found: error
+          retention-days: 7
