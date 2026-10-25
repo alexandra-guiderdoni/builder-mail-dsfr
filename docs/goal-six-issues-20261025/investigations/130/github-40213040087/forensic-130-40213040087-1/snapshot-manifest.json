@@ -1,0 +1,11 @@
+{
+  "commit": "395c08d1dfa4d0b8e41416da798bf0313a8bd379",
+  "files": {
+    "tests/restore-after-refusal-browser.test.cjs": "21b0f995c6e9d2e8d414628e97b5c90e827736db9ece121d5ae44ea34837ccf6",
+    "tests/browser-support.cjs": "9d782871d54fa2c8016a7d1568bb6f55d9d93dc3040f328e0d4bb332418c357e",
+    "app/distribution/portable.html": "ac9aee8c29f438772797acc55dd90e8fb0798de9845ad722c2cb0679aad6f7f3",
+    "package.json": "48831db4c7c1065f47f24cb735f4ac14123fa7b3f142af8baecaec550cd6eeda",
+    "package-lock.json": "fe4f9203ff28b3a0d700234eeba27b9a64a15dd588200a3c5d40ac48d0111105",
+    ".github/workflows/pages.yml": "ab56e3a461291595cc10f9baf47447d30ff435da3b223477940789d2b80d3646"
+  }
+}

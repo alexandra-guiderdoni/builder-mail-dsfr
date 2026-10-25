@@ -1,0 +1,18 @@
+{
+  "ref": "eadd426befeb39a6e68a14342f9c1a66102ac81d",
+  "files": {
+    "app/distribution/portable.html": {
+      "original": "ac9aee8c29f438772797acc55dd90e8fb0798de9845ad722c2cb0679aad6f7f3",
+      "traced": "ac9aee8c29f438772797acc55dd90e8fb0798de9845ad722c2cb0679aad6f7f3"
+    },
+    "tests/browser-support.cjs": {
+      "original": "9d782871d54fa2c8016a7d1568bb6f55d9d93dc3040f328e0d4bb332418c357e",
+      "traced": "1ce1cb660c2fae9580aeeae2725d4589831435ef7cbcb6179c3e1732b39d43a4"
+    },
+    "tests/export-names-browser.test.cjs": {
+      "original": "e42a83f866215ce599cfab478a09fc64d3452f7dbdeffc212be52419e8988ea6",
+      "traced": "be15079b371bfc4338b6105065f260462486bd71c19667b052e30342a7182eb9"
+    }
+  },
+  "helper": "d13f0656d4859258024ff831c175623306db97fc07bc9f2184dcb69478b3b251"
+}

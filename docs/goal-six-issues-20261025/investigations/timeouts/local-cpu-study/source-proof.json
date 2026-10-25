@@ -1,0 +1,32 @@
+{
+  "preparedAtUtc": "2026-10-25T17:01:51.587703+00:00",
+  "historicalRef": "eadd426befeb39a6e68a14342f9c1a66102ac81d",
+  "diagnosticRef": "ce1768f2798454326ed1687c37aaf05aa34c8d0d",
+  "stress": {
+    "method": "Emulation.setCPUThrottlingRate",
+    "rate": 4,
+    "placement": "beforeNavigate callback in exportNames only"
+  },
+  "maxChromiumReplays": 3,
+  "files": {
+    "app/distribution/portable.html": {
+      "historical": "ac9aee8c29f438772797acc55dd90e8fb0798de9845ad722c2cb0679aad6f7f3",
+      "study": "ac9aee8c29f438772797acc55dd90e8fb0798de9845ad722c2cb0679aad6f7f3"
+    },
+    "tests/browser-support.cjs": {
+      "historical": "9d782871d54fa2c8016a7d1568bb6f55d9d93dc3040f328e0d4bb332418c357e",
+      "study": "1ce1cb660c2fae9580aeeae2725d4589831435ef7cbcb6179c3e1732b39d43a4"
+    },
+    "tests/export-names-browser.test.cjs": {
+      "historical": "e42a83f866215ce599cfab478a09fc64d3452f7dbdeffc212be52419e8988ea6",
+      "study": "e7800824433ea03846cf3d46b62eeebaeec9258b8407fb9e72193cf1aad1b416"
+    }
+  },
+  "enrichedTestBeforeCpuSha256": "be15079b371bfc4338b6105065f260462486bd71c19667b052e30342a7182eb9",
+  "allAssertionsAndTimeoutsPreserved": true,
+  "noteBeforeTrialSha256": "24cb4bdb400f9d5adb27325e959cd160dc15385700d096701018efc42794a521",
+  "baselineLogs": {
+    "docs/goal-six-issues-20261025/investigations/timeouts/export-historical-full.log": "e940719710d636fa40f1098c79a14e753e9e291b003bd170ca2da39f6f1dd46c",
+    "docs/goal-six-issues-20261025/investigations/timeouts/export-traced-local.log": "53b70677f43fe9c0945ca7a905a78c438e732279decca73f67852e42e818c8fe"
+  }
+}

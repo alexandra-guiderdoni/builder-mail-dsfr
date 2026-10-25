@@ -1,0 +1,16 @@
+--- eadd426befeb39a6e68a14342f9c1a66102ac81d/tests/export-names-browser.test.cjs
++++ export-traced/tests/export-names-browser.test.cjs
+@@ -36,11 +36,11 @@
+     const downloads = [];
+     for (const selector of selectors) downloads.push((await suggested(page, selector, `nom « ${name} »`)).normalize('NFC'));
+     return {mail: downloads[0], composition: downloads[1], library: downloads[2], direct: () => page.evaluate(n => MailBuilder.Files.exportName(n, 'html'), name)};
+-  } catch (error) { await context.close(); throw error; }
++  } catch (error) { const trace = await page.__readExportTrace145(); await context.close(); throw new Error(`Forensic145 ${JSON.stringify(trace)}`, {cause: error}); }
+ }
+ 
+ for (const [engine, launcher] of [['Chromium', chromium], ['WebKit', webkit]]) {
+-  test(`noms des fichiers exportés, trois types d’export (${engine})`, async () => {
++  for (let replay = 1; replay <= Number(process.env.EXPORT_REPLAYS || 1); replay++) test(`rejeu ${replay} — noms des fichiers exportés, trois types d’export (${engine})`, async () => {
+     const browser = await launcher.launch();
+     try {
+       for (const {label, name, base} of cases) {

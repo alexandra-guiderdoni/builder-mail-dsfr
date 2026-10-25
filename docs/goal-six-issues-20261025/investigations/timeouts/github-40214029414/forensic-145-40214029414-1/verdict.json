@@ -1,0 +1,23 @@
+{
+  "counts": {
+    "original": {
+      "tests": 1,
+      "pass": 1,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0
+    },
+    "traced": {
+      "tests": 5,
+      "pass": 5,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0
+    }
+  },
+  "results": {
+    "originalExit": 0,
+    "tracedExit": 0
+  },
+  "interpretation": "bounded non-reproduction; original cause remains unknown"
+}

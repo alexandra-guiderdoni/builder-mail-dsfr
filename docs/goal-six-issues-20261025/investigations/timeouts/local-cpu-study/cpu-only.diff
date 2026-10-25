@@ -1,0 +1,11 @@
+--- enriched-ce1768f
++++ enriched-ce1768f-cpu4
+@@ -29,7 +29,7 @@
+ // séparément que le nom transmis à la page est déjà en NFC.
+ async function exportNames(browser, name) {
+   // Contexte neuf par nom : Chromium limite les téléchargements automatiques répétés d'une même page.
+-  const {page, context} = await open(browser, {timezoneId: 'Europe/Paris'}, p => p.clock.setFixedTime(FIXED));
++  const {page, context} = await open(browser, {timezoneId: 'Europe/Paris'}, async p => { const cpuSession = await p.context().newCDPSession(p); await cpuSession.send('Emulation.setCPUThrottlingRate', {rate: 4}); await p.clock.setFixedTime(FIXED); });
+   try {
+     await expand(page, 'Fichiers et récupération');
+     await page.locator('#document-name').fill(name); await saved(page);

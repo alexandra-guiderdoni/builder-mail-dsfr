@@ -1,0 +1,17 @@
+{
+  "base": "7c78822872b8e159fd884836828d5b7ce3f75544",
+  "assertionLinesUnchanged": true,
+  "fixedDateCasesSelectorsUnchanged": true,
+  "originalDownloadPromiseStillAwaited": true,
+  "functionalTimeoutsUnchanged": true,
+  "failureSnapshotCalls": 1,
+  "failureSnapshotDeadlineMs": 1000,
+  "failureSnapshotTimerCleared": true,
+  "noHelperActionsRoutesFileIo": true,
+  "sourceSha256": {
+    "app/distribution/portable.html": "622a289ddbaa4fdacc0ff96ff85caba21e4ab85225c3e622dc0ecebf2d3c23f7",
+    "tests/browser-support.cjs": "d56fc80d3c569c93301aea1a2e7022c9cb1a2fccc7240d3162fba7ddb65d3c3e",
+    "tests/export-names-browser.test.cjs": "e61e34e08b9a825e0f8ddf590445ba2360ad690a9654e735966c840ef57dc108",
+    "tests/export-diagnostics.cjs": "2114b56bd2525093037ccbfcf954687a354777b91dc02983788a88a6a9a93ec6"
+  }
+}

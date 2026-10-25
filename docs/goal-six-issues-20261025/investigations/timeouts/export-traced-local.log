@@ -1,0 +1,40 @@
+TAP version 13
+# Subtest: rejeu 1 — noms des fichiers exportés, trois types d’export (Chromium)
+ok 1 - rejeu 1 — noms des fichiers exportés, trois types d’export (Chromium)
+  ---
+  duration_ms: 2985.633167
+  type: 'test'
+  ...
+# Subtest: rejeu 2 — noms des fichiers exportés, trois types d’export (Chromium)
+ok 2 - rejeu 2 — noms des fichiers exportés, trois types d’export (Chromium)
+  ---
+  duration_ms: 2621.674834
+  type: 'test'
+  ...
+# Subtest: rejeu 3 — noms des fichiers exportés, trois types d’export (Chromium)
+ok 3 - rejeu 3 — noms des fichiers exportés, trois types d’export (Chromium)
+  ---
+  duration_ms: 2620.38225
+  type: 'test'
+  ...
+# Subtest: rejeu 4 — noms des fichiers exportés, trois types d’export (Chromium)
+ok 4 - rejeu 4 — noms des fichiers exportés, trois types d’export (Chromium)
+  ---
+  duration_ms: 2613.549083
+  type: 'test'
+  ...
+# Subtest: rejeu 5 — noms des fichiers exportés, trois types d’export (Chromium)
+ok 5 - rejeu 5 — noms des fichiers exportés, trois types d’export (Chromium)
+  ---
+  duration_ms: 2534.402416
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 13564.062292

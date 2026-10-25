@@ -1,6 +1,7 @@
 const test = require('node:test');
-const {open, expand, saved, click, confirmChecks, pageState, chromium, assert} = require('./browser-support.cjs');
+const {open, expand, saved, click, confirmChecks, chromium, assert} = require('./browser-support.cjs');
 const {webkit} = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
+const {attachExportDiagnostics, recordExportPhase, exportDiagnosticError} = require('./export-diagnostics.cjs');
 
 // 25 octobre 2026, 00 h 30 à Paris : le 24 en UTC. La date d'export est la date locale.
 const FIXED = new Date('2026-10-24T22:30:00Z');
@@ -19,17 +20,26 @@ const selectors = ['[data-action=export-mail]', '[data-action=export-document]',
 
 /* Nom proposé au téléchargement ; `label` nomme le cas dans l’échec, avec le sélecteur et l’état de la page. */
 async function suggested(page, selector, label) {
+  let phase = 'before-click';
+  const mark = value => { phase = value; recordExportPhase(page, value, selector); };
   const event = page.waitForEvent('download');
-  await click(page, selector); await confirmChecks(page, event); // fenêtre de contrôle de #36, ou téléchargement direct
-  const result = await event.catch(async cause => { throw new Error(`${label} : aucun téléchargement reçu pour ${selector} ; état de la page : ${JSON.stringify(await pageState(page))}`, {cause}); });
-  return result.suggestedFilename();
+  // Observer le rejet immédiatement si l’activation échoue ; l’attente d’origine reste rejetée et sera relue ci-dessous.
+  event.then(() => recordExportPhase(page, 'download-received', selector), () => {});
+  try {
+    mark('before-click'); await click(page, selector); mark('after-click');
+    mark('before-confirm'); await confirmChecks(page, event); mark('after-confirm'); // fenêtre de contrôle de #36, ou téléchargement direct
+    mark('await-download'); const result = await event;
+    return result.suggestedFilename();
+  } catch (error) {
+    throw await exportDiagnosticError(page, error, {label, selector, lastPhase: phase});
+  }
 }
 
 // WebKit sous macOS restitue le nom décomposé (NFD) : on compare en NFC, et on vérifie
 // séparément que le nom transmis à la page est déjà en NFC.
 async function exportNames(browser, name) {
   // Contexte neuf par nom : Chromium limite les téléchargements automatiques répétés d'une même page.
-  const {page, context} = await open(browser, {timezoneId: 'Europe/Paris'}, p => p.clock.setFixedTime(FIXED));
+  const {page, context} = await open(browser, {timezoneId: 'Europe/Paris'}, async p => { await attachExportDiagnostics(p); await p.clock.setFixedTime(FIXED); });
   try {
     await expand(page, 'Fichiers et récupération');
     await page.locator('#document-name').fill(name); await saved(page);
@@ -67,7 +77,7 @@ for (const [engine, launcher] of [['Chromium', chromium], ['WebKit', webkit]]) {
   test(`export d’une composition depuis l’accueil de la bibliothèque (${engine})`, async () => {
     const browser = await launcher.launch();
     try {
-      const {page, context} = await open(browser, {timezoneId: 'Europe/Paris'}, p => p.clock.setFixedTime(FIXED));
+      const {page, context} = await open(browser, {timezoneId: 'Europe/Paris'}, async p => { await attachExportDiagnostics(p); await p.clock.setFixedTime(FIXED); });
       await page.locator('#document-name').fill('Bulletin n°3 : été / automne ?'); await saved(page);
       await page.evaluate(() => MailBuilder.Library.home());
       const id = await page.evaluate(() => MailBuilder.library.activeId);

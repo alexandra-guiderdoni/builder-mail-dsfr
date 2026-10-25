@@ -1,0 +1,67 @@
+TAP version 13
+# Subtest: rejeu 1 — noms des fichiers exportés, trois types d’export (Chromium)
+not ok 1 - rejeu 1 — noms des fichiers exportés, trois types d’export (Chromium)
+  ---
+  duration_ms: 32193.393045
+  type: 'test'
+  location: '/home/runner/work/builder-mail-dsfr/builder-mail-dsfr/evidence145/export-traced/tests/export-names-browser.test.cjs:43:85'
+  failureType: 'testCodeFailure'
+  error: 'Forensic145 {"browser":{"events":[{"event":"click","time":353,"target":"export-mail","active":"export-mail","dialog":false,"focused":true},{"event":"toggle","time":414,"target":"check-dialog","active":"check-dialog-title","dialog":true,"focused":true}],"active":"preview","dialog":true,"focused":true},"outside":[]}'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    exportNames (/home/runner/work/builder-mail-dsfr/builder-mail-dsfr/evidence145/export-traced/tests/export-names-browser.test.cjs:39:99)
+    async TestContext.<anonymous> (/home/runner/work/builder-mail-dsfr/builder-mail-dsfr/evidence145/export-traced/tests/export-names-browser.test.cjs:47:21)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3)
+  ...
+# Subtest: rejeu 2 — noms des fichiers exportés, trois types d’export (Chromium)
+ok 2 - rejeu 2 — noms des fichiers exportés, trois types d’export (Chromium)
+  ---
+  duration_ms: 4877.798184
+  type: 'test'
+  ...
+# Subtest: rejeu 3 — noms des fichiers exportés, trois types d’export (Chromium)
+not ok 3 - rejeu 3 — noms des fichiers exportés, trois types d’export (Chromium)
+  ---
+  duration_ms: 34502.370268
+  type: 'test'
+  location: '/home/runner/work/builder-mail-dsfr/builder-mail-dsfr/evidence145/export-traced/tests/export-names-browser.test.cjs:43:85'
+  failureType: 'testCodeFailure'
+  error: 'Forensic145 {"browser":{"events":[{"event":"click","time":358,"target":"export-mail","active":"export-mail","dialog":false,"focused":true},{"event":"toggle","time":421,"target":"check-dialog","active":"check-dialog-title","dialog":true,"focused":true}],"active":"preview","dialog":true,"focused":true},"outside":[]}'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    exportNames (/home/runner/work/builder-mail-dsfr/builder-mail-dsfr/evidence145/export-traced/tests/export-names-browser.test.cjs:39:99)
+    async TestContext.<anonymous> (/home/runner/work/builder-mail-dsfr/builder-mail-dsfr/evidence145/export-traced/tests/export-names-browser.test.cjs:54:21)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: rejeu 4 — noms des fichiers exportés, trois types d’export (Chromium)
+not ok 4 - rejeu 4 — noms des fichiers exportés, trois types d’export (Chromium)
+  ---
+  duration_ms: 34470.74158
+  type: 'test'
+  location: '/home/runner/work/builder-mail-dsfr/builder-mail-dsfr/evidence145/export-traced/tests/export-names-browser.test.cjs:43:85'
+  failureType: 'testCodeFailure'
+  error: 'Forensic145 {"browser":{"events":[{"event":"click","time":341,"target":"export-mail","active":"export-mail","dialog":false,"focused":true},{"event":"toggle","time":404,"target":"check-dialog","active":"check-dialog-title","dialog":true,"focused":true}],"active":"preview","dialog":true,"focused":true},"outside":[]}'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    exportNames (/home/runner/work/builder-mail-dsfr/builder-mail-dsfr/evidence145/export-traced/tests/export-names-browser.test.cjs:39:99)
+    async TestContext.<anonymous> (/home/runner/work/builder-mail-dsfr/builder-mail-dsfr/evidence145/export-traced/tests/export-names-browser.test.cjs:54:21)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+  ...
+# Subtest: rejeu 5 — noms des fichiers exportés, trois types d’export (Chromium)
+ok 5 - rejeu 5 — noms des fichiers exportés, trois types d’export (Chromium)
+  ---
+  duration_ms: 4760.171204
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 2
+# fail 3
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 111170.373436

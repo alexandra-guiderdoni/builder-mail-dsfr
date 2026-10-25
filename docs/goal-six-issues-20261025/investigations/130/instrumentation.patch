@@ -1,0 +1,46 @@
+--- docs/goal-six-issues-20261025/investigations/130/snapshot/tests/restore-after-refusal-browser.test.cjs	2026-10-25 17:36:28
++++ docs/goal-six-issues-20261025/investigations/130/snapshot/tests/instrumented.test.cjs	2026-10-25 17:36:28
+@@ -1,17 +1,18 @@
++const {attach, sample} = require('./trace130.cjs');
+ const test = require('node:test');
+ const {click, open, enterEditor, saved, expand, store, portable, chromium, fs, assert} = require('./browser-support.cjs');
+ 
+ // Fenêtre dont la première ouverture d'IndexedDB est refusée (une seule fois par onglet, donc pas après un rechargement) ; toute écriture ultérieure dans le stockage est comptée.
+ async function refusedWindow(context) {
+   const page = await context.newPage(), errors = []; page.setDefaultTimeout(8000);
+-  page.on('pageerror', e => errors.push(e.message));
++  page.on('pageerror', e => errors.push(e.message)); await attach(page);
+   await page.addInitScript(() => {
+     if (window !== window.top) return;
+-    const open = IDBFactory.prototype.open; let attempts = 0; window.writes = 0; const refused = sessionStorage.getItem('refus-initial') === '1'; sessionStorage.setItem('refus-initial', '1');
+-    window.refusedAtStart = refused; // exposé au test : la page rechargée doit démarrer avec le refus déjà consommé
++    const open = IDBFactory.prototype.open; let attempts = 0; window.writes = 0; const markerBefore130 = sessionStorage.getItem('refus-initial'); const refused = markerBefore130 === '1'; sessionStorage.setItem('refus-initial', '1');
++    console.log('[130]' + JSON.stringify({event:'init', url:location.href, origin:location.origin, documentId:performance.timeOrigin, refused, markerBefore:markerBefore130, markerAfter:sessionStorage.getItem('refus-initial')})); window.refusedAtStart = refused; // exposé au test : la page rechargée doit démarrer avec le refus déjà consommé
+     IDBFactory.prototype.open = function(...args) {
+-      if (!refused && ++attempts === 1) { const request = {}; queueMicrotask(() => request.onerror?.()); return request; }
+-      return open.apply(this, args);
++      if (!refused && ++attempts === 1) { console.log('[130]' + JSON.stringify({event:'artificial-refusal', documentId:performance.timeOrigin, name:args[0]})); const request = {}; queueMicrotask(() => request.onerror?.()); return request; }
++      console.log('[130]' + JSON.stringify({event:'native-open', documentId:performance.timeOrigin, name:args[0]})); return open.apply(this, args);
+     };
+     for (const method of ['put', 'add', 'delete', 'clear']) { const original = IDBObjectStore.prototype[method]; IDBObjectStore.prototype[method] = function(...args) { window.writes++; return original.apply(this, args); }; }
+   });
+@@ -50,7 +51,9 @@
+     const library = await exportTemporary(page);
+     assert(JSON.stringify(library).includes('Travail temporaire'), 'l’export contient le travail temporaire');
+     assert.deepEqual(await raw(writer), before);
++    await sample(page, 'before-reload'); if(process.env.CONTROL130 === 'remove-marker') { await page.evaluate(() => sessionStorage.removeItem('refus-initial')); await sample(page, 'controlled-marker-removed'); }
+     await Promise.all([page.waitForEvent('load'), click(page, '#reopen-reload')]); await page.waitForFunction(() => window.MailBuilder?.ready);
++    await sample(page, 'after-reload');
+     assert.equal(await page.evaluate(() => MailBuilder.recoveryOnly), false);
+     assert.match(await page.locator('#save-state').innerText(), /restaurée depuis ce navigateur/);
+     await enterEditor(page); assert.equal(await page.locator('#document-name').inputValue(), 'Second état');
+@@ -74,7 +77,9 @@
+     assert.doesNotMatch(await page.locator('#error').innerText(), /Une autre fenêtre/, 'toujours aucun faux conflit');
+     assert.equal(await page.evaluate(() => window.writes), 0);
+     assert.deepEqual(await raw(writer), concurrent, 'l’écriture concurrente est intacte');
++    await sample(page, 'before-reload'); if(process.env.CONTROL130 === 'remove-marker') { await page.evaluate(() => sessionStorage.removeItem('refus-initial')); await sample(page, 'controlled-marker-removed'); }
+     await Promise.all([page.waitForEvent('load'), click(page, '#reopen-reload')]); await page.waitForFunction(() => window.MailBuilder?.ready);
++    await sample(page, 'after-reload');
+     /* Un nom initial après rechargement signifierait une bibliothèque non relue : l’état réel est nommé avant la comparaison. */
+     const reloaded = await page.evaluate(() => ({recoveryOnly: MailBuilder.recoveryOnly, refusedAtStart: window.refusedAtStart, writes: window.writes, saveState: document.querySelector('#save-state').textContent, error: document.getElementById('error').textContent, documents: MailBuilder.library.documents.map(d => d.name)}));
+     assert.equal(reloaded.recoveryOnly, false, `le rechargement doit relire la bibliothèque enregistrée : ${JSON.stringify(reloaded)}`);

@@ -1,0 +1,13 @@
+--- current-source
++++ disposable-activation-rejection
+@@ -1,7 +1,9 @@
+ const test = require('node:test');
+-const {open, expand, saved, click, confirmChecks, chromium, assert} = require('./browser-support.cjs');
++const {open, expand, saved, click: realClick, confirmChecks, chromium, assert} = require('./browser-support.cjs');
+ const {webkit} = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
+ const {attachExportDiagnostics, recordExportPhase, exportDiagnosticError} = require('./export-diagnostics.cjs');
++// Counterexample only: artificial activation rejection, never a product hypothesis.
++const click = async (page, selector) => { if (selector === '[data-action=export-mail]') throw new Error('CONTROL145_ACTIVATION_REJECTED'); return realClick(page, selector); };
+ 
+ // 25 octobre 2026, 00 h 30 à Paris : le 24 en UTC. La date d'export est la date locale.
+ const FIXED = new Date('2026-10-24T22:30:00Z');

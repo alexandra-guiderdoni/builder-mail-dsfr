@@ -1,0 +1,49 @@
+{
+  "verifiedAtUtc": "2026-10-25T17:03:08.956967+00:00",
+  "counts": {
+    "tests": 3,
+    "pass": 3,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0
+  },
+  "durationMs": 17569.031792,
+  "caseDurationsMs": [
+    6045.455209,
+    5711.844625,
+    5638.47275
+  ],
+  "environment": {
+    "platform": "darwin",
+    "arch": "arm64",
+    "osRelease": "25.5.0",
+    "node": "v24.18.0",
+    "playwright": "1.64.1",
+    "browser": "156.0.8078.4",
+    "cpuRate": 4,
+    "replays": 3,
+    "executable": "/Users/alex/Library/Caches/ms-playwright/chromium-1248/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing"
+  },
+  "maximumReplaysRespected": true,
+  "additionalVariantRun": false,
+  "primaryErrorCaptured": false,
+  "hypothesesDiscriminated": false,
+  "sourceProofUnchangedAfterRun": true,
+  "priorBaselinesUnchanged": true,
+  "interpretation": "Bounded local CPU4 non-reproduction; no causal inference about historical CI.",
+  "files": {
+    ".gitignore": "5eaddb266761764ba54acaa7c6be977e39cda89f2baa5bd585f28d690e091014",
+    "NOTE-AVANT-ESSAI.md": "24cb4bdb400f9d5adb27325e959cd160dc15385700d096701018efc42794a521",
+    "RESULTAT.md": "ebdb45a8e7d9bc320f7d865bcc1418e4b4079aba3f693ba9d736466516724e5b",
+    "cpu-only.diff": "3f35bf802316e0758c6593a6814a74a6460e380fe0c541b97a938fffc6af5626",
+    "cpu4.log": "22d1d4b9c6711b4697f8655c7e09e657f414c86f958b06c337302ef3468ae5ca",
+    "environment.json": "71f73c79536c6c38e4e6e022dda1502e1aa2abe42e0d2936c6d0d66981f8cee0",
+    "finished-at.txt": "f1983032700e9f3d66f5f0a382686adc4e6538b314dc1ea32cc34ac2c01f2ba1",
+    "process-result.json": "aceb28ad2f130b6b365c11640e791f068f93fd983aa0624e6c088d70592d13cc",
+    "run-local.sh": "f5bbe149faa9a08110b20723372f2c9eba703bfd5fb08fbe790e309158c60fe9",
+    "source-proof.json": "31d3f30daa78dd2d9fccd97cdcc2dfe9646d1ac76bb44a29cc7f56c87bae5947",
+    "started-at.txt": "ed7b0af1f543fe228e0164107390eff06401ee519f4b0fbb8cfac05904b4c63b",
+    "trace145-browser-support.cjs.diff": "46a475a6d856b701db34b594bd46feb7dfa94c81565a3d900cc14d49c21f0540",
+    "trace145-export-names-browser.test.cjs.diff": "0cbcb183020f023158f34f9eaa5728c667961a2e29d0292e4adce8ef7083e4cf"
+  }
+}

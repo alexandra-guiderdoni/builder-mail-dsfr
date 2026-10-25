@@ -1,0 +1,17 @@
+{
+  "expectedTestFailure": true,
+  "primaryVisibleInTap": true,
+  "selectorAndCaseLabelPreserved": true,
+  "lastPhase": "before-click",
+  "stackPreservesActivationCallsite": true,
+  "strictUnhandledRejections": true,
+  "unhandledRejectionObserved": false,
+  "pendingDownloadRejectionSeparatelyLogged": false,
+  "singleSnapshotStateAndBrowserCompatible": true,
+  "sourceHashesPreserved": true,
+  "primary": {
+    "name": "Error",
+    "message": "CONTROL145_ACTIVATION_REJECTED",
+    "stack": "Error: CONTROL145_ACTIVATION_REJECTED\n    at click (/Users/alex/Claude-worktrees/builder-six-restants-20261025/docs/goal-six-issues-20261025/investigations/timeouts/durable-diagnostic-proof/counterexample/tests/export-names-browser.test.cjs:6:95)\n    at suggested (/Users/alex/Claude-worktrees/builder-six-restants-20261025/docs/goal-six-issues-20261025/investigations/timeouts/durable-diagnostic-proof/counterexample/tests/export-names-browser.test.cjs:31:33)\n    at exportNames (/Users/alex/Claude-worktrees/builder-six-restants-20261025/docs/goal-six-issues-20261025/investigations/timeouts/durable-diagnostic-proof/counterexample/tests/export-names-browser.test.cjs:49:61)\n    at runNextTicks (node:internal/process/task_queues:65:5)\n    at process.processImmediate (node:internal/timers:472:9)\n    at async TestContext.<anonymous> (/Users/alex/Claude-worktrees/builder-six-restants-20261025/docs/goal-six-issues-20261025/investigations/timeouts/durable-diagnostic-proof/counterexample/tests/export-names-browser.test.cjs:59:21)\n    at async Test.run (node:internal/test_runner/test:1332:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3)"
+  }
+}

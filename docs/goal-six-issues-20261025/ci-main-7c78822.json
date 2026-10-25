@@ -1,0 +1,28 @@
+{
+  "run": 40213203335,
+  "url": "https://github.com/alexandra-guiderdoni/builder-mail-dsfr/actions/runs/40213203335",
+  "sha": "7c78822872b8e159fd884836828d5b7ce3f75544",
+  "conclusion": "success",
+  "counts": {
+    "tests": 397,
+    "pass": 397,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0
+  },
+  "jobs": [
+    {
+      "name": "tests",
+      "conclusion": "success",
+      "startedAt": "2026-10-25T16:45:28Z",
+      "completedAt": "2026-10-25T16:59:28Z"
+    },
+    {
+      "name": "deploy",
+      "conclusion": "success",
+      "startedAt": "2026-10-25T16:59:31Z",
+      "completedAt": "2026-10-25T17:00:50Z"
+    }
+  ],
+  "rawLogSHA256": "7c7e8a1e6b8622e7e7bc7117da55db862aa3a1645864843aad7b2382e38bc457"
+}

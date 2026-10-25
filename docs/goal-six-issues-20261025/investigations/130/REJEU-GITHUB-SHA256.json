@@ -1,0 +1,113 @@
+{
+  "verifiedAtUtc": "2026-10-25T16:48:00.919129+00:00",
+  "runId": 40213040087,
+  "runUrl": "https://github.com/alexandra-guiderdoni/builder-mail-dsfr/actions/runs/40213040087",
+  "headSha": "9b56c13570236875893293fdd95d01d13a4de678",
+  "branch": "diag/issue-130-forensic",
+  "conclusion": "success",
+  "jobNames": [
+    "forensic"
+  ],
+  "artifact": {
+    "id": 12606575909,
+    "name": "forensic-130-40213040087-1",
+    "reportedArchiveDigest": "sha256:d543fdb15d3b74161efad074fdaddb22ecbecd00d492eb3e0147c91b7cd64dd7",
+    "archiveDigestVerifiedLocally": false,
+    "note": "Local extracted file hashes verified below; archive bytes not redownloaded."
+  },
+  "runtime": {
+    "node": "v24.18.0",
+    "arch": "x64",
+    "playwright": "1.64.1",
+    "browser": "156.0.8078.4"
+  },
+  "runnerImage": "20261023.163.3",
+  "historicalRunnerImage": "20261012.163.1",
+  "sourceManifestComparedWithGitBlobs": true,
+  "sourceManifest": {
+    "commit": "395c08d1dfa4d0b8e41416da798bf0313a8bd379",
+    "files": {
+      "tests/restore-after-refusal-browser.test.cjs": "21b0f995c6e9d2e8d414628e97b5c90e827736db9ece121d5ae44ea34837ccf6",
+      "tests/browser-support.cjs": "9d782871d54fa2c8016a7d1568bb6f55d9d93dc3040f328e0d4bb332418c357e",
+      "app/distribution/portable.html": "ac9aee8c29f438772797acc55dd90e8fb0798de9845ad722c2cb0679aad6f7f3",
+      "package.json": "48831db4c7c1065f47f24cb735f4ac14123fa7b3f142af8baecaec550cd6eeda",
+      "package-lock.json": "fe4f9203ff28b3a0d700234eeba27b9a64a15dd588200a3c5d40ac48d0111105",
+      ".github/workflows/pages.yml": "ab56e3a461291595cc10f9baf47447d30ff435da3b223477940789d2b80d3646"
+    }
+  },
+  "counts": {
+    "exact-original": {
+      "tests": 3,
+      "pass": 3,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "duration_ms": 3226.282045
+    },
+    "natural": {
+      "tests": 3,
+      "pass": 3,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "duration_ms": 3245.278688
+    },
+    "controlled": {
+      "tests": 1,
+      "pass": 0,
+      "fail": 1,
+      "cancelled": 0,
+      "skipped": 0,
+      "duration_ms": 1490.421779
+    }
+  },
+  "traceChecks": {
+    "natural": {
+      "events": 131,
+      "fixtureEvents": [
+        "init",
+        "artificial-refusal",
+        "init",
+        "native-open",
+        "init",
+        "artificial-refusal",
+        "init",
+        "native-open"
+      ],
+      "finalDocuments": [
+        "Écriture concurrente"
+      ],
+      "newDocumentAndLoader": true,
+      "sameFrameUrlAndSerializedStorageKey": true
+    },
+    "controlled": {
+      "events": 68,
+      "fixtureEvents": [
+        "init",
+        "artificial-refusal",
+        "init",
+        "artificial-refusal"
+      ],
+      "finalDocuments": [
+        "Mon premier courriel"
+      ],
+      "newDocumentAndLoader": true,
+      "sameFrameUrlAndSerializedStorageKey": true
+    }
+  },
+  "instrumentationHunksMatchReviewedLocalPatch": true,
+  "files": {
+    "github-40213040087/forensic-130-40213040087-1/browser.json": "34f4406807cac3f702b2368442e30336b4648374113f28615bc4790b40aaa7f1",
+    "github-40213040087/forensic-130-40213040087-1/controlled-trace.jsonl": "41b7e2204379a98e9340dc9662e9fbc6035943f512c6b41738ee6359dfea7a9a",
+    "github-40213040087/forensic-130-40213040087-1/controlled.log": "9b0ab6ae290d15615375094436783fe4fd1323845848e5d990e75216dde7cc04",
+    "github-40213040087/forensic-130-40213040087-1/exact-original.log": "a7112ba14597c000fac864e9b6220d4c5d177996f802bf4c9da35f47b7243057",
+    "github-40213040087/forensic-130-40213040087-1/host.log": "c75f9f8a6e1dbc8db2e596d435416cd0a6bd1970fdb04e21d3fa019019e634e6",
+    "github-40213040087/forensic-130-40213040087-1/instrumentation.patch": "c34baf06e0e88aaa76efea7e85e180da92e7758c4b574edf0cb0364f55bb6fb0",
+    "github-40213040087/forensic-130-40213040087-1/natural-trace.jsonl": "01c8694a9877f9922b01ab0466297d2ff939337d1a7f0a4dd76feb1610a28396",
+    "github-40213040087/forensic-130-40213040087-1/natural.log": "44161f131da0b1e5e9588a2c3543c7f198ae75a72326b1ad49200f19ead0095a",
+    "github-40213040087/forensic-130-40213040087-1/results.json": "e550d2f40dd181fd0678d9e005b5c06c945e30689121cadc589885751e2b8659",
+    "github-40213040087/forensic-130-40213040087-1/snapshot-manifest.json": "6d477979891d756ff1e001d8235428bcf2a7eae9dc324707e6671c543ace3116",
+    "REJEU-GITHUB.md": "5ef9b7ac364acda13d70e6e346bf20cfad39acd000fff52861f4cbe0845aa8e5"
+  },
+  "interpretation": "Bounded spontaneous non-reproduction; controlled fixture failure demonstrated; original cause unknown."
+}

@@ -1,0 +1,10 @@
+--- eadd426befeb39a6e68a14342f9c1a66102ac81d/tests/browser-support.cjs
++++ export-traced/tests/browser-support.cjs
+@@ -62,6 +62,7 @@
+ async function open(browser, contextOptions = {}, beforeNavigate) {
+   const context = await browser.newContext({acceptDownloads: true, colorScheme: 'light', viewport: {width: 1600, height: 1000}, ...contextOptions});
+   const page = await context.newPage();
++  page.__readExportTrace145 = await require('../../trace-export.cjs').traceExport(page);
+   const observations = {errors: [], requests: []};
+   page.on('pageerror', error => observations.errors.push(error.message));
+   page.on('request', request => observations.requests.push(request.url()));

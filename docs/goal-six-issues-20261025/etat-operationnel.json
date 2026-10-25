@@ -1,0 +1,68 @@
+{
+  "builderMain": "7c78822872b8e159fd884836828d5b7ce3f75544",
+  "issues": {
+    "13": {
+      "state": "OPEN",
+      "qualification": "NOT_EXECUTED",
+      "blocker": "Aucun poste cible disponible, confirmation utilisateur."
+    },
+    "52": {
+      "state": "OPEN",
+      "qualification": "NOT_EXECUTED",
+      "blocker": "Aucun poste cible disponible, confirmation utilisateur."
+    },
+    "130": {
+      "state": "OPEN",
+      "run": 40213040087,
+      "result": "bounded non-reproduction; controlled negative exact; historical cause unknown"
+    },
+    "142": {
+      "state": "CLOSED",
+      "reason": "completed",
+      "proof": "review-142.md",
+      "published": "7c78822872b8e159fd884836828d5b7ce3f75544"
+    },
+    "145": {
+      "state": "OPEN",
+      "run": 40213294190,
+      "result": "partial durable diagnostics reviewed; historical cause unknown; remains OPEN",
+      "replays": [
+        {
+          "run": 40213294190,
+          "original": 1,
+          "instrumentedPass": 2,
+          "instrumentedFail": 3
+        },
+        {
+          "run": 40213842402,
+          "original": 1,
+          "instrumentedPass": 5,
+          "instrumentedFail": 0
+        },
+        {
+          "run": 40214029414,
+          "original": 1,
+          "instrumentedPass": 5,
+          "instrumentedFail": 0
+        }
+      ],
+      "localCpuStressPass": 3
+    },
+    "149": {
+      "state": "OPEN",
+      "adapterVersion": "2.18.0+codex.local-20261025164729",
+      "result": "native success/error/abort/cleanup_error observed, real SIGINT leaks; standalone supervisor studies passed within documented bounds; no new lifecycle hook active",
+      "localMaintainedSourceCommit": "f010bf260",
+      "parentPushed": false
+    }
+  },
+  "ciPublishedMain": {
+    "run": 40213203335,
+    "tests": 397,
+    "pass": 397,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "pages": "success"
+  }
+}

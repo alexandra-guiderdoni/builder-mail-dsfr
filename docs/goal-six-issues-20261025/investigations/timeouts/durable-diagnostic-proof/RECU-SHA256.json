@@ -1,0 +1,59 @@
+{
+  "verifiedAtUtc": "2026-10-25T17:13:48.620041+00:00",
+  "base": "7c78822872b8e159fd884836828d5b7ce3f75544",
+  "scope": [
+    "tests/export-names-browser.test.cjs",
+    "tests/export-diagnostics.cjs"
+  ],
+  "sourceSha256": {
+    "app/distribution/portable.html": "622a289ddbaa4fdacc0ff96ff85caba21e4ab85225c3e622dc0ecebf2d3c23f7",
+    "tests/browser-support.cjs": "d56fc80d3c569c93301aea1a2e7022c9cb1a2fccc7240d3162fba7ddb65d3c3e",
+    "tests/export-names-browser.test.cjs": "e61e34e08b9a825e0f8ddf590445ba2360ad690a9654e735966c840ef57dc108",
+    "tests/export-diagnostics.cjs": "2114b56bd2525093037ccbfcf954687a354777b91dc02983788a88a6a9a93ec6"
+  },
+  "currentTests": {
+    "total": 4,
+    "passed": 4,
+    "failed": 0,
+    "skipped": 0
+  },
+  "counterexample": {
+    "tests": 1,
+    "expectedFailures": 1,
+    "primary": "CONTROL145_ACTIVATION_REJECTED",
+    "phase": "before-click",
+    "strictUnhandledRejections": true,
+    "unhandledRejectionObserved": false,
+    "historicalCauseClaimed": false
+  },
+  "failureSnapshotProbe": {
+    "kind": "diagnostic-only-counterexample",
+    "elapsedMs": 1003.2972080000001,
+    "pendingCalls": 1,
+    "fastCalls": 1,
+    "primaryAndDetailsPreserved": true,
+    "fallbackUnreadable": true,
+    "normalSnapshotShapePreserved": true,
+    "timersBefore": 0,
+    "timersAfter": 0,
+    "strictUnhandledRejections": true
+  },
+  "noCommitOrPush": true,
+  "files": {
+    ".gitignore": "82e922d7db4f32ea3d0c0c65dd332459423baab372c4c717baac2bb213672480",
+    "activation-rejection.log": "0beaa77319bb26538459be20ced47d977a11610f213bb22086c62fec669a1115",
+    "commands.sh": "ce902a959a885e73f674744ac236b5d4361a3a3ad7f1971b43ab0328e20fdddf",
+    "counterexample-only.diff": "840f016278e5c1f2759686320d37e32ca5a3146b539a1471b63ed848200a29b4",
+    "counterexample-verification.json": "82d902f91099ff74339249cb97db501d857e119adad592d7d336dbe0c272d94f",
+    "current-four.log": "b4acb707a4035d2e6407654dd1589637abf42f50493bcba7c3dcf93f73ebe6c8",
+    "environment.json": "f77a4cbfe44729d0fc9c0a500bc8139c28163c33a04372a215153c845098f0e7",
+    "finished-at.txt": "e455a53047a39c3662edac803ebb2fb666c681aea2f46e343e302c75f1052c0b",
+    "results.json": "f34665743b6e16bcd73959f1fe1a003fcb74838c2c4040f0a1d1e0626d751e7a",
+    "snapshot-deadline-probe.cjs": "52ba751d1b5d6382ae1bf85b5176faa186c611ed0a54e03bd803132cdae65902",
+    "snapshot-deadline.log": "af97e5c90db723bc8c6b3e10785f81f6531772cc1ae212821168924390c162b3",
+    "source-proof.json": "3630cad22348eebf989093243404b55a66081c031c3240a238c6acd97971c574",
+    "started-at.txt": "22b523ff8df42bc5233b156365fda3040b497e39ae6a19e80c7f17cc40948bdc",
+    "tracked-source.diff": "9e1ab04357771a47da13129dd2d1db78971cfee90c83126092d489b55ef0a2d8",
+    "../RESULTAT-DIAGNOSTIC-DURABLE.md": "2c97263e7a058c44baf1947e24ce39bdf826a3d431d59cfd912c8370ea8523ab"
+  }
+}

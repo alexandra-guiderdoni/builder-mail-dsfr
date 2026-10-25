@@ -1,0 +1,32 @@
+TAP version 13
+# Subtest: écriture concurrente pendant la récupération : rien n’est écrasé, le rechargement relit l’état concurrent et le contrôle de conflit reste actif
+not ok 1 - écriture concurrente pendant la récupération : rien n’est écrasé, le rechargement relit l’état concurrent et le contrôle de conflit reste actif
+  ---
+  duration_ms: 1137.190036
+  type: 'test'
+  location: '/home/runner/work/builder-mail-dsfr/builder-mail-dsfr/evidence130/snapshot/tests/instrumented.test.cjs:64:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    le rechargement doit relire la bibliothèque enregistrée : {"recoveryOnly":true,"refusedAtStart":false,"writes":0,"saveState":"Bibliothèque non restaurée.","error":"Bibliothèque locale inaccessible : le navigateur refuse son ouverture. Cette page n’écrit rien dans la bibliothèque locale : exportez la bibliothèque en mémoire pour conserver votre travail.","documents":["Mon premier courriel"]}
+    
+    true !== false
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: false
+  actual: true
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/home/runner/work/builder-mail-dsfr/builder-mail-dsfr/evidence130/snapshot/tests/instrumented.test.cjs:85:12)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1490.421779

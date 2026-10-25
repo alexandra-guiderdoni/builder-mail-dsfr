@@ -1,0 +1,27 @@
+TAP version 13
+# Subtest: noms des fichiers exportés, trois types d’export (Chromium)
+not ok 1 - noms des fichiers exportés, trois types d’export (Chromium)
+  ---
+  duration_ms: 316.849541
+  type: 'test'
+  location: '/Users/alex/Claude-worktrees/builder-six-restants-20261025/docs/goal-six-issues-20261025/investigations/timeouts/durable-diagnostic-proof/counterexample/tests/export-names-browser.test.cjs:55:3'
+  failureType: 'testCodeFailure'
+  error: 'nom « Édition & <dossier> "suivi" » : échec de l’export pour [data-action=export-mail] ; diagnostic {"label":"nom « Édition & <dossier> \\"suivi\\" »","selector":"[data-action=export-mail]","lastPhase":"before-click","original":{"name":"Error","message":"CONTROL145_ACTIVATION_REJECTED","stack":"Error: CONTROL145_ACTIVATION_REJECTED\\n    at click (/Users/alex/Claude-worktrees/builder-six-restants-20261025/docs/goal-six-issues-20261025/investigations/timeouts/durable-diagnostic-proof/counterexample/tests/export-names-browser.test.cjs:6:95)\\n    at suggested (/Users/alex/Claude-worktrees/builder-six-restants-20261025/docs/goal-six-issues-20261025/investigations/timeouts/durable-diagnostic-proof/counterexample/tests/export-names-browser.test.cjs:31:33)\\n    at exportNames (/Users/alex/Claude-worktrees/builder-six-restants-20261025/docs/goal-six-issues-20261025/investigations/timeouts/durable-diagnostic-proof/counterexample/tests/export-names-browser.test.cjs:49:61)\\n    at runNextTicks (node:internal/process/task_queues:65:5)\\n    at process.processImmediate (node:internal/timers:472:9)\\n    at async TestContext.<anonymous> (/Users/alex/Claude-worktrees/builder-six-restants-20261025/docs/goal-six-issues-20261025/investigations/timeouts/durable-diagnostic-proof/counterexample/tests/export-names-browser.test.cjs:59:21)\\n    at async Test.run (node:internal/test_runner/test:1332:7)\\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3)"},"phases":[{"phase":"before-click","selector":"[data-action=export-mail]","time":1792948367049}],"browser":{"events":[],"active":"document-name","dialog":false,"focused":true},"state":{"notice":"","error":"","checkDialog":false,"focused":true},"outside":[]}'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    exportDiagnosticError (/Users/alex/Claude-worktrees/builder-six-restants-20261025/docs/goal-six-issues-20261025/investigations/timeouts/durable-diagnostic-proof/counterexample/tests/export-diagnostics.cjs:46:10)
+    async suggested (/Users/alex/Claude-worktrees/builder-six-restants-20261025/docs/goal-six-issues-20261025/investigations/timeouts/durable-diagnostic-proof/counterexample/tests/export-names-browser.test.cjs:36:11)
+    async exportNames (/Users/alex/Claude-worktrees/builder-six-restants-20261025/docs/goal-six-issues-20261025/investigations/timeouts/durable-diagnostic-proof/counterexample/tests/export-names-browser.test.cjs:49:55)
+    async TestContext.<anonymous> (/Users/alex/Claude-worktrees/builder-six-restants-20261025/docs/goal-six-issues-20261025/investigations/timeouts/durable-diagnostic-proof/counterexample/tests/export-names-browser.test.cjs:59:21)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 491.157584

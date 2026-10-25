@@ -1,0 +1,41 @@
+1: tests	Set up job	﻿2026-10-25T10:32:22.2806557Z Current runner version: '2.338.0'
+2: tests	Set up job	2026-10-25T10:32:22.2823985Z ##[group]Runner Image Provisioner
+3: tests	Set up job	2026-10-25T10:32:22.2824642Z Hosted Compute Agent
+4: tests	Set up job	2026-10-25T10:32:22.2825001Z Version: 20261021.618
+5: tests	Set up job	2026-10-25T10:32:22.2825369Z Commit: 21505ad2541d5be6135ed84fc33697146cf75b8e
+6: tests	Set up job	2026-10-25T10:32:22.2825856Z Build Date: 2026-10-21T00:45:21Z
+7: tests	Set up job	2026-10-25T10:32:22.2826270Z Worker ID: {67a8c765-478d-4a25-bb18-0f00847b5a92}
+8: tests	Set up job	2026-10-25T10:32:22.2826789Z Region: centralus
+9: tests	Set up job	2026-10-25T10:32:22.2827130Z Cloud: Azure
+10: tests	Set up job	2026-10-25T10:32:22.2827449Z ##[endgroup]
+11: tests	Set up job	2026-10-25T10:32:22.2828270Z ##[group]Operating System
+12: tests	Set up job	2026-10-25T10:32:22.2828636Z Ubuntu
+13: tests	Set up job	2026-10-25T10:32:22.2828990Z 26.04.1
+14: tests	Set up job	2026-10-25T10:32:22.2829344Z LTS
+15: tests	Set up job	2026-10-25T10:32:22.2829664Z ##[endgroup]
+16: tests	Set up job	2026-10-25T10:32:22.2830031Z ##[group]Runner Image
+17: tests	Set up job	2026-10-25T10:32:22.2830424Z Image: ubuntu-26.04
+18: tests	Set up job	2026-10-25T10:32:22.2830843Z Version: 20261012.163.1
+19: tests	Set up job	2026-10-25T10:32:22.2831475Z Included Software: https://github.com/actions/runner-images/blob/ubuntu26/20261012.163/images/ubuntu/Ubuntu2604-Readme.md
+20: tests	Set up job	2026-10-25T10:32:22.2832494Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu26%2F20261012.163
+21: tests	Set up job	2026-10-25T10:32:22.2833090Z ##[endgroup]
+22: tests	Set up job	2026-10-25T10:32:22.2833899Z ##[group]GITHUB_TOKEN Permissions
+161: tests	Fixer la version de Node	2026-10-25T10:32:30.6524312Z node: v24.18.0
+1395: tests	Installer Chromium, WebKit et leurs dépendances système	2026-10-25T10:33:04.0511187Z Chrome for Testing 156.0.8078.4 (playwright chromium v1248) downloaded to /home/runner/.cache/ms-playwright/chromium-1248
+1409: tests	Installer Chromium, WebKit et leurs dépendances système	2026-10-25T10:33:04.4902270Z Downloading Chrome Headless Shell 156.0.8078.4 (playwright chromium-headless-shell v1248) from https://cdn.playwright.dev/builds/cft/156.0.8078.4/linux64/chrome-headless-shell-linux64.zip
+1421: tests	Installer Chromium, WebKit et leurs dépendances système	2026-10-25T10:33:06.8774039Z Chrome Headless Shell 156.0.8078.4 (playwright chromium-headless-shell v1248) downloaded to /home/runner/.cache/ms-playwright/chromium_headless_shell-1248
+1452: tests	Exécuter la suite de tests	2026-10-25T10:33:10.1662561Z > node --test --test-concurrency=1 tests/*.test.cjs
+1552: tests	Exécuter la suite de tests	2026-10-25T10:34:06.1876889Z ▶ pied mail-50 avec liens supplémentaires : aucun débordement à 320 px et aspect du gabarit sous Chromium et WebKit
+1555: tests	Exécuter la suite de tests	2026-10-25T10:34:08.2917898Z ✔ pied mail-50 avec liens supplémentaires : aucun débordement à 320 px et aspect du gabarit sous Chromium et WebKit (3442.317686ms)
+1616: tests	Exécuter la suite de tests	2026-10-25T10:35:11.4594529Z ▶ la copie des 52 composants tient sans débordement ni contenu masqué ou coupé sous Chromium et WebKit
+1619: tests	Exécuter la suite de tests	2026-10-25T10:35:16.1754948Z ✔ la copie des 52 composants tient sans débordement ni contenu masqué ou coupé sous Chromium et WebKit (7939.522909ms)
+1626: tests	Exécuter la suite de tests	2026-10-25T10:37:33.2386869Z ▶ l’export téléchargé tient sans styles de tête et garde son rendu avec ces styles sous Chromium et WebKit
+1629: tests	Exécuter la suite de tests	2026-10-25T10:39:20.2064447Z ✔ l’export téléchargé tient sans styles de tête et garde son rendu avec ces styles sous Chromium et WebKit (238732.128147ms)
+1678: tests	Exécuter la suite de tests	2026-10-25T10:40:52.4145585Z ✔ Chromium 320 px : catalogue sans défilement horizontal, accès rapide à l’aperçu, pas de défilement interne (419.477553ms)
+1679: tests	Exécuter la suite de tests	2026-10-25T10:40:52.8160849Z ✔ Chromium 768 px : catalogue sans défilement horizontal, accès rapide à l’aperçu, pas de défilement interne (401.492698ms)
+1699: tests	Exécuter la suite de tests	2026-10-25T10:41:05.5237880Z ✔ Chromium : le titre de page change avec la vue et nomme la composition ouverte (678.297099ms)
+1764: tests	Exécuter la suite de tests	2026-10-25T10:41:36.9705284Z ✖ écriture concurrente pendant la récupération : rien n’est écrasé, le rechargement relit l’état concurrent et le contrôle de conflit reste actif (808.108343ms)
+1881: tests	Exécuter la suite de tests	2026-10-25T10:42:41.0280880Z test at tests/restore-after-refusal-browser.test.cjs:61:1
+1882: tests	Exécuter la suite de tests	2026-10-25T10:42:41.0281825Z ✖ écriture concurrente pendant la récupération : rien n’est écrasé, le rechargement relit l’état concurrent et le contrôle de conflit reste actif (808.108343ms)
+1883: tests	Exécuter la suite de tests	2026-10-25T10:42:41.0283142Z   AssertionError [ERR_ASSERTION]: le rechargement doit relire la bibliothèque enregistrée : {"recoveryOnly":true,"refusedAtStart":false,"writes":0,"saveState":"Bibliothèque non restaurée.","error":"Bibliothèque locale inaccessible : le navigateur refuse son ouverture. Cette page n’écrit rien dans la bibliothèque locale : exportez la bibliothèque en mémoire pour conserver votre travail.","documents":["Mon premier courriel"]}
+1887: tests	Exécuter la suite de tests	2026-10-25T10:42:41.0284778Z       at TestContext.<anonymous> (/home/runner/work/builder-mail-dsfr/builder-mail-dsfr/tests/restore-after-refusal-browser.test.cjs:80:12)

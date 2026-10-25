@@ -1,0 +1,23 @@
+{
+  "counts": {
+    "original": {
+      "tests": 1,
+      "pass": 1,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0
+    },
+    "traced": {
+      "tests": 5,
+      "pass": 2,
+      "fail": 3,
+      "cancelled": 0,
+      "skipped": 0
+    }
+  },
+  "results": {
+    "originalExit": 0,
+    "tracedExit": 1
+  },
+  "interpretation": "failure captured; inspect original error and Forensic145 trace before attributing a cause"
+}

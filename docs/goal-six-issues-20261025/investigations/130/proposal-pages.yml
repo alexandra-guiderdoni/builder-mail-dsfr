@@ -1,0 +1,89 @@
+# PROPOSAL ONLY: replace .github/workflows/pages.yml on a dedicated diagnostic branch.
+# No push trigger, no Pages permissions, no deploy job.
+name: 'Forensic #130 — historical fixture'
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: forensic-130-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  forensic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Read exact incident revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: 395c08d1dfa4d0b8e41416da798bf0313a8bd379
+          path: historical
+          persist-credentials: false
+      - name: Read reviewed diagnostic harness
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.sha }}
+          path: diagnostic
+          persist-credentials: false
+          sparse-checkout: docs/goal-six-issues-20261025/investigations/130
+      - name: Pin Node
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: '24.18.0'
+      - name: Record and guard host environment
+        shell: bash
+        run: |
+          mkdir -p evidence130
+          {
+            cat /etc/os-release
+            uname -a
+            printf 'ImageOS=%s\nImageVersion=%s\nRunnerArch=%s\n' "$ImageOS" "$ImageVersion" "$RUNNER_ARCH"
+            node --version
+            git -C historical rev-parse HEAD
+          } > evidence130/host.log
+          . /etc/os-release
+          test "$ID" = ubuntu
+          test "$VERSION_ID" = 26.04
+          test "$RUNNER_ARCH" = X64
+          test "$(node --version)" = v24.18.0
+          test "$(git -C historical rev-parse HEAD)" = 395c08d1dfa4d0b8e41416da798bf0313a8bd379
+      - name: Install exact locked Playwright
+        working-directory: historical
+        run: |
+          npm ci --ignore-scripts
+          node -e 'if(require("playwright/package.json").version !== "1.64.1") process.exit(1)'
+          npx --no-install playwright install --with-deps chromium
+      - name: Prepare isolated historical copy
+        shell: bash
+        run: |
+          python3 diagnostic/docs/goal-six-issues-20261025/investigations/130/prepare-replay.py --repo historical --output evidence130/snapshot
+          diff -u evidence130/snapshot/tests/restore-after-refusal-browser.test.cjs evidence130/snapshot/tests/instrumented.test.cjs > evidence130/instrumentation.patch || test "$?" = 1
+      - name: Run three bounded scenarios, preserve distinct verdicts
+        shell: bash
+        run: |
+          export PLAYWRIGHT_MODULE="$GITHUB_WORKSPACE/historical/node_modules/playwright"
+          export NODE_PATH="$GITHUB_WORKSPACE/historical/node_modules"
+          export PROOF130="$GITHUB_WORKSPACE/evidence130"
+          node -e '(async()=>{const p=require(process.env.PLAYWRIGHT_MODULE),b=await p.chromium.launch(); console.log(JSON.stringify({node:process.version,arch:process.arch,playwright:require(process.env.PLAYWRIGHT_MODULE+"/package.json").version,browser:b.version()})); await b.close()})()' > "$PROOF130/browser.json"
+          cd evidence130/snapshot
+          set +e
+          node --test --test-reporter=tap tests/restore-after-refusal-browser.test.cjs > "$PROOF130/exact-original.log" 2>&1
+          original=$?
+          TRACE130="$PROOF130/natural-trace.jsonl" node --test --test-reporter=tap tests/instrumented.test.cjs > "$PROOF130/natural.log" 2>&1
+          natural=$?
+          CONTROL130=remove-marker TRACE130="$PROOF130/controlled-trace.jsonl" node --test --test-reporter=tap --test-name-pattern='écriture concurrente pendant' tests/instrumented.test.cjs > "$PROOF130/controlled.log" 2>&1
+          controlled=$?
+          printf '{"originalExit":%s,"naturalExit":%s,"controlledExit":%s}\n' "$original" "$natural" "$controlled" > "$PROOF130/results.json"
+          test "$original" = 0 && test "$natural" = 0 && test "$controlled" = 1
+      - name: Preserve causal evidence even when the fixture fails
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: forensic-130-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            evidence130/*.log
+            evidence130/*.json
+            evidence130/*.jsonl
+            evidence130/*.patch
+          if-no-files-found: error
+          retention-days: 7
