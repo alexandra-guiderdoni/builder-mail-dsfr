@@ -1,79 +1,116 @@
-name: Publier l’atelier sur GitHub Pages
+name: 'Diagnostic unique destinations export #145'
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:
   contents: read
 
-concurrency:
-  group: github-pages
-  cancel-in-progress: false
-
 jobs:
-  tests:
+  diagnostic:
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/diag/issue-145-destinations'
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    permissions:
-      contents: read
+    env:
+      ARTIFACT_DIR: ${{ runner.temp }}/dest145-${{ github.run_id }}-${{ github.run_attempt }}
+      SUBJECT_SHA: 0b7adc7f18355e740f144b379f7930bf4c8c23de
+      PROBE_ROOT: ${{ github.workspace }}/.diagnostic-source/diagnostics/issue-145-destinations
+      PYTHONDONTWRITEBYTECODE: '1'
     steps:
-      - name: Lire les sources
+      - name: Réserver les preuves hors checkout
+        shell: bash
+        run: |
+          mkdir "$ARTIFACT_DIR"
+          printf '{"subjectSha":"%s","workflowSha":"%s","runId":"%s","runAttempt":"%s","maxInvocations":1}\n' "$SUBJECT_SHA" "$GITHUB_SHA" "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT" > "$ARTIFACT_DIR/plan.json"
+      - name: Lire le sujet exact à la racine originale
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: 0b7adc7f18355e740f144b379f7930bf4c8c23de
           persist-credentials: false
-      - name: Fixer la version de Node
+      - name: Lire seulement la sonde de la branche diagnostic
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          path: .diagnostic-source
+          sparse-checkout: diagnostics/issue-145-destinations
+          persist-credentials: false
+      - name: Fixer Node
         uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
         with:
           node-version: '24.18.0'
-      - name: Installer Playwright depuis le verrou
-        run: npm ci --ignore-scripts
-      - name: Installer Chromium, WebKit et leurs dépendances système
-        run: npx --no-install playwright install --with-deps chromium webkit
-      - name: Contrôler les distributions et la provenance
-        run: npm run check
-      - name: Préparer le rapport TAP
-        id: reporter
+      - name: Vérifier la plateforme et consigner les versions
+        shell: bash
         run: |
-          node <<'NODE'
-          const fs = require('node:fs');
-          const previous = process.env.NODE_OPTIONS || '';
-          const options = previous + (previous ? ' ' : '') + '--test-reporter=tap';
-          fs.appendFileSync(process.env.GITHUB_OUTPUT, 'options=' + JSON.stringify(options) + '\n');
-          NODE
-      - name: Exécuter la suite de tests
+          {
+            cat /etc/os-release
+            printf 'ImageOS=%s\nImageVersion=%s\nRunnerArch=%s\n' "$ImageOS" "$ImageVersion" "$RUNNER_ARCH"
+            uname -r
+            node --version
+            npm --version
+            printf 'subject='; git rev-parse HEAD
+            printf 'diagnostic='; git -C .diagnostic-source rev-parse HEAD
+          } > "$ARTIFACT_DIR/host.log"
+          . /etc/os-release
+          test "$ID" = ubuntu
+          test "$VERSION_ID" = 26.04
+          test "$RUNNER_ARCH" = X64
+          test "$(node --version)" = v24.18.0
+          test "$(git rev-parse HEAD)" = "$SUBJECT_SHA"
+          test "$(git -C .diagnostic-source rev-parse HEAD)" = "$GITHUB_SHA"
+          sha256sum package.json package-lock.json > "$ARTIFACT_DIR/package-source.sha256"
+      - name: Vérifier le paquet scellé et appliquer les trois copies observatrices
+        shell: bash
+        run: |
+          set -o pipefail
+          python3 "$PROBE_ROOT/verify-overlay.py" overlay --subject "$GITHUB_WORKSPACE" --probe "$PROBE_ROOT/probe" --artifacts "$ARTIFACT_DIR" 2>&1 | tee "$ARTIFACT_DIR/overlay.log"
+      - name: Installer Playwright depuis le verrou du sujet
+        shell: bash
+        run: |
+          set -o pipefail
+          npm ci --ignore-scripts 2>&1 | tee "$ARTIFACT_DIR/npm-ci.log"
+          node -e 'const fs=require("node:fs"),path=require("node:path");const pw=require("playwright/package.json"),core=require("playwright-core/package.json");if(pw.version!=="1.64.1"||core.version!=="1.64.1"||process.version!=="v24.18.0"||process.platform!=="linux"||process.arch!=="x64")process.exit(1);console.log(JSON.stringify({node:process.version,platform:process.platform,arch:process.arch,playwright:pw.version,playwrightCore:core.version,browsers:JSON.parse(fs.readFileSync(path.join(path.dirname(require.resolve("playwright-core/package.json")),"browsers.json"),"utf8"))},null,2));' > "$ARTIFACT_DIR/packages.json"
+      - name: Installer le même périmètre de navigateurs et dépendances système
+        shell: bash
+        run: |
+          set -o pipefail
+          npx --no-install playwright install --with-deps chromium webkit 2>&1 | tee "$ARTIFACT_DIR/browser-install.log"
+      - name: Exécuter une fois le seul test Chromium instrumenté
+        shell: bash
         env:
-          NODE_OPTIONS: ${{ fromJSON(steps.reporter.outputs.options) }}
-        run: npm test
-
-  deploy:
-    needs: tests
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
-    steps:
-      - name: Lire les sources
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - name: Vérifier les distributions et préparer le site
+          MAIL_BUILDER_ENGINE: chromium
+          DEST145_OUTPUT_DIR: ${{ env.ARTIFACT_DIR }}/observer
         run: |
-          python3 scripts/build_app.py --check
-          python3 scripts/build.py --check
-          mkdir _site
-          cp -R app/distribution/web/. _site/
-          cp app/distribution/snum.html _site/snum.html
-          cp app/distribution/portable.html _site/atelier-portable.html
-      - name: Déposer les seuls fichiers publics
-        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+          python3 "$PROBE_ROOT/verify-overlay.py" after --subject "$GITHUB_WORKSPACE" --probe "$PROBE_ROOT/probe" --artifacts "$ARTIFACT_DIR"
+          sha256sum -c "$ARTIFACT_DIR/package-source.sha256"
+          test ! -e "$DEST145_OUTPUT_DIR"
+          test ! -e "$ARTIFACT_DIR/export-names-chromium.tap"
+          set -o pipefail
+          set +e
+          node --test --test-reporter=tap --test-name-pattern='^noms des fichiers exportés, trois types d’export \(Chromium\)$' tests/export-names-browser.test.cjs 2>&1 | tee "$ARTIFACT_DIR/export-names-chromium.tap"
+          dest145_statuses=("${PIPESTATUS[@]}")
+          set -e
+          printf '{"testExit":%s,"teeExit":%s,"invocations":1,"retries":0}\n' "${dest145_statuses[0]}" "${dest145_statuses[1]}" > "$ARTIFACT_DIR/result.json"
+          if test "${dest145_statuses[0]}" != 0; then exit "${dest145_statuses[0]}"; fi
+          exit "${dest145_statuses[1]}"
+      - name: Sceller les preuves disponibles même en échec
+        if: always()
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+          root = Path(os.environ['ARTIFACT_DIR'])
+          if root.is_dir():
+              rows = [{'path': str(p.relative_to(root)), 'bytes': p.stat().st_size, 'sha256': hashlib.sha256(p.read_bytes()).hexdigest()} for p in sorted(root.rglob('*')) if p.is_file() and p.name != 'MANIFEST.json']
+              with (root / 'MANIFEST.json').open('x') as stream:
+                  json.dump(rows, stream, indent=2)
+                  stream.write('\n')
+          PY
+      - name: Conserver les preuves même en échec
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          path: _site
-      - name: Publier
-        id: deployment
-        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
+          name: destinations-145-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ env.ARTIFACT_DIR }}/
+          if-no-files-found: error
+          retention-days: 7

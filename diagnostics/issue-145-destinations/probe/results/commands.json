@@ -1,0 +1,43 @@
+[
+  {
+    "command": [
+      "node",
+      "--unhandled-rejections=strict",
+      "--test",
+      "probe.test.cjs"
+    ],
+    "exit": 0,
+    "log": "results/pure.log",
+    "sha256": "085ce1ba0755ddf47201ac3b64687609b233466ec6f1f806add22d214f265992"
+  },
+  {
+    "command": [
+      "node",
+      "--check",
+      "runtime/tests/export-names-browser.test.cjs"
+    ],
+    "exit": 0,
+    "log": "results/syntax-test.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "command": [
+      "node",
+      "--check",
+      "runtime/tests/browser-support.cjs"
+    ],
+    "exit": 0,
+    "log": "results/syntax-helper.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "command": [
+      "node",
+      "--check",
+      "runtime/tests/destinations-probe.cjs"
+    ],
+    "exit": 0,
+    "log": "results/syntax-observer.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+]

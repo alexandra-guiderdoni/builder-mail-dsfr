@@ -1,0 +1,22 @@
+[
+  {
+    "path": "tests/export-names-browser.test.cjs",
+    "commit": "0b7adc7f18355e740f144b379f7930bf4c8c23de",
+    "sha256": "e61e34e08b9a825e0f8ddf590445ba2360ad690a9654e735966c840ef57dc108"
+  },
+  {
+    "path": "tests/browser-support.cjs",
+    "commit": "0b7adc7f18355e740f144b379f7930bf4c8c23de",
+    "sha256": "d56fc80d3c569c93301aea1a2e7022c9cb1a2fccc7240d3162fba7ddb65d3c3e"
+  },
+  {
+    "path": "tests/export-diagnostics.cjs",
+    "commit": "0b7adc7f18355e740f144b379f7930bf4c8c23de",
+    "sha256": "2114b56bd2525093037ccbfcf954687a354777b91dc02983788a88a6a9a93ec6"
+  },
+  {
+    "path": "app/distribution/portable.html",
+    "commit": "0b7adc7f18355e740f144b379f7930bf4c8c23de",
+    "sha256": "69b0d0ad06742ffd6e77df9a573238afd849c37628878aadcae9ee9dc5736ab9"
+  }
+]

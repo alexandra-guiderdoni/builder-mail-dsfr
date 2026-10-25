@@ -1,0 +1,30 @@
+[
+  {
+    "path": "tests/export-names-browser.test.cjs",
+    "originalSHA256": "e61e34e08b9a825e0f8ddf590445ba2360ad690a9654e735966c840ef57dc108",
+    "generatedSHA256": "15ce9dc78583b2a83b9946134495f46fa25a109ef8d07b272d3649ebab28e7b1",
+    "inverseExact": true,
+    "unchanged": false
+  },
+  {
+    "path": "tests/browser-support.cjs",
+    "originalSHA256": "d56fc80d3c569c93301aea1a2e7022c9cb1a2fccc7240d3162fba7ddb65d3c3e",
+    "generatedSHA256": "44c3857b41398cdc982124618cbc12f75b18fd349f21b5b7dbe58daf675b4755",
+    "inverseExact": true,
+    "unchanged": false
+  },
+  {
+    "path": "tests/export-diagnostics.cjs",
+    "originalSHA256": "2114b56bd2525093037ccbfcf954687a354777b91dc02983788a88a6a9a93ec6",
+    "generatedSHA256": "2114b56bd2525093037ccbfcf954687a354777b91dc02983788a88a6a9a93ec6",
+    "inverseExact": false,
+    "unchanged": true
+  },
+  {
+    "path": "app/distribution/portable.html",
+    "originalSHA256": "69b0d0ad06742ffd6e77df9a573238afd849c37628878aadcae9ee9dc5736ab9",
+    "generatedSHA256": "69b0d0ad06742ffd6e77df9a573238afd849c37628878aadcae9ee9dc5736ab9",
+    "inverseExact": false,
+    "unchanged": true
+  }
+]

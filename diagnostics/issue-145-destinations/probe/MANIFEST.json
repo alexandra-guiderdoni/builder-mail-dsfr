@@ -1,0 +1,162 @@
+[
+  {
+    "path": "INPUTS.json",
+    "bytes": 777,
+    "sha256": "95193b8aef8fa79d1daaec0d4c3f03e5390af6ac7d15db7bb0cf890ed13cbd96"
+  },
+  {
+    "path": "PRESERVATION.json",
+    "bytes": 1141,
+    "sha256": "34a8fa89752ec208558b8c35ba4280cdfdb2d280d4b1f64856db4d5c5d14fdd2"
+  },
+  {
+    "path": "PROTOCOLE.md",
+    "bytes": 4427,
+    "sha256": "8edc744916f877a898bfd099b475683d53572a263d516874b3de29aaf8f1bb4e"
+  },
+  {
+    "path": "README.md",
+    "bytes": 7800,
+    "sha256": "753cb1ec48119c938135e40b5f3a4f1ec0b746e5a43418aef09357aee1784a5c"
+  },
+  {
+    "path": "RECEIPT.json",
+    "bytes": 1814,
+    "sha256": "0859c056ff298b7f7d6866e5700bc6da8da96e209924e5bda84776d786085df5"
+  },
+  {
+    "path": "original/app/distribution/portable.html",
+    "bytes": 1331409,
+    "sha256": "69b0d0ad06742ffd6e77df9a573238afd849c37628878aadcae9ee9dc5736ab9"
+  },
+  {
+    "path": "original/tests/browser-support.cjs",
+    "bytes": 13306,
+    "sha256": "d56fc80d3c569c93301aea1a2e7022c9cb1a2fccc7240d3162fba7ddb65d3c3e"
+  },
+  {
+    "path": "original/tests/export-diagnostics.cjs",
+    "bytes": 3333,
+    "sha256": "2114b56bd2525093037ccbfcf954687a354777b91dc02983788a88a6a9a93ec6"
+  },
+  {
+    "path": "original/tests/export-names-browser.test.cjs",
+    "bytes": 5514,
+    "sha256": "e61e34e08b9a825e0f8ddf590445ba2360ad690a9654e735966c840ef57dc108"
+  },
+  {
+    "path": "prepare.cjs",
+    "bytes": 3496,
+    "sha256": "fdcf41f01cdf5df748e20f5f486d1a25debbd980bc8e68e9b6b977693aba5723"
+  },
+  {
+    "path": "probe.test.cjs",
+    "bytes": 11576,
+    "sha256": "21efbf2f9bf76e36f2e22c04fc72ee6d321b4d18758107c3d1fc0ec550a1010a"
+  },
+  {
+    "path": "results/accents.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "results/browser-support.cjs.diff",
+    "bytes": 2047,
+    "sha256": "8971baabb3282d3e047d8401812fb68c22c87c5ca6f4474f20fbd59398897ece"
+  },
+  {
+    "path": "results/commands.json",
+    "bytes": 994,
+    "sha256": "ca8a82a130170a0605d6ab3521c3ad8ddbd6ac77a92edf0eda8cdea04908034d"
+  },
+  {
+    "path": "results/export-names-browser.test.cjs.diff",
+    "bytes": 3675,
+    "sha256": "782840cb76ffaf577178e936f68fe72abb8f61efe2648fa30a586b3abe691337"
+  },
+  {
+    "path": "results/final-commands.json",
+    "bytes": 266,
+    "sha256": "adb964414c6c03324dc6830cc7e93a6bbad528b925b61885e6eec1d98ca16655"
+  },
+  {
+    "path": "results/freeze-commands.json",
+    "bytes": 665,
+    "sha256": "d8e87d44e0423df9eece29677980ae15320c0445a0b268dee56ac493fb73335e"
+  },
+  {
+    "path": "results/pure-final.log",
+    "bytes": 1606,
+    "sha256": "b4ca30501ac69a2fac29100c10f9b7114c50c0b8df7dd2951a0c3f4b868f849c"
+  },
+  {
+    "path": "results/pure-freeze.log",
+    "bytes": 1723,
+    "sha256": "fa65739a68a4d77e0d11c3c281cbdd3082c7b2a8cee09739524eec25b2878281"
+  },
+  {
+    "path": "results/pure.log",
+    "bytes": 1395,
+    "sha256": "085ce1ba0755ddf47201ac3b64687609b233466ec6f1f806add22d214f265992"
+  },
+  {
+    "path": "results/syntax-helper.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "results/syntax-observer.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "results/syntax-test.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "runtime/app/distribution/portable.html",
+    "bytes": 1331409,
+    "sha256": "69b0d0ad06742ffd6e77df9a573238afd849c37628878aadcae9ee9dc5736ab9"
+  },
+  {
+    "path": "runtime/tests/browser-support.cjs",
+    "bytes": 13654,
+    "sha256": "44c3857b41398cdc982124618cbc12f75b18fd349f21b5b7dbe58daf675b4755"
+  },
+  {
+    "path": "runtime/tests/destinations-probe.cjs",
+    "bytes": 9308,
+    "sha256": "4cb34c9fb53ea73f3ce813a5e3b700a56295a551acda0beda0f2188825dba4e6"
+  },
+  {
+    "path": "runtime/tests/export-diagnostics.cjs",
+    "bytes": 3333,
+    "sha256": "2114b56bd2525093037ccbfcf954687a354777b91dc02983788a88a6a9a93ec6"
+  },
+  {
+    "path": "runtime/tests/export-names-browser.test.cjs",
+    "bytes": 5874,
+    "sha256": "15ce9dc78583b2a83b9946134495f46fa25a109ef8d07b272d3649ebab28e7b1"
+  },
+  {
+    "path": "sources/PLAYWRIGHT-API.json",
+    "bytes": 1257,
+    "sha256": "608ad2ebe4f148a56a6e812880afee67b4a0488f403a5157fe8df9d7256e297a"
+  },
+  {
+    "path": "sources/lib__coreBundle.js",
+    "bytes": 1327,
+    "sha256": "c02f1b1a5f27deecdc854dfdc913234a660a8e37587f4ca1aa8cb85b4dbe4964"
+  },
+  {
+    "path": "sources/types__structs.d.ts",
+    "bytes": 486,
+    "sha256": "a07ba26aafd27e2601cee82b6072a6e7406501f43bf9746f0924bbd379ebdb22"
+  },
+  {
+    "path": "sources/types__types.d.ts",
+    "bytes": 1665,
+    "sha256": "ec036eaa3d112a67fc7789bd4e95d4054629ff6b3e9113e9fcb179b213eab3be"
+  }
+]

@@ -1,0 +1,30 @@
+--- original/browser-support.cjs
++++ probe/browser-support.cjs
+@@ -1,4 +1,5 @@
+ const path = require('node:path');
++const {markDestination, destinationError} = require('./destinations-probe.cjs');
+ const fs = require('node:fs/promises');
+ const assert = require('node:assert/strict');
+ const playwright = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
+@@ -91,14 +92,19 @@
+    deux états observables, fenêtre ouverte ou action terminée, au lieu d’un seul regard qui manquait une fenêtre ouverte après un
+    `await` du gestionnaire ; un #error apparu pendant l’attente échoue aussitôt en citant son texte. Sans `settled`, un seul regard. */
+ async function confirmChecks(page, settled) {
+-  const look = () => page.evaluate(() => ({open: document.getElementById('check-dialog')?.open === true, error: document.getElementById('error')?.hidden === false ? document.getElementById('error').textContent.trim() : ''}));
++  const look = () => page.evaluate(() => { try { window.__dest145?.firstOpen(); } catch {} return {open: document.getElementById('check-dialog')?.open === true, error: document.getElementById('error')?.hidden === false ? document.getElementById('error').textContent.trim() : ''}; });
+   if (!settled) { if ((await look()).open) await page.locator('#check-confirm').click(); return; }
+   let done = false; settled.then(() => { done = true; }, () => { done = true; });
+   const initial = (await look()).error;
+   while (!done) {
+     const seen = await look();
+     if (seen.error && seen.error !== initial) throw new Error(`Action refusée par l’atelier : ${seen.error}`);
+-    if (seen.open) { await page.locator('#check-confirm').click(); return; }
++    if (seen.open) {
++      markDestination(page, 'confirm-click-before');
++      try { await page.locator('#check-confirm').click(); markDestination(page, 'confirm-click-return'); }
++      catch (error) { destinationError(page, error, 'confirm-click'); throw error; }
++      return;
++    }
+     await new Promise(resolve => setTimeout(resolve, 10));
+   }
+ }

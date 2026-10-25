@@ -1,0 +1,55 @@
+{
+  "subjectSHA": "0b7adc7f18355e740f144b379f7930bf4c8c23de",
+  "overlay": [
+    {
+      "source": "runtime/tests/export-names-browser.test.cjs",
+      "destination": "tests/export-names-browser.test.cjs",
+      "sha256": "15ce9dc78583b2a83b9946134495f46fa25a109ef8d07b272d3649ebab28e7b1"
+    },
+    {
+      "source": "runtime/tests/browser-support.cjs",
+      "destination": "tests/browser-support.cjs",
+      "sha256": "44c3857b41398cdc982124618cbc12f75b18fd349f21b5b7dbe58daf675b4755"
+    },
+    {
+      "source": "runtime/tests/destinations-probe.cjs",
+      "destination": "tests/destinations-probe.cjs",
+      "sha256": "4cb34c9fb53ea73f3ce813a5e3b700a56295a551acda0beda0f2188825dba4e6"
+    }
+  ],
+  "unchanged": [
+    {
+      "path": "tests/export-diagnostics.cjs",
+      "sha256": "2114b56bd2525093037ccbfcf954687a354777b91dc02983788a88a6a9a93ec6"
+    },
+    {
+      "path": "app/distribution/portable.html",
+      "sha256": "69b0d0ad06742ffd6e77df9a573238afd849c37628878aadcae9ee9dc5736ab9"
+    }
+  ],
+  "validation": {
+    "pureTests": 16,
+    "pass": 16,
+    "fail": 0,
+    "nativeExecuted": false,
+    "syntaxChecked": [
+      "runtime/tests/export-names-browser.test.cjs",
+      "runtime/tests/browser-support.cjs",
+      "runtime/tests/destinations-probe.cjs"
+    ],
+    "node": "v24.18.0"
+  },
+  "sourceCheckoutObserved": {
+    "head": "0b7adc7f18355e740f144b379f7930bf4c8c23de",
+    "statusPorcelain": "",
+    "codegraphDirectoryExists": false
+  },
+  "limits": [
+    "No browser, CI or model execution",
+    "No product source or Git mutation",
+    "Two awaited preparation calls before navigation",
+    "Existing look RPC enriched with intrusive layout/style reads",
+    "Transport completeness unknown; no drain ACK",
+    "Native observation requires independent review and root execution"
+  ]
+}

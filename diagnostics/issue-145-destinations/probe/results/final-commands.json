@@ -1,0 +1,13 @@
+[
+  {
+    "command": [
+      "node",
+      "--unhandled-rejections=strict",
+      "--test",
+      "probe.test.cjs"
+    ],
+    "cwd": "/Users/alex/Claude-worktrees/builder-145-destinations-probe-20261026",
+    "exitCode": 0,
+    "log": "results/pure-final.log"
+  }
+]

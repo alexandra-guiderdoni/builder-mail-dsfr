@@ -1,0 +1,21 @@
+✔ serialized observer installs in opaque context with absent crypto and crypto.randomUUID (1.653792ms)
+✔ one installation retains distinct event IDs; repeat setup adds no listeners (0.758292ms)
+✔ navigation creates distinct document labels without assuming timeOrigin uniqueness (1.275667ms)
+✔ geometry only on first open look, no input listener layout reads (0.550875ms)
+✔ observer geometry error is recorded and does not throw into existing look (0.38125ms)
+✔ document overflow explicitly reports lower bound; no unbounded bridge queue (4.699083ms)
+✔ binding rejections handled without awaiting transport; later telemetry reports count (0.494875ms)
+✔ public binding frame identity retained through navigation; document epochs not merged (0.304334ms)
+✔ duplicate/gap/nonmonotone inputs are retained and flagged, not silently deduplicated (0.097292ms)
+✔ node rows, document table and source errors bounded; serialization remains explicit (3.270625ms)
+✔ installation uses public exposeBinding then addInitScript before caller navigation; failure is nonthrowing (0.172792ms)
+✔ exact source inverse, original app and 1000ms diagnostic unchanged (8.688917ms)
+✔ original failure snapshot deadline and primary survive nonresponding evaluate (1004.512584ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 13
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1091.850042
