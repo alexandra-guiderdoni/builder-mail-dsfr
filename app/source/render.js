@@ -23,17 +23,21 @@
       return "&nbsp;| " + markup.replace(/\{\{(f1|f2)\}\}/g, (_, key) => escape(key === "f1" ? link.url : incomplete ? "Intitulé du lien à renseigner" : link.label));
     }).join("");
   }
-  // Issue #71 : le lien source est injecté dans le cadre visuel du bloc (table wlkm-cl)
-  // au lieu d'une table enveloppe séparée. Le dernier wlkm-cl rencontré est ciblé par comptage
-  // de balance de balises <table>/</table> ; si aucun cadre wlkm-cl n'est présent (mail-04/07/51),
-  // l'ancienne table externe reste utilisée pour préserver le lien.
+  // Issue #71 (correctif PR #128) : le lien source est injecté dans le cadre
+  // éditorial du bloc, identifié comme la PREMIÈRE balise <table> portant
+  // class="wlkm-cl darkmode" dans le fragment. L'ancien marqueur lastIndexOf
+  // d'une simple sous-chaîne attrapait aussi les sous-tables (vignette 135 px
+  // de mail-31) et un <td class="wlkm-cl darkmode"> (mail-46) imbriqués dans
+  // le cadre. La table ouvrante repérée est fermée par comptage de balance
+  // des balises <table>/</table> ; si aucun cadre wlkm-cl n'est présent
+  // (mail-04/07/51), l'ancienne table externe reste utilisée pour préserver le lien.
   function injectSourceLink(result, source, label) {
     const safeLabel = escape(label?.trim() || "Consulter la source");
     const row = `<tr><td class="darkmode-1" style="padding:0 10px 16px 10px;font-family:Tahoma,Geneva,sans-serif;font-size:14px;line-height:20px;text-align:left;overflow-wrap:anywhere;word-break:break-word"><a href="${escape(source)}" style="color:#000091">${safeLabel}</a></td></tr>`;
-    const key = 'class="wlkm-cl darkmode"';
-    const marker = result.lastIndexOf(key);
-    if (marker >= 0) {
-      const openEnd = result.indexOf('>', marker) + 1;
+    const frameOpenRe = /<table\b[^>]*\bclass="wlkm-cl darkmode"[^>]*>/i;
+    const openMatch = frameOpenRe.exec(result);
+    if (openMatch) {
+      const openEnd = openMatch.index + openMatch[0].length;
       const re = /<\/?table\b[^>]*>/gi;
       re.lastIndex = openEnd;
       let depth = 1, match;
