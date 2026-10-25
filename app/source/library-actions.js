@@ -117,7 +117,8 @@
     "reload-page": A.State.reload,
     // Décision #32/#37 : le secours exporte la bibliothèque en mémoire même pendant une saisie d’URL invalide (le brouillon n’en fait pas partie).
     "rescue-export": () => { A.State.guardEdit(); A.Files.json(M.library(A.library), "bibliotheque.courriels.json"); A.State.exported(); A.notice("Bibliothèque en mémoire proposée au téléchargement, avec modèles et identités."); },
-    "export-stored": async () => { const record = await A.Storage.load(); if (!record) throw new Error("Aucune donnée enregistrée."); A.Files.json(record, "recuperation.stockage.json"); A.notice("Copie brute du stockage proposée au téléchargement pour récupération."); },
+    // Jeton relevé au départ : la copie brute n’écrase pas une annonce plus récente posée pendant la lecture du stockage (#122).
+    "export-stored": async () => { const ticket = A.State.noticeTicket(); const record = await A.Storage.load(); if (!record) throw new Error("Aucune donnée enregistrée."); A.Files.json(record, "recuperation.stockage.json"); A.notice("Copie brute du stockage proposée au téléchargement pour récupération.", ticket); },
     "export-mail": async () => {
       A.State.guard(); const html = A.Render.exportHtml(A.doc());
       if (!(await A.Checks.confirm("export", A.Checks.warnings(A.doc(), A.Render.weight(html))))) return;

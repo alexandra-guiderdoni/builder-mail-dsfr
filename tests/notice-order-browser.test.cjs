@@ -42,6 +42,32 @@ for (const [label, kind] of Object.entries(KINDS)) {
   });
 }
 
+test('export-stored : la copie brute du stockage n’écrase pas une annonce plus récente', async () => {
+  const browser = await chromium.launch({headless: true});
+  try {
+    const {page} = await open(browser);
+    await page.locator('#document-name').fill('État stocké'); await saved(page);
+    // Suspendre A.Storage.load pour fenêtrer l'annonce différée de export-stored.
+    await page.evaluate(() => {
+      const real = MailBuilder.Storage.load.bind(MailBuilder.Storage);
+      window.__releaseLoad = null;
+      MailBuilder.Storage = {...MailBuilder.Storage, load: (which) => new Promise((res, rej) => { window.__releaseLoad = () => real(which).then(res, rej); })};
+    });
+    const added = await page.evaluate(() => {
+      window.__pending = Promise.resolve(MailBuilder.Actions['export-stored']()).catch(() => {});
+      const select = document.getElementById('catalogue'); select.value = select.options[0].value;
+      MailBuilder.Actions['add-block']();
+      return document.getElementById('notice').textContent;
+    });
+    assert.match(added, /ajouté/, 'l’ajout de bloc est annoncé aussitôt');
+    await page.waitForFunction(() => typeof __releaseLoad === 'function');
+    await page.evaluate(() => window.__releaseLoad());
+    await page.evaluate(() => window.__pending);
+    await saved(page);
+    assert.equal(await page.locator('#notice').innerText(), added, 'la copie brute ne remplace pas l’annonce de bloc ajouté');
+  } finally { await browser.close(); }
+});
+
 test('les réussites différées de création, modèle, import et copie n’écrasent pas une annonce plus récente', async () => {
   const browser = await chromium.launch({headless: true});
   try {

@@ -15,10 +15,12 @@
   window.addEventListener("appinstalled", () => { install.hidden = true; environment.textContent = "Atelier installé dans ce navigateur"; });
   if (!("serviceWorker" in navigator)) { environment.textContent = "Hors connexion web indisponible · utilisez le fichier portable"; return; }
   let reloading = false, controlled = !!navigator.serviceWorker.controller;
-  const reloadNeeded = () => { update.hidden = true; A.notice("Une nouvelle version est active dans un autre onglet. Rechargez cette page pour l’utiliser ; le rechargement reste soumis aux protections de sauvegarde."); };
+  // Jeton optionnel : l’annonce différée se tait si une autre est passée pendant save/flush (#122).
+  const reloadNeeded = since => { update.hidden = true; A.notice("Une nouvelle version est active dans un autre onglet. Rechargez cette page pour l’utiliser ; le rechargement reste soumis aux protections de sauvegarde.", since); };
   navigator.serviceWorker.addEventListener("controllerchange", () => { if (reloading) location.reload(); else if (controlled) { reloadNeeded(); A.State.outdated(); } controlled = true; });
   update.addEventListener("click", async () => {
-    try { await A.State.save(); await A.State.flush(); if (registration.waiting) { reloading = true; registration.waiting.postMessage({type: "ACTIVATE_UPDATE"}); } else reloadNeeded(); } catch (cause) { A.error(cause.message); }
+    const ticket = A.State?.noticeTicket?.();
+    try { await A.State.save(); await A.State.flush(); if (registration.waiting) { reloading = true; registration.waiting.postMessage({type: "ACTIVATE_UPDATE"}); } else reloadNeeded(ticket); } catch (cause) { A.error(cause.message); }
   });
   const helpBox = document.getElementById("offline-help"), helpExport = document.getElementById("offline-export");
   const PORTABLE = "Pour travailler sans connexion, utilisez le fichier portable : sa bibliothèque est séparée de celle de cette page. Exportez la bibliothèque ici, puis importez-la dans le fichier portable.";
