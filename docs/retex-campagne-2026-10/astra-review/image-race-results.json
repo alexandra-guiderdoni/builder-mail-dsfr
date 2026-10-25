@@ -1,0 +1,9 @@
+[
+  {
+    "id": "ASTRA_T01_STALE_IMAGE_APPLIED_AFTER_REPLACE",
+    "method": "Actual editor.js handler in Node VM; FileReader/Image/DOM/storage are controlled adapters, no browser test",
+    "initialDocumentReplaced": true,
+    "staleImageAppliedToNewDocument": true,
+    "staleImageAutosaved": true
+  }
+]

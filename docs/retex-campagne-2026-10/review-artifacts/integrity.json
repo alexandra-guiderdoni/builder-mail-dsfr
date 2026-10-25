@@ -1,0 +1,18 @@
+{
+  "recorded_hashes": 18,
+  "all_match": true,
+  "reference_hashes": [
+    {
+      "file": "Marianne-Light@2x.png",
+      "match": true
+    },
+    {
+      "file": "placeholder.16x9.png",
+      "match": true
+    },
+    {
+      "file": "snum-packet.js",
+      "match": true
+    }
+  ]
+}

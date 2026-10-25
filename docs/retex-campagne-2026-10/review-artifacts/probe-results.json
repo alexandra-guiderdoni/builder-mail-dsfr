@@ -1,0 +1,69 @@
+{
+  "environment": {
+    "node": "v24.19.0",
+    "mode": "Node VM and controlled adapters; no browser execution"
+  },
+  "commit": "c329339aee8e6ba36288197ab22000772bb248ae",
+  "results": [
+    {
+      "id": "T01_INVALID_URL_OLD_EXPORTED",
+      "input": "https://",
+      "errorBefore": "Le lien doit être une URL HTTPS complète.",
+      "exportedURL": "https://example.org/old",
+      "clipboardContainsOldURL": true,
+      "errorHiddenAfterCopy": true,
+      "statusAfterProject": "Fichier de travail proposé au téléchargement."
+    },
+    {
+      "id": "T02_EMPTY_ACTION_ACCEPTED",
+      "emptyLink": true,
+      "emptyHeading": true,
+      "validation": "accepted"
+    },
+    {
+      "id": "T03_CORRUPT_IMAGE_ACCEPTED",
+      "image": "data:image/png;base64,AAAA",
+      "decodedBytes": [
+        0,
+        0,
+        0
+      ],
+      "validation": "accepted"
+    },
+    {
+      "id": "T04_TWO_TABS_LAST_WRITER",
+      "subjectAfterA": "Nouveau sujet de A",
+      "subjectStoredAfterB": "Sujet de A",
+      "footerStored": "Pied modifié dans B",
+      "method": "two editor contexts, shared injected store adapter"
+    },
+    {
+      "id": "T05_PENDING_RESTORE_OVERWRITES_EDIT",
+      "typedWhileLoadPending": "Nouveau",
+      "subjectAfterLoad": "Ancien",
+      "storedSubject": "Nouveau",
+      "method": "injected delayed load; actual editor handler"
+    },
+    {
+      "id": "T06_SW_OTHER_DEPLOYMENT_DELETED",
+      "deleted": [
+        "builder-mail-prototype-other-deployment"
+      ],
+      "method": "actual worker with simulated CacheStorage inventory"
+    },
+    {
+      "id": "T07_SECURITY_NEGATIVE_CONTROLS",
+      "escapedScript": true,
+      "escapedImageMarkup": true,
+      "unsafeURLsRejected": 4
+    },
+    {
+      "id": "T08_UNUSED_IMAGE_FIELDS",
+      "textBlocks": 30,
+      "blocksCarryingUnusedDemoImage": 30,
+      "serializedBytes": 235533,
+      "strippedBytes": 11673,
+      "method": "actual document model from shipped artifact"
+    }
+  ]
+}

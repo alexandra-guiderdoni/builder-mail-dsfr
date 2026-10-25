@@ -1,0 +1,8 @@
+T01_INVALID_URL_OLD_EXPORTED {"input":"https://","errorBefore":"Le lien doit être une URL HTTPS complète.","exportedURL":"https://example.org/old","clipboardContainsOldURL":true,"errorHiddenAfterCopy":true,"statusAfterProject":"Fichier de travail proposé au téléchargement."}
+T02_EMPTY_ACTION_ACCEPTED {"emptyLink":true,"emptyHeading":true,"validation":"accepted"}
+T03_CORRUPT_IMAGE_ACCEPTED {"image":"data:image/png;base64,AAAA","decodedBytes":[0,0,0],"validation":"accepted"}
+T04_TWO_TABS_LAST_WRITER {"subjectAfterA":"Nouveau sujet de A","subjectStoredAfterB":"Sujet de A","footerStored":"Pied modifié dans B","method":"two editor contexts, shared injected store adapter"}
+T05_PENDING_RESTORE_OVERWRITES_EDIT {"typedWhileLoadPending":"Nouveau","subjectAfterLoad":"Ancien","storedSubject":"Nouveau","method":"injected delayed load; actual editor handler"}
+T06_SW_OTHER_DEPLOYMENT_DELETED {"deleted":["builder-mail-prototype-other-deployment"],"method":"actual worker with simulated CacheStorage inventory"}
+T07_SECURITY_NEGATIVE_CONTROLS {"escapedScript":true,"escapedImageMarkup":true,"unsafeURLsRejected":4}
+T08_UNUSED_IMAGE_FIELDS {"textBlocks":30,"blocksCarryingUnusedDemoImage":30,"serializedBytes":235533,"strippedBytes":11673,"method":"actual document model from shipped artifact"}
