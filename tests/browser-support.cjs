@@ -81,14 +81,38 @@ async function expand(page, text) {
     await page.waitForFunction(label => [...document.querySelectorAll('summary')].some(e => e.textContent.includes(label) && e.parentElement.open), text, {timeout: 3000});
   }
 }
+/* État visible de la page au moment d’un échec : ce que l’atelier annonce, refuse ou demande, pour nommer la cause réelle. */
+const pageState = page => page.evaluate(() => ({notice: document.getElementById('notice')?.textContent.trim(), error: document.getElementById('error')?.hidden === false ? document.getElementById('error').textContent.trim() : '', checkDialog: document.getElementById('check-dialog')?.open === true, focused: document.hasFocus()})).catch(cause => ({unreadable: cause.message.split('\n')[0]}));
 // Depuis #36, une composition qui garde des contenus de démonstration demande une confirmation avant copie ou téléchargement.
-async function confirmChecks(page) {
-  if (await page.evaluate(() => document.getElementById('check-dialog')?.open === true)) await page.locator('#check-confirm').click();
+/* Avec `settled` (promesse réglée par la fin de l’action : téléchargement reçu, annonce affichée), l’attente porte sur l’un des
+   deux états observables, fenêtre ouverte ou action terminée, au lieu d’un seul regard qui manquait une fenêtre ouverte après un
+   `await` du gestionnaire ; un #error apparu pendant l’attente échoue aussitôt en citant son texte. Sans `settled`, un seul regard. */
+async function confirmChecks(page, settled) {
+  const look = () => page.evaluate(() => ({open: document.getElementById('check-dialog')?.open === true, error: document.getElementById('error')?.hidden === false ? document.getElementById('error').textContent.trim() : ''}));
+  if (!settled) { if ((await look()).open) await page.locator('#check-confirm').click(); return; }
+  let done = false; settled.then(() => { done = true; }, () => { done = true; });
+  const initial = (await look()).error;
+  while (!done) {
+    const seen = await look();
+    if (seen.error && seen.error !== initial) throw new Error(`Action refusée par l’atelier : ${seen.error}`);
+    if (seen.open) { await page.locator('#check-confirm').click(); return; }
+    await new Promise(resolve => setTimeout(resolve, 10));
+  }
+}
+/* Attend l’annonce `text` dans #notice ; si #error se remplit avant, échoue en citant son texte plutôt qu’à l’expiration du délai.
+   Si ni annonce ni erreur n’apparaissent dans le délai imparti, l’exception cite l’annonce attendue, `pageState` au moment de
+   l’expiration et l’erreur d’origine, pour qu’un échec CI nomme son état plutôt qu’un `TimeoutError` anonyme. */
+async function announced(page, text, options = {}) {
+  const handle = await page.waitForFunction(expected => { const error = document.getElementById('error'); if (!error.hidden && error.textContent.trim()) return {error: error.textContent.trim()}; return document.getElementById('notice').textContent.includes(expected) ? {notice: true} : null; }, text, options)
+    .catch(async cause => { const state = await pageState(page); throw new Error(`Annonce « ${text} » non observée dans le délai ; état de la page : ${JSON.stringify(state)} ; cause d’origine : ${cause.message.split('\n')[0]}`, {cause}); });
+  const seen = await handle.jsonValue();
+  if (seen.error) throw new Error(`Annonce « ${text} » attendue ; #error affiche : ${seen.error} ; état de la page : ${JSON.stringify(await pageState(page))}`);
 }
 async function download(page, selector, filename) {
   await fs.mkdir(evidence, {recursive: true});
-  const event = page.waitForEvent('download'); await click(page, selector); await confirmChecks(page);
-  const result = await event, destination = path.join(evidence, filename); await result.saveAs(destination); return destination;
+  const event = page.waitForEvent('download'); await click(page, selector); await confirmChecks(page, event);
+  const result = await event.catch(async cause => { throw new Error(`Aucun téléchargement reçu pour ${selector} (${filename}) ; état de la page : ${JSON.stringify(await pageState(page))}`, {cause}); });
+  const destination = path.join(evidence, filename); await result.saveAs(destination); return destination;
 }
 /* Attend que l’aperçu affiche le texte donné : cadre chargé, document complet, texte présent au moins `count` fois. */
 async function previewShows(page, text, count = 1) {
@@ -114,4 +138,4 @@ async function selectBlockEffective(page, id) { await selectBlock(page, id); awa
 async function focusPage(page) { await page.bringToFront(); await page.waitForFunction(() => document.hasFocus()); }
 const state = page => page.evaluate(() => JSON.parse(JSON.stringify(MailBuilder.library)));
 const store = page => page.evaluate(() => MailBuilder.Storage.load());
-module.exports = {root, evidence, portable, click, open, enterEditor, saved, expand, download, confirmChecks, selectBlock, selectBlockEffective, focusPage, duplicateBlock, state, store, chromium, fs, assert, engines, engineName, note, nativeAx, nativeAxTree, nativeAxNode, ariaHeadings};
+module.exports = {root, evidence, portable, click, open, enterEditor, saved, expand, download, confirmChecks, announced, pageState, selectBlock, selectBlockEffective, focusPage, duplicateBlock, state, store, chromium, fs, assert, engines, engineName, note, nativeAx, nativeAxTree, nativeAxNode, ariaHeadings};

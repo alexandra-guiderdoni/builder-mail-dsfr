@@ -8,6 +8,7 @@ async function refusedWindow(context) {
   await page.addInitScript(() => {
     if (window !== window.top) return;
     const open = IDBFactory.prototype.open; let attempts = 0; window.writes = 0; const refused = sessionStorage.getItem('refus-initial') === '1'; sessionStorage.setItem('refus-initial', '1');
+    window.refusedAtStart = refused; // exposé au test : la page rechargée doit démarrer avec le refus déjà consommé
     IDBFactory.prototype.open = function(...args) {
       if (!refused && ++attempts === 1) { const request = {}; queueMicrotask(() => request.onerror?.()); return request; }
       return open.apply(this, args);
@@ -74,7 +75,11 @@ test('écriture concurrente pendant la récupération : rien n’est écrasé, l
     assert.equal(await page.evaluate(() => window.writes), 0);
     assert.deepEqual(await raw(writer), concurrent, 'l’écriture concurrente est intacte');
     await Promise.all([page.waitForEvent('load'), click(page, '#reopen-reload')]); await page.waitForFunction(() => window.MailBuilder?.ready);
-    await enterEditor(page); assert.equal(await page.locator('#document-name').inputValue(), 'Écriture concurrente', 'le rechargement relit le jeton et l’état concurrents');
+    /* Un nom initial après rechargement signifierait une bibliothèque non relue : l’état réel est nommé avant la comparaison. */
+    const reloaded = await page.evaluate(() => ({recoveryOnly: MailBuilder.recoveryOnly, refusedAtStart: window.refusedAtStart, writes: window.writes, saveState: document.querySelector('#save-state').textContent, error: document.getElementById('error').textContent, documents: MailBuilder.library.documents.map(d => d.name)}));
+    assert.equal(reloaded.recoveryOnly, false, `le rechargement doit relire la bibliothèque enregistrée : ${JSON.stringify(reloaded)}`);
+    assert.equal(reloaded.refusedAtStart, true, `le refus initial doit déjà être consommé au rechargement : ${JSON.stringify(reloaded)}`);
+    await enterEditor(page); assert.equal(await page.locator('#document-name').inputValue(), 'Écriture concurrente', `le rechargement relit le jeton et l’état concurrents ; page rechargée : ${JSON.stringify(reloaded)} ; stockage : ${JSON.stringify((await raw(page)).current?.library.documents.map(d => d.name))}`);
     assert.deepEqual(await raw(writer), concurrent);
     // Le contrôle de conflit fonctionne dans les deux sens après le rechargement.
     await page.locator('#document-name').fill('Après rechargement'); await saved(page);

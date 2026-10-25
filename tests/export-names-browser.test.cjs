@@ -1,5 +1,5 @@
 const test = require('node:test');
-const {open, expand, saved, click, confirmChecks, chromium, assert} = require('./browser-support.cjs');
+const {open, expand, saved, click, confirmChecks, pageState, chromium, assert} = require('./browser-support.cjs');
 const {webkit} = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
 
 // 25 octobre 2026, 00 h 30 à Paris : le 24 en UTC. La date d'export est la date locale.
@@ -17,10 +17,12 @@ const cases = [
 const longNames = ['a'.repeat(300), 'é'.repeat(300), '😀'.repeat(300)];
 const selectors = ['[data-action=export-mail]', '[data-action=export-document]', '[data-action=export-library]'];
 
-async function suggested(page, selector) {
+/* Nom proposé au téléchargement ; `label` nomme le cas dans l’échec, avec le sélecteur et l’état de la page. */
+async function suggested(page, selector, label) {
   const event = page.waitForEvent('download');
-  await click(page, selector); await confirmChecks(page); // fenêtre de contrôle de #36
-  return (await event).suggestedFilename();
+  await click(page, selector); await confirmChecks(page, event); // fenêtre de contrôle de #36, ou téléchargement direct
+  const result = await event.catch(async cause => { throw new Error(`${label} : aucun téléchargement reçu pour ${selector} ; état de la page : ${JSON.stringify(await pageState(page))}`, {cause}); });
+  return result.suggestedFilename();
 }
 
 // WebKit sous macOS restitue le nom décomposé (NFD) : on compare en NFC, et on vérifie
@@ -32,7 +34,7 @@ async function exportNames(browser, name) {
     await expand(page, 'Fichiers et récupération');
     await page.locator('#document-name').fill(name); await saved(page);
     const downloads = [];
-    for (const selector of selectors) downloads.push((await suggested(page, selector)).normalize('NFC'));
+    for (const selector of selectors) downloads.push((await suggested(page, selector, `nom « ${name} »`)).normalize('NFC'));
     return {mail: downloads[0], composition: downloads[1], library: downloads[2], direct: () => page.evaluate(n => MailBuilder.Files.exportName(n, 'html'), name)};
   } catch (error) { await context.close(); throw error; }
 }
@@ -69,7 +71,7 @@ for (const [engine, launcher] of [['Chromium', chromium], ['WebKit', webkit]]) {
       await page.locator('#document-name').fill('Bulletin n°3 : été / automne ?'); await saved(page);
       await page.evaluate(() => MailBuilder.Library.home());
       const id = await page.evaluate(() => MailBuilder.library.activeId);
-      const filename = await suggested(page, `[data-document="${id}"] [data-library-action=export]`);
+      const filename = await suggested(page, `[data-document="${id}"] [data-library-action=export]`, 'export depuis l’accueil');
       assert.equal(filename.normalize('NFC'), `Bulletin-n°3-été-automne-${DATE}.courriel.json`);
       await context.close();
     } finally { await browser.close(); }
