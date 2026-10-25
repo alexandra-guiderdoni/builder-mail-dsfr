@@ -105,10 +105,10 @@
     const component = A.doc().blocks.find(b => b.id === blockId)?.component;
     attempt(async () => {
       A.State.guard(); const display = component && A.Images.displayWidth(component, key);
-      A.pendingInputs++; A.notice("Chargement de l’image locale…");
+      A.pendingInputs++; A.notice("Chargement de l’image locale…"); const ticket = A.State.noticeTicket();
       const image = await A.Files.image(file, display).finally(() => { A.pendingInputs--; });
       await A.State.change(lib => { const b = lib.documents.find(d => d.id === docId)?.blocks.find(b => b.id === blockId); if (!b) throw new Error("La composition a changé pendant le chargement de l’image."); b.values[key] = image.value; });
-      A.notice(A.Images.describe(image));
+      A.notice(A.Images.describe(image), ticket);
     });
   });
   // Depuis #57, la bascule de composition active passe par une action explicite (bouton « Ouvrir cette composition »)
@@ -119,13 +119,17 @@
   });
 
   let readings = 0; const reading = "Lecture du fichier de travail…";
+  // Jeton partagé entre lectures concurrentes : chaque A.notice(reading) le met à jour, le dernier reste pour l’annonce
+  // de succès différée. Une action utilisateur extérieure qui écrit entre-temps avance noticeTicket plus loin et silence
+  // le succès ; une seconde lecture ne silencie pas la première puisqu’elle avance le jeton partagé en même temps (#122).
+  let readingTicket = 0;
   get("project-input").addEventListener("change", event => {
     const file = event.target.files[0]; if (!file) return;
     attempt(async () => {
-      readings++; A.notice(reading);
+      readings++; A.notice(reading); readingTicket = A.State.noticeTicket();
       try {
         const incoming = await A.Imports.prepare(file), merged = A.Imports.merge(A.library, incoming);
-        await A.State.change(lib => { Object.assign(lib, merged); }); await A.Library.open(A.library.activeId); A.notice("Import ajouté à la bibliothèque, avec ses images. Les compositions existantes sont conservées.");
+        await A.State.change(lib => { Object.assign(lib, merged); }); await A.Library.open(A.library.activeId); A.notice("Import ajouté à la bibliothèque, avec ses images. Les compositions existantes sont conservées.", readingTicket);
       } finally { if (!--readings && get("notice").textContent === reading) A.notice(""); }
     });
     event.target.value = "";
