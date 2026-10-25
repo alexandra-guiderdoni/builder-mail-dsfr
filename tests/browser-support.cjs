@@ -99,10 +99,14 @@ async function confirmChecks(page, settled) {
     await new Promise(resolve => setTimeout(resolve, 10));
   }
 }
-/* Attend l’annonce `text` dans #notice ; si #error se remplit avant, échoue en citant son texte plutôt qu’à l’expiration du délai. */
-async function announced(page, text) {
-  const seen = await (await page.waitForFunction(expected => { const error = document.getElementById('error'); if (!error.hidden && error.textContent.trim()) return {error: error.textContent.trim()}; return document.getElementById('notice').textContent.includes(expected) ? {notice: true} : null; }, text)).jsonValue();
-  if (seen.error) throw new Error(`Annonce « ${text} » attendue ; #error affiche : ${seen.error}`);
+/* Attend l’annonce `text` dans #notice ; si #error se remplit avant, échoue en citant son texte plutôt qu’à l’expiration du délai.
+   Si ni annonce ni erreur n’apparaissent dans le délai imparti, l’exception cite l’annonce attendue, `pageState` au moment de
+   l’expiration et l’erreur d’origine, pour qu’un échec CI nomme son état plutôt qu’un `TimeoutError` anonyme. */
+async function announced(page, text, options = {}) {
+  const handle = await page.waitForFunction(expected => { const error = document.getElementById('error'); if (!error.hidden && error.textContent.trim()) return {error: error.textContent.trim()}; return document.getElementById('notice').textContent.includes(expected) ? {notice: true} : null; }, text, options)
+    .catch(async cause => { const state = await pageState(page); throw new Error(`Annonce « ${text} » non observée dans le délai ; état de la page : ${JSON.stringify(state)} ; cause d’origine : ${cause.message.split('\n')[0]}`, {cause}); });
+  const seen = await handle.jsonValue();
+  if (seen.error) throw new Error(`Annonce « ${text} » attendue ; #error affiche : ${seen.error} ; état de la page : ${JSON.stringify(await pageState(page))}`);
 }
 async function download(page, selector, filename) {
   await fs.mkdir(evidence, {recursive: true});
