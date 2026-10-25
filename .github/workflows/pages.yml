@@ -1,68 +1,145 @@
-name: Publier l’atelier sur GitHub Pages
-
+# Diagnostic branch only; never merge this workflow into main.
+# No push trigger, no Pages permissions, no deploy job.
+name: 'Forensic #145 — historical export confirmation'
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
-
 permissions:
   contents: read
-
 concurrency:
-  group: github-pages
+  group: forensic-145-${{ github.ref }}
   cancel-in-progress: false
-
 jobs:
-  tests:
+  forensic:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
-    permissions:
-      contents: read
+    timeout-minutes: 10
     steps:
-      - name: Lire les sources
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Read exact incident revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
+          ref: eadd426befeb39a6e68a14342f9c1a66102ac81d
+          path: historical
           persist-credentials: false
-      - name: Fixer la version de Node
-        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+      - name: Read reviewed diagnostic harness
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.sha }}
+          path: diagnostic
+          persist-credentials: false
+          sparse-checkout: docs/goal-six-issues-20261025/investigations/timeouts
+      - name: Pin Node
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
         with:
           node-version: '24.18.0'
-      - name: Installer Playwright depuis le verrou
-        run: npm ci --ignore-scripts
-      - name: Installer Chromium, WebKit et leurs dépendances système
-        run: npx --no-install playwright install --with-deps chromium webkit
-      - name: Contrôler les distributions et la provenance
-        run: npm run check
-      - name: Exécuter la suite de tests
-        run: npm test
-
-  deploy:
-    needs: tests
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
-    steps:
-      - name: Lire les sources
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - name: Vérifier les distributions et préparer le site
+      - name: Record and guard host environment
+        shell: bash
         run: |
-          python3 scripts/build_app.py --check
-          python3 scripts/build.py --check
-          mkdir _site
-          cp -R app/distribution/web/. _site/
-          cp app/distribution/snum.html _site/snum.html
-          cp app/distribution/portable.html _site/atelier-portable.html
-      - name: Déposer les seuls fichiers publics
-        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+          mkdir -p evidence145
+          {
+            cat /etc/os-release
+            uname -a
+            printf 'ImageOS=%s\nImageVersion=%s\nRunnerArch=%s\n' "$ImageOS" "$ImageVersion" "$RUNNER_ARCH"
+            node --version
+            git -C historical rev-parse HEAD
+          } > evidence145/host.log
+          test "$GITHUB_REF" = refs/heads/diag/issue-145-forensic
+          . /etc/os-release
+          test "$ID" = ubuntu
+          test "$VERSION_ID" = 26.04
+          test "$RUNNER_ARCH" = X64
+          test "$(node --version)" = v24.18.0
+          test "$(git -C historical rev-parse HEAD)" = eadd426befeb39a6e68a14342f9c1a66102ac81d
+      - name: Install exact locked Playwright
+        working-directory: historical
+        run: |
+          npm ci --ignore-scripts
+          node -e 'if(require("playwright/package.json").version !== "1.64.1") process.exit(1)'
+          npx --no-install playwright install --with-deps chromium
+      - name: Prepare traced copy and prove unchanged assertions and waits
+        shell: bash
+        run: |
+          python3 diagnostic/docs/goal-six-issues-20261025/investigations/timeouts/prepare-export-traced.py --repo historical --output evidence145/export-traced
+          python3 - <<'PYPROOF'
+          from pathlib import Path
+          import hashlib, json, subprocess
+          ref = 'eadd426befeb39a6e68a14342f9c1a66102ac81d'
+          proof = {'ref': ref, 'files': {}}
+          for name in ['app/distribution/portable.html', 'tests/browser-support.cjs', 'tests/export-names-browser.test.cjs']:
+              original = subprocess.check_output(['git', '-C', 'historical', 'show', f'{ref}:{name}'])
+              assert (Path('historical') / name).read_bytes() == original
+              traced = (Path('evidence145/export-traced') / name).read_bytes()
+              restored = traced.decode()
+              if name.endswith('browser-support.cjs'):
+                  added = "\n  page.__readExportTrace145 = await require('../../trace-export.cjs').traceExport(page);"
+                  assert restored.count(added) == 1
+                  restored = restored.replace(added, '')
+              if name.endswith('export-names-browser.test.cjs'):
+                  old = "test(`noms des fichiers exportés, trois types d’export (${engine})`,"
+                  new = "for (let replay = 1; replay <= Number(process.env.EXPORT_REPLAYS || 1); replay++) test(`rejeu ${replay} — noms des fichiers exportés, trois types d’export (${engine})`,"
+                  assert restored.count(new) == 1
+                  restored = restored.replace(new, old)
+                  old = '  } catch (error) { await context.close(); throw error; }'
+                  new = '  } catch (error) { const trace = await page.__readExportTrace145(); await context.close(); throw new Error(`Forensic145 ${JSON.stringify(trace)}`, {cause: error}); }'
+                  assert restored.count(new) == 1
+                  restored = restored.replace(new, old)
+              assert restored.encode() == original, name
+              proof['files'][name] = {'original': hashlib.sha256(original).hexdigest(), 'traced': hashlib.sha256(traced).hexdigest()}
+          helper = Path('diagnostic/docs/goal-six-issues-20261025/investigations/timeouts/trace-export.cjs').read_bytes()
+          assert Path('evidence145/trace-export.cjs').read_bytes() == helper
+          proof['helper'] = hashlib.sha256(helper).hexdigest()
+          Path('evidence145/source-proof.json').write_text(json.dumps(proof, indent=2) + '\n')
+          print('Original sources exact; removing only the declared diagnostic hooks restores all original bytes, including assertions and waits.')
+          PYPROOF
+      - name: Run original once then five traced Chromium replays
+        shell: bash
+        run: |
+          export PLAYWRIGHT_MODULE="$GITHUB_WORKSPACE/historical/node_modules/playwright"
+          export NODE_PATH="$GITHUB_WORKSPACE/historical/node_modules"
+          export MAIL_BUILDER_ENGINE=chromium
+          export PROOF145="$GITHUB_WORKSPACE/evidence145"
+          pattern='noms des fichiers exportés, trois types d’export \(Chromium\)$'
+          node -e '(async()=>{const p=require(process.env.PLAYWRIGHT_MODULE),b=await p.chromium.launch(); console.log(JSON.stringify({node:process.version,arch:process.arch,playwright:require(process.env.PLAYWRIGHT_MODULE+"/package.json").version,browser:b.version()})); await b.close()})()' > "$PROOF145/browser.json"
+          set +e
+          node --test --test-reporter=tap --test-name-pattern="$pattern" historical/tests/export-names-browser.test.cjs > "$PROOF145/original.log" 2>&1
+          original=$?
+          EXPORT_REPLAYS=5 node --test --test-reporter=tap --test-name-pattern="$pattern" evidence145/export-traced/tests/export-names-browser.test.cjs > "$PROOF145/traced.log" 2>&1
+          traced=$?
+          printf '{"originalExit":%s,"tracedExit":%s}\n' "$original" "$traced" > "$PROOF145/results.json"
+          python3 - <<'PYVERIFY'
+          from pathlib import Path
+          import hashlib, json, os, re
+          proof = Path(os.environ['PROOF145'])
+          results = json.loads((proof / 'results.json').read_text())
+          counts = {}
+          for name, expected in [('original', 1), ('traced', 5)]:
+              log = (proof / (name + '.log')).read_text()
+              seen = {}
+              for key in ['tests', 'pass', 'fail', 'cancelled', 'skipped']:
+                  matches = re.findall(r'^# ' + key + r' (\d+)$', log, re.M)
+                  assert len(matches) == 1, (name, key, matches)
+                  seen[key] = int(matches[0])
+              assert seen['tests'] == expected and seen['cancelled'] == 0 and seen['skipped'] == 0, (name, seen)
+              assert seen['pass'] + seen['fail'] == expected, (name, seen)
+              assert seen['fail'] > 0 or results[name + 'Exit'] == 0, (name, results)
+              counts[name] = seen
+          manifest = json.loads((proof / 'source-proof.json').read_text())
+          for name, hashes in manifest['files'].items():
+              assert hashlib.sha256((Path('historical') / name).read_bytes()).hexdigest() == hashes['original'], name
+              assert hashlib.sha256((proof / 'export-traced' / name).read_bytes()).hexdigest() == hashes['traced'], name
+          assert hashlib.sha256((proof / 'trace-export.cjs').read_bytes()).hexdigest() == manifest['helper']
+          verdict = {'counts': counts, 'results': results, 'interpretation': 'bounded non-reproduction; original cause remains unknown' if all(row['fail'] == 0 for row in counts.values()) else 'failure captured; inspect original error and Forensic145 trace before attributing a cause'}
+          (proof / 'verdict.json').write_text(json.dumps(verdict, indent=2) + '\n')
+          print(json.dumps(verdict))
+          assert results == {'originalExit': 0, 'tracedExit': 0}, results
+          assert all(row['fail'] == 0 for row in counts.values()), counts
+          PYVERIFY
+      - name: Preserve evidence even after a failure
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          path: _site
-      - name: Publier
-        id: deployment
-        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
+          name: forensic-145-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            evidence145/*.log
+            evidence145/*.json
+            evidence145/*.diff
+          if-no-files-found: error
+          retention-days: 7
