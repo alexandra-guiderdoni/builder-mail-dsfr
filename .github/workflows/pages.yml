@@ -1,68 +1,87 @@
-name: Publier l’atelier sur GitHub Pages
-
+name: Diagnostic causal confirmation export 145
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
-
 permissions:
   contents: read
-
 concurrency:
-  group: github-pages
+  group: diagnostic-confirmation-145
   cancel-in-progress: false
-
 jobs:
-  tests:
+  forensic:
+    if: github.ref == 'refs/heads/diag/issue-145-confirmation-causal'
     runs-on: ubuntu-latest
-    timeout-minutes: 20
-    permissions:
-      contents: read
+    timeout-minutes: 12
     steps:
-      - name: Lire les sources
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Lire le harnais de la branche diagnostic
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
+          path: harness
           persist-credentials: false
-      - name: Fixer la version de Node
-        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+      - name: Lire le snapshot applicatif exact du rouge
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: f3aa8324dbcd255bddafeeb2eec559e698f6065c
+          path: snapshot
+          persist-credentials: false
+      - name: Fixer Node
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
         with:
           node-version: '24.18.0'
-      - name: Installer Playwright depuis le verrou
-        run: npm ci --ignore-scripts
-      - name: Installer Chromium, WebKit et leurs dépendances système
-        run: npx --no-install playwright install --with-deps chromium webkit
-      - name: Contrôler les distributions et la provenance
-        run: npm run check
-      - name: Exécuter la suite de tests
-        run: npm test
-
-  deploy:
-    needs: tests
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
-    steps:
-      - name: Lire les sources
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - name: Vérifier les distributions et préparer le site
+      - name: Vérifier Ubuntu 26 x64 et enregistrer l’image sans la sélectionner
         run: |
-          python3 scripts/build_app.py --check
-          python3 scripts/build.py --check
-          mkdir _site
-          cp -R app/distribution/web/. _site/
-          cp app/distribution/snum.html _site/snum.html
-          cp app/distribution/portable.html _site/atelier-portable.html
-      - name: Déposer les seuls fichiers publics
-        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+          python3 - <<'PY'
+          import os,json,platform,pathlib,subprocess
+          data=dict(line.split('=',1) for line in pathlib.Path('/etc/os-release').read_text().splitlines() if '=' in line)
+          info={'os':data.get('ID','').strip('"'),'release':data.get('VERSION_ID','').strip('"'),'architecture':platform.machine(),'ImageOS':os.environ.get('ImageOS'),'ImageVersion':os.environ.get('ImageVersion'),'source':subprocess.check_output(['git','-C','snapshot','rev-parse','HEAD'],text=True).strip(),'harness':subprocess.check_output(['git','-C','harness','rev-parse','HEAD'],text=True).strip()}
+          pathlib.Path('host-145.json').write_text(json.dumps(info,indent=2)+'\n')
+          assert info['os']=='ubuntu' and info['release']=='26.04' and info['architecture']=='x86_64', info
+          assert info['source']=='f3aa8324dbcd255bddafeeb2eec559e698f6065c'
+          PY
+      - name: Installer le verrou Playwright du snapshot
+        working-directory: snapshot
+        run: npm ci --ignore-scripts
+      - name: Installer uniquement Chromium
+        working-directory: snapshot
+        run: npx --no-install playwright install --with-deps chromium
+      - name: Oracle court réel, 30 parcours au maximum, arrêt au premier rouge
+        env:
+          PASSES: '30'
+          SCENARIO: full
+          RESULT: linux-confirmation.json
+        run: |
+          set -euo pipefail
+          export PLAYWRIGHT_MODULE="$GITHUB_WORKSPACE/snapshot/node_modules/playwright"
+          export MAIL_BUILDER_ROOT="$GITHUB_WORKSPACE/snapshot"
+          diag_dir="$GITHUB_WORKSPACE/harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444"
+          node "$diag_dir/loop-confirmation.cjs" 2>&1 | tee "$diag_dir/linux-confirmation.log"
+      - name: Reçu strict du résultat et des sources
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import json,hashlib,pathlib
+          root=pathlib.Path('harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444')
+          files=[root/'loop-confirmation.cjs',root/'trace-confirmation.cjs',pathlib.Path('snapshot/tests/browser-support.cjs'),pathlib.Path('snapshot/app/distribution/portable.html')]
+          receipt={'sha256':{str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in files if p.is_file()},'result_exists':(root/'linux-confirmation.json').is_file()}
+          if receipt['result_exists']:
+              data=json.loads((root/'linux-confirmation.json').read_text())
+              receipt.update(passes_requested=data['passes'],passes_observed=len(data['runs']),green=sum(r['status']=='green' for r in data['runs']),red=sum(r['status']=='red' for r in data['runs']),platform=data['platform'],node=data['node'],playwright=data['playwright'])
+          pathlib.Path('receipt-145.json').write_text(json.dumps(receipt,indent=2)+'\n')
+          assert receipt['result_exists'], 'aucun résultat de boucle'
+          assert receipt['platform']=='linux' and receipt['node']=='v24.18.0' and receipt['playwright']=='1.64.1', receipt
+          assert receipt['red'] or (receipt['green']==30 and receipt['passes_observed']==30), receipt
+          PY
+      - name: Conserver traces et reçus même sur échec
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          path: _site
-      - name: Publier
-        id: deployment
-        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
+          name: confirmation-145-${{ github.run_id }}-${{ github.run_attempt }}
+          if-no-files-found: error
+          retention-days: 7
+          path: |
+            host-145.json
+            receipt-145.json
+            harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/loop-confirmation.cjs
+            harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/trace-confirmation.cjs
+            harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/linux-confirmation.json
+            harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/linux-confirmation.log
+            harness/docs/goal-six-issues-20261025/investigations/145-native-red-40216251444/red-*.png
