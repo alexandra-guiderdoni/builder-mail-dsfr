@@ -7,7 +7,9 @@
   install.addEventListener("click", async () => {
     if (!installPrompt) return;
     const prompt = installPrompt; installPrompt = null; install.hidden = true;
-    try { await prompt.prompt(); const result = await prompt.userChoice; A.notice(result.outcome === "accepted" ? "Installation acceptée." : "Installation annulée. Le navigateur proposera une nouvelle tentative lorsqu’elle sera disponible."); } catch (cause) { A.error(`Installation indisponible : ${cause.message}`); }
+    // Jeton relevé au départ de l’action : l’annonce du résultat se tait si une autre annonce est passée pendant l’attente (#122).
+    const ticket = A.State.noticeTicket();
+    try { await prompt.prompt(); const result = await prompt.userChoice; A.notice(result.outcome === "accepted" ? "Installation acceptée." : "Installation annulée. Le navigateur proposera une nouvelle tentative lorsqu’elle sera disponible.", ticket); } catch (cause) { A.error(`Installation indisponible : ${cause.message}`); }
   });
   window.addEventListener("appinstalled", () => { install.hidden = true; environment.textContent = "Atelier installé dans ce navigateur"; });
   if (!("serviceWorker" in navigator)) { environment.textContent = "Hors connexion web indisponible · utilisez le fichier portable"; return; }

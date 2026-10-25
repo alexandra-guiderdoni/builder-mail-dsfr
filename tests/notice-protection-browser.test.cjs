@@ -159,3 +159,8 @@ test('reprise de la main : « Main reprise » n’écrase pas une annonce plus r
     assert.equal(await notice(second), other, 'l’annonce « Main reprise » ne remplace pas l’annonce plus récente');
   } finally { await browser.close(); }
 });
+
+// pwa.js:10 (invite d’installation PWA) : le code porte aussi le jeton `since` relevé au départ du clic sur `#install`.
+// Aucun test navigateur ne l’exerce : `beforeinstallprompt` n’est pas déclenchable en Playwright headless et la variante
+// portable (`file://`, utilisée par tous ces tests) sort du module pwa.js avant d’enregistrer le listener. Documenté dans
+// docs/MAINTENANCE.md, section « Annonces ».
