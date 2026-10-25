@@ -1,5 +1,12 @@
 # Historique des livraisons
 
+## Non publié — Contrat de politesse des emplacements vocaux (#122)
+
+- `#error` sépare deux familles : alertes persistantes (échec de sauvegarde, lecture seule) stockées dans l’état et restaurées depuis `A.State.restoreErrorFromState` ; erreurs ponctuelles (champs invalides, actions refusées) qui n’éteignent plus la persistante. Correction du secours disparu après « Annuler les champs invalides » (#86).
+- `#notice` étend le jeton `since` aux écrivains différés restants : import de projet (jeton partagé entre lectures concurrentes), chargement d’image, copie du courriel, récupération, offre de ré-ouverture, reprise de la main et invite d’installation PWA.
+- Section « Annonces » ajoutée à `docs/MAINTENANCE.md` : trois emplacements, propriétaires, deux familles de `#error`, règle du jeton `since` et inventaire des écrivains protégés avec l’exemption motivée du formulaire modal de la bibliothèque.
+- Exclusion motivée : volet #107 non reproduit en test (cadre d’audit sans scénario stable), retiré de #122.
+
 ## 23 octobre 2026 — Page de composition extensible (#28)
 
 - Liste et catalogue natif entièrement dans le flux de la page ; champs de contenu ajustés au texte et aperçu ajusté à son document réel. Zone JSON compacte conservée.
