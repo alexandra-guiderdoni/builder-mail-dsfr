@@ -134,7 +134,7 @@ Trois emplacements vocaux portent les retours à l’utilisateur : `#notice` (`r
 
 `#save-announce` est régi par `state.js` seul (`say`, `announceSuccess`, l. 13-17), couvert par `tests/save-announcements-browser.test.cjs`. Aucun autre fichier ne doit y écrire.
 
-`#error` porte deux familles. Les alertes **persistantes** sont portées par l’état (`failed` pour l’échec de sauvegarde, `readOnly` pour la lecture seule) et stockées dans `persistentError` (`state.js`). Les écrivains persistants passent par `setPersistentError` : `save()` sur échec, `start()` sur échec, `takeOver` par un autre onglet, `outdated()`. `failing(false)` efface cette mémoire quand la sauvegarde réussit. Les erreurs **ponctuelles** (champs invalides, actions refusées) utilisent `A.error(cause.message)` et écrivent dans le même emplacement sans toucher `persistentError`. `cancel-fields` (`library-actions.js:104`) remet l’emplacement à vide puis appelle `A.State.restoreErrorFromState()` : la persistante revient si elle existait, le secours d’export reste visible et expliqué (#122, suite de #86).
+`#error` porte deux familles. Les alertes **persistantes** sont portées par l’état (`failed` pour l’échec de sauvegarde, `readOnly` pour la lecture seule) et stockées dans `persistentError` (`state.js`). Les écrivains persistants passent par `setPersistentError` : `save()` sur échec, `start()` sur échec, `takeOver` par un autre onglet, `outdated()`. `failing(false)` n’efface cette mémoire que lorsque **plus aucune cause ne la soutient** (ni `failed`, ni `readOnly`) : une sauvegarde qui réussit pendant que la fenêtre est passée en lecture seule (ex. `outdated()` déclenché pendant la sauvegarde) conserve l’alerte persistante, ce qui garantit que `restoreErrorFromState` saura la rétablir ensuite (#122, correctif PR 129). Les erreurs **ponctuelles** (champs invalides, actions refusées) utilisent `A.error(cause.message)` et écrivent dans le même emplacement sans toucher `persistentError`. `cancel-fields` (`library-actions.js:104`) remet l’emplacement à vide puis appelle `A.State.restoreErrorFromState()` : la persistante revient si elle existait, le secours d’export reste visible et expliqué (#122, suite de #86).
 
 `#notice` est écrit par des actions utilisateur. Toute annonce différée (posée après un `await`) risque d’écraser une annonce plus récente écrite par une autre action : la règle commune est le jeton `since`. `A.notice(message, since)` incrémente `noticeTicket` à chaque écriture réussie ; un écrivain différé relève le jeton au départ de son action et le passe à `A.notice`. Si une autre annonce est passée entre-temps, l’écriture différée se tait.
 
@@ -143,7 +143,9 @@ Trois emplacements vocaux portent les retours à l’utilisateur : `#notice` (`r
 - `announce` dans `library-actions.js` (`save-template`, `save-identity`) — depuis `c33d2a7`.
 - `new-document`, `use-template`, `json-import` dans `library-actions.js` — depuis `2114f52`.
 - `duplicate` dans `library.js` — depuis `2114f52`.
-- `project-input` dans `editor.js` (import d’un fichier projet) — jeton partagé `readingTicket` entre lectures concurrentes pour qu’un second import ne silencie pas la réussite du premier (#122).
+- `project-input` dans `editor.js` (import d’un fichier projet) — compteur de reads actifs : seul le premier import en cours pose la notice de lecture et capture le jeton dans `readingTicket` ; les imports suivants s’empilent sans toucher au `#notice` ni au ticket. Le jeton reste donc stable tant qu’un import est en cours, et une annonce extérieure survenue entre deux imports silencie bien la fin de chacun — sans ré-autorisation accidentelle par un import plus récent (#122, correctif PR 129).
+- `export-stored` dans `library-actions.js` — jeton relevé au départ, avant `A.Storage.load`, pour que la copie brute n’écrase pas une annonce plus récente survenue pendant la lecture du stockage (#122, correctif PR 129).
+- `reloadNeeded` dans `pwa.js` (clic sur `#update`) — jeton relevé au départ du clic, passé à `reloadNeeded(since)` ; l’annonce différée se tait si une autre est passée pendant `save/flush` (#122, correctif PR 129). L’appel depuis `controllerchange` reste sans jeton : il est synchrone dans son listener, aucune autre annonce ne peut s’intercaler.
 - Chargement d’une image dans `editor.js` — jeton relevé après l’annonce de progrès « Chargement de l’image locale… » (#122).
 - Copie du courriel dans `files.js` — jeton relevé après `A.notice("")` initial ; `A.State.noticeTicket?.()` tolère le convertisseur SNUM qui n’expose pas ce jeton (#122).
 - Récupération (`recover`) et offre de ré-ouverture (`offerReopen`) dans `state.js` — jeton relevé après `guard()` et partagé par la branche synchrone (#122).
@@ -155,6 +157,15 @@ Exemption motivée : le formulaire de la bibliothèque (`library.js:85-110`, ren
 Tests : `tests/notice-order-browser.test.cjs` couvre `save-template`, `save-identity`, `new-document`, `use-template`, `json-import` et `duplicate` ; `tests/notice-protection-browser.test.cjs` couvre `project-input`, chargement d’image, copie, récupération et reprise de la main ; `tests/error-persistence-browser.test.cjs` couvre la restauration de `#error` après `cancel-fields`.
 
 Avant d’ajouter un nouvel écrivain à `#notice`, relire `grep 'A.notice(' app/source/*.js` et vérifier que chaque écrivain différé est documenté comme protégé ou exempté.
+
+### Chaînages optionnels nécessaires
+
+- `files.js:71` — `A.State.noticeTicket?.()` : **nécessaire**. Le convertisseur SNUM (`app/snum/page.js:23`) utilise un `A.State` réduit qui n’expose pas `noticeTicket` ; le `?.()` laisse `A.notice` écrire sans contrôle, suffisant pour ce flux à un seul écrivain. Ne pas retirer tant que SNUM garde cet état minimal.
+- `pwa.js:12` et `pwa.js:21` — `A.State?.noticeTicket?.()` : **dette**. Le test `tests/pwa-contract.test.cjs` injecte un `MailBuilder` sans `State` pour isoler le contrat des prompts et des caches ; le `?.` compense ce double de test incomplet. Compléter le double (ajouter un `State` minimal avec `noticeTicket`) permettrait de retirer les `?.` ; en attendant, les conserver pour que le test de contrat ne lève pas sur `undefined`.
+
+### Alerte persistante et `attempt()`
+
+Les enveloppes `attempt(action)` dans `editor.js:4` et `library.js:8` capturent l’exception avec `A.error(cause.message)` : elles écrivent **l’erreur ponctuelle** dans `#error`, qui masque visuellement l’alerte persistante jusqu’à ce qu’un flux appelant `A.State.restoreErrorFromState()` (par exemple `cancel-fields`) la rétablisse. Ce comportement précède #122 ; il reste **hors scope** du contrat de politesse (constat 6 de la revue Astra sur PR 129) et ne doit pas être traité en même temps que les correctifs d’annonces.
 
 ## Données et migrations
 
