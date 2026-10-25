@@ -128,6 +128,34 @@ python3 -m http.server 8765 --bind 127.0.0.1 --directory app/distribution/web
 
 Ouvrir `http://127.0.0.1:8765/`. L’exception de sécurité de boucle locale sert à la recette ; cette ouverture seule ne démontre ni une origine HTTPS publique ni une installation. L’installation est exercée séparément par le scénario ci-dessus.
 
+## Annonces
+
+Trois emplacements vocaux portent les retours à l’utilisateur : `#notice` (`role="status"`, polite), `#error` (`role="alert"`, assertive) et `#save-announce` (polite, bornée à `state.js`). Aucune file : chaque emplacement garde le texte le plus récent écrit par un écrivain autorisé. L’enregistrement courant est généré sans dépendance externe au moment de l’écriture.
+
+`#save-announce` est régi par `state.js` seul (`say`, `announceSuccess`, l. 13-17), couvert par `tests/save-announcements-browser.test.cjs`. Aucun autre fichier ne doit y écrire.
+
+`#error` porte deux familles. Les alertes **persistantes** sont portées par l’état (`failed` pour l’échec de sauvegarde, `readOnly` pour la lecture seule) et stockées dans `persistentError` (`state.js`). Les écrivains persistants passent par `setPersistentError` : `save()` sur échec, `start()` sur échec, `takeOver` par un autre onglet, `outdated()`. `failing(false)` efface cette mémoire quand la sauvegarde réussit. Les erreurs **ponctuelles** (champs invalides, actions refusées) utilisent `A.error(cause.message)` et écrivent dans le même emplacement sans toucher `persistentError`. `cancel-fields` (`library-actions.js:104`) remet l’emplacement à vide puis appelle `A.State.restoreErrorFromState()` : la persistante revient si elle existait, le secours d’export reste visible et expliqué (#122, suite de #86).
+
+`#notice` est écrit par des actions utilisateur. Toute annonce différée (posée après un `await`) risque d’écraser une annonce plus récente écrite par une autre action : la règle commune est le jeton `since`. `A.notice(message, since)` incrémente `noticeTicket` à chaque écriture réussie ; un écrivain différé relève le jeton au départ de son action et le passe à `A.notice`. Si une autre annonce est passée entre-temps, l’écriture différée se tait.
+
+Écrivains différés protégés :
+
+- `announce` dans `library-actions.js` (`save-template`, `save-identity`) — depuis `c33d2a7`.
+- `new-document`, `use-template`, `json-import` dans `library-actions.js` — depuis `2114f52`.
+- `duplicate` dans `library.js` — depuis `2114f52`.
+- `project-input` dans `editor.js` (import d’un fichier projet) — jeton partagé `readingTicket` entre lectures concurrentes pour qu’un second import ne silencie pas la réussite du premier (#122).
+- Chargement d’une image dans `editor.js` — jeton relevé après l’annonce de progrès « Chargement de l’image locale… » (#122).
+- Copie du courriel dans `files.js` — jeton relevé après `A.notice("")` initial ; `A.State.noticeTicket?.()` tolère le convertisseur SNUM qui n’expose pas ce jeton (#122).
+- Récupération (`recover`) et offre de ré-ouverture (`offerReopen`) dans `state.js` — jeton relevé après `guard()` et partagé par la branche synchrone (#122).
+- Reprise de la main (`takeOver`) dans `state.js` — jeton relevé après `A.notice("")` initial (#122).
+- Invite d’installation PWA (`pwa.js`) — jeton relevé au départ du clic sur `#install`. Aucun test navigateur ne l’exerce : `beforeinstallprompt` n’est pas déclenchable en Playwright headless et la variante portable (`file://`) sort du module avant d’enregistrer son listener ; le jeton est posé par analogie avec les autres écrivains différés.
+
+Exemption motivée : le formulaire de la bibliothèque (`library.js:85-110`, renommage, suppression, retrait d’un modèle ou d’une identité) écrit l’annonce après la fermeture d’une boîte modale qui bloquait toute autre action pendant l’écriture ; la fenêtre résiduelle est de l’ordre d’une microtâche, aucun écrivain ne peut y écrire. Ne pas y ajouter de jeton.
+
+Tests : `tests/notice-order-browser.test.cjs` couvre `save-template`, `save-identity`, `new-document`, `use-template`, `json-import` et `duplicate` ; `tests/notice-protection-browser.test.cjs` couvre `project-input`, chargement d’image, copie, récupération et reprise de la main ; `tests/error-persistence-browser.test.cjs` couvre la restauration de `#error` après `cancel-fields`.
+
+Avant d’ajouter un nouvel écrivain à `#notice`, relire `grep 'A.notice(' app/source/*.js` et vérifier que chaque écrivain différé est documenté comme protégé ou exempté.
+
 ## Données et migrations
 
 Les fichiers `dsfr-mail/document` et `dsfr-mail/library` portent `version: 1` et l’empreinte du catalogue. La bibliothèque contient compositions, modèles, identités et composition active. Les images sont des données incorporées ; aucun gabarit utilisateur ni HTML actif n’est accepté. Le [contrat JSON](FORMAT-JSON.md) et son schéma sont générés à partir du modèle existant : la séparation SNUM ne change ni le contrat v1, ni son empreinte, ni la base locale.
