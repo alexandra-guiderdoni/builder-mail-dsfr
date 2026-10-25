@@ -1,6 +1,6 @@
 const test = require('node:test');
 const path = require('node:path');
-const {root, evidence, portable, click, open, enterEditor, saved, expand, download, state, store, chromium, fs, assert} = require('./browser-support.cjs');
+const {root, evidence, portable, click, open, enterEditor, saved, expand, download, state, store, chromium, fs, assert, engineName} = require('./browser-support.cjs');
 
 test('quota simulé : aucune écriture partielle, export du travail puis récupération de l’état précédent', async () => {
   const browser = await chromium.launch({headless: true});
@@ -175,6 +175,63 @@ test('abandon de transaction après écriture : la transaction est abandonnée a
     assert.equal(after.previous.library.documents[0].name, 'Avant la panne'); assert.deepEqual(errors, []);
   } finally { await browser.close(); }
 });
+
+// Voie `tx.error` et voie `event.target.error` de Storage.save (#123), sans quota réel ni CDP : la transaction est abandonnée
+// après l’écriture de `current`, et l’erreur nommée QuotaExceededError est portée par l’instance abandonnée. Le porteur
+// `transaction` redéfinit `error` sur l’IDBTransaction avant `abort()` : `tx.onabort` lit `tx.error`. Le porteur `request`
+// redéfinit `error` sur l’IDBRequest de `current` puis distribue un événement `error` qui remonte à `tx.onerror` : la
+// transaction n’est pas encore abandonnée, `tx.error` vaut null, seul `event.target.error` porte le nom. L’abandon suit pour
+// que rien ne soit validé. Aucun des deux porteurs ne lève dans `put` : la voie `refusal` n’est pas exercée ici.
+// Mesuré le 24 octobre 2026 (Playwright 1.64.1) : Chromium remonte à `tx.onerror` un événement distribué par script sur la
+// requête (`event.target === request`, `tx.error === null`) ; WebKit 2370 ne le remonte pas à la transaction. Le porteur
+// `request` n’est donc exécuté que sous Chromium ; le porteur `transaction` l’est sur tous les moteurs.
+const quotaCarriers = ['transaction', 'request'];
+for (const carrier of quotaCarriers) {
+  const skip = carrier === 'request' && engineName !== 'chromium' && 'un événement error distribué par script sur la requête ne remonte pas à la transaction hors Chromium (mesuré sous WebKit 2370)';
+  test(`abandon porteur de QuotaExceededError par ${carrier === 'transaction' ? 'tx.error' : 'event.target.error'} : classement « saturé », current et previous inchangés, secours exportable`, {skip}, async () => {
+    const browser = await chromium.launch({headless: true});
+    try {
+      const {page} = await open(browser), errors = []; page.on('pageerror', e => errors.push(e.message));
+      await page.locator('#document-name').fill('État initial sauvegardé'); await saved(page);
+      await page.locator('#document-name').fill('Avant la panne'); await saved(page);
+      const before = await both(page);
+      assert.equal(before.current.library.documents[0].name, 'Avant la panne');
+      assert.equal(before.previous.library.documents[0].name, 'État initial sauvegardé');
+      await page.evaluate(carrier => {
+        const quota = () => new DOMException('Quota de recette', 'QuotaExceededError');
+        const carry = ({request, transaction}) => {
+          if (carrier === 'transaction') { Object.defineProperty(transaction, 'error', {configurable: true, get: quota}); transaction.abort(); return; }
+          Object.defineProperty(request, 'error', {configurable: true, get: quota}); request.dispatchEvent(new Event('error', {bubbles: true, cancelable: true})); transaction.abort();
+        };
+        const put = IDBObjectStore.prototype.put; window.failWrites = true; window.abortedAfterPut = 0; window.carrierError = null;
+        IDBObjectStore.prototype.put = function(...args) {
+          const request = put.apply(this, args), transaction = this.transaction;
+          if (window.failWrites && this.name === 'library' && args[1] === 'current') {
+            request.addEventListener('success', () => { window.abortedAfterPut++; try { carry({request, transaction}); } catch (cause) { window.carrierError = String(cause); transaction.abort(); } });
+          }
+          return request;
+        };
+      }, carrier);
+      await page.locator('#document-name').fill('Travail en mémoire');
+      await page.locator('#save-state').filter({hasText: 'Modifications non sauvegardées'}).waitFor();
+      assert.equal(await page.evaluate(() => window.carrierError), null, 'le moteur doit accepter la redéfinition de error sur l’instance');
+      assert.equal(await page.evaluate(() => window.abortedAfterPut), 1, 'l’abandon doit survenir après l’écriture de current');
+      const errorText = await page.locator('#error').innerText();
+      assert.match(errorText, /saturé/);
+      assert.doesNotMatch(errorText, /inaccessible/);
+      assert.deepEqual(await both(page), before);
+      const rescue = page.locator('[data-action=rescue-export]'); await rescue.waitFor({state: 'visible'});
+      const output = await download(page, '[data-action=rescue-export]', `quota-${carrier}-secours.json`);
+      assert.equal(JSON.parse(await fs.readFile(output, 'utf8')).documents[0].name, 'Travail en mémoire');
+      assert.equal(await page.locator('#document-name').inputValue(), 'Travail en mémoire');
+      await expand(page, 'Fichiers et récupération');
+      await page.evaluate(() => { window.failWrites = false; }); await click(page, '[data-action=save-now]'); await saved(page);
+      const after = await both(page);
+      assert.equal(after.current.library.documents[0].name, 'Travail en mémoire');
+      assert.equal(after.previous.library.documents[0].name, 'Avant la panne'); assert.deepEqual(errors, []);
+    } finally { await browser.close(); }
+  });
+}
 
 test('un previous invalide ne remplace ni le stockage ni le travail courant lors de la récupération', async () => {
   const browser = await chromium.launch({headless: true});

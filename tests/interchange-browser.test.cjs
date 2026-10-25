@@ -29,12 +29,12 @@ test('SNUM autonome hors connexion : rubriques, JSON transporté, rendu identiqu
     const packet = require('./fixtures/snum.cjs')(); await converter.locator('#snum-input').fill(JSON.stringify(packet)); await click(converter, '#convert');
     await converter.frameLocator('#preview').locator('img').first().waitFor({state: 'visible'});
     const converted = await converter.evaluate(() => JSON.parse(JSON.stringify(MailBuilder.doc())));
-    assert.equal(converted.blocks.filter(b => b.component === 'mail-12').length, 5);
-    assert.equal(converted.blocks.filter(b => b.component === 'mail-15').length, 5);
+    assert.equal(converted.blocks.filter(b => b.component === 'mail-17').length, 5);
+    assert.equal(converted.blocks.filter(b => b.component === 'mail-31').length, 5);
     const preview = converter.frameLocator('#preview');
     for (const title of ['Numérique', 'Intelligence artificielle (IA)', 'Commande publique', 'Ressources humaines', 'Bercy']) assert((await preview.locator('body').textContent()).includes(title));
-    const titleSize = await preview.locator('strong').filter({hasText: 'Article 0'}).evaluate(e => parseFloat(getComputedStyle(e).fontSize));
-    assert.equal(titleSize, 22); assert(!(await preview.locator('body').textContent()).includes(packet.watch[0].summary));
+    const titleSize = await preview.locator('h3 a').filter({hasText: 'Article 0'}).evaluate(e => parseFloat(getComputedStyle(e).fontSize));
+    assert.equal(titleSize, 18); assert(!(await preview.locator('body').textContent()).includes(packet.watch[0].summary));
     const projectPath = await download(converter, '#export-json', 'snum-generique.json');
     const snumHTMLPath = await download(converter, '#export-html', 'snum-rendu.html');
     await expand(builder, 'Fichiers et récupération'); await builder.locator('#project-input').setInputFiles(projectPath);
