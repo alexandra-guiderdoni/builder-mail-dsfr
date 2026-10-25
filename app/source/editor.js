@@ -119,14 +119,16 @@
   });
 
   let readings = 0; const reading = "Lecture du fichier de travail…";
-  // Jeton partagé entre lectures concurrentes : chaque A.notice(reading) le met à jour, le dernier reste pour l’annonce
-  // de succès différée. Une action utilisateur extérieure qui écrit entre-temps avance noticeTicket plus loin et silence
-  // le succès ; une seconde lecture ne silencie pas la première puisqu’elle avance le jeton partagé en même temps (#122).
+  // Compteur de reads actifs : seul le PREMIER import pose la notice de lecture et capture le jeton ; les suivants s'empilent
+  // sans toucher ni au #notice ni au ticket. Le jeton reste donc stable tant qu'un import est en cours, et une annonce
+  // extérieure posée entre deux imports silencie bien la fin de chacun — plus de ré-autorisation accidentelle par un
+  // import plus récent (#122, correctif Astra sur PR 129).
   let readingTicket = 0;
   get("project-input").addEventListener("change", event => {
     const file = event.target.files[0]; if (!file) return;
     attempt(async () => {
-      readings++; A.notice(reading); readingTicket = A.State.noticeTicket();
+      const first = readings === 0; readings++;
+      if (first) { A.notice(reading); readingTicket = A.State.noticeTicket(); }
       try {
         const incoming = await A.Imports.prepare(file), merged = A.Imports.merge(A.library, incoming);
         await A.State.change(lib => { Object.assign(lib, merged); }); await A.Library.open(A.library.activeId); A.notice("Import ajouté à la bibliothèque, avec ses images. Les compositions existantes sont conservées.", readingTicket);

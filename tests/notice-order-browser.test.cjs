@@ -68,6 +68,35 @@ test('export-stored : la copie brute du stockage n’écrase pas une annonce plu
   } finally { await browser.close(); }
 });
 
+test('readingTicket : une annonce extérieure entre deux imports silencie la fin de chaque import', async () => {
+  // Scénario Astra constat 3 : import A → annonce extérieure → import B → fin de A → A ne doit pas annoncer
+  // avec un jeton emprunté à B. Avec le compteur de reads actifs, seul le premier import pose le jeton ; une
+  // annonce extérieure survenue depuis silencie la fin de chaque import.
+  const browser = await chromium.launch({headless: true});
+  const {state} = require('./browser-support.cjs');
+  try {
+    const {page} = await open(browser);
+    await expand(page, 'Fichiers et récupération');
+    const docA = JSON.stringify(await page.evaluate(() => MailBuilder.Model.create('Import A concurrent')));
+    const docB = JSON.stringify(await page.evaluate(() => MailBuilder.Model.create('Import B concurrent')));
+    await hold(page);
+    await page.locator('#project-input').setInputFiles({name: 'a.json', mimeType: 'application/json', buffer: Buffer.from(docA)});
+    await page.waitForFunction(() => window.__release);
+    // Annonce extérieure pendant que la sauvegarde de A est suspendue : elle avance noticeTicket et doit survivre.
+    await page.evaluate(() => MailBuilder.notice('Annonce extérieure durable'));
+    // Import B : son mutator passe tout de suite, sa sauvegarde s'empile derrière celle de A dans la queue.
+    await page.locator('#project-input').setInputFiles({name: 'b.json', mimeType: 'application/json', buffer: Buffer.from(docB)});
+    await page.waitForFunction(() => MailBuilder.library.documents.some(d => d.name === 'Import B concurrent'));
+    assert.equal(await page.locator('#notice').innerText(), 'Annonce extérieure durable', 'B n’écrase pas l’annonce extérieure au départ');
+    await release(page);
+    await saved(page);
+    assert.equal(await page.locator('#notice').innerText(), 'Annonce extérieure durable', 'ni A ni B n’écrasent l’annonce extérieure à la fin');
+    const docs = (await state(page)).documents;
+    assert.equal(docs.filter(d => d.name === 'Import A concurrent').length, 1, 'A ajouté');
+    assert.equal(docs.filter(d => d.name === 'Import B concurrent').length, 1, 'B ajouté');
+  } finally { await browser.close(); }
+});
+
 test('les réussites différées de création, modèle, import et copie n’écrasent pas une annonce plus récente', async () => {
   const browser = await chromium.launch({headless: true});
   try {
