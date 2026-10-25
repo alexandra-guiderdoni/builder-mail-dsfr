@@ -142,8 +142,21 @@ test('une mesure reçue avant le chargement du nouvel aperçu ne change pas la h
     const frame = await composition(page, true, 'Mesure prématurée');
     const id = await page.evaluate(() => MailBuilder.doc().blocks.find(b => MailBuilder.Model.component(b.component).headings.length).id);
     await click(page, `[data-select="${id}"]`);
+    /* La frappe programme un rafraîchissement différé (`state.js:previewAfterInput`) que ni `saved()` ni `Preview.show()`
+       n’attendent. On observe les chargements d’aperçu pour attendre l’aperçu issu de la frappe avant d’ouvrir la course :
+       sans cette attente, le rafraîchissement différé peut remplacer le document après le `load` observé, et la mesure
+       finale est alors ignorée (`loaded=false` dans `preview.js`). */
+    await page.evaluate(() => {
+      const f = document.getElementById('preview');
+      window.previewLoads = [f.src.split('#')[1]];
+      f.addEventListener('load', () => { window.previewLoads.push(f.src.split('#')[1]); });
+    });
     const input = page.locator('textarea[data-field]').first(); await input.fill('Titre'); await saved(page);
-    await frame.waitForFunction(() => document.documentElement.scrollHeight <= document.documentElement.clientHeight);
+    /* Attendre l’aperçu issu de la frappe : au moins un chargement supplémentaire dont le jeton diffère du jeton initial. */
+    await page.waitForFunction(() => window.previewLoads.length >= 2 && window.previewLoads[window.previewLoads.length - 1] !== window.previewLoads[0], null, {timeout: 10000});
+    const typed = await (await page.locator('#preview').elementHandle()).contentFrame();
+    await typed.waitForFunction(() => document.readyState === 'complete' && document.body.textContent.includes('Titre'));
+    await typed.waitForFunction(() => document.documentElement.scrollHeight <= document.documentElement.clientHeight);
     const result = await page.evaluate(() => {
       const f = document.getElementById('preview'), baseline = f.getBoundingClientRect().height, previousToken = f.src.split('#')[1];
       const send = (token, height) => { dispatchEvent(new MessageEvent('message', {source: f.contentWindow, origin: 'null', data: {type: 'mail-preview-size', token, height, width: f.clientWidth}})); return f.getBoundingClientRect().height; };
@@ -161,6 +174,9 @@ test('une mesure reçue avant le chargement du nouvel aperçu ne change pas la h
     const settled = await (await page.locator('#preview').elementHandle()).contentFrame();
     await settled.waitForFunction(() => document.readyState === 'complete' && document.title === 'Mesure prématurée' && document.body.textContent.includes('Titre'));
     await page.waitForFunction(baseline => Math.abs(document.getElementById('preview').getBoundingClientRect().height - baseline) <= 2, result.baseline);
+    /* Invariant : aucun rafraîchissement différé n’a succédé à la course ; le jeton courant doit rester `result.token`. */
+    const finalToken = await page.evaluate(() => document.getElementById('preview').src.split('#')[1]);
+    assert.equal(finalToken, result.token, `jeton final attendu ${result.token}, observé ${finalToken} ; chargements : ${JSON.stringify(await page.evaluate(() => window.previewLoads))}`);
     /* Contrôle négatif : une fois le document chargé, la même mesure avec le jeton courant est, elle, appliquée. */
     const applied = await page.evaluate(half => window.previewRace.send(document.getElementById('preview').src.split('#')[1], half), result.premature);
     assert(applied < result.baseline / 2 + 8 && applied >= result.premature, JSON.stringify({...result, applied}));
