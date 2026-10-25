@@ -1,0 +1,13 @@
+{
+  "command": [
+    "node",
+    "run.cjs",
+    "--run-once",
+    "./result-once"
+  ],
+  "started": "2026-10-25T21:49:57.421676+00:00",
+  "maxInvocations": 1,
+  "retries": 0,
+  "exitCode": 0,
+  "finished": "2026-10-25T21:49:59.871983+00:00"
+}

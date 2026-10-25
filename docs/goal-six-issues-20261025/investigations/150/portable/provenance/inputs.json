@@ -1,0 +1,36 @@
+{
+  "files": [
+    {
+      "name": "parent.html",
+      "source": "/Users/alex/Claude-worktrees/shipguard-session-supervisor-study-20261025/150-minimal-render-routing-r3/parent.html",
+      "sha256": "3710b7346d6b68a42bcf3256bd47bc91091399b0b65f6ebbc66d9b25ba7f82b6"
+    },
+    {
+      "name": "child.html",
+      "source": "/Users/alex/Claude-worktrees/shipguard-session-supervisor-study-20261025/150-minimal-render-routing-r3/child.html",
+      "sha256": "8ca38de438ec47314f93d03cc8049cd02cff78ad968ef1d58a1870b75612e5c7"
+    },
+    {
+      "name": "contract.cjs",
+      "source": "/Users/alex/Claude-worktrees/shipguard-session-supervisor-study-20261025/150-minimal-render-routing-r3/contract.cjs",
+      "sha256": "48fd6e5349947c96086d45d5a227c80020a1b97aba049c7a5b5bb0d7daa30445"
+    },
+    {
+      "name": "run.cjs",
+      "source": "/Users/alex/Claude-worktrees/shipguard-session-supervisor-study-20261025/150-minimal-render-routing-r3/run.cjs",
+      "sha256": "fa3159b4b8acff31845224fae645dedb806eab795e574f3afebecd70589779ed"
+    },
+    {
+      "name": "pure.test.cjs",
+      "source": "/Users/alex/Claude-worktrees/shipguard-session-supervisor-study-20261025/150-minimal-render-routing-r3/pure.test.cjs",
+      "sha256": "0788dd0671ed887cdd7bcb0134cb0349f81f4471ba3866beb50d52111cef315b"
+    },
+    {
+      "name": "reconcile.test.cjs",
+      "source": "/Users/alex/Claude-worktrees/shipguard-session-supervisor-study-20261025/150-minimal-render-routing-r3/reconcile.test.cjs",
+      "sha256": "d13692476a7e3374da8ab99acbed0b3ea1fa61c8053a682d2350370e3f449092"
+    }
+  ],
+  "lockSource": "/Users/alex/Claude/git-hors-workflow/builder-mail-dsfr/package-lock.json",
+  "lockSourceSHA256": "a17e627c97e52dca237f267a5f002a9ff3bfe276d187c3ed31609752a231a81d"
+}

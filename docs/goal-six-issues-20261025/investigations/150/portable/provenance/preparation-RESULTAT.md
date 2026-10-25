@@ -1,0 +1,13 @@
+# #150 — Paquet portable R3, préparation seule
+
+**Paquet concret prêt pour revue, non installé et non exécuté en navigateur.** Source exacte : minimal R3 dont le run natif antérieur était positif. L’exemple n’est pas encore publié ; aucune URL de clone n’est inventée. `README.md` fournit une recette copie/installation locale/run unique à qualifier après décision root.
+
+Deux deltas seulement dans `run.cjs` : suppression du chemin Playwright absolu au profit de `path.dirname(require.resolve('playwright/package.json'))`, **dans main après le contrôle des arguments et dans try** ; ajout de cinq métadonnées `platform`, `arch`, `osRelease`, `node`, `playwright` après l’assertion de version conservée. Pas de hostname, username, dump env ou chemin de résolution enregistré. L’import ne résout pas le paquet et ne lance rien. Les gestes mouse.click, coordonnées, ACK, attendus, oracle, erreurs, finally et protection du dossier de sortie restent exactement ceux de R3.
+
+`parent.html`, `child.html`, `contract.cjs`, `pure.test.cjs` et `reconcile.test.cjs` sont identiques octet par octet aux sources R3 ; `provenance/inputs.json` épingle leurs SHA et `provenance/runner.diff` expose le delta complet. Le test inverse reconstitue le runner R3 original. La provenance interne conserve son ancien chemin local pour cette preuve et devra être revue avant partage upstream ; il n’est jamais utilisé par le runner portable.
+
+`package.json` épingle Playwright 1.64.1 ; son assertion runtime est conservée. Le lock minimal v3 reprend **sans modification** les deux entrées `node_modules/playwright` et `node_modules/playwright-core` du lock parent, avec leurs URL et intégrités. Leur fermeture de dépendances est vérifiée par test pur. Aucun npm install/ci, mutation réseau de paquet, téléchargement de navigateur ou installation globale. La validité de `npm ci` est donc étayée statiquement, pas qualifiée par une installation réelle.
+
+**21/21 tests purs**, syntaxe valide, logs conservés. Les six nouveaux tests de portabilité s’ajoutent aux quinze tests R3 inchangés. Ils ne qualifient ni navigateur ni taux de reproduction. Aucun code app, builder public, ShipGuard, source gelée, CI, modèle, GitHub ou configuration modifié. Étude locale uniquement ; parité inter-Mac hors périmètre.
+
+Campagne future proposée : revue indépendante, installation locale explicite puis **un seul run root**, dossier de sortie nouveau. Le `README.md` distingue exit0, finding positif, non-reproduction et erreurs. Le finding historique ne mesure que les clics complets ; un false n’exclut pas un appui partiel. Aucun patch produit/pilote, nouvelle série native ni conclusion causale n’est promu par ce paquet.

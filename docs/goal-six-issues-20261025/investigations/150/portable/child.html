@@ -1,0 +1,21 @@
+<!doctype html><meta charset="utf-8"><title>150 opaque child</title>
+<style>body{margin:0;background:#e8f4ff}button{position:absolute;box-sizing:border-box}#control{left:508px;top:21px;width:40px;height:40px}#target{left:600px;top:510px;width:40px;height:50px}</style>
+<button id="control">Control</button><button id="target">Hit</button>
+<script>
+'use strict';
+let eventSequence=0,clicks=0;const seen=new WeakMap();
+const send=data=>parent.postMessage({protocol:'minimal150',document:'child-1',url:location.href,...data},'*');
+for(const type of ['pointerdown','pointerup','mousedown','mouseup','click']) {
+ document.addEventListener(type,event=>{
+  if(!seen.has(event))seen.set(event,++eventSequence);
+  if(type==='click')clicks++;
+  send({kind:'event',event:'child-1:'+seen.get(event),type,isTrusted:event.isTrusted,
+   x:event.clientX,y:event.clientY,time:event.timeStamp,target:{tag:event.target.tagName,id:event.target.id}});
+ },true);
+}
+window.addEventListener('message',event=>{
+ if(event.source===parent&&event.data?.protocol==='minimal150'&&event.data.kind==='probe')
+  send({kind:'probe',probe:event.data.probe,clicks,eventSequence});
+});
+send({kind:'ready'});
+</script>

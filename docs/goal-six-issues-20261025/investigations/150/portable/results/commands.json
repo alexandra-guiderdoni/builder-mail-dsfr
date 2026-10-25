@@ -1,0 +1,20 @@
+[
+  {
+    "command": [
+      "node",
+      "--test",
+      "pure.test.cjs",
+      "reconcile.test.cjs",
+      "portable.test.cjs"
+    ],
+    "exit": 0
+  },
+  {
+    "command": [
+      "node",
+      "--check",
+      "run.cjs"
+    ],
+    "exit": 0
+  }
+]

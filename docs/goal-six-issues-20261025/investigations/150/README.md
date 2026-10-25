@@ -2,6 +2,8 @@
 
 **Investigation ouverte, aucun correctif validé.** Ces pièces montrent que le compteur de clics seul ne suffit pas à qualifier l’exclusion des entrées vers l’iframe. Elles ne prouvent pas la cause interne Chromium ou Playwright.
 
+Le [paquet portable autonome](portable/README.md) conserve une qualification locale unique positive, ses reçus et sa recette d’installation. Ses nouveaux emplacements publiés n’ont pas été réexécutés ; aucune garantie de reproduction déterministe n’en découle.
+
 ## Deux observations natives conservées
 
 | Pièce | Annuler : avant / sous modale / après | Confirmer : avant / sous modale / après | Observation décisive |

@@ -1,0 +1,33 @@
+
+> modal-iframe-routing-repro@0.0.0 test
+> node --test pure.test.cjs reconcile.test.cjs portable.test.cjs
+
+✔ inverse exactly reconstructs R3 outside resolution and metadata (0.466541ms)
+✔ HTML, contract and original pure tests remain pinned (0.505167ms)
+✔ lock entries are exact and dependency closure is complete (0.527ms)
+✔ import neither resolves Playwright nor runs environment or filesystem probes (0.864542ms)
+✔ missing explicit run-once argument rejects before filesystem and resolution (0.662125ms)
+✔ metadata allowlist is limited and contains no hostname, username, env or paths (0.373875ms)
+✔ HTML inline scripts parse without DOM or browser (0.718458ms)
+✔ synthetic geometry satisfies exact preconditions (0.40625ms)
+✔ wrong geometry/modal/CSS/origin/focus prevents input (3.283542ms)
+✔ two positive cycles without routing remain limited nonreproduction (0.185584ms)
+✔ routing classified independently of application (0.069584ms)
+✔ absent positive controls never count as absence of routing (0.604125ms)
+✔ duplicate event, untrusted, dropped or missing rows disqualify (0.38775ms)
+✔ runner import does not load Playwright or execute browser (0.35725ms)
+✔ positive input uses native frame locator click without force or options (0.142958ms)
+✔ two synthetic child regions cover separate control and raw input points (0.291084ms)
+✔ runner keeps one unchanged raw background gesture and two positive controls (0.120083ms)
+✔ reject positive child5 versus parent4 and four click rows (0.945834ms)
+✔ reject negative child4 versus parent0 and zero click rows (0.128334ms)
+✔ coherent positive child5 parent5 rows5 stays accepted (0.074458ms)
+✔ coherent negative child4 parent4 rows4 stays accepted (0.059875ms)
+ℹ tests 21
+ℹ suites 0
+ℹ pass 21
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 49.201959

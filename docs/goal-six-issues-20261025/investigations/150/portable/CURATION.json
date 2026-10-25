@@ -1,0 +1,245 @@
+{
+  "scope": "curation for builder only; no new browser execution, install, CI or upstream publication",
+  "sourceRoot": "/Users/alex/Claude-worktrees/builder-150-portable-repro-20261025",
+  "preparationManifestSha256": "83f25a37bd9a49fc8ec466834e6616b5263260dd21869d6733c190dbfaac8e8c",
+  "qualificationManifestSha256": "0daaeedc63af2ce58bd7205a18eb9fedd1924492c3b884a17ce9b8f3333684a0",
+  "copies": [
+    {
+      "source": "/Users/alex/Claude-worktrees/builder-150-portable-repro-20261025/README.md",
+      "destination": "provenance/preparation-README.md",
+      "role": "historical preparation",
+      "sha256": "ddaf9430748ab1ce696710486bbd3089b18cff6cf0d2c441b3c766b2a9f0d6ae",
+      "bytes": 4656
+    },
+    {
+      "source": "/Users/alex/Claude-worktrees/builder-150-portable-repro-20261025/RESULTAT.md",
+      "destination": "provenance/preparation-RESULTAT.md",
+      "role": "historical preparation",
+      "sha256": "8e3104f57eacf8cee4cff4d8dad4774fccd30d8f40d3b129c18dee3e11ae235e",
+      "bytes": 2761
+    },
+    {
+      "source": "/Users/alex/Claude-worktrees/builder-150-portable-repro-20261025/child.html",
+      "destination": "child.html",
+      "role": "exact qualified source",
+      "sha256": "8ca38de438ec47314f93d03cc8049cd02cff78ad968ef1d58a1870b75612e5c7",
+      "bytes": 1181
+    },
+    {
+      "source": "/Users/alex/Claude-worktrees/builder-150-portable-repro-20261025/contract.cjs",
+      "destination": "contract.cjs",
+      "role": "exact qualified source",
+      "sha256": "48fd6e5349947c96086d45d5a227c80020a1b97aba049c7a5b5bb0d7daa30445",
+      "bytes": 1626
+    },
+    {
+      "source": "/Users/alex/Claude-worktrees/builder-150-portable-repro-20261025/package-lock.json",
+      "destination": "package-lock.json",
+      "role": "exact qualified source",
+      "sha256": "11aaf4dbfc327256afffda345e9e571263db0e32b12bdc935a5aedaff2b8794b",
+      "bytes": 1268
+    },
+    {
+      "source": "/Users/alex/Claude-worktrees/builder-150-portable-repro-20261025/package.json",
+      "destination": "package.json",
+      "role": "exact qualified source",
+      "sha256": "a96fa484a7271dbfa2fda36275eff0a66c404d1e5dcb2fe2d1bd726ce925a635",
+      "bytes": 365
+    },
+    {
+      "source": "/Users/alex/Claude-worktrees/builder-150-portable-repro-20261025/parent.html",
+      "destination": "parent.html",
+      "role": "exact qualified source",
+      "sha256": "3710b7346d6b68a42bcf3256bd47bc91091399b0b65f6ebbc66d9b25ba7f82b6",
+      "bytes": 3548
+    },
+    {
+      "source": "/Users/alex/Claude-worktrees/builder-150-portable-repro-20261025/portable.test.cjs",
+      "destination": "portable.test.cjs",
+      "role": "exact qualified source",
+      "sha256": "2d9268efa1309d11db748262597d712a759734e3c5d3e3d6d74e75267b5234bc",
+      "bytes": 3730
+    },
+    {
+      "source": "/Users/alex/Claude-worktrees/builder-150-portable-repro-20261025/provenance/inputs.json",
+      "destination": "provenance/inputs.json",
+      "role": "exact qualified source",
+      "sha256": "be7452baf4969a80f790a70d60de332ebf5b996110c6ee2f2025dec483d63380",
+      "bytes": 1766
+    },
+    {
+      "source": "/Users/alex/Claude-worktrees/builder-150-portable-repro-20261025/provenance/run-r3.cjs.txt",
+      "destination": "provenance/run-r3.cjs.txt",
+      "role": "exact qualified source",
+      "sha256": "fa3159b4b8acff31845224fae645dedb806eab795e574f3afebecd70589779ed",
+      "bytes": 3646
+    },
+    {
+      "source": "/Users/alex/Claude-worktrees/builder-150-portable-repro-20261025/provenance/runner.diff",
+      "destination": "provenance/runner.diff",
+      "role": "exact qualified source",
+      "sha256": "2e969457fdbff57319585723d271daabb5ebe5bacc5203cc7864e9ba8eb84848",
+      "bytes": 1320
+    },
+    {
+      "source": "/Users/alex/Claude-worktrees/builder-150-portable-repro-20261025/provenance/upstream-lock-entries.json",
+      "destination": "provenance/upstream-lock-entries.json",
+      "role": "exact qualified source",
+      "sha256": "e092463535723d4547f56afc24db2c9c131a279ab1baea0b9304ba4f4b9f933c",
+      "bytes": 880
+    },
+    {
+      "source": "/Users/alex/Claude-worktrees/builder-150-portable-repro-20261025/pure.test.cjs",
+      "destination": "pure.test.cjs",
+      "role": "exact qualified source",
+      "sha256": "0788dd0671ed887cdd7bcb0134cb0349f81f4471ba3866beb50d52111cef315b",
+      "bytes": 4339
+    },
+    {
+      "source": "/Users/alex/Claude-worktrees/builder-150-portable-repro-20261025/reconcile.test.cjs",
+      "destination": "reconcile.test.cjs",
+      "role": "exact qualified source",
+      "sha256": "d13692476a7e3374da8ab99acbed0b3ea1fa61c8053a682d2350370e3f449092",
+      "bytes": 1069
+    },
+    {
+      "source": "/Users/alex/Claude-worktrees/builder-150-portable-repro-20261025/results/accents.log",
+      "destination": "results/accents.log",
+      "role": "historical preparation",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "/Users/alex/Claude-worktrees/builder-150-portable-repro-20261025/results/commands.json",
+      "destination": "results/commands.json",
+      "role": "historical preparation",
+      "sha256": "122b15e5152fe9b17d5e6c35345867149b2e3bc31ef6e335be94d625125ba84f",
+      "bytes": 251
+    },
+    {
+      "source": "/Users/alex/Claude-worktrees/builder-150-portable-repro-20261025/results/pure.log",
+      "destination": "results/pure.log",
+      "role": "historical preparation",
+      "sha256": "e883c00c58232d0a47dd4fef0efe779e69424eb6c7d72f3506df0790365d19a2",
+      "bytes": 1768
+    },
+    {
+      "source": "/Users/alex/Claude-worktrees/builder-150-portable-repro-20261025/results/syntax.log",
+      "destination": "results/syntax.log",
+      "role": "historical preparation",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "/Users/alex/Claude-worktrees/builder-150-portable-repro-20261025/run.cjs",
+      "destination": "run.cjs",
+      "role": "exact qualified source",
+      "sha256": "0ee85dfcf80c0f9a83a46807c1e1d3648691ec8ba656b65549c6cd1ab82442a1",
+      "bytes": 3803
+    },
+    {
+      "source": "/Users/alex/Claude-worktrees/builder-150-portable-repro-20261025/MANIFEST.json",
+      "destination": "provenance/preparation-MANIFEST.json",
+      "role": "historical preparation manifest; old paths mapped by this receipt",
+      "sha256": "83f25a37bd9a49fc8ec466834e6616b5263260dd21869d6733c190dbfaac8e8c",
+      "bytes": 2955
+    },
+    {
+      "source": "/Users/alex/Claude-worktrees/builder-150-portable-repro-20261025/qualification/attempt.json",
+      "destination": "qualification/attempt.json",
+      "role": "native qualification evidence",
+      "sha256": "20b41fd15751815ff983a502cf8e1f424aa1b3e00926724d21ce760dade65f30",
+      "bytes": 176
+    },
+    {
+      "source": "/Users/alex/Claude-worktrees/builder-150-portable-repro-20261025/qualification/execution.json",
+      "destination": "qualification/execution.json",
+      "role": "native qualification evidence",
+      "sha256": "ce743af0586c51e58b2604f31f3ae70cd4e8b929c5e1ef88703e7199e3e5e016",
+      "bytes": 243
+    },
+    {
+      "source": "/Users/alex/Claude-worktrees/builder-150-portable-repro-20261025/qualification/stdout.log",
+      "destination": "qualification/stdout.log",
+      "role": "native qualification evidence",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "/Users/alex/Claude-worktrees/builder-150-portable-repro-20261025/qualification/stderr.log",
+      "destination": "qualification/stderr.log",
+      "role": "native qualification evidence",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "/Users/alex/Claude-worktrees/builder-150-portable-repro-20261025/qualification/RESULTAT.md",
+      "destination": "qualification/RESULTAT.md",
+      "role": "native qualification evidence",
+      "sha256": "237d26347409c0c25c6ad5574be027cd3de43be559833488470660dc07f7862c",
+      "bytes": 2850
+    },
+    {
+      "source": "/Users/alex/Claude-worktrees/builder-150-portable-repro-20261025/result-once/result.json",
+      "destination": "result-once/result.json",
+      "role": "native qualification evidence",
+      "sha256": "6fd9b6f7021fe9fb492d89b6c2c0156c6b4ffc51f4bde392cf73b9924d575380",
+      "bytes": 21648
+    },
+    {
+      "source": "/Users/alex/Claude-worktrees/builder-150-portable-repro-20261025/qualification/MANIFEST.json",
+      "destination": "qualification/MANIFEST.json",
+      "role": "native qualification manifest",
+      "sha256": "0daaeedc63af2ce58bd7205a18eb9fedd1924492c3b884a17ce9b8f3333684a0",
+      "bytes": 1107
+    },
+    {
+      "source": "/Users/alex/Claude-worktrees/builder-150-portable-native-review-20261025.md",
+      "destination": "qualification/REVIEW.md",
+      "role": "independent native review",
+      "sha256": "cfbf6dff122ab406e702e5a4f54fe5f7d4dbe876ae7df81e69af742a0696429e",
+      "bytes": 5301
+    }
+  ],
+  "excluded": [
+    "node_modules/",
+    ".browsers/",
+    ".npm-cache/",
+    "all downloads"
+  ],
+  "newAuthOrNativeRun": false,
+  "limitations": [
+    "Installation stdout/stderr and post-install npm test log were not archived; operator attestations only.",
+    "Preparation false/false fields are historical, unchanged.",
+    "Copied sources and native evidence are byte-exact; new publication file URLs have not been run.",
+    "Historical technical paths are retained for provenance, never runtime configuration."
+  ],
+  "inverseVerification": "For every copies entry, SHA256(destination)==sha256==SHA256(source). Original preparation README/RESULTAT paths are mapped into provenance; all other preparation paths are unchanged.",
+  "generatedFiles": [
+    "README.md",
+    ".gitignore",
+    "CURATION.json",
+    "SHA256.json",
+    "publication-checks.log"
+  ],
+  "offlineValidation": {
+    "command": [
+      "npm",
+      "test",
+      "--offline"
+    ],
+    "passed": 21,
+    "failed": 0,
+    "browserExecuted": false,
+    "dependenciesInstalledInPublicationCopy": false,
+    "sourceCopiesVerified": 28,
+    "localReadmeLinksChecked": true,
+    "newFrenchReadmeMojibakeChecked": true
+  },
+  "historicalPreparationPaths": {
+    "README.md": "provenance/preparation-README.md",
+    "RESULTAT.md": "provenance/preparation-RESULTAT.md",
+    "MANIFEST.json": "provenance/preparation-MANIFEST.json"
+  },
+  "futureOutput": "result-new/; ignored, absent, not executed"
+}

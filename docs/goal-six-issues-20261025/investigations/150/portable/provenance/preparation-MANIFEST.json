@@ -1,0 +1,101 @@
+{
+  "browserExecuted": false,
+  "dependenciesInstalled": false,
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 4656,
+      "sha256": "ddaf9430748ab1ce696710486bbd3089b18cff6cf0d2c441b3c766b2a9f0d6ae"
+    },
+    {
+      "path": "RESULTAT.md",
+      "bytes": 2761,
+      "sha256": "8e3104f57eacf8cee4cff4d8dad4774fccd30d8f40d3b129c18dee3e11ae235e"
+    },
+    {
+      "path": "child.html",
+      "bytes": 1181,
+      "sha256": "8ca38de438ec47314f93d03cc8049cd02cff78ad968ef1d58a1870b75612e5c7"
+    },
+    {
+      "path": "contract.cjs",
+      "bytes": 1626,
+      "sha256": "48fd6e5349947c96086d45d5a227c80020a1b97aba049c7a5b5bb0d7daa30445"
+    },
+    {
+      "path": "package-lock.json",
+      "bytes": 1268,
+      "sha256": "11aaf4dbfc327256afffda345e9e571263db0e32b12bdc935a5aedaff2b8794b"
+    },
+    {
+      "path": "package.json",
+      "bytes": 365,
+      "sha256": "a96fa484a7271dbfa2fda36275eff0a66c404d1e5dcb2fe2d1bd726ce925a635"
+    },
+    {
+      "path": "parent.html",
+      "bytes": 3548,
+      "sha256": "3710b7346d6b68a42bcf3256bd47bc91091399b0b65f6ebbc66d9b25ba7f82b6"
+    },
+    {
+      "path": "portable.test.cjs",
+      "bytes": 3730,
+      "sha256": "2d9268efa1309d11db748262597d712a759734e3c5d3e3d6d74e75267b5234bc"
+    },
+    {
+      "path": "provenance/inputs.json",
+      "bytes": 1766,
+      "sha256": "be7452baf4969a80f790a70d60de332ebf5b996110c6ee2f2025dec483d63380"
+    },
+    {
+      "path": "provenance/run-r3.cjs.txt",
+      "bytes": 3646,
+      "sha256": "fa3159b4b8acff31845224fae645dedb806eab795e574f3afebecd70589779ed"
+    },
+    {
+      "path": "provenance/runner.diff",
+      "bytes": 1320,
+      "sha256": "2e969457fdbff57319585723d271daabb5ebe5bacc5203cc7864e9ba8eb84848"
+    },
+    {
+      "path": "provenance/upstream-lock-entries.json",
+      "bytes": 880,
+      "sha256": "e092463535723d4547f56afc24db2c9c131a279ab1baea0b9304ba4f4b9f933c"
+    },
+    {
+      "path": "pure.test.cjs",
+      "bytes": 4339,
+      "sha256": "0788dd0671ed887cdd7bcb0134cb0349f81f4471ba3866beb50d52111cef315b"
+    },
+    {
+      "path": "reconcile.test.cjs",
+      "bytes": 1069,
+      "sha256": "d13692476a7e3374da8ab99acbed0b3ea1fa61c8053a682d2350370e3f449092"
+    },
+    {
+      "path": "results/accents.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "results/commands.json",
+      "bytes": 251,
+      "sha256": "122b15e5152fe9b17d5e6c35345867149b2e3bc31ef6e335be94d625125ba84f"
+    },
+    {
+      "path": "results/pure.log",
+      "bytes": 1768,
+      "sha256": "e883c00c58232d0a47dd4fef0efe779e69424eb6c7d72f3506df0790365d19a2"
+    },
+    {
+      "path": "results/syntax.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "run.cjs",
+      "bytes": 3803,
+      "sha256": "0ee85dfcf80c0f9a83a46807c1e1d3648691ec8ba656b65549c6cd1ab82442a1"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "name": "modal-iframe-routing-repro",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Isolated observation of modal iframe input routing; not a product fix",
+  "scripts": {
+    "test": "node --test pure.test.cjs reconcile.test.cjs portable.test.cjs"
+  },
+  "devDependencies": {
+    "playwright": "1.64.1"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
