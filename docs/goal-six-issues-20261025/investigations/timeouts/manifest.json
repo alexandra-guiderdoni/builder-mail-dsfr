@@ -1,0 +1,13 @@
+{
+  "base": "79c999cc00e8a317e71aa6f91c3bb357b5537741",
+  "historicalArticle": "395c08d1dfa4d0b8e41416da798bf0313a8bd379",
+  "historicalExport": "eadd426befeb39a6e68a14342f9c1a66102ac81d",
+  "node": "24.18.0",
+  "playwright": "1.64.1",
+  "platform": "macOS darwin arm64",
+  "sha256": {
+    "historical/app/distribution/portable.html": "ac9aee8c29f438772797acc55dd90e8fb0798de9845ad722c2cb0679aad6f7f3",
+    "preview-only/app/distribution/portable.html": "1f36946b262da7c4a7d4776d3e7e7c696c10e9095d0bec5455c5081c353adebf",
+    "export-historical/app/distribution/portable.html": "ac9aee8c29f438772797acc55dd90e8fb0798de9845ad722c2cb0679aad6f7f3"
+  }
+}

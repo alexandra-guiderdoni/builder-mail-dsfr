@@ -1,0 +1,90 @@
+[
+  {
+    "delay": 0,
+    "status": "download",
+    "name": "Édition-&-dossier-suivi-2026-10-25.html",
+    "state": {
+      "notice": "Courriel proposé au téléchargement.",
+      "error": "",
+      "checkDialog": false,
+      "focused": true
+    },
+    "downloads": 1
+  },
+  {
+    "delay": 0,
+    "status": "download",
+    "name": "Édition-&-dossier-suivi-2026-10-25.html",
+    "state": {
+      "notice": "Courriel proposé au téléchargement.",
+      "error": "",
+      "checkDialog": false,
+      "focused": true
+    },
+    "downloads": 1
+  },
+  {
+    "delay": 0,
+    "status": "download",
+    "name": "Édition-&-dossier-suivi-2026-10-25.html",
+    "state": {
+      "notice": "Courriel proposé au téléchargement.",
+      "error": "",
+      "checkDialog": false,
+      "focused": true
+    },
+    "downloads": 1
+  },
+  {
+    "delay": 120,
+    "status": "download",
+    "name": "Édition-&-dossier-suivi-2026-10-25.html",
+    "state": {
+      "notice": "Courriel proposé au téléchargement.",
+      "error": "",
+      "checkDialog": false,
+      "focused": true
+    },
+    "downloads": 1
+  },
+  {
+    "delay": 650,
+    "status": "timeout",
+    "state": {
+      "notice": "",
+      "error": "",
+      "checkDialog": true,
+      "focused": true
+    },
+    "downloads": 0,
+    "afterRelease": {
+      "state": {
+        "notice": "Courriel proposé au téléchargement.",
+        "error": "",
+        "checkDialog": false,
+        "focused": true
+      },
+      "downloads": 1
+    }
+  },
+  {
+    "delay": 650,
+    "status": "timeout",
+    "state": {
+      "notice": "",
+      "error": "",
+      "checkDialog": true,
+      "focused": true
+    },
+    "downloads": 0,
+    "afterRelease": {
+      "state": {
+        "notice": "Courriel proposé au téléchargement.",
+        "error": "",
+        "checkDialog": false,
+        "focused": true
+      },
+      "downloads": 1
+    }
+  }
+]

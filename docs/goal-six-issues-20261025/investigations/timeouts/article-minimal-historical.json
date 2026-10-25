@@ -1,0 +1,2444 @@
+{
+  "variant": "historical",
+  "count": 20,
+  "timeout": 1200,
+  "injection": false,
+  "results": [
+    {
+      "run": 0,
+      "status": "pass",
+      "error": null,
+      "state": {
+        "notice": "Lien supplémentaire 1 ajouté au bloc « Gestion des abonnements ».",
+        "error": "",
+        "checkDialog": false,
+        "focused": true
+      },
+      "outer": {
+        "src": "blob:null/ed5c65b7-dbe4-470c-8a0b-caf05ce1b642#b343e026-07fb-4379-bb6a-ba95cbe20f85",
+        "selected": "17a6c5c5-a7a7-4416-a80f-e4d5d5bb61a2",
+        "doc": {
+          "schema": "dsfr-mail/document",
+          "version": 1,
+          "catalogue": "6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278f74858e8cddd6e72af8b",
+          "id": "f1652fd2-58bf-4af2-8aaf-bd11cafc8292",
+          "name": "Lettre de recette",
+          "subject": "Lettre de recette",
+          "blocks": [
+            {
+              "id": "689e56d3-d229-4022-acee-4da1be0c9555",
+              "component": "mail-31",
+              "values": {
+                "f0": "",
+                "f1": "",
+                "f2": "",
+                "f3": "https://example.invalid/article",
+                "f4": "Un article sans illustration",
+                "f5": "Le détail utile de cet article",
+                "f6": ""
+              },
+              "source": ""
+            },
+            {
+              "id": "17a6c5c5-a7a7-4416-a80f-e4d5d5bb61a2",
+              "component": "mail-50",
+              "values": {
+                "f0": "Une question sur cette lettre ?",
+                "f1": "mailto:abonnement@example.invalid?subject=Inscription",
+                "f2": "S’abonner"
+              },
+              "source": "",
+              "additionalLinks": [
+                {
+                  "url": "https://exemple.invalid/",
+                  "label": ""
+                }
+              ]
+            }
+          ]
+        },
+        "events": [
+          {
+            "kind": "src",
+            "src": "blob:null/7073cdd8-a4ae-4894-a5e0-0034fd94ebd3#7ae28258-e640-4f8a-b0f8-a419563a2f49",
+            "at": 253
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/7073cdd8-a4ae-4894-a5e0-0034fd94ebd3#7ae28258-e640-4f8a-b0f8-a419563a2f49",
+            "at": 257
+          },
+          {
+            "kind": "src",
+            "src": "blob:null/659f536c-4b80-42d4-bbd4-c0e0db78dcce#03d593c6-02eb-4d94-982a-0ea91495dee5",
+            "at": 286
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/659f536c-4b80-42d4-bbd4-c0e0db78dcce#03d593c6-02eb-4d94-982a-0ea91495dee5",
+            "at": 290
+          },
+          {
+            "kind": "src",
+            "src": "blob:null/ed5c65b7-dbe4-470c-8a0b-caf05ce1b642#b343e026-07fb-4379-bb6a-ba95cbe20f85",
+            "at": 295
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/ed5c65b7-dbe4-470c-8a0b-caf05ce1b642#b343e026-07fb-4379-bb6a-ba95cbe20f85",
+            "at": 298
+          }
+        ]
+      },
+      "inner": {
+        "url": "blob:null/ed5c65b7-dbe4-470c-8a0b-caf05ce1b642#b343e026-07fb-4379-bb6a-ba95cbe20f85",
+        "ready": "complete",
+        "links": [
+          {
+            "text": "Un article sans illustration",
+            "href": "https://example.invalid/article"
+          },
+          {
+            "text": "S’abonner",
+            "href": "mailto:abonnement@example.invalid?subject=Inscription"
+          },
+          {
+            "text": "Intitulé du lien à renseigner",
+            "href": null
+          }
+        ]
+      },
+      "frames": [
+        {
+          "kind": "navigated",
+          "url": "blob:null/7073cdd8-a4ae-4894-a5e0-0034fd94ebd3#7ae28258-e640-4f8a-b0f8-a419563a2f49",
+          "at": 1792946132454
+        },
+        {
+          "kind": "navigated",
+          "url": "blob:null/659f536c-4b80-42d4-bbd4-c0e0db78dcce#03d593c6-02eb-4d94-982a-0ea91495dee5",
+          "at": 1792946132487
+        },
+        {
+          "kind": "navigated",
+          "url": "blob:null/ed5c65b7-dbe4-470c-8a0b-caf05ce1b642#b343e026-07fb-4379-bb6a-ba95cbe20f85",
+          "at": 1792946132496
+        }
+      ],
+      "errors": []
+    },
+    {
+      "run": 1,
+      "status": "timeout",
+      "error": "locator.waitFor: Timeout 1200ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#preview').contentFrame().locator('a:not([href])').filter({ hasText: 'Intitulé du lien à renseigner' }) to be visible\u001b[22m\n",
+      "state": {
+        "notice": "Lien supplémentaire 1 ajouté au bloc « Gestion des abonnements ».",
+        "error": "",
+        "checkDialog": false,
+        "focused": true
+      },
+      "outer": {
+        "src": "blob:null/f8f176b3-aa28-488a-a5d6-f4aa46ba4001#7f735ece-22e0-4ce4-9b1b-969ca295ba34",
+        "selected": "13fd6c9a-2ced-4b37-a874-23aa2d6ccb20",
+        "doc": {
+          "schema": "dsfr-mail/document",
+          "version": 1,
+          "catalogue": "6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278f74858e8cddd6e72af8b",
+          "id": "52780e44-a30d-422a-8e87-47c8cf7377e2",
+          "name": "Lettre de recette",
+          "subject": "Lettre de recette",
+          "blocks": [
+            {
+              "id": "47892653-4d58-4761-aea2-afd82874c462",
+              "component": "mail-31",
+              "values": {
+                "f0": "",
+                "f1": "",
+                "f2": "",
+                "f3": "https://example.invalid/article",
+                "f4": "Un article sans illustration",
+                "f5": "Le détail utile de cet article",
+                "f6": ""
+              },
+              "source": ""
+            },
+            {
+              "id": "13fd6c9a-2ced-4b37-a874-23aa2d6ccb20",
+              "component": "mail-50",
+              "values": {
+                "f0": "Une question sur cette lettre ?",
+                "f1": "mailto:abonnement@example.invalid?subject=Inscription",
+                "f2": "S’abonner"
+              },
+              "source": "",
+              "additionalLinks": [
+                {
+                  "url": "https://exemple.invalid/",
+                  "label": ""
+                }
+              ]
+            }
+          ]
+        },
+        "events": [
+          {
+            "kind": "src",
+            "src": "blob:null/5d84e0d5-c977-4746-869d-2357723e9de5#5a9653e6-e157-4780-9a4d-fc8e11dd0759",
+            "at": 248
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/5d84e0d5-c977-4746-869d-2357723e9de5#5a9653e6-e157-4780-9a4d-fc8e11dd0759",
+            "at": 253
+          },
+          {
+            "kind": "src",
+            "src": "blob:null/f75f3ce9-fe44-43cf-9ec6-db2a695ead5d#bd708603-8bdc-4154-9c95-0e92a61444a5",
+            "at": 262
+          },
+          {
+            "kind": "src",
+            "src": "blob:null/f8f176b3-aa28-488a-a5d6-f4aa46ba4001#7f735ece-22e0-4ce4-9b1b-969ca295ba34",
+            "at": 267
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/f8f176b3-aa28-488a-a5d6-f4aa46ba4001#7f735ece-22e0-4ce4-9b1b-969ca295ba34",
+            "at": 271
+          }
+        ]
+      },
+      "inner": {
+        "url": "blob:null/f75f3ce9-fe44-43cf-9ec6-db2a695ead5d#bd708603-8bdc-4154-9c95-0e92a61444a5",
+        "ready": "complete",
+        "links": [
+          {
+            "text": "Un article sans illustration",
+            "href": "https://example.invalid/article"
+          },
+          {
+            "text": "S’abonner",
+            "href": "mailto:abonnement@example.invalid?subject=Inscription"
+          }
+        ]
+      },
+      "frames": [
+        {
+          "kind": "navigated",
+          "url": "blob:null/5d84e0d5-c977-4746-869d-2357723e9de5#5a9653e6-e157-4780-9a4d-fc8e11dd0759",
+          "at": 1792946132939
+        },
+        {
+          "kind": "navigated",
+          "url": "blob:null/f75f3ce9-fe44-43cf-9ec6-db2a695ead5d#bd708603-8bdc-4154-9c95-0e92a61444a5",
+          "at": 1792946132957
+        }
+      ],
+      "errors": []
+    },
+    {
+      "run": 2,
+      "status": "pass",
+      "error": null,
+      "state": {
+        "notice": "Lien supplémentaire 1 ajouté au bloc « Gestion des abonnements ».",
+        "error": "",
+        "checkDialog": false,
+        "focused": true
+      },
+      "outer": {
+        "src": "blob:null/9d51bfc0-b5ba-4b32-84a5-5631b1469ba1#9eeb16b9-918c-4a58-821b-3dc4b23b69f5",
+        "selected": "c6935c9f-d7e3-49c5-8aaa-0d8d396f2ab2",
+        "doc": {
+          "schema": "dsfr-mail/document",
+          "version": 1,
+          "catalogue": "6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278f74858e8cddd6e72af8b",
+          "id": "697ad687-f233-4023-9116-3fac1b4de75e",
+          "name": "Lettre de recette",
+          "subject": "Lettre de recette",
+          "blocks": [
+            {
+              "id": "151f48e2-2e62-4c72-85f2-eacd2d9902a8",
+              "component": "mail-31",
+              "values": {
+                "f0": "",
+                "f1": "",
+                "f2": "",
+                "f3": "https://example.invalid/article",
+                "f4": "Un article sans illustration",
+                "f5": "Le détail utile de cet article",
+                "f6": ""
+              },
+              "source": ""
+            },
+            {
+              "id": "c6935c9f-d7e3-49c5-8aaa-0d8d396f2ab2",
+              "component": "mail-50",
+              "values": {
+                "f0": "Une question sur cette lettre ?",
+                "f1": "mailto:abonnement@example.invalid?subject=Inscription",
+                "f2": "S’abonner"
+              },
+              "source": "",
+              "additionalLinks": [
+                {
+                  "url": "https://exemple.invalid/",
+                  "label": ""
+                }
+              ]
+            }
+          ]
+        },
+        "events": [
+          {
+            "kind": "src",
+            "src": "blob:null/5bb2b537-ce36-484f-93fe-52f603f3e376#5644d42e-6c42-4bdd-8704-b2a80e60badc",
+            "at": 256
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/5bb2b537-ce36-484f-93fe-52f603f3e376#5644d42e-6c42-4bdd-8704-b2a80e60badc",
+            "at": 260
+          },
+          {
+            "kind": "src",
+            "src": "blob:null/2e902eea-4490-4aac-b8a4-b3e66b1437b4#34d84a45-3b61-437c-8f28-fb599c308bf0",
+            "at": 271
+          },
+          {
+            "kind": "src",
+            "src": "blob:null/9d51bfc0-b5ba-4b32-84a5-5631b1469ba1#9eeb16b9-918c-4a58-821b-3dc4b23b69f5",
+            "at": 274
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/9d51bfc0-b5ba-4b32-84a5-5631b1469ba1#9eeb16b9-918c-4a58-821b-3dc4b23b69f5",
+            "at": 278
+          }
+        ]
+      },
+      "inner": {
+        "url": "blob:null/9d51bfc0-b5ba-4b32-84a5-5631b1469ba1#9eeb16b9-918c-4a58-821b-3dc4b23b69f5",
+        "ready": "complete",
+        "links": [
+          {
+            "text": "Un article sans illustration",
+            "href": "https://example.invalid/article"
+          },
+          {
+            "text": "S’abonner",
+            "href": "mailto:abonnement@example.invalid?subject=Inscription"
+          },
+          {
+            "text": "Intitulé du lien à renseigner",
+            "href": null
+          }
+        ]
+      },
+      "frames": [
+        {
+          "kind": "navigated",
+          "url": "blob:null/5bb2b537-ce36-484f-93fe-52f603f3e376#5644d42e-6c42-4bdd-8704-b2a80e60badc",
+          "at": 1792946134638
+        },
+        {
+          "kind": "navigated",
+          "url": "blob:null/9d51bfc0-b5ba-4b32-84a5-5631b1469ba1#9eeb16b9-918c-4a58-821b-3dc4b23b69f5",
+          "at": 1792946134656
+        }
+      ],
+      "errors": []
+    },
+    {
+      "run": 3,
+      "status": "pass",
+      "error": null,
+      "state": {
+        "notice": "Lien supplémentaire 1 ajouté au bloc « Gestion des abonnements ».",
+        "error": "",
+        "checkDialog": false,
+        "focused": true
+      },
+      "outer": {
+        "src": "blob:null/d5c371c0-8c4b-49ec-bde6-00e027f63792#5dff9fd4-4ebd-4330-8fc0-71de4c1c07f8",
+        "selected": "88d1f033-ee1b-4edf-a2e6-2af2330af407",
+        "doc": {
+          "schema": "dsfr-mail/document",
+          "version": 1,
+          "catalogue": "6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278f74858e8cddd6e72af8b",
+          "id": "a1057cc9-a71a-4d89-bb05-b960028a04a4",
+          "name": "Lettre de recette",
+          "subject": "Lettre de recette",
+          "blocks": [
+            {
+              "id": "8673ad38-2da3-4106-b657-8ce3b5a5dfec",
+              "component": "mail-31",
+              "values": {
+                "f0": "",
+                "f1": "",
+                "f2": "",
+                "f3": "https://example.invalid/article",
+                "f4": "Un article sans illustration",
+                "f5": "Le détail utile de cet article",
+                "f6": ""
+              },
+              "source": ""
+            },
+            {
+              "id": "88d1f033-ee1b-4edf-a2e6-2af2330af407",
+              "component": "mail-50",
+              "values": {
+                "f0": "Une question sur cette lettre ?",
+                "f1": "mailto:abonnement@example.invalid?subject=Inscription",
+                "f2": "S’abonner"
+              },
+              "source": "",
+              "additionalLinks": [
+                {
+                  "url": "https://exemple.invalid/",
+                  "label": ""
+                }
+              ]
+            }
+          ]
+        },
+        "events": [
+          {
+            "kind": "src",
+            "src": "blob:null/d24ab951-a72c-4549-a112-70cf8379d366#7a2c0214-cf03-4dad-badf-438f44f742ce",
+            "at": 240
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/d24ab951-a72c-4549-a112-70cf8379d366#7a2c0214-cf03-4dad-badf-438f44f742ce",
+            "at": 244
+          },
+          {
+            "kind": "src",
+            "src": "blob:null/c74fd3f1-d543-463f-aedc-de8a4abe0554#b487ee66-1237-47cc-9dae-79b2c0fca70a",
+            "at": 272
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/c74fd3f1-d543-463f-aedc-de8a4abe0554#b487ee66-1237-47cc-9dae-79b2c0fca70a",
+            "at": 276
+          },
+          {
+            "kind": "src",
+            "src": "blob:null/d5c371c0-8c4b-49ec-bde6-00e027f63792#5dff9fd4-4ebd-4330-8fc0-71de4c1c07f8",
+            "at": 281
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/d5c371c0-8c4b-49ec-bde6-00e027f63792#5dff9fd4-4ebd-4330-8fc0-71de4c1c07f8",
+            "at": 284
+          }
+        ]
+      },
+      "inner": {
+        "url": "blob:null/d5c371c0-8c4b-49ec-bde6-00e027f63792#5dff9fd4-4ebd-4330-8fc0-71de4c1c07f8",
+        "ready": "complete",
+        "links": [
+          {
+            "text": "Un article sans illustration",
+            "href": "https://example.invalid/article"
+          },
+          {
+            "text": "S’abonner",
+            "href": "mailto:abonnement@example.invalid?subject=Inscription"
+          },
+          {
+            "text": "Intitulé du lien à renseigner",
+            "href": null
+          }
+        ]
+      },
+      "frames": [
+        {
+          "kind": "navigated",
+          "url": "blob:null/d24ab951-a72c-4549-a112-70cf8379d366#7a2c0214-cf03-4dad-badf-438f44f742ce",
+          "at": 1792946135096
+        },
+        {
+          "kind": "navigated",
+          "url": "blob:null/c74fd3f1-d543-463f-aedc-de8a4abe0554#b487ee66-1237-47cc-9dae-79b2c0fca70a",
+          "at": 1792946135128
+        },
+        {
+          "kind": "navigated",
+          "url": "blob:null/d5c371c0-8c4b-49ec-bde6-00e027f63792#5dff9fd4-4ebd-4330-8fc0-71de4c1c07f8",
+          "at": 1792946135137
+        }
+      ],
+      "errors": []
+    },
+    {
+      "run": 4,
+      "status": "pass",
+      "error": null,
+      "state": {
+        "notice": "Lien supplémentaire 1 ajouté au bloc « Gestion des abonnements ».",
+        "error": "",
+        "checkDialog": false,
+        "focused": true
+      },
+      "outer": {
+        "src": "blob:null/878a25dd-cf91-4333-9308-2a96da95ad8e#52bfcbef-9133-49d3-ade7-2feb3b6f9990",
+        "selected": "2220b4bb-294d-47d7-ba21-38c7bf322810",
+        "doc": {
+          "schema": "dsfr-mail/document",
+          "version": 1,
+          "catalogue": "6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278f74858e8cddd6e72af8b",
+          "id": "53b73390-71b9-4d5e-9039-56058ea5d629",
+          "name": "Lettre de recette",
+          "subject": "Lettre de recette",
+          "blocks": [
+            {
+              "id": "9afe67b2-6179-4e3b-bfa7-497ef96bc25a",
+              "component": "mail-31",
+              "values": {
+                "f0": "",
+                "f1": "",
+                "f2": "",
+                "f3": "https://example.invalid/article",
+                "f4": "Un article sans illustration",
+                "f5": "Le détail utile de cet article",
+                "f6": ""
+              },
+              "source": ""
+            },
+            {
+              "id": "2220b4bb-294d-47d7-ba21-38c7bf322810",
+              "component": "mail-50",
+              "values": {
+                "f0": "Une question sur cette lettre ?",
+                "f1": "mailto:abonnement@example.invalid?subject=Inscription",
+                "f2": "S’abonner"
+              },
+              "source": "",
+              "additionalLinks": [
+                {
+                  "url": "https://exemple.invalid/",
+                  "label": ""
+                }
+              ]
+            }
+          ]
+        },
+        "events": [
+          {
+            "kind": "src",
+            "src": "blob:null/73b4ad59-ad8c-4935-8541-4f440e5ac054#85688bd0-bf27-45fd-9f2f-fe6c3f2f4dc7",
+            "at": 255
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/73b4ad59-ad8c-4935-8541-4f440e5ac054#85688bd0-bf27-45fd-9f2f-fe6c3f2f4dc7",
+            "at": 259
+          },
+          {
+            "kind": "src",
+            "src": "blob:null/d574f8b0-58eb-4327-bf27-f98789b9e35f#4f0dca9c-51ec-4aed-98a9-5a50705e66a3",
+            "at": 271
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/d574f8b0-58eb-4327-bf27-f98789b9e35f#4f0dca9c-51ec-4aed-98a9-5a50705e66a3",
+            "at": 275
+          },
+          {
+            "kind": "src",
+            "src": "blob:null/878a25dd-cf91-4333-9308-2a96da95ad8e#52bfcbef-9133-49d3-ade7-2feb3b6f9990",
+            "at": 279
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/878a25dd-cf91-4333-9308-2a96da95ad8e#52bfcbef-9133-49d3-ade7-2feb3b6f9990",
+            "at": 283
+          }
+        ]
+      },
+      "inner": {
+        "url": "blob:null/878a25dd-cf91-4333-9308-2a96da95ad8e#52bfcbef-9133-49d3-ade7-2feb3b6f9990",
+        "ready": "complete",
+        "links": [
+          {
+            "text": "Un article sans illustration",
+            "href": "https://example.invalid/article"
+          },
+          {
+            "text": "S’abonner",
+            "href": "mailto:abonnement@example.invalid?subject=Inscription"
+          },
+          {
+            "text": "Intitulé du lien à renseigner",
+            "href": null
+          }
+        ]
+      },
+      "frames": [
+        {
+          "kind": "navigated",
+          "url": "blob:null/73b4ad59-ad8c-4935-8541-4f440e5ac054#85688bd0-bf27-45fd-9f2f-fe6c3f2f4dc7",
+          "at": 1792946135587
+        },
+        {
+          "kind": "navigated",
+          "url": "blob:null/d574f8b0-58eb-4327-bf27-f98789b9e35f#4f0dca9c-51ec-4aed-98a9-5a50705e66a3",
+          "at": 1792946135603
+        },
+        {
+          "kind": "navigated",
+          "url": "blob:null/878a25dd-cf91-4333-9308-2a96da95ad8e#52bfcbef-9133-49d3-ade7-2feb3b6f9990",
+          "at": 1792946135612
+        }
+      ],
+      "errors": []
+    },
+    {
+      "run": 5,
+      "status": "pass",
+      "error": null,
+      "state": {
+        "notice": "Lien supplémentaire 1 ajouté au bloc « Gestion des abonnements ».",
+        "error": "",
+        "checkDialog": false,
+        "focused": true
+      },
+      "outer": {
+        "src": "blob:null/4b72f6a7-8978-4ae6-ae09-385ff1c7507f#9e87e014-ad1a-40ef-80db-636d844eec53",
+        "selected": "f48c16f5-d01b-45a2-96b5-ceb06841b101",
+        "doc": {
+          "schema": "dsfr-mail/document",
+          "version": 1,
+          "catalogue": "6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278f74858e8cddd6e72af8b",
+          "id": "bc4c5833-b7e9-4180-ab8a-27c4930abdd8",
+          "name": "Lettre de recette",
+          "subject": "Lettre de recette",
+          "blocks": [
+            {
+              "id": "fc66a32b-cbaa-4869-9a85-39dbd703dc5e",
+              "component": "mail-31",
+              "values": {
+                "f0": "",
+                "f1": "",
+                "f2": "",
+                "f3": "https://example.invalid/article",
+                "f4": "Un article sans illustration",
+                "f5": "Le détail utile de cet article",
+                "f6": ""
+              },
+              "source": ""
+            },
+            {
+              "id": "f48c16f5-d01b-45a2-96b5-ceb06841b101",
+              "component": "mail-50",
+              "values": {
+                "f0": "Une question sur cette lettre ?",
+                "f1": "mailto:abonnement@example.invalid?subject=Inscription",
+                "f2": "S’abonner"
+              },
+              "source": "",
+              "additionalLinks": [
+                {
+                  "url": "https://exemple.invalid/",
+                  "label": ""
+                }
+              ]
+            }
+          ]
+        },
+        "events": [
+          {
+            "kind": "src",
+            "src": "blob:null/06a786e7-5455-498e-9f1c-ba1c9971b8fd#60f61138-b8fd-435a-b071-6be01e783761",
+            "at": 259
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/06a786e7-5455-498e-9f1c-ba1c9971b8fd#60f61138-b8fd-435a-b071-6be01e783761",
+            "at": 263
+          },
+          {
+            "kind": "src",
+            "src": "blob:null/feca8464-6aac-415d-a9d5-df9a78679631#d0026799-9904-4398-a9ae-a0f603ce92f1",
+            "at": 274
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/feca8464-6aac-415d-a9d5-df9a78679631#d0026799-9904-4398-a9ae-a0f603ce92f1",
+            "at": 278
+          },
+          {
+            "kind": "src",
+            "src": "blob:null/4b72f6a7-8978-4ae6-ae09-385ff1c7507f#9e87e014-ad1a-40ef-80db-636d844eec53",
+            "at": 283
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/4b72f6a7-8978-4ae6-ae09-385ff1c7507f#9e87e014-ad1a-40ef-80db-636d844eec53",
+            "at": 287
+          }
+        ]
+      },
+      "inner": {
+        "url": "blob:null/4b72f6a7-8978-4ae6-ae09-385ff1c7507f#9e87e014-ad1a-40ef-80db-636d844eec53",
+        "ready": "complete",
+        "links": [
+          {
+            "text": "Un article sans illustration",
+            "href": "https://example.invalid/article"
+          },
+          {
+            "text": "S’abonner",
+            "href": "mailto:abonnement@example.invalid?subject=Inscription"
+          },
+          {
+            "text": "Intitulé du lien à renseigner",
+            "href": null
+          }
+        ]
+      },
+      "frames": [
+        {
+          "kind": "navigated",
+          "url": "blob:null/06a786e7-5455-498e-9f1c-ba1c9971b8fd#60f61138-b8fd-435a-b071-6be01e783761",
+          "at": 1792946136062
+        },
+        {
+          "kind": "navigated",
+          "url": "blob:null/feca8464-6aac-415d-a9d5-df9a78679631#d0026799-9904-4398-a9ae-a0f603ce92f1",
+          "at": 1792946136078
+        },
+        {
+          "kind": "navigated",
+          "url": "blob:null/4b72f6a7-8978-4ae6-ae09-385ff1c7507f#9e87e014-ad1a-40ef-80db-636d844eec53",
+          "at": 1792946136087
+        }
+      ],
+      "errors": []
+    },
+    {
+      "run": 6,
+      "status": "pass",
+      "error": null,
+      "state": {
+        "notice": "Lien supplémentaire 1 ajouté au bloc « Gestion des abonnements ».",
+        "error": "",
+        "checkDialog": false,
+        "focused": true
+      },
+      "outer": {
+        "src": "blob:null/ea8ddccf-7cca-4faf-b817-4569ef326183#a265d5df-804e-4fd7-bfa5-7ba8552b4a1f",
+        "selected": "126e47fd-eebc-43f7-941c-e9fdc2f74122",
+        "doc": {
+          "schema": "dsfr-mail/document",
+          "version": 1,
+          "catalogue": "6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278f74858e8cddd6e72af8b",
+          "id": "faf8d9eb-69b0-4307-a2ec-7a844aa0456a",
+          "name": "Lettre de recette",
+          "subject": "Lettre de recette",
+          "blocks": [
+            {
+              "id": "711ab900-3369-4d03-8844-46618d27d3bd",
+              "component": "mail-31",
+              "values": {
+                "f0": "",
+                "f1": "",
+                "f2": "",
+                "f3": "https://example.invalid/article",
+                "f4": "Un article sans illustration",
+                "f5": "Le détail utile de cet article",
+                "f6": ""
+              },
+              "source": ""
+            },
+            {
+              "id": "126e47fd-eebc-43f7-941c-e9fdc2f74122",
+              "component": "mail-50",
+              "values": {
+                "f0": "Une question sur cette lettre ?",
+                "f1": "mailto:abonnement@example.invalid?subject=Inscription",
+                "f2": "S’abonner"
+              },
+              "source": "",
+              "additionalLinks": [
+                {
+                  "url": "https://exemple.invalid/",
+                  "label": ""
+                }
+              ]
+            }
+          ]
+        },
+        "events": [
+          {
+            "kind": "src",
+            "src": "blob:null/5a95dd21-c98b-4101-be7f-afd2e77cc13e#e0fbb70b-f5af-4582-9136-01789faba42b",
+            "at": 233
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/5a95dd21-c98b-4101-be7f-afd2e77cc13e#e0fbb70b-f5af-4582-9136-01789faba42b",
+            "at": 237
+          },
+          {
+            "kind": "src",
+            "src": "blob:null/fc19db1f-6010-4ffa-9f33-98a6387e2add#a8023c9c-4fe2-4c1b-947c-1f0866a2b048",
+            "at": 263
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/fc19db1f-6010-4ffa-9f33-98a6387e2add#a8023c9c-4fe2-4c1b-947c-1f0866a2b048",
+            "at": 269
+          },
+          {
+            "kind": "src",
+            "src": "blob:null/ea8ddccf-7cca-4faf-b817-4569ef326183#a265d5df-804e-4fd7-bfa5-7ba8552b4a1f",
+            "at": 274
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/ea8ddccf-7cca-4faf-b817-4569ef326183#a265d5df-804e-4fd7-bfa5-7ba8552b4a1f",
+            "at": 278
+          }
+        ]
+      },
+      "inner": {
+        "url": "blob:null/ea8ddccf-7cca-4faf-b817-4569ef326183#a265d5df-804e-4fd7-bfa5-7ba8552b4a1f",
+        "ready": "complete",
+        "links": [
+          {
+            "text": "Un article sans illustration",
+            "href": "https://example.invalid/article"
+          },
+          {
+            "text": "S’abonner",
+            "href": "mailto:abonnement@example.invalid?subject=Inscription"
+          },
+          {
+            "text": "Intitulé du lien à renseigner",
+            "href": null
+          }
+        ]
+      },
+      "frames": [
+        {
+          "kind": "navigated",
+          "url": "blob:null/5a95dd21-c98b-4101-be7f-afd2e77cc13e#e0fbb70b-f5af-4582-9136-01789faba42b",
+          "at": 1792946136515
+        },
+        {
+          "kind": "navigated",
+          "url": "blob:null/fc19db1f-6010-4ffa-9f33-98a6387e2add#a8023c9c-4fe2-4c1b-947c-1f0866a2b048",
+          "at": 1792946136546
+        },
+        {
+          "kind": "navigated",
+          "url": "blob:null/ea8ddccf-7cca-4faf-b817-4569ef326183#a265d5df-804e-4fd7-bfa5-7ba8552b4a1f",
+          "at": 1792946136555
+        }
+      ],
+      "errors": []
+    },
+    {
+      "run": 7,
+      "status": "pass",
+      "error": null,
+      "state": {
+        "notice": "Lien supplémentaire 1 ajouté au bloc « Gestion des abonnements ».",
+        "error": "",
+        "checkDialog": false,
+        "focused": true
+      },
+      "outer": {
+        "src": "blob:null/0f307467-95dc-495e-a3a4-5766812271d9#073e076c-68eb-407b-8c89-1101df1bcaba",
+        "selected": "9cf589cc-c587-46f2-8a9c-55e384d05e07",
+        "doc": {
+          "schema": "dsfr-mail/document",
+          "version": 1,
+          "catalogue": "6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278f74858e8cddd6e72af8b",
+          "id": "73a33860-9a7d-4ce6-82f0-4356a6e82e17",
+          "name": "Lettre de recette",
+          "subject": "Lettre de recette",
+          "blocks": [
+            {
+              "id": "71c6a162-3ab3-4bb7-9496-b1e7aa48295c",
+              "component": "mail-31",
+              "values": {
+                "f0": "",
+                "f1": "",
+                "f2": "",
+                "f3": "https://example.invalid/article",
+                "f4": "Un article sans illustration",
+                "f5": "Le détail utile de cet article",
+                "f6": ""
+              },
+              "source": ""
+            },
+            {
+              "id": "9cf589cc-c587-46f2-8a9c-55e384d05e07",
+              "component": "mail-50",
+              "values": {
+                "f0": "Une question sur cette lettre ?",
+                "f1": "mailto:abonnement@example.invalid?subject=Inscription",
+                "f2": "S’abonner"
+              },
+              "source": "",
+              "additionalLinks": [
+                {
+                  "url": "https://exemple.invalid/",
+                  "label": ""
+                }
+              ]
+            }
+          ]
+        },
+        "events": [
+          {
+            "kind": "src",
+            "src": "blob:null/f8b4ce88-6b1d-4e34-8203-ceb9c46d4195#02e597c1-1360-489a-9c49-197049893ecd",
+            "at": 245
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/f8b4ce88-6b1d-4e34-8203-ceb9c46d4195#02e597c1-1360-489a-9c49-197049893ecd",
+            "at": 250
+          },
+          {
+            "kind": "src",
+            "src": "blob:null/e8f96b73-b313-4bb3-b950-d95bd3ff5d04#58f88b85-7110-4db5-a580-ba16e1bddf17",
+            "at": 262
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/e8f96b73-b313-4bb3-b950-d95bd3ff5d04#58f88b85-7110-4db5-a580-ba16e1bddf17",
+            "at": 267
+          },
+          {
+            "kind": "src",
+            "src": "blob:null/0f307467-95dc-495e-a3a4-5766812271d9#073e076c-68eb-407b-8c89-1101df1bcaba",
+            "at": 271
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/0f307467-95dc-495e-a3a4-5766812271d9#073e076c-68eb-407b-8c89-1101df1bcaba",
+            "at": 275
+          }
+        ]
+      },
+      "inner": {
+        "url": "blob:null/0f307467-95dc-495e-a3a4-5766812271d9#073e076c-68eb-407b-8c89-1101df1bcaba",
+        "ready": "complete",
+        "links": [
+          {
+            "text": "Un article sans illustration",
+            "href": "https://example.invalid/article"
+          },
+          {
+            "text": "S’abonner",
+            "href": "mailto:abonnement@example.invalid?subject=Inscription"
+          },
+          {
+            "text": "Intitulé du lien à renseigner",
+            "href": null
+          }
+        ]
+      },
+      "frames": [
+        {
+          "kind": "navigated",
+          "url": "blob:null/f8b4ce88-6b1d-4e34-8203-ceb9c46d4195#02e597c1-1360-489a-9c49-197049893ecd",
+          "at": 1792946137005
+        },
+        {
+          "kind": "navigated",
+          "url": "blob:null/e8f96b73-b313-4bb3-b950-d95bd3ff5d04#58f88b85-7110-4db5-a580-ba16e1bddf17",
+          "at": 1792946137022
+        },
+        {
+          "kind": "navigated",
+          "url": "blob:null/0f307467-95dc-495e-a3a4-5766812271d9#073e076c-68eb-407b-8c89-1101df1bcaba",
+          "at": 1792946137030
+        }
+      ],
+      "errors": []
+    },
+    {
+      "run": 8,
+      "status": "pass",
+      "error": null,
+      "state": {
+        "notice": "Lien supplémentaire 1 ajouté au bloc « Gestion des abonnements ».",
+        "error": "",
+        "checkDialog": false,
+        "focused": true
+      },
+      "outer": {
+        "src": "blob:null/c916b45d-9954-4e36-8011-4e77ebf061f0#64dd0f42-b8ad-4aa1-8743-84267513c837",
+        "selected": "1ca95ac1-fce4-4a81-b519-d6edc2c0c0d7",
+        "doc": {
+          "schema": "dsfr-mail/document",
+          "version": 1,
+          "catalogue": "6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278f74858e8cddd6e72af8b",
+          "id": "35d75e5c-bd39-488f-babc-9ebe0264e400",
+          "name": "Lettre de recette",
+          "subject": "Lettre de recette",
+          "blocks": [
+            {
+              "id": "255b035b-da5e-4af1-8823-9a765364c9fe",
+              "component": "mail-31",
+              "values": {
+                "f0": "",
+                "f1": "",
+                "f2": "",
+                "f3": "https://example.invalid/article",
+                "f4": "Un article sans illustration",
+                "f5": "Le détail utile de cet article",
+                "f6": ""
+              },
+              "source": ""
+            },
+            {
+              "id": "1ca95ac1-fce4-4a81-b519-d6edc2c0c0d7",
+              "component": "mail-50",
+              "values": {
+                "f0": "Une question sur cette lettre ?",
+                "f1": "mailto:abonnement@example.invalid?subject=Inscription",
+                "f2": "S’abonner"
+              },
+              "source": "",
+              "additionalLinks": [
+                {
+                  "url": "https://exemple.invalid/",
+                  "label": ""
+                }
+              ]
+            }
+          ]
+        },
+        "events": [
+          {
+            "kind": "src",
+            "src": "blob:null/ba7b733d-d9f7-4952-8cb7-d50fd10da3b1#bda196f0-8b92-4df9-b270-4c85cbcd3179",
+            "at": 252
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/ba7b733d-d9f7-4952-8cb7-d50fd10da3b1#bda196f0-8b92-4df9-b270-4c85cbcd3179",
+            "at": 256
+          },
+          {
+            "kind": "src",
+            "src": "blob:null/99fd33e1-8b94-41c3-afbb-776e3f4c63f5#fa1f7cf9-9708-451d-9207-fc832871ffd7",
+            "at": 267
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/99fd33e1-8b94-41c3-afbb-776e3f4c63f5#fa1f7cf9-9708-451d-9207-fc832871ffd7",
+            "at": 272
+          },
+          {
+            "kind": "src",
+            "src": "blob:null/c916b45d-9954-4e36-8011-4e77ebf061f0#64dd0f42-b8ad-4aa1-8743-84267513c837",
+            "at": 276
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/c916b45d-9954-4e36-8011-4e77ebf061f0#64dd0f42-b8ad-4aa1-8743-84267513c837",
+            "at": 279
+          }
+        ]
+      },
+      "inner": {
+        "url": "blob:null/c916b45d-9954-4e36-8011-4e77ebf061f0#64dd0f42-b8ad-4aa1-8743-84267513c837",
+        "ready": "complete",
+        "links": [
+          {
+            "text": "Un article sans illustration",
+            "href": "https://example.invalid/article"
+          },
+          {
+            "text": "S’abonner",
+            "href": "mailto:abonnement@example.invalid?subject=Inscription"
+          },
+          {
+            "text": "Intitulé du lien à renseigner",
+            "href": null
+          }
+        ]
+      },
+      "frames": [
+        {
+          "kind": "navigated",
+          "url": "blob:null/ba7b733d-d9f7-4952-8cb7-d50fd10da3b1#bda196f0-8b92-4df9-b270-4c85cbcd3179",
+          "at": 1792946137479
+        },
+        {
+          "kind": "navigated",
+          "url": "blob:null/99fd33e1-8b94-41c3-afbb-776e3f4c63f5#fa1f7cf9-9708-451d-9207-fc832871ffd7",
+          "at": 1792946137495
+        },
+        {
+          "kind": "navigated",
+          "url": "blob:null/c916b45d-9954-4e36-8011-4e77ebf061f0#64dd0f42-b8ad-4aa1-8743-84267513c837",
+          "at": 1792946137503
+        }
+      ],
+      "errors": []
+    },
+    {
+      "run": 9,
+      "status": "pass",
+      "error": null,
+      "state": {
+        "notice": "Lien supplémentaire 1 ajouté au bloc « Gestion des abonnements ».",
+        "error": "",
+        "checkDialog": false,
+        "focused": true
+      },
+      "outer": {
+        "src": "blob:null/065dc510-7fca-4778-a24a-ad1b3e1245d0#b0ec172f-aea3-4ad7-b323-85b21d53c0d9",
+        "selected": "dc0c21f7-a553-44b2-85bf-27c8954875e7",
+        "doc": {
+          "schema": "dsfr-mail/document",
+          "version": 1,
+          "catalogue": "6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278f74858e8cddd6e72af8b",
+          "id": "298eee86-8022-4ccc-8f0c-55e84468363f",
+          "name": "Lettre de recette",
+          "subject": "Lettre de recette",
+          "blocks": [
+            {
+              "id": "5abe803d-ebb1-4c0e-90e4-759f1231a6f3",
+              "component": "mail-31",
+              "values": {
+                "f0": "",
+                "f1": "",
+                "f2": "",
+                "f3": "https://example.invalid/article",
+                "f4": "Un article sans illustration",
+                "f5": "Le détail utile de cet article",
+                "f6": ""
+              },
+              "source": ""
+            },
+            {
+              "id": "dc0c21f7-a553-44b2-85bf-27c8954875e7",
+              "component": "mail-50",
+              "values": {
+                "f0": "Une question sur cette lettre ?",
+                "f1": "mailto:abonnement@example.invalid?subject=Inscription",
+                "f2": "S’abonner"
+              },
+              "source": "",
+              "additionalLinks": [
+                {
+                  "url": "https://exemple.invalid/",
+                  "label": ""
+                }
+              ]
+            }
+          ]
+        },
+        "events": [
+          {
+            "kind": "src",
+            "src": "blob:null/652efd6a-85e1-44dc-9775-048fd6cfed9f#5605c351-e0e5-4e8d-be0e-fe46d358ef9f",
+            "at": 244
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/652efd6a-85e1-44dc-9775-048fd6cfed9f#5605c351-e0e5-4e8d-be0e-fe46d358ef9f",
+            "at": 249
+          },
+          {
+            "kind": "src",
+            "src": "blob:null/b24b0f59-344e-48f9-80d0-50634db455cf#52220f37-2526-4a78-91a0-3e7e7067a000",
+            "at": 260
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/b24b0f59-344e-48f9-80d0-50634db455cf#52220f37-2526-4a78-91a0-3e7e7067a000",
+            "at": 265
+          },
+          {
+            "kind": "src",
+            "src": "blob:null/065dc510-7fca-4778-a24a-ad1b3e1245d0#b0ec172f-aea3-4ad7-b323-85b21d53c0d9",
+            "at": 269
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/065dc510-7fca-4778-a24a-ad1b3e1245d0#b0ec172f-aea3-4ad7-b323-85b21d53c0d9",
+            "at": 273
+          }
+        ]
+      },
+      "inner": {
+        "url": "blob:null/065dc510-7fca-4778-a24a-ad1b3e1245d0#b0ec172f-aea3-4ad7-b323-85b21d53c0d9",
+        "ready": "complete",
+        "links": [
+          {
+            "text": "Un article sans illustration",
+            "href": "https://example.invalid/article"
+          },
+          {
+            "text": "S’abonner",
+            "href": "mailto:abonnement@example.invalid?subject=Inscription"
+          },
+          {
+            "text": "Intitulé du lien à renseigner",
+            "href": null
+          }
+        ]
+      },
+      "frames": [
+        {
+          "kind": "navigated",
+          "url": "blob:null/652efd6a-85e1-44dc-9775-048fd6cfed9f#5605c351-e0e5-4e8d-be0e-fe46d358ef9f",
+          "at": 1792946137938
+        },
+        {
+          "kind": "navigated",
+          "url": "blob:null/b24b0f59-344e-48f9-80d0-50634db455cf#52220f37-2526-4a78-91a0-3e7e7067a000",
+          "at": 1792946137954
+        },
+        {
+          "kind": "navigated",
+          "url": "blob:null/065dc510-7fca-4778-a24a-ad1b3e1245d0#b0ec172f-aea3-4ad7-b323-85b21d53c0d9",
+          "at": 1792946137963
+        }
+      ],
+      "errors": []
+    },
+    {
+      "run": 10,
+      "status": "pass",
+      "error": null,
+      "state": {
+        "notice": "Lien supplémentaire 1 ajouté au bloc « Gestion des abonnements ».",
+        "error": "",
+        "checkDialog": false,
+        "focused": true
+      },
+      "outer": {
+        "src": "blob:null/c6b23f46-f51b-4f27-9347-e484419e0178#7546f491-c696-4937-b42f-5e800440a2f0",
+        "selected": "98c2e3d6-35eb-4170-b9bd-2531a727db1c",
+        "doc": {
+          "schema": "dsfr-mail/document",
+          "version": 1,
+          "catalogue": "6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278f74858e8cddd6e72af8b",
+          "id": "a20f7a71-b1be-47a5-9601-b8262bc1514b",
+          "name": "Lettre de recette",
+          "subject": "Lettre de recette",
+          "blocks": [
+            {
+              "id": "d7f899c9-62c6-42b2-ae40-ff8327991c1f",
+              "component": "mail-31",
+              "values": {
+                "f0": "",
+                "f1": "",
+                "f2": "",
+                "f3": "https://example.invalid/article",
+                "f4": "Un article sans illustration",
+                "f5": "Le détail utile de cet article",
+                "f6": ""
+              },
+              "source": ""
+            },
+            {
+              "id": "98c2e3d6-35eb-4170-b9bd-2531a727db1c",
+              "component": "mail-50",
+              "values": {
+                "f0": "Une question sur cette lettre ?",
+                "f1": "mailto:abonnement@example.invalid?subject=Inscription",
+                "f2": "S’abonner"
+              },
+              "source": "",
+              "additionalLinks": [
+                {
+                  "url": "https://exemple.invalid/",
+                  "label": ""
+                }
+              ]
+            }
+          ]
+        },
+        "events": [
+          {
+            "kind": "src",
+            "src": "blob:null/f6ef6ea3-57ea-448d-b93d-8e1a9832f090#5beff182-7263-49aa-886c-9c5c8188297c",
+            "at": 257
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/f6ef6ea3-57ea-448d-b93d-8e1a9832f090#5beff182-7263-49aa-886c-9c5c8188297c",
+            "at": 262
+          },
+          {
+            "kind": "src",
+            "src": "blob:null/18f58a5d-717d-4a68-a85c-ac9f280ae08f#c865ce38-4ae8-47bb-9064-7c7849f609a3",
+            "at": 272
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/18f58a5d-717d-4a68-a85c-ac9f280ae08f#c865ce38-4ae8-47bb-9064-7c7849f609a3",
+            "at": 276
+          },
+          {
+            "kind": "src",
+            "src": "blob:null/c6b23f46-f51b-4f27-9347-e484419e0178#7546f491-c696-4937-b42f-5e800440a2f0",
+            "at": 281
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/c6b23f46-f51b-4f27-9347-e484419e0178#7546f491-c696-4937-b42f-5e800440a2f0",
+            "at": 284
+          }
+        ]
+      },
+      "inner": {
+        "url": "blob:null/c6b23f46-f51b-4f27-9347-e484419e0178#7546f491-c696-4937-b42f-5e800440a2f0",
+        "ready": "complete",
+        "links": [
+          {
+            "text": "Un article sans illustration",
+            "href": "https://example.invalid/article"
+          },
+          {
+            "text": "S’abonner",
+            "href": "mailto:abonnement@example.invalid?subject=Inscription"
+          },
+          {
+            "text": "Intitulé du lien à renseigner",
+            "href": null
+          }
+        ]
+      },
+      "frames": [
+        {
+          "kind": "navigated",
+          "url": "blob:null/f6ef6ea3-57ea-448d-b93d-8e1a9832f090#5beff182-7263-49aa-886c-9c5c8188297c",
+          "at": 1792946138414
+        },
+        {
+          "kind": "navigated",
+          "url": "blob:null/18f58a5d-717d-4a68-a85c-ac9f280ae08f#c865ce38-4ae8-47bb-9064-7c7849f609a3",
+          "at": 1792946138428
+        },
+        {
+          "kind": "navigated",
+          "url": "blob:null/c6b23f46-f51b-4f27-9347-e484419e0178#7546f491-c696-4937-b42f-5e800440a2f0",
+          "at": 1792946138436
+        }
+      ],
+      "errors": []
+    },
+    {
+      "run": 11,
+      "status": "pass",
+      "error": null,
+      "state": {
+        "notice": "Lien supplémentaire 1 ajouté au bloc « Gestion des abonnements ».",
+        "error": "",
+        "checkDialog": false,
+        "focused": true
+      },
+      "outer": {
+        "src": "blob:null/434baea2-24cd-4192-95cf-b48358d056bd#3aa44663-691b-425a-bbfa-735ca21798d7",
+        "selected": "d52b3cf7-58ba-4a3a-87f6-8418b9e8ce6f",
+        "doc": {
+          "schema": "dsfr-mail/document",
+          "version": 1,
+          "catalogue": "6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278f74858e8cddd6e72af8b",
+          "id": "e9d9f7e9-d4f2-4a43-b13d-b3f4d0b2d9dd",
+          "name": "Lettre de recette",
+          "subject": "Lettre de recette",
+          "blocks": [
+            {
+              "id": "5fdb4361-4d20-4720-aa59-221bfbfacba0",
+              "component": "mail-31",
+              "values": {
+                "f0": "",
+                "f1": "",
+                "f2": "",
+                "f3": "https://example.invalid/article",
+                "f4": "Un article sans illustration",
+                "f5": "Le détail utile de cet article",
+                "f6": ""
+              },
+              "source": ""
+            },
+            {
+              "id": "d52b3cf7-58ba-4a3a-87f6-8418b9e8ce6f",
+              "component": "mail-50",
+              "values": {
+                "f0": "Une question sur cette lettre ?",
+                "f1": "mailto:abonnement@example.invalid?subject=Inscription",
+                "f2": "S’abonner"
+              },
+              "source": "",
+              "additionalLinks": [
+                {
+                  "url": "https://exemple.invalid/",
+                  "label": ""
+                }
+              ]
+            }
+          ]
+        },
+        "events": [
+          {
+            "kind": "src",
+            "src": "blob:null/a0276a3a-b626-4ab7-ac52-c1e30b3f96b9#53097e7a-e0d3-4ed1-9e86-b97848964bf9",
+            "at": 246
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/a0276a3a-b626-4ab7-ac52-c1e30b3f96b9#53097e7a-e0d3-4ed1-9e86-b97848964bf9",
+            "at": 251
+          },
+          {
+            "kind": "src",
+            "src": "blob:null/9fc94aa6-a90a-4b41-8fd9-9f352c96e63b#89e18ff6-bf54-4d8b-82db-feb417629020",
+            "at": 261
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/9fc94aa6-a90a-4b41-8fd9-9f352c96e63b#89e18ff6-bf54-4d8b-82db-feb417629020",
+            "at": 266
+          },
+          {
+            "kind": "src",
+            "src": "blob:null/434baea2-24cd-4192-95cf-b48358d056bd#3aa44663-691b-425a-bbfa-735ca21798d7",
+            "at": 271
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/434baea2-24cd-4192-95cf-b48358d056bd#3aa44663-691b-425a-bbfa-735ca21798d7",
+            "at": 274
+          }
+        ]
+      },
+      "inner": {
+        "url": "blob:null/434baea2-24cd-4192-95cf-b48358d056bd#3aa44663-691b-425a-bbfa-735ca21798d7",
+        "ready": "complete",
+        "links": [
+          {
+            "text": "Un article sans illustration",
+            "href": "https://example.invalid/article"
+          },
+          {
+            "text": "S’abonner",
+            "href": "mailto:abonnement@example.invalid?subject=Inscription"
+          },
+          {
+            "text": "Intitulé du lien à renseigner",
+            "href": null
+          }
+        ]
+      },
+      "frames": [
+        {
+          "kind": "navigated",
+          "url": "blob:null/a0276a3a-b626-4ab7-ac52-c1e30b3f96b9#53097e7a-e0d3-4ed1-9e86-b97848964bf9",
+          "at": 1792946138881
+        },
+        {
+          "kind": "navigated",
+          "url": "blob:null/9fc94aa6-a90a-4b41-8fd9-9f352c96e63b#89e18ff6-bf54-4d8b-82db-feb417629020",
+          "at": 1792946138895
+        },
+        {
+          "kind": "navigated",
+          "url": "blob:null/434baea2-24cd-4192-95cf-b48358d056bd#3aa44663-691b-425a-bbfa-735ca21798d7",
+          "at": 1792946138904
+        }
+      ],
+      "errors": []
+    },
+    {
+      "run": 12,
+      "status": "pass",
+      "error": null,
+      "state": {
+        "notice": "Lien supplémentaire 1 ajouté au bloc « Gestion des abonnements ».",
+        "error": "",
+        "checkDialog": false,
+        "focused": true
+      },
+      "outer": {
+        "src": "blob:null/7f7200d0-1f29-4318-9674-719f7e44e9e2#8f230d76-4e94-4aa7-b16a-97f406a51c5a",
+        "selected": "ebc6d81f-8254-4355-ab33-af9a93918558",
+        "doc": {
+          "schema": "dsfr-mail/document",
+          "version": 1,
+          "catalogue": "6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278f74858e8cddd6e72af8b",
+          "id": "b59998aa-c2dc-47de-bd2a-dd5501c7738d",
+          "name": "Lettre de recette",
+          "subject": "Lettre de recette",
+          "blocks": [
+            {
+              "id": "b2f8a4b2-32e3-4779-8184-f36d65ad81ad",
+              "component": "mail-31",
+              "values": {
+                "f0": "",
+                "f1": "",
+                "f2": "",
+                "f3": "https://example.invalid/article",
+                "f4": "Un article sans illustration",
+                "f5": "Le détail utile de cet article",
+                "f6": ""
+              },
+              "source": ""
+            },
+            {
+              "id": "ebc6d81f-8254-4355-ab33-af9a93918558",
+              "component": "mail-50",
+              "values": {
+                "f0": "Une question sur cette lettre ?",
+                "f1": "mailto:abonnement@example.invalid?subject=Inscription",
+                "f2": "S’abonner"
+              },
+              "source": "",
+              "additionalLinks": [
+                {
+                  "url": "https://exemple.invalid/",
+                  "label": ""
+                }
+              ]
+            }
+          ]
+        },
+        "events": [
+          {
+            "kind": "src",
+            "src": "blob:null/e4c71f5a-97c5-4fb4-ad88-b738c7881549#fab777a2-d4b6-4203-9b28-fc0f33140876",
+            "at": 247
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/e4c71f5a-97c5-4fb4-ad88-b738c7881549#fab777a2-d4b6-4203-9b28-fc0f33140876",
+            "at": 252
+          },
+          {
+            "kind": "src",
+            "src": "blob:null/66751779-1de4-47f1-8168-6dd5fdd3601f#5ff47107-8cb1-4e43-bc2a-58487bbe1498",
+            "at": 263
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/66751779-1de4-47f1-8168-6dd5fdd3601f#5ff47107-8cb1-4e43-bc2a-58487bbe1498",
+            "at": 268
+          },
+          {
+            "kind": "src",
+            "src": "blob:null/7f7200d0-1f29-4318-9674-719f7e44e9e2#8f230d76-4e94-4aa7-b16a-97f406a51c5a",
+            "at": 272
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/7f7200d0-1f29-4318-9674-719f7e44e9e2#8f230d76-4e94-4aa7-b16a-97f406a51c5a",
+            "at": 276
+          }
+        ]
+      },
+      "inner": {
+        "url": "blob:null/7f7200d0-1f29-4318-9674-719f7e44e9e2#8f230d76-4e94-4aa7-b16a-97f406a51c5a",
+        "ready": "complete",
+        "links": [
+          {
+            "text": "Un article sans illustration",
+            "href": "https://example.invalid/article"
+          },
+          {
+            "text": "S’abonner",
+            "href": "mailto:abonnement@example.invalid?subject=Inscription"
+          },
+          {
+            "text": "Intitulé du lien à renseigner",
+            "href": null
+          }
+        ]
+      },
+      "frames": [
+        {
+          "kind": "navigated",
+          "url": "blob:null/e4c71f5a-97c5-4fb4-ad88-b738c7881549#fab777a2-d4b6-4203-9b28-fc0f33140876",
+          "at": 1792946139347
+        },
+        {
+          "kind": "navigated",
+          "url": "blob:null/66751779-1de4-47f1-8168-6dd5fdd3601f#5ff47107-8cb1-4e43-bc2a-58487bbe1498",
+          "at": 1792946139363
+        },
+        {
+          "kind": "navigated",
+          "url": "blob:null/7f7200d0-1f29-4318-9674-719f7e44e9e2#8f230d76-4e94-4aa7-b16a-97f406a51c5a",
+          "at": 1792946139371
+        }
+      ],
+      "errors": []
+    },
+    {
+      "run": 13,
+      "status": "pass",
+      "error": null,
+      "state": {
+        "notice": "Lien supplémentaire 1 ajouté au bloc « Gestion des abonnements ».",
+        "error": "",
+        "checkDialog": false,
+        "focused": true
+      },
+      "outer": {
+        "src": "blob:null/bf56d874-880b-4348-9e19-b23fbce64f29#6eadeb74-4e93-4c09-8d4d-5d2e824edb8e",
+        "selected": "7bed3c77-c0cb-4b2d-880f-dcb5e719de13",
+        "doc": {
+          "schema": "dsfr-mail/document",
+          "version": 1,
+          "catalogue": "6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278f74858e8cddd6e72af8b",
+          "id": "a78a5797-3b9c-4d03-ba3b-1154c0c72507",
+          "name": "Lettre de recette",
+          "subject": "Lettre de recette",
+          "blocks": [
+            {
+              "id": "049165ba-a9ed-4e87-a768-c65e2a7fa108",
+              "component": "mail-31",
+              "values": {
+                "f0": "",
+                "f1": "",
+                "f2": "",
+                "f3": "https://example.invalid/article",
+                "f4": "Un article sans illustration",
+                "f5": "Le détail utile de cet article",
+                "f6": ""
+              },
+              "source": ""
+            },
+            {
+              "id": "7bed3c77-c0cb-4b2d-880f-dcb5e719de13",
+              "component": "mail-50",
+              "values": {
+                "f0": "Une question sur cette lettre ?",
+                "f1": "mailto:abonnement@example.invalid?subject=Inscription",
+                "f2": "S’abonner"
+              },
+              "source": "",
+              "additionalLinks": [
+                {
+                  "url": "https://exemple.invalid/",
+                  "label": ""
+                }
+              ]
+            }
+          ]
+        },
+        "events": [
+          {
+            "kind": "src",
+            "src": "blob:null/1e525512-9134-4a31-9ac2-2317d451407c#ed2811ed-be39-499a-9135-4eaed5526db5",
+            "at": 245
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/1e525512-9134-4a31-9ac2-2317d451407c#ed2811ed-be39-499a-9135-4eaed5526db5",
+            "at": 248
+          },
+          {
+            "kind": "src",
+            "src": "blob:null/aeda632e-78e9-46c1-88c9-d0ed44e589d6#5816c5bf-fbea-4440-946d-93b65fe9bfd8",
+            "at": 275
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/aeda632e-78e9-46c1-88c9-d0ed44e589d6#5816c5bf-fbea-4440-946d-93b65fe9bfd8",
+            "at": 280
+          },
+          {
+            "kind": "src",
+            "src": "blob:null/bf56d874-880b-4348-9e19-b23fbce64f29#6eadeb74-4e93-4c09-8d4d-5d2e824edb8e",
+            "at": 285
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/bf56d874-880b-4348-9e19-b23fbce64f29#6eadeb74-4e93-4c09-8d4d-5d2e824edb8e",
+            "at": 288
+          }
+        ]
+      },
+      "inner": {
+        "url": "blob:null/bf56d874-880b-4348-9e19-b23fbce64f29#6eadeb74-4e93-4c09-8d4d-5d2e824edb8e",
+        "ready": "complete",
+        "links": [
+          {
+            "text": "Un article sans illustration",
+            "href": "https://example.invalid/article"
+          },
+          {
+            "text": "S’abonner",
+            "href": "mailto:abonnement@example.invalid?subject=Inscription"
+          },
+          {
+            "text": "Intitulé du lien à renseigner",
+            "href": null
+          }
+        ]
+      },
+      "frames": [
+        {
+          "kind": "navigated",
+          "url": "blob:null/1e525512-9134-4a31-9ac2-2317d451407c#ed2811ed-be39-499a-9135-4eaed5526db5",
+          "at": 1792946139814
+        },
+        {
+          "kind": "navigated",
+          "url": "blob:null/aeda632e-78e9-46c1-88c9-d0ed44e589d6#5816c5bf-fbea-4440-946d-93b65fe9bfd8",
+          "at": 1792946139846
+        },
+        {
+          "kind": "navigated",
+          "url": "blob:null/bf56d874-880b-4348-9e19-b23fbce64f29#6eadeb74-4e93-4c09-8d4d-5d2e824edb8e",
+          "at": 1792946139854
+        }
+      ],
+      "errors": []
+    },
+    {
+      "run": 14,
+      "status": "pass",
+      "error": null,
+      "state": {
+        "notice": "Lien supplémentaire 1 ajouté au bloc « Gestion des abonnements ».",
+        "error": "",
+        "checkDialog": false,
+        "focused": true
+      },
+      "outer": {
+        "src": "blob:null/3380bd53-301d-4f5b-a696-6ef20b621462#271d84e6-f39d-4121-878f-bf02e121d44a",
+        "selected": "28e15570-ef8b-403e-b680-fcc10b70cd03",
+        "doc": {
+          "schema": "dsfr-mail/document",
+          "version": 1,
+          "catalogue": "6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278f74858e8cddd6e72af8b",
+          "id": "4b84bcc5-8c13-496b-86a0-2b2a9f339fd2",
+          "name": "Lettre de recette",
+          "subject": "Lettre de recette",
+          "blocks": [
+            {
+              "id": "a7122ccd-2c96-4bb9-a9eb-1b877fe4886f",
+              "component": "mail-31",
+              "values": {
+                "f0": "",
+                "f1": "",
+                "f2": "",
+                "f3": "https://example.invalid/article",
+                "f4": "Un article sans illustration",
+                "f5": "Le détail utile de cet article",
+                "f6": ""
+              },
+              "source": ""
+            },
+            {
+              "id": "28e15570-ef8b-403e-b680-fcc10b70cd03",
+              "component": "mail-50",
+              "values": {
+                "f0": "Une question sur cette lettre ?",
+                "f1": "mailto:abonnement@example.invalid?subject=Inscription",
+                "f2": "S’abonner"
+              },
+              "source": "",
+              "additionalLinks": [
+                {
+                  "url": "https://exemple.invalid/",
+                  "label": ""
+                }
+              ]
+            }
+          ]
+        },
+        "events": [
+          {
+            "kind": "src",
+            "src": "blob:null/1ea7f61e-af46-4799-9ba8-b0a3b9181108#de1a4500-78d7-41e2-89a3-11d5d2264cb9",
+            "at": 247
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/1ea7f61e-af46-4799-9ba8-b0a3b9181108#de1a4500-78d7-41e2-89a3-11d5d2264cb9",
+            "at": 252
+          },
+          {
+            "kind": "src",
+            "src": "blob:null/965d421f-a846-4e02-b160-27bebbcc58e0#9caa00c0-4dac-4739-b55e-48f9f147c846",
+            "at": 263
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/965d421f-a846-4e02-b160-27bebbcc58e0#9caa00c0-4dac-4739-b55e-48f9f147c846",
+            "at": 268
+          },
+          {
+            "kind": "src",
+            "src": "blob:null/3380bd53-301d-4f5b-a696-6ef20b621462#271d84e6-f39d-4121-878f-bf02e121d44a",
+            "at": 273
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/3380bd53-301d-4f5b-a696-6ef20b621462#271d84e6-f39d-4121-878f-bf02e121d44a",
+            "at": 277
+          }
+        ]
+      },
+      "inner": {
+        "url": "blob:null/3380bd53-301d-4f5b-a696-6ef20b621462#271d84e6-f39d-4121-878f-bf02e121d44a",
+        "ready": "complete",
+        "links": [
+          {
+            "text": "Un article sans illustration",
+            "href": "https://example.invalid/article"
+          },
+          {
+            "text": "S’abonner",
+            "href": "mailto:abonnement@example.invalid?subject=Inscription"
+          },
+          {
+            "text": "Intitulé du lien à renseigner",
+            "href": null
+          }
+        ]
+      },
+      "frames": [
+        {
+          "kind": "navigated",
+          "url": "blob:null/1ea7f61e-af46-4799-9ba8-b0a3b9181108#de1a4500-78d7-41e2-89a3-11d5d2264cb9",
+          "at": 1792946140304
+        },
+        {
+          "kind": "navigated",
+          "url": "blob:null/965d421f-a846-4e02-b160-27bebbcc58e0#9caa00c0-4dac-4739-b55e-48f9f147c846",
+          "at": 1792946140321
+        },
+        {
+          "kind": "navigated",
+          "url": "blob:null/3380bd53-301d-4f5b-a696-6ef20b621462#271d84e6-f39d-4121-878f-bf02e121d44a",
+          "at": 1792946140330
+        }
+      ],
+      "errors": []
+    },
+    {
+      "run": 15,
+      "status": "pass",
+      "error": null,
+      "state": {
+        "notice": "Lien supplémentaire 1 ajouté au bloc « Gestion des abonnements ».",
+        "error": "",
+        "checkDialog": false,
+        "focused": true
+      },
+      "outer": {
+        "src": "blob:null/a63bdc54-4937-4c40-8686-d050e6b31fe1#d43e0257-b157-4810-bcc9-1f13c1ad46f5",
+        "selected": "3df70fae-fae9-4fd2-ae5c-b9729a3a7c98",
+        "doc": {
+          "schema": "dsfr-mail/document",
+          "version": 1,
+          "catalogue": "6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278f74858e8cddd6e72af8b",
+          "id": "6a9fd9f5-e5d1-455b-8c42-1da50ff33ebd",
+          "name": "Lettre de recette",
+          "subject": "Lettre de recette",
+          "blocks": [
+            {
+              "id": "cb7f2263-b7d5-4010-8bb3-efb3993dbd9d",
+              "component": "mail-31",
+              "values": {
+                "f0": "",
+                "f1": "",
+                "f2": "",
+                "f3": "https://example.invalid/article",
+                "f4": "Un article sans illustration",
+                "f5": "Le détail utile de cet article",
+                "f6": ""
+              },
+              "source": ""
+            },
+            {
+              "id": "3df70fae-fae9-4fd2-ae5c-b9729a3a7c98",
+              "component": "mail-50",
+              "values": {
+                "f0": "Une question sur cette lettre ?",
+                "f1": "mailto:abonnement@example.invalid?subject=Inscription",
+                "f2": "S’abonner"
+              },
+              "source": "",
+              "additionalLinks": [
+                {
+                  "url": "https://exemple.invalid/",
+                  "label": ""
+                }
+              ]
+            }
+          ]
+        },
+        "events": [
+          {
+            "kind": "src",
+            "src": "blob:null/66eb738e-2ec7-43ca-868b-e688b29040ef#53aec485-0c58-4058-8e16-1b2ebb4fb167",
+            "at": 242
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/66eb738e-2ec7-43ca-868b-e688b29040ef#53aec485-0c58-4058-8e16-1b2ebb4fb167",
+            "at": 248
+          },
+          {
+            "kind": "src",
+            "src": "blob:null/95bed66b-089a-47a0-9bcb-445eb5b9ad9f#955678dd-8b9e-4a27-9a44-25c7e9635120",
+            "at": 259
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/95bed66b-089a-47a0-9bcb-445eb5b9ad9f#955678dd-8b9e-4a27-9a44-25c7e9635120",
+            "at": 264
+          },
+          {
+            "kind": "src",
+            "src": "blob:null/a63bdc54-4937-4c40-8686-d050e6b31fe1#d43e0257-b157-4810-bcc9-1f13c1ad46f5",
+            "at": 269
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/a63bdc54-4937-4c40-8686-d050e6b31fe1#d43e0257-b157-4810-bcc9-1f13c1ad46f5",
+            "at": 273
+          }
+        ]
+      },
+      "inner": {
+        "url": "blob:null/a63bdc54-4937-4c40-8686-d050e6b31fe1#d43e0257-b157-4810-bcc9-1f13c1ad46f5",
+        "ready": "complete",
+        "links": [
+          {
+            "text": "Un article sans illustration",
+            "href": "https://example.invalid/article"
+          },
+          {
+            "text": "S’abonner",
+            "href": "mailto:abonnement@example.invalid?subject=Inscription"
+          },
+          {
+            "text": "Intitulé du lien à renseigner",
+            "href": null
+          }
+        ]
+      },
+      "frames": [
+        {
+          "kind": "navigated",
+          "url": "blob:null/66eb738e-2ec7-43ca-868b-e688b29040ef#53aec485-0c58-4058-8e16-1b2ebb4fb167",
+          "at": 1792946140772
+        },
+        {
+          "kind": "navigated",
+          "url": "blob:null/95bed66b-089a-47a0-9bcb-445eb5b9ad9f#955678dd-8b9e-4a27-9a44-25c7e9635120",
+          "at": 1792946140788
+        },
+        {
+          "kind": "navigated",
+          "url": "blob:null/a63bdc54-4937-4c40-8686-d050e6b31fe1#d43e0257-b157-4810-bcc9-1f13c1ad46f5",
+          "at": 1792946140797
+        }
+      ],
+      "errors": []
+    },
+    {
+      "run": 16,
+      "status": "pass",
+      "error": null,
+      "state": {
+        "notice": "Lien supplémentaire 1 ajouté au bloc « Gestion des abonnements ».",
+        "error": "",
+        "checkDialog": false,
+        "focused": true
+      },
+      "outer": {
+        "src": "blob:null/dc2e60d9-a023-42cf-8934-e45653f8db1b#25f063b0-4bd1-4f5e-b1fb-bc1e288898ec",
+        "selected": "3b42eee5-aa57-4263-8449-a381d0bdc89d",
+        "doc": {
+          "schema": "dsfr-mail/document",
+          "version": 1,
+          "catalogue": "6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278f74858e8cddd6e72af8b",
+          "id": "fee2fc49-5d92-47dc-9087-c8c96380c04c",
+          "name": "Lettre de recette",
+          "subject": "Lettre de recette",
+          "blocks": [
+            {
+              "id": "8e085783-c543-4e2f-a2a8-40d17c731ccc",
+              "component": "mail-31",
+              "values": {
+                "f0": "",
+                "f1": "",
+                "f2": "",
+                "f3": "https://example.invalid/article",
+                "f4": "Un article sans illustration",
+                "f5": "Le détail utile de cet article",
+                "f6": ""
+              },
+              "source": ""
+            },
+            {
+              "id": "3b42eee5-aa57-4263-8449-a381d0bdc89d",
+              "component": "mail-50",
+              "values": {
+                "f0": "Une question sur cette lettre ?",
+                "f1": "mailto:abonnement@example.invalid?subject=Inscription",
+                "f2": "S’abonner"
+              },
+              "source": "",
+              "additionalLinks": [
+                {
+                  "url": "https://exemple.invalid/",
+                  "label": ""
+                }
+              ]
+            }
+          ]
+        },
+        "events": [
+          {
+            "kind": "src",
+            "src": "blob:null/2baf48aa-9cf7-4fd4-b012-c5e708bdb1d2#acae8749-abd4-475f-b97d-1664fa4f0309",
+            "at": 243
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/2baf48aa-9cf7-4fd4-b012-c5e708bdb1d2#acae8749-abd4-475f-b97d-1664fa4f0309",
+            "at": 247
+          },
+          {
+            "kind": "src",
+            "src": "blob:null/5e27df9c-b749-49cd-89dd-1cf9541d7ef8#7298334c-6244-4502-bfca-f48164868ae3",
+            "at": 258
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/5e27df9c-b749-49cd-89dd-1cf9541d7ef8#7298334c-6244-4502-bfca-f48164868ae3",
+            "at": 262
+          },
+          {
+            "kind": "src",
+            "src": "blob:null/dc2e60d9-a023-42cf-8934-e45653f8db1b#25f063b0-4bd1-4f5e-b1fb-bc1e288898ec",
+            "at": 266
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/dc2e60d9-a023-42cf-8934-e45653f8db1b#25f063b0-4bd1-4f5e-b1fb-bc1e288898ec",
+            "at": 269
+          }
+        ]
+      },
+      "inner": {
+        "url": "blob:null/dc2e60d9-a023-42cf-8934-e45653f8db1b#25f063b0-4bd1-4f5e-b1fb-bc1e288898ec",
+        "ready": "complete",
+        "links": [
+          {
+            "text": "Un article sans illustration",
+            "href": "https://example.invalid/article"
+          },
+          {
+            "text": "S’abonner",
+            "href": "mailto:abonnement@example.invalid?subject=Inscription"
+          },
+          {
+            "text": "Intitulé du lien à renseigner",
+            "href": null
+          }
+        ]
+      },
+      "frames": [
+        {
+          "kind": "navigated",
+          "url": "blob:null/2baf48aa-9cf7-4fd4-b012-c5e708bdb1d2#acae8749-abd4-475f-b97d-1664fa4f0309",
+          "at": 1792946141246
+        },
+        {
+          "kind": "navigated",
+          "url": "blob:null/5e27df9c-b749-49cd-89dd-1cf9541d7ef8#7298334c-6244-4502-bfca-f48164868ae3",
+          "at": 1792946141261
+        },
+        {
+          "kind": "navigated",
+          "url": "blob:null/dc2e60d9-a023-42cf-8934-e45653f8db1b#25f063b0-4bd1-4f5e-b1fb-bc1e288898ec",
+          "at": 1792946141268
+        }
+      ],
+      "errors": []
+    },
+    {
+      "run": 17,
+      "status": "pass",
+      "error": null,
+      "state": {
+        "notice": "Lien supplémentaire 1 ajouté au bloc « Gestion des abonnements ».",
+        "error": "",
+        "checkDialog": false,
+        "focused": true
+      },
+      "outer": {
+        "src": "blob:null/6dc67894-dece-4814-a9a3-2bd401bb77b6#37ff2826-f3fe-43c0-8dce-f7fc600a2705",
+        "selected": "b4f17f7d-87ad-492a-aa74-c9118c22cc3a",
+        "doc": {
+          "schema": "dsfr-mail/document",
+          "version": 1,
+          "catalogue": "6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278f74858e8cddd6e72af8b",
+          "id": "9a20ca7f-14f1-4360-bf9d-3cb55ca33244",
+          "name": "Lettre de recette",
+          "subject": "Lettre de recette",
+          "blocks": [
+            {
+              "id": "86cf28fc-f1af-47ef-aa95-1686a59862de",
+              "component": "mail-31",
+              "values": {
+                "f0": "",
+                "f1": "",
+                "f2": "",
+                "f3": "https://example.invalid/article",
+                "f4": "Un article sans illustration",
+                "f5": "Le détail utile de cet article",
+                "f6": ""
+              },
+              "source": ""
+            },
+            {
+              "id": "b4f17f7d-87ad-492a-aa74-c9118c22cc3a",
+              "component": "mail-50",
+              "values": {
+                "f0": "Une question sur cette lettre ?",
+                "f1": "mailto:abonnement@example.invalid?subject=Inscription",
+                "f2": "S’abonner"
+              },
+              "source": "",
+              "additionalLinks": [
+                {
+                  "url": "https://exemple.invalid/",
+                  "label": ""
+                }
+              ]
+            }
+          ]
+        },
+        "events": [
+          {
+            "kind": "src",
+            "src": "blob:null/18e27939-388e-4a71-b72c-0d43e4a880e4#61db461e-1df8-4e3c-8ef4-6203f6175fcd",
+            "at": 243
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/18e27939-388e-4a71-b72c-0d43e4a880e4#61db461e-1df8-4e3c-8ef4-6203f6175fcd",
+            "at": 248
+          },
+          {
+            "kind": "src",
+            "src": "blob:null/056f549b-d6c0-4cdb-afc4-35ca0eafccb6#e871f3fb-2648-46e6-8466-d9f0daa12319",
+            "at": 260
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/056f549b-d6c0-4cdb-afc4-35ca0eafccb6#e871f3fb-2648-46e6-8466-d9f0daa12319",
+            "at": 265
+          },
+          {
+            "kind": "src",
+            "src": "blob:null/6dc67894-dece-4814-a9a3-2bd401bb77b6#37ff2826-f3fe-43c0-8dce-f7fc600a2705",
+            "at": 271
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/6dc67894-dece-4814-a9a3-2bd401bb77b6#37ff2826-f3fe-43c0-8dce-f7fc600a2705",
+            "at": 274
+          }
+        ]
+      },
+      "inner": {
+        "url": "blob:null/6dc67894-dece-4814-a9a3-2bd401bb77b6#37ff2826-f3fe-43c0-8dce-f7fc600a2705",
+        "ready": "complete",
+        "links": [
+          {
+            "text": "Un article sans illustration",
+            "href": "https://example.invalid/article"
+          },
+          {
+            "text": "S’abonner",
+            "href": "mailto:abonnement@example.invalid?subject=Inscription"
+          },
+          {
+            "text": "Intitulé du lien à renseigner",
+            "href": null
+          }
+        ]
+      },
+      "frames": [
+        {
+          "kind": "navigated",
+          "url": "blob:null/18e27939-388e-4a71-b72c-0d43e4a880e4#61db461e-1df8-4e3c-8ef4-6203f6175fcd",
+          "at": 1792946141704
+        },
+        {
+          "kind": "navigated",
+          "url": "blob:null/056f549b-d6c0-4cdb-afc4-35ca0eafccb6#e871f3fb-2648-46e6-8466-d9f0daa12319",
+          "at": 1792946141721
+        },
+        {
+          "kind": "navigated",
+          "url": "blob:null/6dc67894-dece-4814-a9a3-2bd401bb77b6#37ff2826-f3fe-43c0-8dce-f7fc600a2705",
+          "at": 1792946141730
+        }
+      ],
+      "errors": []
+    },
+    {
+      "run": 18,
+      "status": "pass",
+      "error": null,
+      "state": {
+        "notice": "Lien supplémentaire 1 ajouté au bloc « Gestion des abonnements ».",
+        "error": "",
+        "checkDialog": false,
+        "focused": true
+      },
+      "outer": {
+        "src": "blob:null/20892b53-b3ed-4e4f-abe0-b385c6c1309a#d3afffb6-bf8d-45dc-99aa-b76f13447bf3",
+        "selected": "a9c326e8-8249-4c8e-99d1-541ff159007e",
+        "doc": {
+          "schema": "dsfr-mail/document",
+          "version": 1,
+          "catalogue": "6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278f74858e8cddd6e72af8b",
+          "id": "240b4696-d5b0-469a-b66e-7748a8fce914",
+          "name": "Lettre de recette",
+          "subject": "Lettre de recette",
+          "blocks": [
+            {
+              "id": "855963a5-5908-47cf-bcca-827ce5859265",
+              "component": "mail-31",
+              "values": {
+                "f0": "",
+                "f1": "",
+                "f2": "",
+                "f3": "https://example.invalid/article",
+                "f4": "Un article sans illustration",
+                "f5": "Le détail utile de cet article",
+                "f6": ""
+              },
+              "source": ""
+            },
+            {
+              "id": "a9c326e8-8249-4c8e-99d1-541ff159007e",
+              "component": "mail-50",
+              "values": {
+                "f0": "Une question sur cette lettre ?",
+                "f1": "mailto:abonnement@example.invalid?subject=Inscription",
+                "f2": "S’abonner"
+              },
+              "source": "",
+              "additionalLinks": [
+                {
+                  "url": "https://exemple.invalid/",
+                  "label": ""
+                }
+              ]
+            }
+          ]
+        },
+        "events": [
+          {
+            "kind": "src",
+            "src": "blob:null/9f8c2615-7ad8-49e1-8b56-3ace903cdffc#cd7cd2d4-c6e3-41e4-9618-8a01e05da800",
+            "at": 244
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/9f8c2615-7ad8-49e1-8b56-3ace903cdffc#cd7cd2d4-c6e3-41e4-9618-8a01e05da800",
+            "at": 249
+          },
+          {
+            "kind": "src",
+            "src": "blob:null/2c02beb2-c6a8-4622-ada9-1afa304191fa#b3eb68da-720d-4eb9-bc2b-b4cd24798f8f",
+            "at": 260
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/2c02beb2-c6a8-4622-ada9-1afa304191fa#b3eb68da-720d-4eb9-bc2b-b4cd24798f8f",
+            "at": 265
+          },
+          {
+            "kind": "src",
+            "src": "blob:null/20892b53-b3ed-4e4f-abe0-b385c6c1309a#d3afffb6-bf8d-45dc-99aa-b76f13447bf3",
+            "at": 269
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/20892b53-b3ed-4e4f-abe0-b385c6c1309a#d3afffb6-bf8d-45dc-99aa-b76f13447bf3",
+            "at": 273
+          }
+        ]
+      },
+      "inner": {
+        "url": "blob:null/20892b53-b3ed-4e4f-abe0-b385c6c1309a#d3afffb6-bf8d-45dc-99aa-b76f13447bf3",
+        "ready": "complete",
+        "links": [
+          {
+            "text": "Un article sans illustration",
+            "href": "https://example.invalid/article"
+          },
+          {
+            "text": "S’abonner",
+            "href": "mailto:abonnement@example.invalid?subject=Inscription"
+          },
+          {
+            "text": "Intitulé du lien à renseigner",
+            "href": null
+          }
+        ]
+      },
+      "frames": [
+        {
+          "kind": "navigated",
+          "url": "blob:null/9f8c2615-7ad8-49e1-8b56-3ace903cdffc#cd7cd2d4-c6e3-41e4-9618-8a01e05da800",
+          "at": 1792946142172
+        },
+        {
+          "kind": "navigated",
+          "url": "blob:null/2c02beb2-c6a8-4622-ada9-1afa304191fa#b3eb68da-720d-4eb9-bc2b-b4cd24798f8f",
+          "at": 1792946142188
+        },
+        {
+          "kind": "navigated",
+          "url": "blob:null/20892b53-b3ed-4e4f-abe0-b385c6c1309a#d3afffb6-bf8d-45dc-99aa-b76f13447bf3",
+          "at": 1792946142196
+        }
+      ],
+      "errors": []
+    },
+    {
+      "run": 19,
+      "status": "pass",
+      "error": null,
+      "state": {
+        "notice": "Lien supplémentaire 1 ajouté au bloc « Gestion des abonnements ».",
+        "error": "",
+        "checkDialog": false,
+        "focused": true
+      },
+      "outer": {
+        "src": "blob:null/363fdcac-ad08-4388-bbb7-81f45ec69216#ffb88060-9a25-4cc6-a988-4c3adf42dc26",
+        "selected": "753c44a4-9e86-4215-be1a-b6e6f7fc187c",
+        "doc": {
+          "schema": "dsfr-mail/document",
+          "version": 1,
+          "catalogue": "6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278f74858e8cddd6e72af8b",
+          "id": "63ad28ff-4b06-427c-85d2-eed3720a266a",
+          "name": "Lettre de recette",
+          "subject": "Lettre de recette",
+          "blocks": [
+            {
+              "id": "72b90c9a-fdfd-433c-a9f3-4f90cec01adb",
+              "component": "mail-31",
+              "values": {
+                "f0": "",
+                "f1": "",
+                "f2": "",
+                "f3": "https://example.invalid/article",
+                "f4": "Un article sans illustration",
+                "f5": "Le détail utile de cet article",
+                "f6": ""
+              },
+              "source": ""
+            },
+            {
+              "id": "753c44a4-9e86-4215-be1a-b6e6f7fc187c",
+              "component": "mail-50",
+              "values": {
+                "f0": "Une question sur cette lettre ?",
+                "f1": "mailto:abonnement@example.invalid?subject=Inscription",
+                "f2": "S’abonner"
+              },
+              "source": "",
+              "additionalLinks": [
+                {
+                  "url": "https://exemple.invalid/",
+                  "label": ""
+                }
+              ]
+            }
+          ]
+        },
+        "events": [
+          {
+            "kind": "src",
+            "src": "blob:null/d3c7e4cb-8492-486b-b88c-40ec2be3692f#1a0c7836-4403-4069-93ff-e689b848850f",
+            "at": 246
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/d3c7e4cb-8492-486b-b88c-40ec2be3692f#1a0c7836-4403-4069-93ff-e689b848850f",
+            "at": 251
+          },
+          {
+            "kind": "src",
+            "src": "blob:null/2372cb24-692f-4109-a191-3ad2fd063069#b0ab01eb-232c-48e6-813b-d2457d1ea344",
+            "at": 261
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/2372cb24-692f-4109-a191-3ad2fd063069#b0ab01eb-232c-48e6-813b-d2457d1ea344",
+            "at": 266
+          },
+          {
+            "kind": "src",
+            "src": "blob:null/363fdcac-ad08-4388-bbb7-81f45ec69216#ffb88060-9a25-4cc6-a988-4c3adf42dc26",
+            "at": 271
+          },
+          {
+            "kind": "load",
+            "src": "blob:null/363fdcac-ad08-4388-bbb7-81f45ec69216#ffb88060-9a25-4cc6-a988-4c3adf42dc26",
+            "at": 274
+          }
+        ]
+      },
+      "inner": {
+        "url": "blob:null/363fdcac-ad08-4388-bbb7-81f45ec69216#ffb88060-9a25-4cc6-a988-4c3adf42dc26",
+        "ready": "complete",
+        "links": [
+          {
+            "text": "Un article sans illustration",
+            "href": "https://example.invalid/article"
+          },
+          {
+            "text": "S’abonner",
+            "href": "mailto:abonnement@example.invalid?subject=Inscription"
+          },
+          {
+            "text": "Intitulé du lien à renseigner",
+            "href": null
+          }
+        ]
+      },
+      "frames": [
+        {
+          "kind": "navigated",
+          "url": "blob:null/d3c7e4cb-8492-486b-b88c-40ec2be3692f#1a0c7836-4403-4069-93ff-e689b848850f",
+          "at": 1792946142639
+        },
+        {
+          "kind": "navigated",
+          "url": "blob:null/2372cb24-692f-4109-a191-3ad2fd063069#b0ab01eb-232c-48e6-813b-d2457d1ea344",
+          "at": 1792946142654
+        },
+        {
+          "kind": "navigated",
+          "url": "blob:null/363fdcac-ad08-4388-bbb7-81f45ec69216#ffb88060-9a25-4cc6-a988-4c3adf42dc26",
+          "at": 1792946142662
+        }
+      ],
+      "errors": []
+    }
+  ]
+}

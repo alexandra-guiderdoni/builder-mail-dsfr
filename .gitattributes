@@ -7,3 +7,5 @@ docs/prise-en-charge-backlog-20261025/coordination/recette-messageries/*.referen
 docs/verification-publication-shipguard-20261025/artifacts/prompt-*.md whitespace=-blank-at-eol
 docs/verification-publication-shipguard-20261025/artifacts/activated-checklists.md whitespace=-blank-at-eof
 docs/verification-publication-shipguard-20261025/artifacts/supplement/*.diff whitespace=-blank-at-eol
+docs/goal-six-issues-20261025/investigations/timeouts/historical-article-repeat.log whitespace=-blank-at-eol
+docs/goal-six-issues-20261025/investigations/timeouts/preview-contract-old.log whitespace=-blank-at-eol

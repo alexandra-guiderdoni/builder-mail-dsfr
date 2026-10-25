@@ -1,0 +1,47 @@
+diff --git a/app/source/preview.js b/app/source/preview.js
+index 00d48cc..d59e063 100644
+--- a/app/source/preview.js
++++ b/app/source/preview.js
+@@ -2,18 +2,24 @@
+ (() => {
+   "use strict";
+   const A = window.MailBuilder, frame = document.getElementById("preview"), measure = A.previewMeasure;
+-  let url, token, loaded = false;
++  let url, token, loaded = false, navigating = false, pending;
+   function request() { frame.contentWindow?.postMessage({type: "mail-preview-measure", token}, "*"); }
++  function navigate(next) {
++    const previous = url;
++    url = URL.createObjectURL(new Blob([next.html], {type: "text/html"}));
++    navigating = true; frame.src = `${url}#${next.token}`;
++    if (previous) URL.revokeObjectURL(previous);
++  }
+   function show(value) {
+     const marker = "default-src &#39;none&#39;;", rendered = A.Render.html(value, true);
+     if (!rendered.includes(marker)) throw new Error("La politique de sécurité de l’aperçu n’est pas reconnue.");
+     const html = rendered.replace(marker, `${marker}script-src &#39;sha256-${measure.hash}&#39;;`)
+       .replace("</body>", `<script>${measure.source}<\/script></body>`);
+     token = crypto.randomUUID(); loaded = false;
+-    const previous = url;
+-    url = URL.createObjectURL(new Blob([html], {type: "text/html"}));
+-    frame.src = `${url}#${token}`;
+-    if (previous) URL.revokeObjectURL(previous);
++    // Une seconde navigation avant le load de la première peut être perdue par le
++    // navigateur. Garder seulement le dernier rendu demandé, sans créer son blob.
++    const next = {html, token};
++    if (navigating) pending = next; else navigate(next);
+   }
+   addEventListener("message", event => {
+     const data = event.data;
+@@ -24,7 +30,11 @@
+     const style = getComputedStyle(frame), height = data.height + parseFloat(style.borderTopWidth) + parseFloat(style.borderBottomWidth) + 1;
+     if (Math.abs(frame.getBoundingClientRect().height - height) > .5) frame.style.height = `${height}px`;
+   });
+-  frame.addEventListener("load", () => { loaded = true; request(); });
++  frame.addEventListener("load", () => {
++    navigating = false;
++    if (pending) { const next = pending; pending = undefined; navigate(next); return; }
++    loaded = true; request();
++  });
+   let width;
+   new ResizeObserver(() => { if (frame.clientWidth !== width) { width = frame.clientWidth; request(); } }).observe(frame);
+   A.Preview = Object.freeze({show});

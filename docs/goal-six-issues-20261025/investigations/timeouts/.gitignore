@@ -1,0 +1,6 @@
+# Copies éphémères autonomes, recréées par prepare.py.
+/historical/
+/current/
+/export-historical/
+/preview-only/
+/export-traced/

@@ -1,0 +1,19 @@
+422: tests	Exécuter la suite de tests	2026-10-25T10:08:50.6281430Z test at tests/export-names-browser.test.cjs:43:3
+423: tests	Exécuter la suite de tests	2026-10-25T10:08:50.6282624Z ✖ noms des fichiers exportés, trois types d’export (Chromium) (30584.203796ms)
+424: tests	Exécuter la suite de tests	2026-10-25T10:08:50.6284763Z   Error: nom « Édition & <dossier> "suivi" » : aucun téléchargement reçu pour [data-action=export-mail] ; état de la page : {"notice":"","error":"","checkDialog":true,"focused":true}
+425: tests	Exécuter la suite de tests	2026-10-25T10:08:50.6286690Z       at /home/runner/work/builder-mail-dsfr/builder-mail-dsfr/tests/export-names-browser.test.cjs:24:59
+426: tests	Exécuter la suite de tests	2026-10-25T10:08:50.6288649Z       at async suggested (/home/runner/work/builder-mail-dsfr/builder-mail-dsfr/tests/export-names-browser.test.cjs:24:18)
+427: tests	Exécuter la suite de tests	2026-10-25T10:08:50.6290443Z       at async exportNames (/home/runner/work/builder-mail-dsfr/builder-mail-dsfr/tests/export-names-browser.test.cjs:37:55)
+428: tests	Exécuter la suite de tests	2026-10-25T10:08:50.6292347Z       at async TestContext.<anonymous> (/home/runner/work/builder-mail-dsfr/builder-mail-dsfr/tests/export-names-browser.test.cjs:47:21)
+429: tests	Exécuter la suite de tests	2026-10-25T10:08:50.6293726Z       at async Test.run (node:internal/test_runner/test:1332:7)
+430: tests	Exécuter la suite de tests	2026-10-25T10:08:50.6294741Z       at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+431: tests	Exécuter la suite de tests	2026-10-25T10:08:50.6296498Z     [cause]: page.waitForEvent: Timeout 30000ms exceeded while waiting for event "download"
+432: tests	Exécuter la suite de tests	2026-10-25T10:08:50.6297460Z     =========================== logs ===========================
+433: tests	Exécuter la suite de tests	2026-10-25T10:08:50.6298886Z     waiting for event "download"
+434: tests	Exécuter la suite de tests	2026-10-25T10:08:50.6299406Z     ============================================================
+435: tests	Exécuter la suite de tests	2026-10-25T10:08:50.6300482Z         at suggested (/home/runner/work/builder-mail-dsfr/builder-mail-dsfr/tests/export-names-browser.test.cjs:22:22)
+436: tests	Exécuter la suite de tests	2026-10-25T10:08:50.6301986Z         at exportNames (/home/runner/work/builder-mail-dsfr/builder-mail-dsfr/tests/export-names-browser.test.cjs:37:61)
+437: tests	Exécuter la suite de tests	2026-10-25T10:08:50.6303707Z         at async TestContext.<anonymous> (/home/runner/work/builder-mail-dsfr/builder-mail-dsfr/tests/export-names-browser.test.cjs:47:21) {
+438: tests	Exécuter la suite de tests	2026-10-25T10:08:50.6304810Z       name: 'TimeoutError',
+439: tests	Exécuter la suite de tests	2026-10-25T10:08:50.6305240Z       log: []
+440: tests	Exécuter la suite de tests	2026-10-25T10:08:50.6305576Z     }

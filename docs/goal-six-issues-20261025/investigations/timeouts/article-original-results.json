@@ -1,0 +1,23 @@
+[
+  {
+    "engine": "firefox",
+    "file": "article-text-footer-links-browser.test.cjs",
+    "name": "article sans image et trois actions de pied de page : import, édition, refus, image, clone et exports hors ligne",
+    "status": "pass"
+  },
+  {
+    "engine": "webkit",
+    "file": "article-text-footer-links-browser.test.cjs",
+    "name": "article sans image et trois actions de pied de page : import, édition, refus, image, clone et exports hors ligne",
+    "status": "fail",
+    "message": "locator.waitFor: Timeout 30000ms exceeded.",
+    "class": "product",
+    "known": false
+  },
+  {
+    "engine": "chromium",
+    "file": "article-text-footer-links-browser.test.cjs",
+    "name": "article sans image et trois actions de pied de page : import, édition, refus, image, clone et exports hors ligne",
+    "status": "pass"
+  }
+]

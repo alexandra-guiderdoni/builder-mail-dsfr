@@ -1,0 +1,16 @@
+TAP version 13
+# Subtest: article sans image et trois actions de pied de page : import, édition, refus, image, clone et exports hors ligne
+not ok 1 - article sans image et trois actions de pied de page : import, édition, refus, image, clone et exports hors ligne
+  ---
+  duration_ms: 30471.451792
+  type: 'test'
+  location: '/Users/alex/Claude-worktrees/builder-six-restants-20261025/docs/goal-six-issues-20261025/investigations/timeouts/preview-only/tests/article-repeat.test.cjs:5:41'
+  failureType: 'testCodeFailure'
+  error: 'ouverture : page.waitForFunction: Timeout 30000ms exceeded.'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    TestContext.<anonymous> (/Users/alex/Claude-worktrees/builder-six-restants-20261025/docs/goal-six-issues-20261025/investigations/timeouts/preview-only/tests/article-repeat.test.cjs:125:11)
+    async Test.run (node:internal/test_runner/test:1332:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3)
+  ...
+# Interrupted while running: docs/goal-six-issues-20261025/investigations/timeouts/preview-only/tests/article-repeat.test.cjs at /Users/alex/Claude-worktrees/builder-six-restants-20261025/docs/goal-six-issues-20261025/investigations/timeouts/preview-only/tests/article-repeat.test.cjs:1:1

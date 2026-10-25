@@ -1,0 +1,298 @@
+{
+  "precondition": "Retard de soumission natif contrôlé ; aucune attribution à la CI historique.",
+  "results": [
+    {
+      "status": "download",
+      "name": "Édition-&-dossier-suivi-2026-10-25.html",
+      "delay": 0,
+      "timeout": 400,
+      "state": {
+        "notice": "Courriel proposé au téléchargement.",
+        "error": "",
+        "checkDialog": false,
+        "focused": true
+      },
+      "details": {
+        "active": "",
+        "trace": [
+          {
+            "type": "click",
+            "target": "export-mail",
+            "at": 319,
+            "open": false,
+            "focused": ""
+          },
+          {
+            "type": "click",
+            "target": "check-confirm",
+            "at": 348,
+            "open": true,
+            "focused": "check-confirm"
+          },
+          {
+            "type": "submit",
+            "target": "check-form",
+            "at": 348,
+            "open": true,
+            "focused": "check-confirm"
+          }
+        ],
+        "dialog": "<dialog id=\"check-dialog\" aria-labelledby=\"check-dialog-title\" aria-describedby=\"check-dialog-description\"><form id=\"check-form\" novalidate=\"\"><h2 id=\"check-dialog-title\" tabindex=\"-1\">Vérifier avant de télécharger</h2><p id=\"check-dialog-description\">8 points à vérifier. Ces avertissements ne bloquent pas : corrigez le bloc concerné ou poursuivez.</p><ul id=\"check-list\" class=\"check-list\"><li><p>Bloc 1 « En-tête Marianne » : valeur de démonstration du catalogue inchangée (Nom du service).</p><button class=\"fr-btn fr-btn--tertiary\" type=\"button\" data-check-index=\"0\">Aller au bloc 1</button></li><li><p>Bloc 2 « Titre principal » : valeur de démonstration du catalogue inchangée (Titre principal).</p><button class=\"fr-btn fr-btn--tertiary\" type=\"button\" data-check-index=\"1\">Aller au bloc 2</button></li><li><p>Bloc 3 « Paragraphe · blanc » : valeur de démonstration du catalogue inchangée (Texte du paragraphe).</p><button class=\"fr-btn fr-btn--tertiary\" type=\"button\" data-check-index=\"2\">Aller au bloc 3</button></li><li><p>Bloc 4 « Bouton primaire » : lien de démonstration vers exemple.invalid.</p><button class=\"fr-btn fr-btn--tertiary\" type=\"button\" data-check-index=\"3\">Aller au bloc 4</button></li><li><p>Bloc 4 « Bouton primaire » : valeur de démonstration du catalogue inchangée (Texte du bouton).</p><button class=\"fr-btn fr-btn--tertiary\" type=\"button\" data-check-index=\"4\">Aller au bloc 4</button></li><li><p>Bloc 5 « Pied de page Marianne » : valeur de démonstration du catalogue inchangée (Mention d’abonnement, Adresse HTTPS ou mailto de la politique de données personnelles, Texte du lien vers la politique de données personnelles, Nom du service).</p><button class=\"fr-btn fr-btn--tertiary\" type=\"button\" data-check-index=\"5\">Aller au bloc 5</button></li><li><p>Bloc 6 « Lien de désabonnement » : lien de démonstration vers exemple.invalid.</p><button class=\"fr-btn fr-btn--tertiary\" type=\"button\" data-check-index=\"6\">Aller au bloc 6</button></li><li><p>Bloc 6 « Lien de désabonnement » : valeur de démonstration du catalogue inchangée (Phrase précédant le lien de désabonnement, Texte du lien de désabonnement).</p><button class=\"fr-btn fr-btn--tertiary\" type=\"button\" data-check-index=\"7\">Aller au bloc 6</button></li></ul><div class=\"actions\"><button class=\"fr-btn fr-btn--secondary\" id=\"check-cancel\" type=\"button\">Annuler</button><button id=\"check-confirm\" type=\"submit\" class=\"fr-btn primary\">Télécharger quand même</button></div></form></dialog>"
+      },
+      "errors": [],
+      "downloads": 1
+    },
+    {
+      "status": "download",
+      "name": "Édition-&-dossier-suivi-2026-10-25.html",
+      "delay": 0,
+      "timeout": 400,
+      "state": {
+        "notice": "Courriel proposé au téléchargement.",
+        "error": "",
+        "checkDialog": false,
+        "focused": true
+      },
+      "details": {
+        "active": "",
+        "trace": [
+          {
+            "type": "click",
+            "target": "export-mail",
+            "at": 196,
+            "open": false,
+            "focused": ""
+          },
+          {
+            "type": "click",
+            "target": "check-confirm",
+            "at": 224,
+            "open": true,
+            "focused": "check-confirm"
+          },
+          {
+            "type": "submit",
+            "target": "check-form",
+            "at": 224,
+            "open": true,
+            "focused": "check-confirm"
+          }
+        ],
+        "dialog": "<dialog id=\"check-dialog\" aria-labelledby=\"check-dialog-title\" aria-describedby=\"check-dialog-description\"><form id=\"check-form\" novalidate=\"\"><h2 id=\"check-dialog-title\" tabindex=\"-1\">Vérifier avant de télécharger</h2><p id=\"check-dialog-description\">8 points à vérifier. Ces avertissements ne bloquent pas : corrigez le bloc concerné ou poursuivez.</p><ul id=\"check-list\" class=\"check-list\"><li><p>Bloc 1 « En-tête Marianne » : valeur de démonstration du catalogue inchangée (Nom du service).</p><button class=\"fr-btn fr-btn--tertiary\" type=\"button\" data-check-index=\"0\">Aller au bloc 1</button></li><li><p>Bloc 2 « Titre principal » : valeur de démonstration du catalogue inchangée (Titre principal).</p><button class=\"fr-btn fr-btn--tertiary\" type=\"button\" data-check-index=\"1\">Aller au bloc 2</button></li><li><p>Bloc 3 « Paragraphe · blanc » : valeur de démonstration du catalogue inchangée (Texte du paragraphe).</p><button class=\"fr-btn fr-btn--tertiary\" type=\"button\" data-check-index=\"2\">Aller au bloc 3</button></li><li><p>Bloc 4 « Bouton primaire » : lien de démonstration vers exemple.invalid.</p><button class=\"fr-btn fr-btn--tertiary\" type=\"button\" data-check-index=\"3\">Aller au bloc 4</button></li><li><p>Bloc 4 « Bouton primaire » : valeur de démonstration du catalogue inchangée (Texte du bouton).</p><button class=\"fr-btn fr-btn--tertiary\" type=\"button\" data-check-index=\"4\">Aller au bloc 4</button></li><li><p>Bloc 5 « Pied de page Marianne » : valeur de démonstration du catalogue inchangée (Mention d’abonnement, Adresse HTTPS ou mailto de la politique de données personnelles, Texte du lien vers la politique de données personnelles, Nom du service).</p><button class=\"fr-btn fr-btn--tertiary\" type=\"button\" data-check-index=\"5\">Aller au bloc 5</button></li><li><p>Bloc 6 « Lien de désabonnement » : lien de démonstration vers exemple.invalid.</p><button class=\"fr-btn fr-btn--tertiary\" type=\"button\" data-check-index=\"6\">Aller au bloc 6</button></li><li><p>Bloc 6 « Lien de désabonnement » : valeur de démonstration du catalogue inchangée (Phrase précédant le lien de désabonnement, Texte du lien de désabonnement).</p><button class=\"fr-btn fr-btn--tertiary\" type=\"button\" data-check-index=\"7\">Aller au bloc 6</button></li></ul><div class=\"actions\"><button class=\"fr-btn fr-btn--secondary\" id=\"check-cancel\" type=\"button\">Annuler</button><button id=\"check-confirm\" type=\"submit\" class=\"fr-btn primary\">Télécharger quand même</button></div></form></dialog>"
+      },
+      "errors": [],
+      "downloads": 1
+    },
+    {
+      "status": "download",
+      "name": "Édition-&-dossier-suivi-2026-10-25.html",
+      "delay": 0,
+      "timeout": 400,
+      "state": {
+        "notice": "Courriel proposé au téléchargement.",
+        "error": "",
+        "checkDialog": false,
+        "focused": true
+      },
+      "details": {
+        "active": "",
+        "trace": [
+          {
+            "type": "click",
+            "target": "export-mail",
+            "at": 193,
+            "open": false,
+            "focused": ""
+          },
+          {
+            "type": "click",
+            "target": "check-confirm",
+            "at": 223,
+            "open": true,
+            "focused": "check-confirm"
+          },
+          {
+            "type": "submit",
+            "target": "check-form",
+            "at": 223,
+            "open": true,
+            "focused": "check-confirm"
+          }
+        ],
+        "dialog": "<dialog id=\"check-dialog\" aria-labelledby=\"check-dialog-title\" aria-describedby=\"check-dialog-description\"><form id=\"check-form\" novalidate=\"\"><h2 id=\"check-dialog-title\" tabindex=\"-1\">Vérifier avant de télécharger</h2><p id=\"check-dialog-description\">8 points à vérifier. Ces avertissements ne bloquent pas : corrigez le bloc concerné ou poursuivez.</p><ul id=\"check-list\" class=\"check-list\"><li><p>Bloc 1 « En-tête Marianne » : valeur de démonstration du catalogue inchangée (Nom du service).</p><button class=\"fr-btn fr-btn--tertiary\" type=\"button\" data-check-index=\"0\">Aller au bloc 1</button></li><li><p>Bloc 2 « Titre principal » : valeur de démonstration du catalogue inchangée (Titre principal).</p><button class=\"fr-btn fr-btn--tertiary\" type=\"button\" data-check-index=\"1\">Aller au bloc 2</button></li><li><p>Bloc 3 « Paragraphe · blanc » : valeur de démonstration du catalogue inchangée (Texte du paragraphe).</p><button class=\"fr-btn fr-btn--tertiary\" type=\"button\" data-check-index=\"2\">Aller au bloc 3</button></li><li><p>Bloc 4 « Bouton primaire » : lien de démonstration vers exemple.invalid.</p><button class=\"fr-btn fr-btn--tertiary\" type=\"button\" data-check-index=\"3\">Aller au bloc 4</button></li><li><p>Bloc 4 « Bouton primaire » : valeur de démonstration du catalogue inchangée (Texte du bouton).</p><button class=\"fr-btn fr-btn--tertiary\" type=\"button\" data-check-index=\"4\">Aller au bloc 4</button></li><li><p>Bloc 5 « Pied de page Marianne » : valeur de démonstration du catalogue inchangée (Mention d’abonnement, Adresse HTTPS ou mailto de la politique de données personnelles, Texte du lien vers la politique de données personnelles, Nom du service).</p><button class=\"fr-btn fr-btn--tertiary\" type=\"button\" data-check-index=\"5\">Aller au bloc 5</button></li><li><p>Bloc 6 « Lien de désabonnement » : lien de démonstration vers exemple.invalid.</p><button class=\"fr-btn fr-btn--tertiary\" type=\"button\" data-check-index=\"6\">Aller au bloc 6</button></li><li><p>Bloc 6 « Lien de désabonnement » : valeur de démonstration du catalogue inchangée (Phrase précédant le lien de désabonnement, Texte du lien de désabonnement).</p><button class=\"fr-btn fr-btn--tertiary\" type=\"button\" data-check-index=\"7\">Aller au bloc 6</button></li></ul><div class=\"actions\"><button class=\"fr-btn fr-btn--secondary\" id=\"check-cancel\" type=\"button\">Annuler</button><button id=\"check-confirm\" type=\"submit\" class=\"fr-btn primary\">Télécharger quand même</button></div></form></dialog>"
+      },
+      "errors": [],
+      "downloads": 1
+    },
+    {
+      "status": "download",
+      "name": "Édition-&-dossier-suivi-2026-10-25.html",
+      "delay": 120,
+      "timeout": 400,
+      "state": {
+        "notice": "Courriel proposé au téléchargement.",
+        "error": "",
+        "checkDialog": false,
+        "focused": true
+      },
+      "details": {
+        "active": "",
+        "trace": [
+          {
+            "type": "click",
+            "target": "export-mail",
+            "at": 193,
+            "open": false,
+            "focused": ""
+          },
+          {
+            "type": "click",
+            "target": "check-confirm",
+            "at": 223,
+            "open": true,
+            "focused": "check-confirm"
+          },
+          {
+            "type": "submit",
+            "target": "check-form",
+            "at": 223,
+            "open": true,
+            "focused": "check-confirm"
+          },
+          {
+            "type": "controlled-submit-delay",
+            "delay": 120,
+            "at": 223
+          },
+          {
+            "type": "submit",
+            "target": "check-form",
+            "at": 345,
+            "open": true,
+            "focused": "check-confirm"
+          },
+          {
+            "type": "close",
+            "target": "check-dialog",
+            "at": 348,
+            "open": false,
+            "focused": ""
+          }
+        ],
+        "dialog": "<dialog id=\"check-dialog\" aria-labelledby=\"check-dialog-title\" aria-describedby=\"check-dialog-description\"><form id=\"check-form\" novalidate=\"\"><h2 id=\"check-dialog-title\" tabindex=\"-1\">Vérifier avant de télécharger</h2><p id=\"check-dialog-description\">8 points à vérifier. Ces avertissements ne bloquent pas : corrigez le bloc concerné ou poursuivez.</p><ul id=\"check-list\" class=\"check-list\"><li><p>Bloc 1 « En-tête Marianne » : valeur de démonstration du catalogue inchangée (Nom du service).</p><button class=\"fr-btn fr-btn--tertiary\" type=\"button\" data-check-index=\"0\">Aller au bloc 1</button></li><li><p>Bloc 2 « Titre principal » : valeur de démonstration du catalogue inchangée (Titre principal).</p><button class=\"fr-btn fr-btn--tertiary\" type=\"button\" data-check-index=\"1\">Aller au bloc 2</button></li><li><p>Bloc 3 « Paragraphe · blanc » : valeur de démonstration du catalogue inchangée (Texte du paragraphe).</p><button class=\"fr-btn fr-btn--tertiary\" type=\"button\" data-check-index=\"2\">Aller au bloc 3</button></li><li><p>Bloc 4 « Bouton primaire » : lien de démonstration vers exemple.invalid.</p><button class=\"fr-btn fr-btn--tertiary\" type=\"button\" data-check-index=\"3\">Aller au bloc 4</button></li><li><p>Bloc 4 « Bouton primaire » : valeur de démonstration du catalogue inchangée (Texte du bouton).</p><button class=\"fr-btn fr-btn--tertiary\" type=\"button\" data-check-index=\"4\">Aller au bloc 4</button></li><li><p>Bloc 5 « Pied de page Marianne » : valeur de démonstration du catalogue inchangée (Mention d’abonnement, Adresse HTTPS ou mailto de la politique de données personnelles, Texte du lien vers la politique de données personnelles, Nom du service).</p><button class=\"fr-btn fr-btn--tertiary\" type=\"button\" data-check-index=\"5\">Aller au bloc 5</button></li><li><p>Bloc 6 « Lien de désabonnement » : lien de démonstration vers exemple.invalid.</p><button class=\"fr-btn fr-btn--tertiary\" type=\"button\" data-check-index=\"6\">Aller au bloc 6</button></li><li><p>Bloc 6 « Lien de désabonnement » : valeur de démonstration du catalogue inchangée (Phrase précédant le lien de désabonnement, Texte du lien de désabonnement).</p><button class=\"fr-btn fr-btn--tertiary\" type=\"button\" data-check-index=\"7\">Aller au bloc 6</button></li></ul><div class=\"actions\"><button class=\"fr-btn fr-btn--secondary\" id=\"check-cancel\" type=\"button\">Annuler</button><button id=\"check-confirm\" type=\"submit\" class=\"fr-btn primary\">Télécharger quand même</button></div></form></dialog>"
+      },
+      "errors": [],
+      "downloads": 1
+    },
+    {
+      "status": "timeout",
+      "error": "page.waitForEvent: Timeout 400ms exceeded while waiting for event \"download\"",
+      "delay": 650,
+      "timeout": 400,
+      "state": {
+        "notice": "",
+        "error": "",
+        "checkDialog": true,
+        "focused": true
+      },
+      "details": {
+        "active": "check-confirm",
+        "trace": [
+          {
+            "type": "click",
+            "target": "export-mail",
+            "at": 193,
+            "open": false,
+            "focused": ""
+          },
+          {
+            "type": "click",
+            "target": "check-confirm",
+            "at": 223,
+            "open": true,
+            "focused": "check-confirm"
+          },
+          {
+            "type": "submit",
+            "target": "check-form",
+            "at": 223,
+            "open": true,
+            "focused": "check-confirm"
+          },
+          {
+            "type": "controlled-submit-delay",
+            "delay": 650,
+            "at": 223
+          }
+        ],
+        "dialog": "<dialog id=\"check-dialog\" aria-labelledby=\"check-dialog-title\" aria-describedby=\"check-dialog-description\" open=\"\"><form id=\"check-form\" novalidate=\"\"><h2 id=\"check-dialog-title\" tabindex=\"-1\">Vérifier avant de télécharger</h2><p id=\"check-dialog-description\">8 points à vérifier. Ces avertissements ne bloquent pas : corrigez le bloc concerné ou poursuivez.</p><ul id=\"check-list\" class=\"check-list\"><li><p>Bloc 1 « En-tête Marianne » : valeur de démonstration du catalogue inchangée (Nom du service).</p><button class=\"fr-btn fr-btn--tertiary\" type=\"button\" data-check-index=\"0\">Aller au bloc 1</button></li><li><p>Bloc 2 « Titre principal » : valeur de démonstration du catalogue inchangée (Titre principal).</p><button class=\"fr-btn fr-btn--tertiary\" type=\"button\" data-check-index=\"1\">Aller au bloc 2</button></li><li><p>Bloc 3 « Paragraphe · blanc » : valeur de démonstration du catalogue inchangée (Texte du paragraphe).</p><button class=\"fr-btn fr-btn--tertiary\" type=\"button\" data-check-index=\"2\">Aller au bloc 3</button></li><li><p>Bloc 4 « Bouton primaire » : lien de démonstration vers exemple.invalid.</p><button class=\"fr-btn fr-btn--tertiary\" type=\"button\" data-check-index=\"3\">Aller au bloc 4</button></li><li><p>Bloc 4 « Bouton primaire » : valeur de démonstration du catalogue inchangée (Texte du bouton).</p><button class=\"fr-btn fr-btn--tertiary\" type=\"button\" data-check-index=\"4\">Aller au bloc 4</button></li><li><p>Bloc 5 « Pied de page Marianne » : valeur de démonstration du catalogue inchangée (Mention d’abonnement, Adresse HTTPS ou mailto de la politique de données personnelles, Texte du lien vers la politique de données personnelles, Nom du service).</p><button class=\"fr-btn fr-btn--tertiary\" type=\"button\" data-check-index=\"5\">Aller au bloc 5</button></li><li><p>Bloc 6 « Lien de désabonnement » : lien de démonstration vers exemple.invalid.</p><button class=\"fr-btn fr-btn--tertiary\" type=\"button\" data-check-index=\"6\">Aller au bloc 6</button></li><li><p>Bloc 6 « Lien de désabonnement » : valeur de démonstration du catalogue inchangée (Phrase précédant le lien de désabonnement, Texte du lien de désabonnement).</p><button class=\"fr-btn fr-btn--tertiary\" type=\"button\" data-check-index=\"7\">Aller au bloc 6</button></li></ul><div class=\"actions\"><button class=\"fr-btn fr-btn--secondary\" id=\"check-cancel\" type=\"button\">Annuler</button><button id=\"check-confirm\" type=\"submit\" class=\"fr-btn primary\">Télécharger quand même</button></div></form></dialog>"
+      },
+      "errors": [],
+      "downloads": 0,
+      "afterRelease": {
+        "state": {
+          "notice": "Courriel proposé au téléchargement.",
+          "error": "",
+          "checkDialog": false,
+          "focused": true
+        },
+        "downloads": 1
+      }
+    },
+    {
+      "status": "timeout",
+      "error": "page.waitForEvent: Timeout 400ms exceeded while waiting for event \"download\"",
+      "delay": 650,
+      "timeout": 400,
+      "state": {
+        "notice": "",
+        "error": "",
+        "checkDialog": true,
+        "focused": true
+      },
+      "details": {
+        "active": "check-confirm",
+        "trace": [
+          {
+            "type": "click",
+            "target": "export-mail",
+            "at": 199,
+            "open": false,
+            "focused": ""
+          },
+          {
+            "type": "click",
+            "target": "check-confirm",
+            "at": 227,
+            "open": true,
+            "focused": "check-confirm"
+          },
+          {
+            "type": "submit",
+            "target": "check-form",
+            "at": 227,
+            "open": true,
+            "focused": "check-confirm"
+          },
+          {
+            "type": "controlled-submit-delay",
+            "delay": 650,
+            "at": 227
+          }
+        ],
+        "dialog": "<dialog id=\"check-dialog\" aria-labelledby=\"check-dialog-title\" aria-describedby=\"check-dialog-description\" open=\"\"><form id=\"check-form\" novalidate=\"\"><h2 id=\"check-dialog-title\" tabindex=\"-1\">Vérifier avant de télécharger</h2><p id=\"check-dialog-description\">8 points à vérifier. Ces avertissements ne bloquent pas : corrigez le bloc concerné ou poursuivez.</p><ul id=\"check-list\" class=\"check-list\"><li><p>Bloc 1 « En-tête Marianne » : valeur de démonstration du catalogue inchangée (Nom du service).</p><button class=\"fr-btn fr-btn--tertiary\" type=\"button\" data-check-index=\"0\">Aller au bloc 1</button></li><li><p>Bloc 2 « Titre principal » : valeur de démonstration du catalogue inchangée (Titre principal).</p><button class=\"fr-btn fr-btn--tertiary\" type=\"button\" data-check-index=\"1\">Aller au bloc 2</button></li><li><p>Bloc 3 « Paragraphe · blanc » : valeur de démonstration du catalogue inchangée (Texte du paragraphe).</p><button class=\"fr-btn fr-btn--tertiary\" type=\"button\" data-check-index=\"2\">Aller au bloc 3</button></li><li><p>Bloc 4 « Bouton primaire » : lien de démonstration vers exemple.invalid.</p><button class=\"fr-btn fr-btn--tertiary\" type=\"button\" data-check-index=\"3\">Aller au bloc 4</button></li><li><p>Bloc 4 « Bouton primaire » : valeur de démonstration du catalogue inchangée (Texte du bouton).</p><button class=\"fr-btn fr-btn--tertiary\" type=\"button\" data-check-index=\"4\">Aller au bloc 4</button></li><li><p>Bloc 5 « Pied de page Marianne » : valeur de démonstration du catalogue inchangée (Mention d’abonnement, Adresse HTTPS ou mailto de la politique de données personnelles, Texte du lien vers la politique de données personnelles, Nom du service).</p><button class=\"fr-btn fr-btn--tertiary\" type=\"button\" data-check-index=\"5\">Aller au bloc 5</button></li><li><p>Bloc 6 « Lien de désabonnement » : lien de démonstration vers exemple.invalid.</p><button class=\"fr-btn fr-btn--tertiary\" type=\"button\" data-check-index=\"6\">Aller au bloc 6</button></li><li><p>Bloc 6 « Lien de désabonnement » : valeur de démonstration du catalogue inchangée (Phrase précédant le lien de désabonnement, Texte du lien de désabonnement).</p><button class=\"fr-btn fr-btn--tertiary\" type=\"button\" data-check-index=\"7\">Aller au bloc 6</button></li></ul><div class=\"actions\"><button class=\"fr-btn fr-btn--secondary\" id=\"check-cancel\" type=\"button\">Annuler</button><button id=\"check-confirm\" type=\"submit\" class=\"fr-btn primary\">Télécharger quand même</button></div></form></dialog>"
+      },
+      "errors": [],
+      "downloads": 0,
+      "afterRelease": {
+        "state": {
+          "notice": "Courriel proposé au téléchargement.",
+          "error": "",
+          "checkDialog": false,
+          "focused": true
+        },
+        "downloads": 1
+      }
+    }
+  ]
+}
