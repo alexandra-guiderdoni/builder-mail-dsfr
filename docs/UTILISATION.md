@@ -81,7 +81,9 @@ Le [format générique](FORMAT-JSON.md) décrit les blocs et leurs champs ; son 
 
 ## Collecte SNUM dans sa page dédiée
 
-Ouvrir [snum.html](../app/distribution/snum.html) par double-clic, coller le paquet JSON V519 ou le bloc complet de Collecte, puis « Convertir et afficher l’aperçu ». La page fonctionne dès sa première ouverture hors connexion. Elle présente des rubriques, des titres d’articles avec leur source et date, puis les faits, enseignements, intérêt SNUM et mots-clés dans des blocs distincts.
+Ouvrir [snum.html](../app/distribution/snum.html) par double-clic, coller le paquet JSON V519 ou le bloc complet de Collecte, puis « Convertir et afficher l’aperçu ». La page fonctionne dès sa première ouverture hors connexion. Elle suit la structure du modèle éditorial validé : en-tête, titre « Revue de presse — date », introduction avec la période et le nombre d’articles, puis une partie numérotée par rubrique V519 présente (jusqu’à cinq) et un bloc « Article sans image » par article. Le titre de l’article est son lien ; la ligne de métadonnées porte « Essentiel » si l’article l’est, la source et la date en toutes lettres ; le fait, « À retenir », « Pour le SNUM » et les mots-clés suivent dans le même bloc, en texte et non en titres. Le courriel se termine par une mention et une signature, la gestion des abonnements et le pied Marianne avec le lien vers les données personnelles.
+
+Le nom du service, la signature et les adresses de gestion des abonnements sont des valeurs fictives du dépôt public (« Service », `exemple.invalid`). Avant un envoi réel, importer la composition dans le builder, appliquer l’identité locale de l’équipe (en-tête et pieds de page) et corriger la signature à la main.
 
 « Exporter la composition JSON » fournit le fichier à importer dans le builder pour poursuivre l’édition. La page propose aussi le téléchargement du HTML et la copie du courriel. Modifier la collecte désactive ces sorties jusqu’à une nouvelle conversion réussie ; l’aperçu précédent reste visible avec un avertissement.
 
