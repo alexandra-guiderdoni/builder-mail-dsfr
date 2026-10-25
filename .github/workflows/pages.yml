@@ -12,7 +12,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
-      ARTIFACT_DIR: ${{ runner.temp }}/dest145-${{ github.run_id }}-${{ github.run_attempt }}
       SUBJECT_SHA: 0b7adc7f18355e740f144b379f7930bf4c8c23de
       PROBE_ROOT: ${{ github.workspace }}/.diagnostic-source/diagnostics/issue-145-destinations
       PYTHONDONTWRITEBYTECODE: '1'
@@ -20,8 +19,10 @@ jobs:
       - name: Réserver les preuves hors checkout
         shell: bash
         run: |
+          ARTIFACT_DIR="$RUNNER_TEMP/dest145-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
           mkdir "$ARTIFACT_DIR"
           printf '{"subjectSha":"%s","workflowSha":"%s","runId":"%s","runAttempt":"%s","maxInvocations":1}\n' "$SUBJECT_SHA" "$GITHUB_SHA" "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT" > "$ARTIFACT_DIR/plan.json"
+          printf 'ARTIFACT_DIR=%s\n' "$ARTIFACT_DIR" >> "$GITHUB_ENV"
       - name: Lire le sujet exact à la racine originale
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -78,8 +79,8 @@ jobs:
         shell: bash
         env:
           MAIL_BUILDER_ENGINE: chromium
-          DEST145_OUTPUT_DIR: ${{ env.ARTIFACT_DIR }}/observer
         run: |
+          export DEST145_OUTPUT_DIR="$ARTIFACT_DIR/observer"
           python3 "$PROBE_ROOT/verify-overlay.py" after --subject "$GITHUB_WORKSPACE" --probe "$PROBE_ROOT/probe" --artifacts "$ARTIFACT_DIR"
           sha256sum -c "$ARTIFACT_DIR/package-source.sha256"
           test ! -e "$DEST145_OUTPUT_DIR"
