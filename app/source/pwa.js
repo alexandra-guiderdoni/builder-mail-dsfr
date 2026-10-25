@@ -8,7 +8,8 @@
     if (!installPrompt) return;
     const prompt = installPrompt; installPrompt = null; install.hidden = true;
     // Jeton relevé au départ de l’action : l’annonce du résultat se tait si une autre annonce est passée pendant l’attente (#122).
-    const ticket = A.State.noticeTicket();
+    // Optional chaining : le contrat isolé de pwa.js (tests/pwa-contract.test.cjs) injecte un MailBuilder sans State.
+    const ticket = A.State?.noticeTicket?.();
     try { await prompt.prompt(); const result = await prompt.userChoice; A.notice(result.outcome === "accepted" ? "Installation acceptée." : "Installation annulée. Le navigateur proposera une nouvelle tentative lorsqu’elle sera disponible.", ticket); } catch (cause) { A.error(`Installation indisponible : ${cause.message}`); }
   });
   window.addEventListener("appinstalled", () => { install.hidden = true; environment.textContent = "Atelier installé dans ce navigateur"; });
