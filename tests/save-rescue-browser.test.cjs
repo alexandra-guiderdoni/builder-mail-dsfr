@@ -192,6 +192,7 @@ test('après un échec, le rechargement et l’activation d’une mise à jour P
     await page.evaluate(() => { window.sameDocument = true; });
     await refuseWrites(page, 'QuotaExceededError');
     await page.locator('#document-name').click(); await page.locator('#document-name').fill('Travail à protéger'); await failed(page);
+    const notice = await page.locator('#error').innerText(); assert.match(notice, kinds.sature); assert.doesNotMatch(notice, kinds.inaccessible);
     await click(page, '#update'); await page.locator('#error').filter({hasText: 'La sauvegarde doit réussir'}).waitFor();
     assert.deepEqual(await page.evaluate(async () => ({same: window.sameDocument === true, waiting: !!(await navigator.serviceWorker.getRegistration()).waiting, controller: navigator.serviceWorker.controller === window.previousController})), {same: true, waiting: true, controller: true});
     assert.equal((await store(page)).library.documents[0].name, 'Avant mise à jour');
