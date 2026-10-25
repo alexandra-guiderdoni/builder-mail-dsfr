@@ -1,0 +1,38 @@
+{
+  "method": "Local JSON parsing, lock consistency and complete workflow source inspection; no npm install, CI, browser or registry query",
+  "manifest_root_matches_package": true,
+  "fast_uri": {
+    "version": "3.1.9",
+    "resolved": "https://registry.npmjs.org/fast-uri/-/fast-uri-3.1.9.tgz",
+    "integrity_sha512_well_formed": true,
+    "satisfies_ajv_range": "3.1.9 is within ^3.0.1",
+    "tarball_integrity_verified": false
+  },
+  "pipeline": {
+    "deploy_needs_tests": true,
+    "npm_check_before_npm_test": true,
+    "tests_permissions": "contents:read",
+    "deploy_permissions": [
+      "contents:read",
+      "pages:write",
+      "id-token:write"
+    ],
+    "actions_refs_40hex": true,
+    "test_node": "24.18.0",
+    "playwright_install": [
+      "chromium",
+      "webkit"
+    ],
+    "remote_action_commit_existence_verified": false
+  },
+  "npmrc": {
+    "literal": "min-release-age=3",
+    "runtime_enforcement_exercised": false
+  },
+  "source_sha256": {
+    ".github/workflows/pages.yml": "ab56e3a461291595cc10f9baf47447d30ff435da3b223477940789d2b80d3646",
+    ".npmrc": "302a3ab98854ffb8d14cc3c3e7490222ed4828036b9401359482a899d0e32e94",
+    "package-lock.json": "a17e627c97e52dca237f267a5f002a9ff3bfe276d187c3ed31609752a231a81d",
+    "package.json": "48831db4c7c1065f47f24cb735f4ac14123fa7b3f142af8baecaec550cd6eeda"
+  }
+}

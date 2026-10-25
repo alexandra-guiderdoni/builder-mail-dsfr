@@ -187,18 +187,21 @@ test('un rafraîchissement complet remplace l’aperçu différé d’une frappe
   const browser = await chromium.launch({headless: true});
   try {
     const {page, observations} = await open(browser);
-    const renders = await page.evaluate(async () => {
+    await page.evaluate(async () => {
       const frame = document.getElementById('preview'); let count = 0;
       const observer = new MutationObserver(records => { count += records.length; }); observer.observe(frame, {attributes: true, attributeFilter: ['src']});
+      window.finishPreviewCount = () => { observer.disconnect(); return count; };
       const input = document.getElementById('subject'); input.value += ' puis bloc déplacé'; input.dispatchEvent(new Event('input', {bubbles: true}));
       await MailBuilder.State.change(() => {});
-      // L’aperçu différé passe par une minuterie, une image puis une tâche : deux images et une tâche suffisent à l’observer.
-      await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(() => setTimeout(resolve, 100))));
-      observer.disconnect(); return count;
     });
-    assert.equal(renders, 1);
+    // La frappe peut précéder le premier chargement de l’iframe. Garder l’observateur jusqu’au
+    // document final réellement chargé, sans pré-attendre l’aperçu initial ni minuterie de test.
+    const title = await page.locator('#subject').inputValue();
     const frame = await (await page.locator('#preview').elementHandle()).contentFrame();
-    await frame.waitForFunction(() => document.title.endsWith('puis bloc déplacé'));
+    await frame.waitForFunction(expected => document.readyState === 'complete' && document.title === expected, title);
+    const url = await page.locator('#preview').getAttribute('src');
+    await frame.waitForFunction(expected => location.href === expected.url && document.readyState === 'complete' && document.title === expected.title, {url, title});
+    assert.equal(await page.evaluate(() => window.finishPreviewCount()), 1);
     assert.deepEqual(observations.errors, []);
   } finally { await browser.close(); }
 });

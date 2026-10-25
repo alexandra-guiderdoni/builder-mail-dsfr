@@ -1,0 +1,11 @@
+{
+  "archived_at": "2026-10-25T14:41:13.040135+00:00",
+  "archive_local_dir": "/Users/alex/Claude-worktrees/builder-publication-archives-20261025T142932Z",
+  "archive_manifest_sha256": "aca703c79d8df86ae0f0d038b32c43d21c6fd7726fc7773220c97e769f27e412",
+  "original_files_preserved": 107,
+  "qualification_raw_files_preserved": 3136,
+  "qualification_raw_bytes_preserved": 85086035,
+  "all_hashes_verified_before_after": true,
+  "global_clean_or_stash_used": false,
+  "curated_initial_files": 203
+}

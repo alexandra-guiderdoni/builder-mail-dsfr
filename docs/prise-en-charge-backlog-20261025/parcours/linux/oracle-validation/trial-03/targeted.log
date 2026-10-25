@@ -1,0 +1,21 @@
+✔ le bundle reste un script HTML complet et la CSP autorise les deux empreintes exactes (17.622041ms)
+✔ la préparation géométrique refuse aussi une image cassée volontairement masquée (412.053167ms)
+✔ la préparation géométrique refuse un inventaire incomplet puis accepte toutes les images (367.989042ms)
+✔ la préparation géométrique attend la réponse HTTP réelle d’une image retenue (391.027083ms)
+✔ la préparation géométrique refuse une URL ou un titre périmé puis accepte le document demandé (761.34375ms)
+✔ la préparation géométrique attend fonts.ready pour une vraie police HTTP retenue (375.633791ms)
+✔ une rafale de rendus ne navigue que vers le premier puis le dernier document, même sans mesure (618.479375ms)
+✔ import et changement de composition chargent le bon aperçu depuis l’éditeur et depuis l’accueil (862.211542ms)
+✔ aperçu isolé : 52 blocs jusqu’au pied de page, redimensionnement et réduction sur les deux distributions (1463.461417ms)
+✔ aperçu : origine opaque, script étranger et réseau bloqués, messages forgés ignorés (427.767125ms)
+✔ la frappe continue conserve le champ et la position de lecture sans effondrement de l’aperçu (3385.827751ms)
+✔ une image chargée après la mesure agrandit puis réduit le même aperçu (300.219709ms)
+✔ une mesure reçue avant le chargement du nouvel aperçu ne change pas la hauteur du cadre ; la même mesure après chargement est appliquée (467.782291ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 13
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 10227.714296

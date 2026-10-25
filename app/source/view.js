@@ -114,7 +114,7 @@
   }
   function summary() { get("composition-summary").textContent = `${A.doc().blocks.length} blocs dans « ${A.doc().name} »`; }
   function preview() {
-    pageTitle(); A.Preview.show(A.doc());
+    pageTitle(); if (!get("editor-page").hidden) A.Preview.show(A.doc());
     summary();
     // #41 : avertissement des pré-en-têtes multiples, calculé avec l’aperçu différé, jamais à la frappe (#34).
     const warnings = A.Render.warnings(A.doc()); if (warnings.length) get("composition-summary").textContent += `. ${warnings.join(". ")}`;

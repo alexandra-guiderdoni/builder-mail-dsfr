@@ -1,0 +1,6 @@
+{
+  "probe": "Exact interception function with controlled native boundary stub; not native clipboard proof",
+  "first": "sentinel",
+  "rejected": true,
+  "last": "sentinel"
+}

@@ -1,0 +1,281 @@
+{
+  "recorded_at": "2026-10-25T14:43:33.793365+00:00",
+  "scope": "staged added code lines; separate strong-secret scan over every staged text file",
+  "code_files": 62,
+  "added_code_lines": 8350,
+  "reviewed_matches": [
+    {
+      "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/overlay/app/source/library.js",
+      "line": 15,
+      "category": "inner_html",
+      "classification": "archived reproducible evidence"
+    },
+    {
+      "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/overlay/app/source/render.js",
+      "line": 38,
+      "category": "dynamic_execution",
+      "classification": "archived reproducible evidence"
+    },
+    {
+      "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/overlay/app/source/render.js",
+      "line": 44,
+      "category": "dynamic_execution",
+      "classification": "archived reproducible evidence"
+    },
+    {
+      "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/overlay/app/source/view.js",
+      "line": 55,
+      "category": "inner_html",
+      "classification": "archived reproducible evidence"
+    },
+    {
+      "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/overlay/app/source/view.js",
+      "line": 57,
+      "category": "inner_html",
+      "classification": "archived reproducible evidence"
+    },
+    {
+      "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/overlay/app/source/view.js",
+      "line": 58,
+      "category": "inner_html",
+      "classification": "archived reproducible evidence"
+    },
+    {
+      "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/overlay/app/source/view.js",
+      "line": 63,
+      "category": "inner_html",
+      "classification": "archived reproducible evidence"
+    },
+    {
+      "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/overlay/app/source/view.js",
+      "line": 96,
+      "category": "inner_html",
+      "classification": "archived reproducible evidence"
+    },
+    {
+      "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/overlay/app/source/view.js",
+      "line": 98,
+      "category": "inner_html",
+      "classification": "archived reproducible evidence"
+    },
+    {
+      "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/overlay/app/source/view.js",
+      "line": 135,
+      "category": "inner_html",
+      "classification": "archived reproducible evidence"
+    },
+    {
+      "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/overlay/tests/article-text-footer-links-browser.test.cjs",
+      "line": 35,
+      "category": "dynamic_execution",
+      "classification": "archived reproducible evidence"
+    },
+    {
+      "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/overlay/tests/browser-support.cjs",
+      "line": 60,
+      "category": "dynamic_execution",
+      "classification": "archived reproducible evidence"
+    },
+    {
+      "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/overlay/tests/mail-layout-browser.test.cjs",
+      "line": 51,
+      "category": "inner_html",
+      "classification": "archived reproducible evidence"
+    },
+    {
+      "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/overlay/tests/mail-layout-browser.test.cjs",
+      "line": 122,
+      "category": "inner_html",
+      "classification": "archived reproducible evidence"
+    },
+    {
+      "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/overlay/tests/save-rescue-browser.test.cjs",
+      "line": 218,
+      "category": "credential_literal",
+      "classification": "archived reproducible evidence"
+    },
+    {
+      "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/overlay/tests/save-rescue-browser.test.cjs",
+      "line": 224,
+      "category": "credential_literal",
+      "classification": "archived reproducible evidence"
+    },
+    {
+      "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/overlay/tests/scope-buttons-browser.test.cjs",
+      "line": 10,
+      "category": "dynamic_execution",
+      "classification": "archived reproducible evidence"
+    },
+    {
+      "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/overlay/tests/tab-takeover-browser.test.cjs",
+      "line": 198,
+      "category": "credential_literal",
+      "classification": "archived reproducible evidence"
+    },
+    {
+      "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/z01-probe.cjs",
+      "line": 26,
+      "category": "console_log",
+      "classification": "archived reproducible evidence"
+    },
+    {
+      "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/z03-probe.cjs",
+      "line": 11,
+      "category": "console_log",
+      "classification": "archived reproducible evidence"
+    },
+    {
+      "path": "docs/prise-en-charge-backlog-20261025/audit-final/supplement-preview-probe.cjs",
+      "line": 58,
+      "category": "credential_literal",
+      "classification": "archived reproducible evidence"
+    },
+    {
+      "path": "docs/prise-en-charge-backlog-20261025/audit-final/supplement-preview-probe.cjs",
+      "line": 59,
+      "category": "credential_literal",
+      "classification": "archived reproducible evidence"
+    },
+    {
+      "path": "docs/prise-en-charge-backlog-20261025/audit-final/supplement-preview-probe.cjs",
+      "line": 78,
+      "category": "console_log",
+      "classification": "archived reproducible evidence"
+    },
+    {
+      "path": "docs/prise-en-charge-backlog-20261025/coordination/cleanup/probe-owned-sessions.cjs",
+      "line": 70,
+      "category": "console_log",
+      "classification": "archived reproducible evidence"
+    },
+    {
+      "path": "docs/prise-en-charge-backlog-20261025/coordination/recette-messageries/builder-candidat.html",
+      "line": 259,
+      "category": "dynamic_execution",
+      "classification": "archived reproducible evidence"
+    },
+    {
+      "path": "docs/prise-en-charge-backlog-20261025/coordination/recette-messageries/builder-candidat.html",
+      "line": 411,
+      "category": "dynamic_execution",
+      "classification": "archived reproducible evidence"
+    },
+    {
+      "path": "docs/prise-en-charge-backlog-20261025/coordination/recette-messageries/builder-candidat.html",
+      "line": 417,
+      "category": "dynamic_execution",
+      "classification": "archived reproducible evidence"
+    },
+    {
+      "path": "docs/prise-en-charge-backlog-20261025/coordination/recette-messageries/builder-candidat.html",
+      "line": 900,
+      "category": "inner_html",
+      "classification": "archived reproducible evidence"
+    },
+    {
+      "path": "docs/prise-en-charge-backlog-20261025/coordination/recette-messageries/builder-candidat.html",
+      "line": 1145,
+      "category": "inner_html",
+      "classification": "archived reproducible evidence"
+    },
+    {
+      "path": "docs/prise-en-charge-backlog-20261025/coordination/recette-messageries/builder-candidat.html",
+      "line": 1147,
+      "category": "inner_html",
+      "classification": "archived reproducible evidence"
+    },
+    {
+      "path": "docs/prise-en-charge-backlog-20261025/coordination/recette-messageries/builder-candidat.html",
+      "line": 1148,
+      "category": "inner_html",
+      "classification": "archived reproducible evidence"
+    },
+    {
+      "path": "docs/prise-en-charge-backlog-20261025/coordination/recette-messageries/builder-candidat.html",
+      "line": 1153,
+      "category": "inner_html",
+      "classification": "archived reproducible evidence"
+    },
+    {
+      "path": "docs/prise-en-charge-backlog-20261025/coordination/recette-messageries/builder-candidat.html",
+      "line": 1186,
+      "category": "inner_html",
+      "classification": "archived reproducible evidence"
+    },
+    {
+      "path": "docs/prise-en-charge-backlog-20261025/coordination/recette-messageries/builder-candidat.html",
+      "line": 1188,
+      "category": "inner_html",
+      "classification": "archived reproducible evidence"
+    },
+    {
+      "path": "docs/prise-en-charge-backlog-20261025/coordination/recette-messageries/builder-candidat.html",
+      "line": 1225,
+      "category": "inner_html",
+      "classification": "archived reproducible evidence"
+    },
+    {
+      "path": "docs/prise-en-charge-backlog-20261025/coordination/recette-messageries/builder-candidat.html",
+      "line": 1292,
+      "category": "dynamic_execution",
+      "classification": "archived reproducible evidence"
+    },
+    {
+      "path": "docs/prise-en-charge-backlog-20261025/coordination/recette-messageries/builder-candidat.html",
+      "line": 1293,
+      "category": "dynamic_execution",
+      "classification": "archived reproducible evidence"
+    },
+    {
+      "path": "docs/prise-en-charge-backlog-20261025/coordination/recette-messageries/builder-candidat.html",
+      "line": 1294,
+      "category": "dynamic_execution",
+      "classification": "archived reproducible evidence"
+    },
+    {
+      "path": "docs/prise-en-charge-backlog-20261025/coordination/recette-messageries/builder-candidat.html",
+      "line": 1297,
+      "category": "dynamic_execution",
+      "classification": "archived reproducible evidence"
+    },
+    {
+      "path": "docs/prise-en-charge-backlog-20261025/coordination/recette-messageries/builder-candidat.html",
+      "line": 1332,
+      "category": "dynamic_execution",
+      "classification": "archived reproducible evidence"
+    },
+    {
+      "path": "docs/prise-en-charge-backlog-20261025/coordination/recette-messageries/builder-candidat.html",
+      "line": 1475,
+      "category": "dynamic_execution",
+      "classification": "archived reproducible evidence"
+    },
+    {
+      "path": "docs/prise-en-charge-backlog-20261025/coordination/recette-messageries/builder-candidat.html",
+      "line": 1556,
+      "category": "inner_html",
+      "classification": "archived reproducible evidence"
+    },
+    {
+      "path": "docs/prise-en-charge-backlog-20261025/coordination/recette-messageries/builder-candidat.html",
+      "line": 1726,
+      "category": "inner_html",
+      "classification": "archived reproducible evidence"
+    },
+    {
+      "path": "docs/prise-en-charge-backlog-20261025/coordination/recette-messageries/generer-kit.cjs",
+      "line": 50,
+      "category": "console_log",
+      "classification": "archived reproducible evidence"
+    },
+    {
+      "path": "tests/scope-buttons-browser.test.cjs",
+      "line": 10,
+      "category": "dynamic_execution",
+      "classification": "test fixture or boundary"
+    }
+  ],
+  "retained_findings": [],
+  "strong_secret_matches": [],
+  "verdict": "clean"
+}

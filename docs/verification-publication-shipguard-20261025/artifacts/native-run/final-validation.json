@@ -1,0 +1,29 @@
+{
+  "run_id": "audit-20261025-142735923-395c08d1",
+  "all_native_completed": true,
+  "accepted_exact_artifacts": [
+    "visual-tests/_results/runs/audit-20261025-142735923-395c08d1/zone-z01-r1-r1-z01-a1.json",
+    "visual-tests/_results/runs/audit-20261025-142735923-395c08d1/zone-z02-r1-r1-z02-a1.json",
+    "visual-tests/_results/runs/audit-20261025-142735923-395c08d1/zone-z03-r1-r1-z03-a1.json",
+    "visual-tests/_results/runs/audit-20261025-142735923-395c08d1/zone-z04-r1-r1-z04-a1.json",
+    "visual-tests/_results/runs/audit-20261025-142735923-395c08d1/zone-z05-r1-r1-z05-a1.json"
+  ],
+  "all_five_worktree_heads_match_base": true,
+  "all_five_times_168_source_hashes_unchanged": true,
+  "zone_overlap_count": 0,
+  "files_audited": 168,
+  "merge_log": [],
+  "parent_status_at_collection": " M app/distribution/portable.html\n M app/distribution/snum.html\n M app/distribution/web/index.html\n M app/distribution/web/sw.js\n M app/source/library.js\n M app/source/preview.js\n M app/source/render.js\n M app/source/view.js\n M package-lock.json\n M tests/article-text-footer-links-browser.test.cjs\n M tests/browser-support.cjs\n M tests/browser.test.cjs\n M tests/creation-browser.test.cjs\n M tests/editor-input-preservation-browser.test.cjs\n M tests/error-persistence-browser.test.cjs\n M tests/link-labels-browser.test.cjs\n M tests/mail-layout-browser.test.cjs\n M tests/preview-size-browser.test.cjs\n M tests/pwa-contract.test.cjs\n M tests/restore-after-refusal-browser.test.cjs\n M tests/save-rescue-browser.test.cjs\n M tests/scope-buttons-browser.test.cjs\n M tests/tab-takeover-browser.test.cjs\n M tests/typing-performance-browser.test.cjs\n?? docs/prise-en-charge-backlog-20261025/\n?? docs/verification-publication-shipguard-20261025/\n?? tests/portability-clipboard-browser.test.cjs\n?? tests/portability-storage.cjs\n?? tests/preview-resources-browser.test.cjs\n?? tests/preview-resources.cjs\n",
+  "merge_phase": "not applicable report-only; uncommitted candidate preserved, no merge",
+  "post_merge_checks": "not applicable no audit fix commits/merges",
+  "flow_tracer": "skipped per quick mode",
+  "negative_evidence_gate": {
+    "checked": 3,
+    "rejected": 0,
+    "retained": 3,
+    "note": "Raw regex serialization issues retained in artifact; independent complete replay supplies canonical evidence"
+  },
+  "source_snapshot": "c43 immutable native worktrees; parent began authorized follow-up correction separately",
+  "canonical_gate": "NO_GO until newly introduced harness cleanup finding corrected and independently checked",
+  "validated_at": "2026-10-25T14:36:51.993323+00:00"
+}

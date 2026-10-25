@@ -1,0 +1,111 @@
+diff --git a/app/source/library.js b/app/source/library.js
+index 09e2532..c2b1994 100644
+--- a/app/source/library.js
++++ b/app/source/library.js
+@@ -22,10 +22,12 @@
+   }
+   // Changer de vue attend les écritures en cours sans exiger leur succès : après un échec, le travail reste en mémoire.
+   async function open(id) {
++    const alreadyVisible = !get("editor-page").hidden;
+     A.State.guard(); find(id); await A.State.settle();
+     if (id !== A.library.activeId) { await A.State.change(lib => { lib.activeId = id; }); await A.State.settle(); }
+-    // Le cadre doit être visible avant de charger son document d’aperçu.
+-    show(true); A.UI.refresh();
++    // Depuis l’accueil, le cadre doit être visible avant de charger son aperçu.
++    // Dans l’éditeur, State.change a déjà rendu : une seconde navigation blob peut être perdue sous WebKit.
++    show(true); if (!alreadyVisible) A.UI.refresh();
+   }
+   async function home() { A.State.guard(); await A.State.settle(); refresh(); show(false); }
+   // Message commun : signale un objet daté qui n'a pas été repris tel quel.
+diff --git a/app/source/preview.js b/app/source/preview.js
+index 00d48cc..d59e063 100644
+--- a/app/source/preview.js
++++ b/app/source/preview.js
+@@ -2,18 +2,24 @@
+ (() => {
+   "use strict";
+   const A = window.MailBuilder, frame = document.getElementById("preview"), measure = A.previewMeasure;
+-  let url, token, loaded = false;
++  let url, token, loaded = false, navigating = false, pending;
+   function request() { frame.contentWindow?.postMessage({type: "mail-preview-measure", token}, "*"); }
++  function navigate(next) {
++    const previous = url;
++    url = URL.createObjectURL(new Blob([next.html], {type: "text/html"}));
++    navigating = true; frame.src = `${url}#${next.token}`;
++    if (previous) URL.revokeObjectURL(previous);
++  }
+   function show(value) {
+     const marker = "default-src &#39;none&#39;;", rendered = A.Render.html(value, true);
+     if (!rendered.includes(marker)) throw new Error("La politique de sécurité de l’aperçu n’est pas reconnue.");
+     const html = rendered.replace(marker, `${marker}script-src &#39;sha256-${measure.hash}&#39;;`)
+       .replace("</body>", `<script>${measure.source}<\/script></body>`);
+     token = crypto.randomUUID(); loaded = false;
+-    const previous = url;
+-    url = URL.createObjectURL(new Blob([html], {type: "text/html"}));
+-    frame.src = `${url}#${token}`;
+-    if (previous) URL.revokeObjectURL(previous);
++    // Une seconde navigation avant le load de la première peut être perdue par le
++    // navigateur. Garder seulement le dernier rendu demandé, sans créer son blob.
++    const next = {html, token};
++    if (navigating) pending = next; else navigate(next);
+   }
+   addEventListener("message", event => {
+     const data = event.data;
+@@ -24,7 +30,11 @@
+     const style = getComputedStyle(frame), height = data.height + parseFloat(style.borderTopWidth) + parseFloat(style.borderBottomWidth) + 1;
+     if (Math.abs(frame.getBoundingClientRect().height - height) > .5) frame.style.height = `${height}px`;
+   });
+-  frame.addEventListener("load", () => { loaded = true; request(); });
++  frame.addEventListener("load", () => {
++    navigating = false;
++    if (pending) { const next = pending; pending = undefined; navigate(next); return; }
++    loaded = true; request();
++  });
+   let width;
+   new ResizeObserver(() => { if (frame.clientWidth !== width) { width = frame.clientWidth; request(); } }).observe(frame);
+   A.Preview = Object.freeze({show});
+diff --git a/app/source/render.js b/app/source/render.js
+index fb40b06..b8152be 100644
+--- a/app/source/render.js
++++ b/app/source/render.js
+@@ -186,7 +186,9 @@
+       const layout = table.hasAttribute("data-mail-columns") && !table.classList.contains("mail-columns-stack") ? "auto" : "fixed";
+       add(table, "min-width:0!important;max-width:100%!important;border-collapse:collapse;table-layout:" + layout + ";");
+       if (table.parentElement === doc.body) {
+-        add(table, "width:620px;margin:0;");
++        // Une messagerie peut remplacer width par 800px. La borne logique reste
++        // prioritaire ; WebKit ignore max-width sur les tables à largeur fixe.
++        add(table, "width:620px;margin:0;inline-size:min(100%,620px)!important;");
+       }
+       // WebKit ignore max-width sur une table de largeur fixe en pixels, imbriquée ou racine.
+       // min() la borne à son conteneur ; un moteur qui ignore min() garde la largeur fixe.
+diff --git a/app/source/view.js b/app/source/view.js
+index 6f40951..b1a10ab 100644
+--- a/app/source/view.js
++++ b/app/source/view.js
+@@ -114,7 +114,7 @@
+   }
+   function summary() { get("composition-summary").textContent = `${A.doc().blocks.length} blocs dans « ${A.doc().name} »`; }
+   function preview() {
+-    pageTitle(); A.Preview.show(A.doc());
++    pageTitle(); if (!get("editor-page").hidden) A.Preview.show(A.doc());
+     summary();
+     // #41 : avertissement des pré-en-têtes multiples, calculé avec l’aperçu différé, jamais à la frappe (#34).
+     const warnings = A.Render.warnings(A.doc()); if (warnings.length) get("composition-summary").textContent += `. ${warnings.join(". ")}`;
+diff --git a/package-lock.json b/package-lock.json
+index 64cab21..f46406f 100644
+--- a/package-lock.json
++++ b/package-lock.json
+@@ -56,9 +56,9 @@
+       "license": "MIT"
+     },
+     "node_modules/fast-uri": {
+-      "version": "3.1.8",
+-      "resolved": "https://registry.npmjs.org/fast-uri/-/fast-uri-3.1.8.tgz",
+-      "integrity": "sha512-GZMtZUTNRpOVIECoXwLNZS5xUGE+mVNbTB8h/7Rwh2TFWcBQiPzTgyZi05BF9UMZKkLJv8XBRJTlU7zg8+ZfMg==",
++      "version": "3.1.9",
++      "resolved": "https://registry.npmjs.org/fast-uri/-/fast-uri-3.1.9.tgz",
++      "integrity": "sha512-hS/0Wt3Ya043oKXs0sIxrMpKQITXhMLIrVAKKXi4gozGC9v7YRWVnXIZzjNPTO02M9BdxLCWqK1yRXgNziVyJQ==",
+       "dev": true,
+       "funding": [
+         {

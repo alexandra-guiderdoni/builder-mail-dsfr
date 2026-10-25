@@ -68,12 +68,17 @@ test('parcours complet par les contrôles : bibliothèque, identités, modèles,
     await page.locator('[data-image-field]').first().setInputFiles(path.join(root, 'app/assets/icon-192.png'));
     await page.locator('#notice').filter({hasText: 'Image locale incorporée'}).waitFor();
     await saved(page);
+    // Une nouvelle image est recomprimée localement. Le parcours vérifie l’image incorporée
+    // dans l’éditeur puis sa conservation exacte dans les exports et la restauration.
+    // Le contrat de préparation/réencodage possède ses propres tests (image-import-browser).
+    const image = await page.locator('.image-field img').first().getAttribute('src');
+    assert.match(image, /^data:image\/png;base64,/);
+    assert.deepEqual(await page.evaluate(async src => { const image = new Image(); image.src = src; await image.decode(); return [image.naturalWidth, image.naturalHeight]; }, image), [192, 192], 'l’icône incorporée reste décodable aux dimensions attendues');
     await expand(page, 'Fichiers et récupération');
     const projectPath = await download(page, '[data-action=export-document]', 'composition.courriel.json');
     const libraryPath = await download(page, '[data-action=export-library]', 'bibliotheque.courriels.json');
     const mailPath = await download(page, '[data-action=export-mail]', 'courriel.html');
     const project = JSON.parse(await fs.readFile(projectPath, 'utf8')), lib = JSON.parse(await fs.readFile(libraryPath, 'utf8')), html = await fs.readFile(mailPath, 'utf8');
-    const image = (await fs.readFile(path.join(root, 'app/assets/icon-192.png'))).toString('base64');
     assert(JSON.stringify(project).includes(image)); assert(html.includes(image)); assert(!/<script[\s>]/i.test(html));
     assert(html.includes('&lt;script&gt;')); assert.equal(html.split(escapedTitle).length - 1, 2); assert.equal(JSON.stringify(project).split(JSON.stringify(editedTitle)).length - 1, 2); assert.equal(lib.templates.length, 1); assert.equal(lib.identities.length, 1); assert.equal(lib.documents.length, 4);
     await click(page, '[data-action=copy]'); await confirmChecks(page); await page.locator('#notice').filter({hasText: 'Courriel copié en HTML et texte.'}).waitFor();

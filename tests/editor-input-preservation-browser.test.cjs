@@ -55,17 +55,28 @@ test('la fin du chargement pendant une sélection à remplacer garde la sélecti
   } finally { await browser.close(); }
 });
 
-test('la fin du chargement pendant une composition IME ne remplace pas le champ avant compositionend', async () => {
+test('la fin du chargement pendant une composition IME synthétique ne remplace pas le champ avant compositionend', async () => {
   const browser = await chromium.launch({headless: true});
   try {
     const {page} = await open(browser);
     await holdImage(page);
     const field = textField(page), id = await field.getAttribute('id');
     await field.focus(); await page.keyboard.press('ControlOrMeta+A'); await page.keyboard.type('AB');
+    await field.evaluate(e => {
+      window.compositionTrace = [];
+      for (const type of ['compositionstart', 'input', 'compositionend', 'focusout']) e.addEventListener(type, event => window.compositionTrace.push({type, isComposing: event.isComposing, trusted: event.isTrusted, value: e.value, focused: document.activeElement === e, connected: e.isConnected}));
+    });
     await field.evaluate(e => { e.__marque = true; e.dispatchEvent(new CompositionEvent('compositionstart', {bubbles: true})); });
-    await page.keyboard.insertText('é');
+    // insertText déclenche une composition complète sous Firefox, donc termine le scénario.
+    // Ici la composition reste synthétique et explicitement ouverte jusqu’à compositionend.
+    await field.evaluate(e => {
+      e.setRangeText('é', e.selectionStart, e.selectionEnd, 'end');
+      e.dispatchEvent(new InputEvent('input', {bubbles: true, data: 'é', inputType: 'insertCompositionText', isComposing: true}));
+    });
     await release(page);
-    assert(await field.evaluate(e => e.__marque === true && e.isConnected && document.activeElement === e), 'le champ en composition doit rester le même nœud, focalisé');
+    assert(await field.evaluate(e => e.__marque === true && e.isConnected && document.activeElement === e), `le champ en composition doit rester le même nœud, focalisé : ${JSON.stringify(await page.evaluate(() => window.compositionTrace))}`);
+    assert.equal(await field.inputValue(), 'ABé');
+    assert.deepEqual(await caret(page), {id, start: 3, end: 3});
     await field.evaluate(e => e.dispatchEvent(new CompositionEvent('compositionend', {bubbles: true, data: 'é'})));
     await page.waitForFunction(() => document.querySelector('#block-editor [data-field]').__marque === undefined);
     assert.deepEqual(await caret(page), {id, start: 3, end: 3});

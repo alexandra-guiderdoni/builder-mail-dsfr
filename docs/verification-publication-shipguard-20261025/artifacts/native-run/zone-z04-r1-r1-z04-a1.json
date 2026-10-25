@@ -1,0 +1,586 @@
+{
+  "run_id": "audit-20261025-142735923-395c08d1",
+  "base_sha": "395c08d1dfa4d0b8e41416da798bf0313a8bd379",
+  "zone_id": "z04",
+  "agent_id": "r1-z04-a1",
+  "zone": "tests/fixtures/snum.cjs",
+  "round": 1,
+  "files_audited": 48,
+  "duration_ms": 650000,
+  "candidate_overlay_sha256": "c43f9e5f67bcee948de67b57d9a51d4b20454bd1ed5a5bdd291de3ecc57b2ec5",
+  "bugs": [
+    {
+      "id": "r1-z04-001",
+      "severity": "medium",
+      "category": "resource-leak",
+      "subcategory": "fixture-failure-cleanup",
+      "file": "tests/preview-resources-browser.test.cjs",
+      "line": 45,
+      "title": "Un échec navigateur laisse le serveur de contre-épreuve actif",
+      "description": "Nouvelle occurrence introduite par le fichier candidat, limitée au harnais. withPreview démarre resourceServer avant le try ; si chromium.launch rejette, aucun finally n’est atteint. Sonde VM sur la source exacte : listen=1, hostClose=0. Autre branche : browser.close rejette au début du finally, hostClose reste 0. Le témoin nominal ferme le serveur (hostClose=1). Le contrôle de terminaison borné utilise la source exacte, le runner node:test natif et un intervalle référencé à la frontière HTTP (sans navigateur ni réseau) : les deux pannes produisent un test échoué puis ETIMEDOUT/SIGTERM à 1200ms, le témoin nominal termine code0. Un vrai serveur HTTP référencé aurait le même besoin de fermeture ; aucun serveur HTTP réel lancé ici. Conséquence : suite déjà échouée retenue jusqu’à la borne externe, pas un faux succès produit. Le même motif est préexistant dans tests/preview-size-browser.test.cjs:113,140,169 (setup),136,165,200 (finally) ; seuls les nouveaux appels du helper ajoutent ce risque à la candidate.",
+      "fix_tier": "test-first",
+      "fix_tier_reason": "Changer la gestion des échecs ou l’attribution des preuves exige une contre-épreuve qui échoue avant le correctif et passe ensuite.",
+      "fix_applied": false,
+      "fix_commit": "",
+      "fix_evidence": null,
+      "negative_evidence": {
+        "claim": "missing-construct",
+        "complete": true,
+        "scope": [
+          "tests/preview-resources-browser.test.cjs",
+          "tests/preview-size-browser.test.cjs",
+          "tests/browser-support.cjs"
+        ],
+        "exclusions": [
+          ".git/",
+          "node_modules/",
+          "visual-tests/_results/",
+          "generated distributions"
+        ],
+        "searches": [
+          {
+            "query": "rg -n 'after\\\\(|afterEach\\\\(|closeAllConnections|server\\\\.close|host\\\\.close|chromium\\\\.launch|await server\\\\(|await resourceServer\\\\(' tests/preview-resources-browser.test.cjs tests/preview-size-browser.test.cjs tests/browser-support.cjs",
+            "mode": "regex",
+            "matches": [
+              "tests/preview-resources-browser.test.cjs:45:  const host = await resourceServer(), browser = await chromium.launch();",
+              "tests/preview-resources-browser.test.cjs:58:  } finally { await browser.close(); await host.close(); }",
+              "tests/preview-size-browser.test.cjs:42:  const browser = await chromium.launch();",
+              "tests/preview-size-browser.test.cjs:80:  const browser = await chromium.launch();",
+              "tests/preview-size-browser.test.cjs:113:  const host = await server(), browser = await chromium.launch();",
+              "tests/preview-size-browser.test.cjs:136:  } finally { await browser.close(); await host.close(); }",
+              "tests/preview-size-browser.test.cjs:140:  const host = await server(), browser = await chromium.launch();",
+              "tests/preview-size-browser.test.cjs:165:  } finally { await browser.close(); await host.close(); }",
+              "tests/preview-size-browser.test.cjs:169:  const host = await server(), browser = await chromium.launch();",
+              "tests/preview-size-browser.test.cjs:200:  } finally { await browser.close(); await host.close(); }",
+              "tests/preview-size-browser.test.cjs:204:  const browser = await chromium.launch();",
+              "tests/preview-size-browser.test.cjs:225:  const browser = await chromium.launch();"
+            ]
+          }
+        ],
+        "inspected_files": [
+          "tests/preview-resources-browser.test.cjs",
+          "tests/preview-size-browser.test.cjs",
+          "tests/browser-support.cjs"
+        ]
+      },
+      "confidence": "high",
+      "verification_score": null,
+      "verified": null
+    },
+    {
+      "id": "r1-z04-002",
+      "severity": "medium",
+      "category": "error-handling",
+      "subcategory": "partial-tap-accepted-after-failed-process",
+      "file": "tests/run-engines.cjs",
+      "line": 59,
+      "title": "Un processus interrompu après un succès TAP donne un bilan vert",
+      "description": "Défaut préexistant : tests/run-engines.cjs est byte-identique à la base. runEngine ne considère le code du processus que lorsque parseTap ne produit aucun résultat. La sonde VM injecte la réponse de spawnSync, sans exécuter de tests : stdout contient seulement « ok 1 - premier test », alors que le processus a soit ETIMEDOUT/SIGTERM/status null, soit status7. Dans les deux cas le vrai code retourne un seul pass et exitCode(summarize(...))=0 ; les tests restants et le processus échoué disparaissent. Limite : sonde à la frontière child_process, pas campagne navigateur. npm test et le workflow Pages invoquent directement node --test et ne consomment pas cet agrégateur ; leurs 397 réussites ne sont pas invalidées par ce défaut.",
+      "fix_tier": "test-first",
+      "fix_tier_reason": "Changer la gestion des échecs ou l’attribution des preuves exige une contre-épreuve qui échoue avant le correctif et passe ensuite.",
+      "fix_applied": false,
+      "fix_commit": "",
+      "fix_evidence": null,
+      "negative_evidence": {
+        "claim": "missing-construct",
+        "complete": true,
+        "scope": [
+          "tests/run-engines.cjs",
+          "tests/run-engines.test.cjs"
+        ],
+        "exclusions": [
+          ".git/",
+          "node_modules/",
+          "visual-tests/_results/",
+          "generated distributions"
+        ],
+        "searches": [
+          {
+            "query": "rg -n 'run\\\\.status|run\\\\.signal|run\\\\.error|runEngine|parseTap|timeout' tests/run-engines.cjs tests/run-engines.test.cjs",
+            "mode": "regex",
+            "matches": [
+              "tests/run-engines.test.cjs:3:const {parseTap, classify, summarize, exitCode, selectFiles} = require('./run-engines.cjs');",
+              "tests/run-engines.test.cjs:10:  assert.deepEqual(parseTap(tap), [",
+              "tests/run-engines.cjs:10:function parseTap(output) {",
+              "tests/run-engines.cjs:52:  const run = spawnSync(process.execPath, ['-e', `const p=require(process.env.PLAYWRIGHT_MODULE||'playwright');p[${JSON.stringify(engine)}].launch().then(b=>b.close()).then(()=>process.exit(0),e=>{console.error(String(e.message).split('\\\\n')[0]);process.exit(1)})`], {cwd: root, encoding: 'utf8', timeout: 60000});",
+              "tests/run-engines.cjs:53:  return run.status === 0 ? null : (run.stderr.trim() || 'lancement impossible');",
+              "tests/run-engines.cjs:55:function runEngine(engine, files, dir, root, registry, timeoutMs) {",
+              "tests/run-engines.cjs:58:    const run = spawnSync(process.execPath, ['--test', '--test-concurrency=1', '--test-reporter=tap', path.join(root, 'tests', file)], {cwd: root, encoding: 'utf8', timeout: timeoutMs, maxBuffer: 64 * 1024 * 1024, env: {...process.env, MAIL_BUILDER_ENGINE: engine, MAIL_BUILDER_NOTES: notes}});",
+              "tests/run-engines.cjs:59:    const parsed = parseTap(run.stdout || '');",
+              "tests/run-engines.cjs:60:    if (!parsed.length) parsed.push({name: '(fichier entier)', status: 'fail', message: run.error ? String(run.error.message) : `aucun résultat TAP, code ${run.status}`});",
+              "tests/run-engines.cjs:88:  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'mail-builder-engines-')), timeoutMs = Number(option('timeout-ms')) || 180000;",
+              "tests/run-engines.cjs:93:    const run = runEngine(engine, files, dir, root, registry, timeoutMs);",
+              "tests/run-engines.cjs:101:module.exports = {parseTap, classify, summarize, exitCode, selectFiles, ENGINES};"
+            ]
+          }
+        ],
+        "inspected_files": [
+          "tests/run-engines.cjs",
+          "tests/run-engines.test.cjs"
+        ]
+      },
+      "confidence": "high",
+      "verification_score": null,
+      "verified": null
+    },
+    {
+      "id": "r1-z04-003",
+      "severity": "medium",
+      "category": "logic-error",
+      "subcategory": "engine-evidence-misattribution",
+      "file": "tests/narrow-window-browser.test.cjs",
+      "line": 5,
+      "title": "Onze scénarios fixes sont attribués au moteur demandé",
+      "description": "Motif préexistant supplémentaire au constat historique creation-browser ; les quatre fichiers sont byte-identiques à la base. narrow-window-browser (4 tests), page-title-views-browser (2), preheader-hidden-browser (3) et snum-error-browser (2) choisissent directement Chromium/WebKit. Le vrai run-engines.cjs sélectionne ces fichiers puis attribue chaque ligne TAP au moteur demandé. La sonde VM conserve l’enregistrement de chaque test et arrête chaque appel à la frontière launch : avec MAIL_BUILDER_ENGINE=firefox, 6 lancements Chromium et 5 WebKit, aucun Firefox, sur ces 11 scénarios. Les sorties de ces fichiers peuvent donc gonfler une ligne Firefox sans l’exercer ; cela ne transforme pas la suite npm test native en preuve Firefox, et ne prouve aucune régression produit. Fichiers/points : tests/narrow-window-browser.test.cjs:5, tests/page-title-views-browser.test.cjs:9, tests/preheader-hidden-browser.test.cjs:18, tests/snum-error-browser.test.cjs:12.",
+      "fix_tier": "test-first",
+      "fix_tier_reason": "Changer la gestion des échecs ou l’attribution des preuves exige une contre-épreuve qui échoue avant le correctif et passe ensuite.",
+      "fix_applied": false,
+      "fix_commit": "",
+      "fix_evidence": null,
+      "negative_evidence": null,
+      "confidence": "high",
+      "verification_score": null,
+      "verified": null
+    }
+  ],
+  "review_evidence": {
+    "files_read": [
+      "tests/fixtures/snum.cjs",
+      "tests/narrow-window-browser.test.cjs",
+      "tests/notice-order-browser.test.cjs",
+      "tests/notice-protection-browser.test.cjs",
+      "tests/observers-browser.test.cjs",
+      "tests/page-flow-browser.test.cjs",
+      "tests/page-title-browser.test.cjs",
+      "tests/page-title-views-browser.test.cjs",
+      "tests/page-title.test.cjs",
+      "tests/pages-workflow.test.cjs",
+      "tests/portability-clipboard-browser.test.cjs",
+      "tests/portability-storage.cjs",
+      "tests/preheader-hidden-browser.test.cjs",
+      "tests/preheader-hidden.test.cjs",
+      "tests/preview-contract.test.cjs",
+      "tests/preview-resources-browser.test.cjs",
+      "tests/preview-resources.cjs",
+      "tests/preview-size-browser.test.cjs",
+      "tests/prototype-browser.test.cjs",
+      "tests/prototype-lifecycle-browser.test.cjs",
+      "tests/prototype-model.test.cjs",
+      "tests/provenance.test.cjs",
+      "tests/pwa-browser.test.cjs",
+      "tests/pwa-contract.test.cjs",
+      "tests/pwa-install-failure-browser.test.cjs",
+      "tests/pwa-update-save-contract.test.cjs",
+      "tests/pwa-update-two-tabs-browser.test.cjs",
+      "tests/reference-browser.test.cjs",
+      "tests/restore-after-refusal-browser.test.cjs",
+      "tests/run-engines.cjs",
+      "tests/run-engines.test.cjs",
+      "tests/save-announcements-browser.test.cjs",
+      "tests/save-rescue-browser.test.cjs",
+      "tests/schema-validation.test.cjs",
+      "tests/scope-buttons-browser.test.cjs",
+      "tests/snum-conversion.test.cjs",
+      "tests/snum-error-browser.test.cjs",
+      "tests/source-editorial-frame.test.cjs",
+      "tests/source-in-frame.test.cjs",
+      "tests/source-label.test.cjs",
+      "tests/storage-browser.test.cjs",
+      "tests/storage-resilience-browser.test.cjs",
+      "tests/tab-takeover-browser.test.cjs",
+      "tests/typing-performance-browser.test.cjs",
+      "tests/undo-remove-browser.test.cjs",
+      "tests/url-input-browser.test.cjs",
+      "tests/url-issues.test.cjs",
+      "tests/validate-schema.cjs"
+    ],
+    "all_168_manifest_hashes_verified": true,
+    "syntax_checks": [
+      {
+        "path": "tests/fixtures/snum.cjs",
+        "exit_code": 0
+      },
+      {
+        "path": "tests/narrow-window-browser.test.cjs",
+        "exit_code": 0
+      },
+      {
+        "path": "tests/notice-order-browser.test.cjs",
+        "exit_code": 0
+      },
+      {
+        "path": "tests/notice-protection-browser.test.cjs",
+        "exit_code": 0
+      },
+      {
+        "path": "tests/observers-browser.test.cjs",
+        "exit_code": 0
+      },
+      {
+        "path": "tests/page-flow-browser.test.cjs",
+        "exit_code": 0
+      },
+      {
+        "path": "tests/page-title-browser.test.cjs",
+        "exit_code": 0
+      },
+      {
+        "path": "tests/page-title-views-browser.test.cjs",
+        "exit_code": 0
+      },
+      {
+        "path": "tests/page-title.test.cjs",
+        "exit_code": 0
+      },
+      {
+        "path": "tests/pages-workflow.test.cjs",
+        "exit_code": 0
+      },
+      {
+        "path": "tests/portability-clipboard-browser.test.cjs",
+        "exit_code": 0
+      },
+      {
+        "path": "tests/portability-storage.cjs",
+        "exit_code": 0
+      },
+      {
+        "path": "tests/preheader-hidden-browser.test.cjs",
+        "exit_code": 0
+      },
+      {
+        "path": "tests/preheader-hidden.test.cjs",
+        "exit_code": 0
+      },
+      {
+        "path": "tests/preview-contract.test.cjs",
+        "exit_code": 0
+      },
+      {
+        "path": "tests/preview-resources-browser.test.cjs",
+        "exit_code": 0
+      },
+      {
+        "path": "tests/preview-resources.cjs",
+        "exit_code": 0
+      },
+      {
+        "path": "tests/preview-size-browser.test.cjs",
+        "exit_code": 0
+      },
+      {
+        "path": "tests/prototype-browser.test.cjs",
+        "exit_code": 0
+      },
+      {
+        "path": "tests/prototype-lifecycle-browser.test.cjs",
+        "exit_code": 0
+      },
+      {
+        "path": "tests/prototype-model.test.cjs",
+        "exit_code": 0
+      },
+      {
+        "path": "tests/provenance.test.cjs",
+        "exit_code": 0
+      },
+      {
+        "path": "tests/pwa-browser.test.cjs",
+        "exit_code": 0
+      },
+      {
+        "path": "tests/pwa-contract.test.cjs",
+        "exit_code": 0
+      },
+      {
+        "path": "tests/pwa-install-failure-browser.test.cjs",
+        "exit_code": 0
+      },
+      {
+        "path": "tests/pwa-update-save-contract.test.cjs",
+        "exit_code": 0
+      },
+      {
+        "path": "tests/pwa-update-two-tabs-browser.test.cjs",
+        "exit_code": 0
+      },
+      {
+        "path": "tests/reference-browser.test.cjs",
+        "exit_code": 0
+      },
+      {
+        "path": "tests/restore-after-refusal-browser.test.cjs",
+        "exit_code": 0
+      },
+      {
+        "path": "tests/run-engines.cjs",
+        "exit_code": 0
+      },
+      {
+        "path": "tests/run-engines.test.cjs",
+        "exit_code": 0
+      },
+      {
+        "path": "tests/save-announcements-browser.test.cjs",
+        "exit_code": 0
+      },
+      {
+        "path": "tests/save-rescue-browser.test.cjs",
+        "exit_code": 0
+      },
+      {
+        "path": "tests/schema-validation.test.cjs",
+        "exit_code": 0
+      },
+      {
+        "path": "tests/scope-buttons-browser.test.cjs",
+        "exit_code": 0
+      },
+      {
+        "path": "tests/snum-conversion.test.cjs",
+        "exit_code": 0
+      },
+      {
+        "path": "tests/snum-error-browser.test.cjs",
+        "exit_code": 0
+      },
+      {
+        "path": "tests/source-editorial-frame.test.cjs",
+        "exit_code": 0
+      },
+      {
+        "path": "tests/source-in-frame.test.cjs",
+        "exit_code": 0
+      },
+      {
+        "path": "tests/source-label.test.cjs",
+        "exit_code": 0
+      },
+      {
+        "path": "tests/storage-browser.test.cjs",
+        "exit_code": 0
+      },
+      {
+        "path": "tests/storage-resilience-browser.test.cjs",
+        "exit_code": 0
+      },
+      {
+        "path": "tests/tab-takeover-browser.test.cjs",
+        "exit_code": 0
+      },
+      {
+        "path": "tests/typing-performance-browser.test.cjs",
+        "exit_code": 0
+      },
+      {
+        "path": "tests/undo-remove-browser.test.cjs",
+        "exit_code": 0
+      },
+      {
+        "path": "tests/url-input-browser.test.cjs",
+        "exit_code": 0
+      },
+      {
+        "path": "tests/url-issues.test.cjs",
+        "exit_code": 0
+      },
+      {
+        "path": "tests/validate-schema.cjs",
+        "exit_code": 0
+      }
+    ],
+    "probes": {
+      "command": {
+        "executable": "node",
+        "args": [],
+        "stdin": "const fs=require('node:fs'), vm=require('node:vm'), cp=require('node:child_process');\n(async()=>{\n const results={cleanup:[],runnerPartial:[],hardcodedEngines:[],termination:[]};\n const helperSource=fs.readFileSync('tests/preview-resources-browser.test.cjs','utf8');\n for(const scenario of ['launch-reject','browser-close-reject','success']){\n  const calls={listen:0,hostClose:0,launch:0,browserClose:0};\n  const server={listen(_p,_h,cb){calls.listen++;cb();},address(){return {port:1}},close(cb){calls.hostClose++;cb();}};\n  const browser={newPage:async()=>({goto:async()=>{}}),close:async()=>{calls.browserClose++;if(scenario==='browser-close-reject')throw new Error('CLOSE_REJECTED')}};\n  const support={root:process.cwd(),fs:{readFile:async()=>Buffer.from('fixture')},chromium:{launch:async()=>{calls.launch++;if(scenario==='launch-reject')throw new Error('LAUNCH_REJECTED');return browser;}},assert:require('node:assert/strict')};\n  const scope={require:id=>id==='node:test'?()=>{}:id==='node:http'?{createServer:()=>server}:id==='./browser-support.cjs'?support:id==='./preview-resources.cjs'?{}:require(id),URL,Buffer,console,module:{exports:{}}};\n  vm.createContext(scope);vm.runInContext(helperSource+'\\nglobalThis.probe=withPreview;',scope);\n  let error=null;try{await scope.probe(async()=>{});}catch(e){error=e.message;}results.cleanup.push({scenario,error,...calls});\n }\n const source=fs.readFileSync('tests/run-engines.cjs','utf8');\n for(const run of [{stdout:'TAP version 13\\nok 1 - premier test\\n',stderr:'',status:null,signal:'SIGTERM',error:Object.assign(new Error('spawnSync ETIMEDOUT'),{code:'ETIMEDOUT'})},{stdout:'TAP version 13\\nok 1 - premier test\\n',stderr:'crash',status:7,signal:null}]){\n  const m={exports:{}};const scope={require:id=>id==='node:child_process'?{spawnSync:()=>run}:id==='node:fs'?{existsSync:()=>false}:require(id),module:m,exports:m.exports,process:{execPath:process.execPath,env:{}},console};vm.createContext(scope);vm.runInContext(source+'\\nglobalThis.runEngineForProbe=runEngine;',scope);\n  const parsed=scope.runEngineForProbe('firefox',['synthetic.test.cjs'],'/not-created',process.cwd(),[],10).results;const summary=m.exports.summarize(parsed);results.runnerPartial.push({input:{status:run.status,signal:run.signal,error:run.error?.code??null},results:parsed,summary,exitCode:m.exports.exitCode(summary)});\n }\n for(const file of ['tests/narrow-window-browser.test.cjs','tests/page-title-views-browser.test.cjs','tests/preheader-hidden-browser.test.cjs','tests/snum-error-browser.test.cjs']){\n  const callbacks=[],launches=[];const engines=Object.fromEntries(['chromium','webkit','firefox'].map(name=>[name,{launch:async()=>{launches.push(name);throw new Error('STOP_BEFORE_BROWSER')}}]));const scope={require:id=>id==='node:test'?(name,fn)=>callbacks.push({name,fn}):id==='playwright'?engines:id==='./browser-support.cjs'?{root:process.cwd(),assert:require('node:assert/strict')}:require(id),process:{env:{MAIL_BUILDER_ENGINE:'firefox'}},console,Buffer,module:{exports:{}}};vm.createContext(scope);vm.runInContext(fs.readFileSync(file,'utf8'),scope);\n  for(const t of callbacks){try{await t.fn();}catch(e){if(e.message!=='STOP_BEFORE_BROWSER')throw e;}}\n  results.hardcodedEngines.push({file,requested:'firefox',testCount:callbacks.length,launches});\n }\n for(const scenario of ['launch-reject','browser-close-reject','success']){\n  const childSource=`const vm=require('node:vm'),test=require('node:test');const mode=${JSON.stringify(scenario)},calls={listen:0,hostClose:0};let hold;\nconst server={listen(_p,_h,cb){calls.listen++;hold=setInterval(()=>{},1000);cb();},address(){return {port:1}},close(cb){calls.hostClose++;clearInterval(hold);cb();}};\nconst browser={newPage:async()=>({goto:async()=>{}}),close:async()=>{if(mode==='browser-close-reject')throw new Error('CLOSE_REJECTED')}};\nconst support={root:process.cwd(),fs:{readFile:async()=>Buffer.from('fixture')},chromium:{launch:async()=>{if(mode==='launch-reject')throw new Error('LAUNCH_REJECTED');return browser}},assert:require('node:assert/strict')};\nconst scope={require:id=>id==='node:test'?()=>{}:id==='node:http'?{createServer:()=>server}:id==='./browser-support.cjs'?support:id==='./preview-resources.cjs'?{}:require(id),Buffer,URL,module:{exports:{}}};vm.createContext(scope);vm.runInContext(${JSON.stringify(helperSource+'\\nglobalThis.probe=withPreview;')},scope);\ntest('bounded helper cleanup',async()=>{try{await scope.probe(async()=>{});}finally{console.log('RESOURCE_STATE '+JSON.stringify(calls));}});`;\n  const started=Date.now();const run=cp.spawnSync(process.execPath,['--test-reporter=tap','-e',childSource],{encoding:'utf8',timeout:1200});results.termination.push({scenario,elapsed_ms:Date.now()-started,status:run.status,signal:run.signal,error:run.error?.code??null,resourceState:/RESOURCE_STATE (\\{[^\\n]+\\})/.exec(run.stdout)?.[1],testReportedFailure:run.stdout.includes('not ok'),testReportedSuccess:/^ok 1 - bounded/m.test(run.stdout),method:'Exact helper source; HTTP seam replaced by a referenced interval, native node:test. No browser/network; external 1200ms bound.'});\n }\n console.log(JSON.stringify(results));\n})();"
+      },
+      "exit_code": 0,
+      "results": {
+        "cleanup": [
+          {
+            "scenario": "launch-reject",
+            "error": "LAUNCH_REJECTED",
+            "listen": 1,
+            "hostClose": 0,
+            "launch": 1,
+            "browserClose": 0
+          },
+          {
+            "scenario": "browser-close-reject",
+            "error": "CLOSE_REJECTED",
+            "listen": 1,
+            "hostClose": 0,
+            "launch": 1,
+            "browserClose": 1
+          },
+          {
+            "scenario": "success",
+            "error": null,
+            "listen": 1,
+            "hostClose": 1,
+            "launch": 1,
+            "browserClose": 1
+          }
+        ],
+        "runnerPartial": [
+          {
+            "input": {
+              "status": null,
+              "signal": "SIGTERM",
+              "error": "ETIMEDOUT"
+            },
+            "results": [
+              {
+                "engine": "firefox",
+                "file": "synthetic.test.cjs",
+                "name": "premier test",
+                "status": "pass"
+              }
+            ],
+            "summary": {
+              "engines": {
+                "firefox": {
+                  "pass": 1,
+                  "productUnknown": 0,
+                  "productKnown": 0,
+                  "automation": 0,
+                  "skipped": 0,
+                  "total": 1
+                }
+              },
+              "unavailable": []
+            },
+            "exitCode": 0
+          },
+          {
+            "input": {
+              "status": 7,
+              "signal": null,
+              "error": null
+            },
+            "results": [
+              {
+                "engine": "firefox",
+                "file": "synthetic.test.cjs",
+                "name": "premier test",
+                "status": "pass"
+              }
+            ],
+            "summary": {
+              "engines": {
+                "firefox": {
+                  "pass": 1,
+                  "productUnknown": 0,
+                  "productKnown": 0,
+                  "automation": 0,
+                  "skipped": 0,
+                  "total": 1
+                }
+              },
+              "unavailable": []
+            },
+            "exitCode": 0
+          }
+        ],
+        "hardcodedEngines": [
+          {
+            "file": "tests/narrow-window-browser.test.cjs",
+            "requested": "firefox",
+            "testCount": 4,
+            "launches": [
+              "chromium",
+              "chromium",
+              "webkit",
+              "webkit"
+            ]
+          },
+          {
+            "file": "tests/page-title-views-browser.test.cjs",
+            "requested": "firefox",
+            "testCount": 2,
+            "launches": [
+              "chromium",
+              "webkit"
+            ]
+          },
+          {
+            "file": "tests/preheader-hidden-browser.test.cjs",
+            "requested": "firefox",
+            "testCount": 3,
+            "launches": [
+              "chromium",
+              "webkit",
+              "chromium"
+            ]
+          },
+          {
+            "file": "tests/snum-error-browser.test.cjs",
+            "requested": "firefox",
+            "testCount": 2,
+            "launches": [
+              "chromium",
+              "webkit"
+            ]
+          }
+        ],
+        "termination": [
+          {
+            "scenario": "launch-reject",
+            "elapsed_ms": 1204,
+            "status": null,
+            "signal": "SIGTERM",
+            "error": "ETIMEDOUT",
+            "resourceState": "{\"listen\":1,\"hostClose\":0}",
+            "testReportedFailure": true,
+            "testReportedSuccess": false,
+            "method": "Exact helper source; HTTP seam replaced by a referenced interval, native node:test. No browser/network; external 1200ms bound."
+          },
+          {
+            "scenario": "browser-close-reject",
+            "elapsed_ms": 1205,
+            "status": null,
+            "signal": "SIGTERM",
+            "error": "ETIMEDOUT",
+            "resourceState": "{\"listen\":1,\"hostClose\":0}",
+            "testReportedFailure": true,
+            "testReportedSuccess": false,
+            "method": "Exact helper source; HTTP seam replaced by a referenced interval, native node:test. No browser/network; external 1200ms bound."
+          },
+          {
+            "scenario": "success",
+            "elapsed_ms": 55,
+            "status": 0,
+            "signal": null,
+            "error": null,
+            "resourceState": "{\"listen\":1,\"hostClose\":1}",
+            "testReportedFailure": false,
+            "testReportedSuccess": true,
+            "method": "Exact helper source; HTTP seam replaced by a referenced interval, native node:test. No browser/network; external 1200ms bound."
+          }
+        ]
+      }
+    },
+    "preexisting_byte_identical_to_base": [
+      "tests/run-engines.cjs",
+      "tests/narrow-window-browser.test.cjs",
+      "tests/page-title-views-browser.test.cjs",
+      "tests/preheader-hidden-browser.test.cjs",
+      "tests/snum-error-browser.test.cjs"
+    ],
+    "new_product_regressions_established": 0,
+    "new_harness_issue": true,
+    "contract_review": [
+      "#138 first-edit refusal, memory/export/current+token preservation asserted; proactive notification not required",
+      "Resources oracle retains exact 24/0 cardinality, complete/natural dimensions, fonts.ready and URL/title identity",
+      "Late-image scenario retains two explicit decode calls; geometry readiness does not claim pixel paint or decoder settlement",
+      "No newly introduced skip hiding a product result found; physical CDP quota case remains explicitly limited; injected boundary scenario separate",
+      "Clipboard seam accurately labels native write plus intercepted read; no Outlook/Melissa claim"
+    ],
+    "limits": [
+      "Static quick review plus controlled VM/runner probes; no browser/network/heavy suite",
+      "397/397 historical receipts not rerun here",
+      "Root orchestrator owns final publication verdict"
+    ]
+  }
+}

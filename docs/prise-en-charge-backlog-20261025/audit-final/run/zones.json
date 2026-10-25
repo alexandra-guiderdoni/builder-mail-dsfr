@@ -1,0 +1,104 @@
+[
+  {
+    "id": "z01",
+    "paths": [
+      "app/source/checks.js",
+      "app/source/editor.js",
+      "app/source/files.js",
+      "app/source/images.js",
+      "app/source/imports.js",
+      "app/source/model.js",
+      "app/source/render.js"
+    ],
+    "file_count": 7
+  },
+  {
+    "id": "z02",
+    "paths": [
+      "app/snum/adapter.js",
+      "app/snum/base.css",
+      "app/snum/page.js",
+      "app/snum/shell.html",
+      "app/snum/style.css",
+      "app/source/catalogue-search.js",
+      "app/source/library-actions.js",
+      "app/source/library.css",
+      "app/source/library.js",
+      "app/source/preview-measure.js",
+      "app/source/preview.js",
+      "app/source/pwa.js",
+      "app/source/shell.html",
+      "app/source/state.js",
+      "app/source/storage.js",
+      "app/source/style.css",
+      "app/source/sw.js",
+      "app/source/view.js",
+      "shared/image-files.js"
+    ],
+    "file_count": 19
+  },
+  {
+    "id": "z03",
+    "paths": [
+      "prototype/reference/snum-packet.js",
+      "prototype/source/draft-store.js",
+      "prototype/source/editor.js",
+      "prototype/source/model.js",
+      "prototype/source/render-mail.js",
+      "prototype/source/shell.html",
+      "prototype/source/style.css",
+      "prototype/source/sw.js",
+      "scripts/audit_ay11.py",
+      "scripts/audit_expectations.py",
+      "scripts/audit_receipt.py",
+      "scripts/audit_reports.py",
+      "scripts/audit_server_lifecycle.py",
+      "scripts/build.py",
+      "scripts/build_app.py",
+      "scripts/catalogue.py",
+      "scripts/check_provenance.py",
+      "scripts/dsfr_assets.py",
+      "scripts/interchange.py",
+      "scripts/mail_layout.py",
+      "scripts/recipe_firefox.mjs",
+      "scripts/recipe_page_flow_firefox.mjs"
+    ],
+    "file_count": 22
+  },
+  {
+    "id": "z04",
+    "paths": [
+      "tests/article-text-footer-links-browser.test.cjs",
+      "tests/audit_expectations_contract.py",
+      "tests/audit_receipt_contract.py",
+      "tests/audit_server_lifecycle_contract.py",
+      "tests/browser-support.cjs",
+      "tests/browser.test.cjs",
+      "tests/build_contract.py",
+      "tests/creation-browser.test.cjs",
+      "tests/editor-input-preservation-browser.test.cjs",
+      "tests/error-persistence-browser.test.cjs",
+      "tests/firefox-support.mjs",
+      "tests/mail-layout-browser.test.cjs",
+      "tests/portability-clipboard-browser.test.cjs",
+      "tests/portability-storage.cjs",
+      "tests/preview-size-browser.test.cjs",
+      "tests/pwa-contract.test.cjs",
+      "tests/restore-after-refusal-browser.test.cjs",
+      "tests/save-rescue-browser.test.cjs",
+      "tests/scope-buttons-browser.test.cjs",
+      "tests/tab-takeover-browser.test.cjs"
+    ],
+    "file_count": 20
+  },
+  {
+    "id": "z05",
+    "paths": [
+      ".github/workflows/pages.yml",
+      ".npmrc",
+      "package-lock.json",
+      "package.json"
+    ],
+    "file_count": 4
+  }
+]

@@ -1,0 +1,19 @@
+{
+  "scope": "Pages publication mapping for newly observed preexisting audit-server finding",
+  "finding": "scripts/audit_server.cjs:8 rejects malformed URL before response in local audit server",
+  "introduced_by_candidate": false,
+  "exposure": "127.0.0.1 only, source line24",
+  "pages_deployment_inputs": [
+    "app/distribution/web/**",
+    "app/distribution/snum.html",
+    "app/distribution/portable.html"
+  ],
+  "workflow_lines": "58-65",
+  "shipped_in_pages_artifact": false,
+  "qualification": "Static workflow/path mapping, not a live remote deployment check",
+  "files_sha256": {
+    ".github/workflows/pages.yml": "ab56e3a461291595cc10f9baf47447d30ff435da3b223477940789d2b80d3646",
+    "scripts/audit_server.cjs": "9113dedad58e5e2c36cc7ad2b6073a36dee98b690098fb9dab9f2c15500a77ba",
+    "scripts/build_app.py": "2d52c9e227f066ca6817832e14aded8b61c23597911965bf041519d74d35aeb6"
+  }
+}

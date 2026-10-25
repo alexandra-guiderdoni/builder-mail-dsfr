@@ -1,0 +1,12 @@
+{
+  "recorded_at": "2026-10-25T14:44:24.421323+00:00",
+  "build_check_exit": 0,
+  "security_scan": "no retained dangerous match; no strong secret pattern in staged text",
+  "structural_check": "root auto-verification, independent ShipGuard report separate",
+  "max_active_file_lines": 328,
+  "source_product_unchanged_by_cleanup": true,
+  "archive_verified": true,
+  "candidate_overlay": "4c4caff747a77c987be2ec4cbb914c39d3ea5b07b206886f6ab5fc24955f914e",
+  "independent_review": "docs/verification-publication-shipguard-20261025/RAPPORT.md",
+  "final_x86_ci": "pending after push"
+}

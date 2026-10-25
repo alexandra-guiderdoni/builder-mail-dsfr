@@ -1,0 +1,69 @@
+{
+  "run_id": "audit-20261025-115922108-395c08d1",
+  "base_sha": "395c08d1dfa4d0b8e41416da798bf0313a8bd379",
+  "overlay_hash": "c257e8483a78695fa29935b8f3db54b11bc9664a69001a5576cde37dbd114a57",
+  "parent_manifest_matching_files": 72,
+  "parent_index_unchanged_empty": true,
+  "worktrees": [
+    {
+      "zone_id": "z01",
+      "registered": true,
+      "head_matches": true,
+      "manifest_files_matching": 72,
+      "retained_artifact_status": "A visual-tests/_results/runs/audit-20261025-115922108-395c08d1/zone-z01-r1-r1-z01-a1.json",
+      "no_staged_content": true
+    },
+    {
+      "zone_id": "z02",
+      "registered": true,
+      "head_matches": true,
+      "manifest_files_matching": 72,
+      "retained_artifact_status": "A visual-tests/_results/runs/audit-20261025-115922108-395c08d1/zone-z02-r1-r1-z02-a1.json",
+      "no_staged_content": true
+    },
+    {
+      "zone_id": "z03",
+      "registered": true,
+      "head_matches": true,
+      "manifest_files_matching": 72,
+      "retained_artifact_status": "A visual-tests/_results/runs/audit-20261025-115922108-395c08d1/zone-z03-r1-r1-z03-a1.json",
+      "no_staged_content": true
+    },
+    {
+      "zone_id": "z04",
+      "registered": true,
+      "head_matches": true,
+      "manifest_files_matching": 72,
+      "retained_artifact_status": "A visual-tests/_results/runs/audit-20261025-115922108-395c08d1/zone-z04-r1-r1-z04-a1.json",
+      "no_staged_content": true
+    },
+    {
+      "zone_id": "z05",
+      "registered": true,
+      "head_matches": true,
+      "manifest_files_matching": 72,
+      "retained_artifact_status": "A visual-tests/_results/runs/audit-20261025-115922108-395c08d1/zone-z05-r1-r1-z05-a1.json",
+      "no_staged_content": true
+    }
+  ],
+  "scope_files": 72,
+  "unique_scope_files": 72,
+  "negative_evidence_gate": {
+    "claims_checked": 0,
+    "rejected": 0,
+    "reason": "Four positive source contradictions/duplicate declaration; no absence claim"
+  },
+  "constitutional_checks": "All files/lines/IDs, severity/category/tier and report-only fields validated",
+  "verification_agents": 0,
+  "verification_reason": "No critical/high finding",
+  "normalization_changes": 0,
+  "duplicates_removed": 0,
+  "merges": [],
+  "post_merge_checks": "not applicable: report-only, no merges",
+  "cross_zone_tracer": "skipped by quick protocol",
+  "previous_run": null,
+  "accepted_risks_file_present": false,
+  "route_derivation": "No product-visible defect or backend endpoint finding; tooling findings and identical duplicate carry no impacted runtime route",
+  "candidate_definition": "base_sha + overlay_hash in dispatch.json/candidate-identity.json; base commit alone does not contain candidate changes",
+  "completed_at": "2026-10-25T12:08:15.469887+00:00"
+}

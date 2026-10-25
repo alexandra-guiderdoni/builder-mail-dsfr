@@ -2,6 +2,7 @@ const test = require('node:test');
 const http = require('node:http');
 const path = require('node:path');
 const {root, evidence, portable, click, open, enterEditor, saved, expand, download, state, store, chromium, fs, assert, engineName} = require('./browser-support.cjs');
+const {rejectLargeWrites, limitNativeQuota} = require('./portability-storage.cjs');
 
 // Données synthétiques uniquement. Le secours doit exporter la bibliothèque en mémoire, à côté du message d’échec.
 const rescue = '[data-action=rescue-export]';
@@ -10,14 +11,11 @@ const kinds = {absent: /Stockage indisponible/, inaccessible: /inaccessible/, sa
 const failed = page => page.locator('#save-state').filter({hasText: 'Modifications non sauvegardées'}).waitFor();
 
 // Quota réel de Chromium : fixé avant la première ouverture du stockage, il refuse une écriture volumineuse.
-const bulky = 'Objet de remplissage synthétique. '.repeat(20000);
-// Storage.overrideQuotaForOrigin est une commande CDP : hors Chromium, les tests qui en dépendent sont ignorés avec cette raison,
-// jamais comptés réussis. La voie `tx.error` est couverte sur tous les moteurs par tests/storage-browser.test.cjs (#123).
+// Sous le plafond natif de 524288 caractères des inputs WebKit, au-dessus du quota de 400000 octets.
+const bulky = 'Objet de remplissage synthétique. '.repeat(15000);
+// Seul le quota physique conserve sa limitation CDP ; les parcours UI sont exercés
+// séparément avec une panne injectée à la frontière IndexedDB sur les trois moteurs.
 const cdpOnly = engineName !== 'chromium' && 'quota réel fixé par CDP, Chromium seul';
-async function limitQuota(page) {
-  const cdp = await page.context().newCDPSession(page);
-  await cdp.send('Storage.overrideQuotaForOrigin', {origin: 'file://', quotaSize: 400000});
-}
 async function saturate(page) { await page.locator('#subject').fill(bulky); await failed(page); }
 async function refuseWrites(page, name) {
   await page.evaluate(name => {
@@ -38,10 +36,10 @@ async function rescueBesideMessage(page, selector = rescue, gap = 32) {
   return layout;
 }
 
-test('quota réel dépassé : le secours suit le message sans défilement et exporte la bibliothèque en mémoire', {skip: cdpOnly}, async () => {
+async function rescueAfterFailure(injectFailure, scenario) {
   const browser = await chromium.launch({headless: true});
   try {
-    const {page} = await open(browser, {viewport: {width: 1440, height: 1000}}, limitQuota);
+    const {page} = await open(browser, {viewport: {width: 1440, height: 1000}}, injectFailure);
     await page.locator('#document-name').fill('Version sauvegardée'); await saved(page);
     const persisted = await store(page);
     await saturate(page);
@@ -58,11 +56,13 @@ test('quota réel dépassé : le secours suit le message sans défilement et exp
     await page.locator('#subject').fill('Objet allégé'); await saved(page);
     assert(await page.locator(rescue).isHidden(), 'Le secours disparaît après une sauvegarde réussie.');
     await fs.mkdir(evidence, {recursive: true});
-    await fs.writeFile(path.join(evidence, 'secours-sauvegarde.json'), JSON.stringify({scenario: 'quota réel Chromium (Storage.overrideQuotaForOrigin)', desktop, narrow, exportedEqualsMemory: true, storeUnchanged: true}, null, 2));
+    await fs.writeFile(path.join(evidence, scenario === 'quota réel Chromium' ? 'secours-sauvegarde.json' : 'secours-sauvegarde-injection.json'), JSON.stringify({scenario, desktop, narrow, exportedEqualsMemory: true, storeUnchanged: true}, null, 2));
   } finally { await browser.close(); }
-});
+}
+test('quota réel dépassé : le secours suit le message sans défilement et exporte la bibliothèque en mémoire', {skip: cdpOnly}, () => rescueAfterFailure(limitNativeQuota, 'quota réel Chromium'));
+test('panne IndexedDB injectée : secours visible, export égal à la mémoire et stockage inchangé', () => rescueAfterFailure(rejectLargeWrites, 'QuotaExceededError injectée, aucun quota physique mesuré'));
 
-test('stockage absent, inaccessible, saturé ou en conflit : messages distincts, secours visible, aucune récupération promise', {skip: cdpOnly}, async () => {
+test('stockage absent, inaccessible, saturé ou en conflit : messages distincts, secours visible, aucune récupération promise', async () => {
   const browser = await chromium.launch({headless: true}), observed = {}, problems = [];
   try {
     const absent = await open(browser, {}, page => page.addInitScript(() => { Object.defineProperty(window, 'indexedDB', {value: undefined, configurable: true}); }));
@@ -90,7 +90,7 @@ test('stockage absent, inaccessible, saturé ou en conflit : messages distincts,
     observed.conflit = await second.locator('#error').innerText();
     try { await rescueBesideMessage(second, '[data-action=read-only-export]', 400); } catch (cause) { problems.push(`conflit : ${cause.message.split('\n')[0]}`); } // #31 : lecture seule, export du bandeau
 
-    const full = await open(browser, {}, limitQuota);
+    const full = await open(browser, {}, rejectLargeWrites);
     await full.page.locator('#document-name').fill('Avant saturation'); await saved(full.page);
     await saturate(full.page);
     observed.sature = await full.page.locator('#error').innerText();
@@ -107,10 +107,10 @@ test('stockage absent, inaccessible, saturé ou en conflit : messages distincts,
   } finally { await browser.close(); }
 });
 
-test('après un échec de sauvegarde, les changements de vue gardent le travail en mémoire ; champs invalides et chargements restent bloquants', {skip: cdpOnly}, async () => {
+test('après un échec de sauvegarde, les changements de vue gardent le travail en mémoire ; champs invalides et chargements restent bloquants', async () => {
   const browser = await chromium.launch({headless: true});
   try {
-    const {page} = await open(browser, {}, limitQuota);
+    const {page} = await open(browser, {}, rejectLargeWrites);
     await page.locator('#document-name').fill('Version sauvegardée'); await saved(page);
     const persisted = await store(page), first = (await state(page)).activeId;
     await saturate(page); await page.locator('#document-name').fill('Travail non sauvegardé'); await failed(page);
@@ -143,10 +143,10 @@ test('après un échec de sauvegarde, les changements de vue gardent le travail 
 
 // Décision du 24 octobre (#32 et #37) : l’export de secours n’est jamais bloqué par une URL invalide ;
 // la copie et l’export HTML du courriel le restent. Le brouillon n’est pas dans le modèle, donc pas dans le secours.
-test('un lien en cours de saisie bloque l’export du courriel, jamais l’export de secours', {skip: cdpOnly}, async () => {
+test('un lien en cours de saisie bloque l’export du courriel, jamais l’export de secours', async () => {
   const browser = await chromium.launch({headless: true});
   try {
-    const {page} = await open(browser, {}, limitQuota);
+    const {page} = await open(browser, {}, rejectLargeWrites);
     await page.locator('#document-name').fill('Version sauvegardée'); await saved(page);
     await saturate(page); await rescueBesideMessage(page);
     await page.locator('#article-source').fill('https://'); await page.locator('#article-source').blur();

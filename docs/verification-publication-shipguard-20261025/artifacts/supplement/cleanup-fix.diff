@@ -1,0 +1,26 @@
+--- a/tests/preview-resources-browser.test.cjs
++++ b/tests/preview-resources-browser.test.cjs
+@@ -42,8 +42,10 @@
+ }
+ 
+ async function withPreview(run) {
+-  const host = await resourceServer(), browser = await chromium.launch();
++  const host = await resourceServer();
++  let browser;
+   try {
++    browser = await chromium.launch();
+     const page = await browser.newPage(); await page.goto(host.origin);
+     const mount = async (body, title = 'Ressources attendues') => {
+       const url = await page.evaluate(({body, title}) => {
+@@ -55,7 +57,10 @@
+       return {frame, expected: {url, title}};
+     };
+     await run({host, page, mount});
+-  } finally { await browser.close(); await host.close(); }
++  } finally {
++    try { await browser?.close(); }
++    finally { await host.close(); }
++  }
+ }
+ 
+ test('la préparation géométrique refuse aussi une image cassée volontairement masquée', async () => {

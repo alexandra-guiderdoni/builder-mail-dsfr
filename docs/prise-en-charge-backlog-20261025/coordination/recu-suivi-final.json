@@ -1,0 +1,53 @@
+{
+  "recorded_at": "2026-10-25T13:15:33.026830+00:00",
+  "issues": [
+    {
+      "issue": 13,
+      "url": "https://github.com/alexandra-guiderdoni/builder-mail-dsfr/issues/13",
+      "state": "OPEN",
+      "body_verified": true,
+      "metadata_preserved": true,
+      "body_sha256": "49012730e6601696c16654627f3c8d51bb64aa7cc46f510111bd36d51002c710"
+    },
+    {
+      "issue": 52,
+      "url": "https://github.com/alexandra-guiderdoni/builder-mail-dsfr/issues/52",
+      "state": "OPEN",
+      "body_verified": true,
+      "metadata_preserved": true,
+      "body_sha256": "23503fd8d0297dccb0c335c677d68231e26eb21e899c6ec050c1f4bf41bb32a7"
+    },
+    {
+      "issue": 130,
+      "url": "https://github.com/alexandra-guiderdoni/builder-mail-dsfr/issues/130",
+      "state": "OPEN",
+      "body_verified": true,
+      "metadata_preserved": true,
+      "body_sha256": "f792f9534ee2fd943824fae8faa89b75ac59eea4d5b0db6af3f4febf162f579a"
+    },
+    {
+      "issue": 141,
+      "url": "https://github.com/alexandra-guiderdoni/builder-mail-dsfr/issues/141",
+      "state": "OPEN",
+      "body_verified": true,
+      "metadata_preserved": true,
+      "body_sha256": "623e1c574e59eb2140b4c4b2f25011ae4688357c72a38628510360833fc253f1"
+    },
+    {
+      "issue": 148,
+      "url": "https://github.com/alexandra-guiderdoni/builder-mail-dsfr/issues/148",
+      "state": "OPEN",
+      "body_verified": true,
+      "metadata_preserved": true,
+      "body_sha256": "418b9524b7f8f9de5521a45592bf34315cee5e499609f264905f68732ff6bc5b"
+    },
+    {
+      "issue": 149,
+      "url": "https://github.com/alexandra-guiderdoni/builder-mail-dsfr/issues/149",
+      "state": "OPEN",
+      "body_verified": true,
+      "metadata_preserved": true,
+      "body_sha256": "83630fde63f01903bf98a5784286228e1e4505e51748b1ad8b1ca65a1250050b"
+    }
+  ]
+}

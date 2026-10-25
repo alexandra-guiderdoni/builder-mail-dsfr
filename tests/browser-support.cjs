@@ -17,9 +17,12 @@ const portablePermissions = permissions => permissions?.filter(p => !/^clipboard
 function clipboardInterception() {
   const proto = window.Clipboard?.prototype; if (!proto || window.__mailBuilderClipboard) return;
   window.__mailBuilderClipboard = {written: null};
-  const write = proto.write;
-  proto.write = async function (items) { window.__mailBuilderClipboard.written = items; try { window.mailBuilderNote({kind: 'clipboard-write-recorded'}); } catch {} return write.call(this, items); };
+  const write = proto.write, writeText = proto.writeText;
+  // Enregistrer seulement après réussite native : un refus ne doit jamais fabriquer une nouvelle sortie.
+  proto.write = async function (items) { await write.call(this, items); window.__mailBuilderClipboard.written = items; try { window.mailBuilderNote({kind: 'clipboard-write-recorded'}); } catch {} };
+  proto.writeText = async function (text) { await writeText.call(this, text); window.__mailBuilderClipboard.written = [new ClipboardItem({'text/plain': new Blob([text], {type: 'text/plain'})})]; try { window.mailBuilderNote({kind: 'clipboard-write-text-recorded'}); } catch {} };
   proto.read = async function () { try { window.mailBuilderNote({kind: 'clipboard-read-intercepted'}); } catch {} if (!window.__mailBuilderClipboard.written) throw new DOMException('Aucune écriture à relire.', 'NotAllowedError'); return window.__mailBuilderClipboard.written; };
+  proto.readText = async function () { try { window.mailBuilderNote({kind: 'clipboard-read-text-intercepted'}); } catch {} const items = await this.read(); const item = items.find(item => item.types.includes('text/plain')); return item ? (await item.getType('text/plain')).text() : ''; };
 }
 async function prepareContext(context) {
   if (nativePermissions.size) return context;

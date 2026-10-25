@@ -1,0 +1,818 @@
+diff --git a/app/source/library.js b/app/source/library.js
+index 09e2532..c2b1994 100644
+--- a/app/source/library.js
++++ b/app/source/library.js
+@@ -22,10 +22,12 @@
+   }
+   // Changer de vue attend les écritures en cours sans exiger leur succès : après un échec, le travail reste en mémoire.
+   async function open(id) {
++    const alreadyVisible = !get("editor-page").hidden;
+     A.State.guard(); find(id); await A.State.settle();
+     if (id !== A.library.activeId) { await A.State.change(lib => { lib.activeId = id; }); await A.State.settle(); }
+-    // Le cadre doit être visible avant de charger son document d’aperçu.
+-    show(true); A.UI.refresh();
++    // Depuis l’accueil, le cadre doit être visible avant de charger son aperçu.
++    // Dans l’éditeur, State.change a déjà rendu : une seconde navigation blob peut être perdue sous WebKit.
++    show(true); if (!alreadyVisible) A.UI.refresh();
+   }
+   async function home() { A.State.guard(); await A.State.settle(); refresh(); show(false); }
+   // Message commun : signale un objet daté qui n'a pas été repris tel quel.
+diff --git a/app/source/render.js b/app/source/render.js
+index fb40b06..b8152be 100644
+--- a/app/source/render.js
++++ b/app/source/render.js
+@@ -186,7 +186,9 @@
+       const layout = table.hasAttribute("data-mail-columns") && !table.classList.contains("mail-columns-stack") ? "auto" : "fixed";
+       add(table, "min-width:0!important;max-width:100%!important;border-collapse:collapse;table-layout:" + layout + ";");
+       if (table.parentElement === doc.body) {
+-        add(table, "width:620px;margin:0;");
++        // Une messagerie peut remplacer width par 800px. La borne logique reste
++        // prioritaire ; WebKit ignore max-width sur les tables à largeur fixe.
++        add(table, "width:620px;margin:0;inline-size:min(100%,620px)!important;");
+       }
+       // WebKit ignore max-width sur une table de largeur fixe en pixels, imbriquée ou racine.
+       // min() la borne à son conteneur ; un moteur qui ignore min() garde la largeur fixe.
+diff --git a/app/source/view.js b/app/source/view.js
+index 6f40951..b1a10ab 100644
+--- a/app/source/view.js
++++ b/app/source/view.js
+@@ -114,7 +114,7 @@
+   }
+   function summary() { get("composition-summary").textContent = `${A.doc().blocks.length} blocs dans « ${A.doc().name} »`; }
+   function preview() {
+-    pageTitle(); A.Preview.show(A.doc());
++    pageTitle(); if (!get("editor-page").hidden) A.Preview.show(A.doc());
+     summary();
+     // #41 : avertissement des pré-en-têtes multiples, calculé avec l’aperçu différé, jamais à la frappe (#34).
+     const warnings = A.Render.warnings(A.doc()); if (warnings.length) get("composition-summary").textContent += `. ${warnings.join(". ")}`;
+diff --git a/package-lock.json b/package-lock.json
+index 64cab21..f46406f 100644
+--- a/package-lock.json
++++ b/package-lock.json
+@@ -56,9 +56,9 @@
+       "license": "MIT"
+     },
+     "node_modules/fast-uri": {
+-      "version": "3.1.8",
+-      "resolved": "https://registry.npmjs.org/fast-uri/-/fast-uri-3.1.8.tgz",
+-      "integrity": "sha512-GZMtZUTNRpOVIECoXwLNZS5xUGE+mVNbTB8h/7Rwh2TFWcBQiPzTgyZi05BF9UMZKkLJv8XBRJTlU7zg8+ZfMg==",
++      "version": "3.1.9",
++      "resolved": "https://registry.npmjs.org/fast-uri/-/fast-uri-3.1.9.tgz",
++      "integrity": "sha512-hS/0Wt3Ya043oKXs0sIxrMpKQITXhMLIrVAKKXi4gozGC9v7YRWVnXIZzjNPTO02M9BdxLCWqK1yRXgNziVyJQ==",
+       "dev": true,
+       "funding": [
+         {
+diff --git a/tests/article-text-footer-links-browser.test.cjs b/tests/article-text-footer-links-browser.test.cjs
+index 82aaceb..6b96e6d 100644
+--- a/tests/article-text-footer-links-browser.test.cjs
++++ b/tests/article-text-footer-links-browser.test.cjs
+@@ -1,10 +1,13 @@
+ const test = require('node:test');
+-const {chromium, open, click, expand, saved, state, enterEditor, selectBlock, download, fs, assert} = require('./browser-support.cjs');
++const {chromium, open, click, expand, saved, state, enterEditor, selectBlock, download, fs, assert, evidence, pageState} = require('./browser-support.cjs');
++const path = require('node:path');
+ 
+ test('article sans image et trois actions de pied de page : import, édition, refus, image, clone et exports hors ligne', async () => {
+   const browser = await chromium.launch();
++  let page, stage = 'ouverture';
+   try {
+-    const {page, observations} = await open(browser, {offline: true});
++    const opened = await open(browser, {offline: true}); page = opened.page;
++    const {observations} = opened;
+     const fixture = await page.evaluate(() => {
+       const doc = MailBuilder.Model.create('Lettre de recette', [31, 50]), [article, footer] = doc.blocks, image = article.values.f0;
+       Object.assign(article.values, {f0: '', f1: '', f2: '', f3: 'https://example.invalid/article', f4: 'Un article sans illustration', f5: 'Le détail utile de cet article', f6: ''});
+@@ -18,6 +21,7 @@ test('article sans image et trois actions de pied de page : import, édition, re
+     const imported = await state(page), doc = imported.documents.find(d => d.id === imported.activeId), [article, footer] = doc.blocks;
+     assert.equal(doc.blocks.length, 2);
+     const preview = page.frameLocator('#preview');
++    stage = 'aperçu de l’article importé sans image';
+     await preview.locator('a').filter({hasText: 'Un article sans illustration'}).waitFor();
+     assert.equal(await preview.locator('img').count(), 0);
+     assert.equal(await preview.locator('a[href]').count(), 4);
+@@ -31,6 +35,7 @@ test('article sans image et trois actions de pied de page : import, édition, re
+     const imageMatch = /^data:(image\/[a-z]+);base64,(.+)$/.exec(fixture.image);
+     assert.ok(imageMatch);
+     await page.locator('[data-image-field=f0]').setInputFiles({name: 'illustration.' + imageMatch[1].split('/')[1], mimeType: imageMatch[1], buffer: Buffer.from(imageMatch[2], 'base64')});
++    stage = 'aperçu de l’image ajoutée';
+     await saved(page); await preview.locator('img').first().waitFor();
+     await page.locator('#field-f1').fill('Illustration de recette'); await saved(page);
+     assert.equal(await page.locator('.image-field img').count(), 1);
+@@ -41,6 +46,7 @@ test('article sans image et trois actions de pied de page : import, édition, re
+     assert.equal(withoutImage.values.f0, ''); assert.equal(withoutImage.values.f1, '');
+ 
+     await selectBlock(page, footer.id);
++    stage = 'édition et refus des liens invalides';
+     assert.equal(await page.locator('[data-block-action=add-footer-link]').isDisabled(), true);
+     assert.equal(await page.locator('#field-footer-label-0').getAttribute('aria-required'), 'true');
+     assert.equal(await page.locator('#field-footer-label-0').getAttribute('data-link-label'), '');
+@@ -64,6 +70,7 @@ test('article sans image et trois actions de pied de page : import, édition, re
+     assert.deepEqual(await state(page), beforeInvalid);
+     await click(page, '[data-action=cancel-fields]');
+ 
++    stage = 'duplication et retrait du pied de page';
+     await click(page, '[data-block-action=duplicate]'); await saved(page);
+     const clone = await page.evaluate(() => MailBuilder.doc().blocks.find(b => b.id === MailBuilder.selected));
+     assert.notEqual(clone.id, footer.id);
+@@ -76,6 +83,7 @@ test('article sans image et trois actions de pied de page : import, édition, re
+ 
+     await click(page, '[data-block-action=add-footer-link]'); await saved(page);
+     assert.equal(await page.locator('#field-footer-label-0').inputValue(), '');
++    stage = 'aperçu du lien sans intitulé';
+     await preview.locator('a:not([href])').filter({hasText: 'Intitulé du lien à renseigner'}).waitFor();
+     let downloads = 0; page.on('download', () => downloads++);
+     await click(page, '[data-action=export-mail]');
+@@ -90,16 +98,19 @@ test('article sans image et trois actions de pied de page : import, édition, re
+       await page.locator(`#field-footer-label-${i}`).fill(link.label); await saved(page);
+     }
+     assert.equal(await page.locator('[data-block-action=add-footer-link]').isDisabled(), true);
++    stage = 'aperçu des liens finaux';
+     await preview.locator('a[href]').filter({hasText: finalLinks[1].label}).waitFor();
+     assert.equal(await preview.locator('a[href]').count(), 4);
+     const final = await page.evaluate(() => MailBuilder.doc());
+     assert.deepEqual(final.blocks.find(b => b.id === footer.id).additionalLinks, finalLinks);
++    stage = 'exports JSON et HTML';
+     const json = JSON.parse(await fs.readFile(await download(page, '[data-action=export-document]', 'article-texte-trois-liens.json'), 'utf8'));
+     assert.deepEqual(json, final);
+     const html = await fs.readFile(await download(page, '[data-action=export-mail]', 'article-texte-trois-liens.html'), 'utf8');
+     assert.ok(html.includes('Un article sans illustration')); assert.ok(!/<img\b/i.test(html));
+     for (const link of finalLinks) { assert.ok(html.includes(link.url)); assert.ok(html.includes(link.label)); }
+     assert.ok(html.includes('S’abonner'));
++    stage = 'rechargement et conservation des liens';
+     await page.reload(); await page.waitForFunction(() => MailBuilder.ready); await enterEditor(page);
+     assert.deepEqual(await page.evaluate(() => MailBuilder.doc()), final);
+     await selectBlock(page, footer.id);
+@@ -107,5 +118,10 @@ test('article sans image et trois actions de pied de page : import, édition, re
+     assert.equal(await page.locator('#field-footer-url-1').inputValue(), finalLinks[1].url);
+     assert.deepEqual(observations.errors, []);
+     assert.ok(!observations.requests.some(url => /^https?:/.test(url)));
++  } catch (cause) {
++    const diagnostic = {stage, state: page && await pageState(page), active: page && await page.evaluate(() => ({id: MailBuilder.library.activeId, selected: MailBuilder.selected, name: MailBuilder.doc().name})).catch(() => null), preview: page && await page.frameLocator('#preview').locator('html').innerHTML({timeout: 1000}).catch(error => error.message)};
++    await fs.mkdir(evidence, {recursive: true});
++    await fs.writeFile(path.join(evidence, 'article-footer-failure.json'), JSON.stringify(diagnostic, null, 2));
++    throw new Error(`${stage} : ${cause.message}`, {cause});
+   } finally { await browser.close(); }
+ });
+diff --git a/tests/browser-support.cjs b/tests/browser-support.cjs
+index 8fec820..9d463c4 100644
+--- a/tests/browser-support.cjs
++++ b/tests/browser-support.cjs
+@@ -17,9 +17,12 @@ const portablePermissions = permissions => permissions?.filter(p => !/^clipboard
+ function clipboardInterception() {
+   const proto = window.Clipboard?.prototype; if (!proto || window.__mailBuilderClipboard) return;
+   window.__mailBuilderClipboard = {written: null};
+-  const write = proto.write;
+-  proto.write = async function (items) { window.__mailBuilderClipboard.written = items; try { window.mailBuilderNote({kind: 'clipboard-write-recorded'}); } catch {} return write.call(this, items); };
++  const write = proto.write, writeText = proto.writeText;
++  // Enregistrer seulement après réussite native : un refus ne doit jamais fabriquer une nouvelle sortie.
++  proto.write = async function (items) { await write.call(this, items); window.__mailBuilderClipboard.written = items; try { window.mailBuilderNote({kind: 'clipboard-write-recorded'}); } catch {} };
++  proto.writeText = async function (text) { await writeText.call(this, text); window.__mailBuilderClipboard.written = [new ClipboardItem({'text/plain': new Blob([text], {type: 'text/plain'})})]; try { window.mailBuilderNote({kind: 'clipboard-write-text-recorded'}); } catch {} };
+   proto.read = async function () { try { window.mailBuilderNote({kind: 'clipboard-read-intercepted'}); } catch {} if (!window.__mailBuilderClipboard.written) throw new DOMException('Aucune écriture à relire.', 'NotAllowedError'); return window.__mailBuilderClipboard.written; };
++  proto.readText = async function () { try { window.mailBuilderNote({kind: 'clipboard-read-text-intercepted'}); } catch {} const items = await this.read(); const item = items.find(item => item.types.includes('text/plain')); return item ? (await item.getType('text/plain')).text() : ''; };
+ }
+ async function prepareContext(context) {
+   if (nativePermissions.size) return context;
+diff --git a/tests/browser.test.cjs b/tests/browser.test.cjs
+index b255d6e..7bf6ad2 100644
+--- a/tests/browser.test.cjs
++++ b/tests/browser.test.cjs
+@@ -68,12 +68,17 @@ test('parcours complet par les contrôles : bibliothèque, identités, modèles,
+     await page.locator('[data-image-field]').first().setInputFiles(path.join(root, 'app/assets/icon-192.png'));
+     await page.locator('#notice').filter({hasText: 'Image locale incorporée'}).waitFor();
+     await saved(page);
++    // Une nouvelle image est recomprimée localement. Le parcours vérifie l’image incorporée
++    // dans l’éditeur puis sa conservation exacte dans les exports et la restauration.
++    // Le contrat de préparation/réencodage possède ses propres tests (image-import-browser).
++    const image = await page.locator('.image-field img').first().getAttribute('src');
++    assert.match(image, /^data:image\/png;base64,/);
++    assert.deepEqual(await page.evaluate(async src => { const image = new Image(); image.src = src; await image.decode(); return [image.naturalWidth, image.naturalHeight]; }, image), [192, 192], 'l’icône incorporée reste décodable aux dimensions attendues');
+     await expand(page, 'Fichiers et récupération');
+     const projectPath = await download(page, '[data-action=export-document]', 'composition.courriel.json');
+     const libraryPath = await download(page, '[data-action=export-library]', 'bibliotheque.courriels.json');
+     const mailPath = await download(page, '[data-action=export-mail]', 'courriel.html');
+     const project = JSON.parse(await fs.readFile(projectPath, 'utf8')), lib = JSON.parse(await fs.readFile(libraryPath, 'utf8')), html = await fs.readFile(mailPath, 'utf8');
+-    const image = (await fs.readFile(path.join(root, 'app/assets/icon-192.png'))).toString('base64');
+     assert(JSON.stringify(project).includes(image)); assert(html.includes(image)); assert(!/<script[\s>]/i.test(html));
+     assert(html.includes('&lt;script&gt;')); assert.equal(html.split(escapedTitle).length - 1, 2); assert.equal(JSON.stringify(project).split(JSON.stringify(editedTitle)).length - 1, 2); assert.equal(lib.templates.length, 1); assert.equal(lib.identities.length, 1); assert.equal(lib.documents.length, 4);
+     await click(page, '[data-action=copy]'); await confirmChecks(page); await page.locator('#notice').filter({hasText: 'Courriel copié en HTML et texte.'}).waitFor();
+diff --git a/tests/creation-browser.test.cjs b/tests/creation-browser.test.cjs
+index 0be5da2..4d5ec31 100644
+--- a/tests/creation-browser.test.cjs
++++ b/tests/creation-browser.test.cjs
+@@ -69,7 +69,20 @@ for (const [engine, launcher] of [['Chromium', chromium], ['WebKit', webkit]]) {
+       assert.deepEqual(templates.map(t => t.subject), [DATED, UNDATED]);
+ 
+       await page.locator('#saved-templates').selectOption({label: 'Modèle daté'}).catch(() => page.locator('#saved-templates').selectOption(templates[0].id));
++      // Retenir la notification de succès IndexedDB, sans changer l’écriture réelle.
++      await page.evaluate(() => {
++        const descriptor = Object.getOwnPropertyDescriptor(IDBTransaction.prototype, 'oncomplete');
++        Object.defineProperty(IDBTransaction.prototype, 'oncomplete', {...descriptor, set(callback) {
++          if (this.mode !== 'readwrite') return descriptor.set.call(this, callback);
++          Object.defineProperty(IDBTransaction.prototype, 'oncomplete', descriptor);
++          descriptor.set.call(this, event => { window.releaseCreationSave = () => callback.call(this, event); });
++        }});
++      });
+       await click(page, '[data-action=use-template]'); await page.locator('#editor-page').waitFor({state: 'visible'});
++      await page.waitForFunction(() => typeof window.releaseCreationSave === 'function');
++      assert.match(await page.locator('#save-state').textContent(), /Sauvegarde en cours/);
++      await page.evaluate(() => window.releaseCreationSave());
++      await page.locator('#notice').filter({hasText: /Composition créée depuis le modèle.*L’objet d’origine contenait une date/}).waitFor();
+       let doc = await last(page);
+       assert.equal(doc.name, 'Modèle daté · composition');
+       assert.equal(doc.subject, 'Modèle daté · composition', 'aucun objet daté hérité');
+diff --git a/tests/editor-input-preservation-browser.test.cjs b/tests/editor-input-preservation-browser.test.cjs
+index a8c5fc6..d3649d2 100644
+--- a/tests/editor-input-preservation-browser.test.cjs
++++ b/tests/editor-input-preservation-browser.test.cjs
+@@ -55,17 +55,28 @@ test('la fin du chargement pendant une sélection à remplacer garde la sélecti
+   } finally { await browser.close(); }
+ });
+ 
+-test('la fin du chargement pendant une composition IME ne remplace pas le champ avant compositionend', async () => {
++test('la fin du chargement pendant une composition IME synthétique ne remplace pas le champ avant compositionend', async () => {
+   const browser = await chromium.launch({headless: true});
+   try {
+     const {page} = await open(browser);
+     await holdImage(page);
+     const field = textField(page), id = await field.getAttribute('id');
+     await field.focus(); await page.keyboard.press('ControlOrMeta+A'); await page.keyboard.type('AB');
++    await field.evaluate(e => {
++      window.compositionTrace = [];
++      for (const type of ['compositionstart', 'input', 'compositionend', 'focusout']) e.addEventListener(type, event => window.compositionTrace.push({type, isComposing: event.isComposing, trusted: event.isTrusted, value: e.value, focused: document.activeElement === e, connected: e.isConnected}));
++    });
+     await field.evaluate(e => { e.__marque = true; e.dispatchEvent(new CompositionEvent('compositionstart', {bubbles: true})); });
+-    await page.keyboard.insertText('é');
++    // insertText déclenche une composition complète sous Firefox, donc termine le scénario.
++    // Ici la composition reste synthétique et explicitement ouverte jusqu’à compositionend.
++    await field.evaluate(e => {
++      e.setRangeText('é', e.selectionStart, e.selectionEnd, 'end');
++      e.dispatchEvent(new InputEvent('input', {bubbles: true, data: 'é', inputType: 'insertCompositionText', isComposing: true}));
++    });
+     await release(page);
+-    assert(await field.evaluate(e => e.__marque === true && e.isConnected && document.activeElement === e), 'le champ en composition doit rester le même nœud, focalisé');
++    assert(await field.evaluate(e => e.__marque === true && e.isConnected && document.activeElement === e), `le champ en composition doit rester le même nœud, focalisé : ${JSON.stringify(await page.evaluate(() => window.compositionTrace))}`);
++    assert.equal(await field.inputValue(), 'ABé');
++    assert.deepEqual(await caret(page), {id, start: 3, end: 3});
+     await field.evaluate(e => e.dispatchEvent(new CompositionEvent('compositionend', {bubbles: true, data: 'é'})));
+     await page.waitForFunction(() => document.querySelector('#block-editor [data-field]').__marque === undefined);
+     assert.deepEqual(await caret(page), {id, start: 3, end: 3});
+diff --git a/tests/error-persistence-browser.test.cjs b/tests/error-persistence-browser.test.cjs
+index eaedb51..06aea77 100644
+--- a/tests/error-persistence-browser.test.cjs
++++ b/tests/error-persistence-browser.test.cjs
+@@ -1,5 +1,6 @@
+ const test = require('node:test');
+-const {open, saved, chromium, assert} = require('./browser-support.cjs');
++const {open, saved, click, chromium, assert, engineName} = require('./browser-support.cjs');
++const {rejectLargeWrites, limitNativeQuota} = require('./portability-storage.cjs');
+ 
+ // #122 : #error porte deux familles de messages. Les alertes persistantes (échec de sauvegarde, lecture seule) sont
+ // portées par l’état (`failed`, `readOnly`) ; les erreurs ponctuelles (champ invalide, action refusée) écrivent dans le
+@@ -8,10 +9,7 @@ const {open, saved, chromium, assert} = require('./browser-support.cjs');
+ 
+ // Quota réel de Chromium : fixé avant la première ouverture du stockage.
+ const bulky = 'Objet de remplissage synthétique. '.repeat(20000);
+-async function limitQuota(page) {
+-  const cdp = await page.context().newCDPSession(page);
+-  await cdp.send('Storage.overrideQuotaForOrigin', {origin: 'file://', quotaSize: 400000});
+-}
++const limitQuota = engineName === 'chromium' ? limitNativeQuota : rejectLargeWrites;
+ const failed = page => page.locator('#save-state').filter({hasText: 'Modifications non sauvegardées'}).waitFor();
+ 
+ test('cancel-fields n’éteint pas l’alerte persistante d’échec de sauvegarde', async () => {
+@@ -23,7 +21,7 @@ test('cancel-fields n’éteint pas l’alerte persistante d’échec de sauvega
+     const persistent = await page.locator('#error').innerText();
+     assert.match(persistent, /saturé/, 'l’alerte d’échec décrit le quota saturé');
+     // cancel-fields appelle A.error("") : la persistante doit être restaurée depuis l’état.
+-    await page.evaluate(() => MailBuilder.Actions['cancel-fields']());
++    await click(page, '[data-action=cancel-fields]');
+     const restored = await page.locator('#error').innerText();
+     assert.equal(restored, persistent, 'la persistante survit à cancel-fields');
+     assert.equal(await page.locator('#error').count(), 1, 'un seul #error dans le DOM');
+@@ -86,7 +84,7 @@ test('une sauvegarde réussie éteint durablement l’alerte persistante', async
+     assert.match(await page.locator('#error').innerText(), /saturé/);
+     await page.locator('#subject').fill('Objet allégé'); await saved(page);
+     // Après le succès, cancel-fields ne doit rien restaurer : plus de persistante.
+-    await page.evaluate(() => MailBuilder.Actions['cancel-fields']());
++    await click(page, '[data-action=cancel-fields]');
+     assert.equal(await page.locator('#error').innerText(), '', 'aucune alerte persistante restaurée après succès');
+     assert(await page.locator('#error').evaluate(e => e.hidden), '#error reste masqué');
+   } finally { await browser.close(); }
+diff --git a/tests/mail-layout-browser.test.cjs b/tests/mail-layout-browser.test.cjs
+index 0befa44..5f089fe 100644
+--- a/tests/mail-layout-browser.test.cjs
++++ b/tests/mail-layout-browser.test.cjs
+@@ -2,6 +2,33 @@ const test = require('node:test');
+ const {createHash} = require('node:crypto');
+ const {open, confirmChecks, chromium, assert} = require('./browser-support.cjs');
+ 
++// Le rectangle inclut la bordure fusionnée du tableau (1 px sous WebKit).
++// Mesurer les pixels peints, sans déduire l’épaisseur du CSS qui les produit.
++async function paintedBars(page) {
++  const bars = await page.locator('td').evaluateAll(nodes => nodes.filter(n => n.style.backgroundColor === 'rgb(106, 106, 244)').map(n => {
++    const r = n.getBoundingClientRect(); return {x: r.x, y: r.y, width: r.width, height: r.height};
++  }));
++  const result = [];
++  for (const bar of bars) {
++    const png = await page.screenshot({clip: {x: Math.max(0, Math.floor(bar.x) - 1), y: Math.floor(bar.y + bar.height / 2), width: Math.ceil(bar.width) + 3, height: 1}, scale: 'css'});
++    const painted = await page.evaluate(async data => {
++      const image = new Image(); image.src = 'data:image/png;base64,' + data; await image.decode();
++      const canvas = document.createElement('canvas'); canvas.width = image.width; canvas.height = image.height;
++      const context = canvas.getContext('2d'); context.drawImage(image, 0, 0);
++      const pixels = context.getImageData(0, 0, image.width, 1).data;
++      let run = 0, longest = 0;
++      for (let i = 0; i < pixels.length; i += 4) {
++        run = pixels[i] === 106 && pixels[i + 1] === 106 && pixels[i + 2] === 244 && pixels[i + 3] === 255 ? run + 1 : 0;
++        longest = Math.max(longest, run);
++      }
++      return longest;
++    }, png.toString('base64'));
++    result.push({rectangle: bar.width, painted});
++  }
++  return result;
++}
++const threePixelBars = bars => bars.length === 2 && bars.every(bar => Math.abs(bar.painted - 3) <= 0.75);
++
+ test('le courriel copié tient dans un message étroit après retrait des styles de tête', async () => {
+   const browser = await chromium.launch({headless: true});
+   try {
+@@ -45,11 +72,14 @@ test('la copie conserve les filets décoratifs de trois pixels des mises en avan
+     await rendered.locator('style').evaluateAll(nodes => nodes.forEach(n => n.remove()));
+     for (const width of [800, 390]) {
+       await rendered.setViewportSize({width, height: 900});
+-      const bars = await rendered.locator('td').evaluateAll(nodes => nodes.filter(n => n.style.backgroundColor === 'rgb(106, 106, 244)').map(n => n.getBoundingClientRect().width));
+-      assert.equal(bars.length, 2);
+-      // La bordure fusionnée voisine peut ajouter un demi-pixel au rectangle.
+-      assert(bars.every(w => Math.abs(w - 3) <= 0.75), `Filets à ${width}px : ${bars.join(', ')}`);
++      const bars = await paintedBars(rendered);
++      assert(threePixelBars(bars), `Filets à ${width}px : ${JSON.stringify(bars)}`);
+     }
++    // Témoin négatif : le contrôle doit refuser un vrai filet élargi.
++    await rendered.locator('td').evaluateAll(nodes => nodes.filter(n => n.style.backgroundColor === 'rgb(106, 106, 244)').forEach(n => { n.style.width = '4px'; }));
++    const widened = await paintedBars(rendered);
++    assert.deepEqual(widened.map(bar => bar.painted), [4, 4], 'Le témoin peint réellement quatre pixels.');
++    assert.equal(threePixelBars(widened), false, 'Un filet élargi doit être détecté.');
+   } finally { await browser.close(); }
+ });
+ 
+@@ -65,8 +95,13 @@ test('les 52 composants copiés conservent texte, liens et images sans déborder
+       const original = new DOMParser().parseFromString(A.Render.html(A.doc()), 'text/html');
+       const adapted = new DOMParser().parseFromString(A.Render.clipboardHtml(A.doc()), 'text/html');
+       if (JSON.stringify([...adapted.images].map(i => [i.src, i.alt])) !== JSON.stringify([...original.images].map(i => [i.src, i.alt]))) throw new Error('La préparation du presse-papiers a changé les images');
++      const preheader = value.blocks.find(b => b.component === 'mail-00').values.f0;
++      for (const output of [original, adapted]) {
++        const first = output.body.firstElementChild;
++        if (first.textContent !== preheader || first.style.display !== 'none' || !/mso-hide\s*:\s*all/.test(first.getAttribute('style'))) throw new Error('Le pré-en-tête doit rester présent et masqué dans les sorties.');
++      }
+       const nodes = original.createTreeWalker(original.body, NodeFilter.SHOW_TEXT), text = [];
+-      while (nodes.nextNode()) { const value = nodes.currentNode.data.replace(/\s+/g, ' ').trim(); if (value && !nodes.currentNode.parentElement.closest('[style*="mso-hide:all"]')) text.push(value); } // #41 : le pré-en-tête masqué n'est pas du texte reçu
++      while (nodes.nextNode()) { const value = nodes.currentNode.data.replace(/\s+/g, ' ').trim(); if (value && !original.body.firstElementChild.contains(nodes.currentNode)) text.push(value); }
+       // Chromium omet les variantes blanches masquées dans sa copie en mode clair, les autres moteurs non : on ne compare que les images visibles.
+       return {text, images: [...original.images].filter(i => !i.closest('.hide-white')).map(i => [i.src, i.alt]), links: [...original.querySelectorAll('a')].map(a => a.getAttribute('href')), plain: A.Render.plain(A.doc())};
+     });
+@@ -85,8 +120,15 @@ test('les 52 composants copiés conservent texte, liens et images sans déborder
+       // Cas reçu dans Mélissa : une largeur de table est figée à 800 pixels.
+       for (const table of doc.body.children) table.style.width = '800px';
+       document.querySelector('#message').innerHTML = doc.body.innerHTML;
+-      const nodes = doc.createTreeWalker(doc.body, NodeFilter.SHOW_TEXT), text = [];
+-      while (nodes.nextNode()) { const value = nodes.currentNode.data.replace(/\s+/g, ' ').trim(); if (value && !nodes.currentNode.parentElement.closest('[style*="mso-hide:all"]')) text.push(value); } // #41 : le pré-en-tête masqué n'est pas du texte reçu
++      // La réécriture CSSOM ci-dessus retire mso-hide inconnu sous Firefox/WebKit.
++      // La visibilité reçue dépend du rendu, pas de la graphie de cette propriété Office.
++      const message = document.querySelector('#message'), nodes = document.createTreeWalker(message, NodeFilter.SHOW_TEXT), text = [];
++      while (nodes.nextNode()) {
++        const value = nodes.currentNode.data.replace(/\s+/g, ' ').trim();
++        let parent = nodes.currentNode.parentElement, hidden = false;
++        while (parent && parent !== message) { if (getComputedStyle(parent).display === 'none') hidden = true; parent = parent.parentElement; }
++        if (value && !hidden) text.push(value);
++      }
+       return {text, images: [...doc.images].filter(i => !i.closest('.hide-white')).map(i => [i.src, i.alt]), links: [...doc.querySelectorAll('a')].map(a => a.getAttribute('href'))};
+     }, clipboard.html);
+     assert.deepEqual(actual.text, expected.text);
+diff --git a/tests/preview-size-browser.test.cjs b/tests/preview-size-browser.test.cjs
+index 2565706..891ac5b 100644
+--- a/tests/preview-size-browser.test.cjs
++++ b/tests/preview-size-browser.test.cjs
+@@ -18,16 +18,58 @@ async function server() {
+   return {origin: 'http://127.0.0.1:' + instance.address().port, get forbidden() { return forbidden; }, reset() { forbidden = 0; }, close: () => new Promise(resolve => instance.close(resolve))};
+ }
+ async function composition(page, all, title) {
++  await page.evaluate(() => { if (window.portabilityPreviewLoads) return; window.portabilityPreviewLoads = []; document.getElementById('preview').addEventListener('load', () => window.portabilityPreviewLoads.push(document.getElementById('preview').src)); });
+   const value = await page.evaluate(({all, title}) => JSON.stringify(MailBuilder.Model.create(title, all ? MailBuilder.catalog.components.map(c => c.id) : [0])), {all, title});
+   await expand(page, 'Importer du JSON'); await page.locator('#json-input').fill(value); await click(page, '[data-action=json-import]');
+   await page.locator('#notice').filter({hasText: 'Composition ou bibliothèque JSON ajoutée.'}).waitFor(); await saved(page);
+   const frame = await (await page.locator('#preview').elementHandle()).contentFrame();
+   await frame.waitForFunction(expected => document.title === expected, title);
+   await frame.evaluate(async () => { await Promise.all([...document.images].map(i => i.decode().catch(() => {}))); await document.fonts.ready; });
+-  await frame.waitForFunction(() => document.documentElement.scrollHeight <= document.documentElement.clientHeight, null, {timeout: 10000});
++  const requestedUrl = await page.locator('#preview').getAttribute('src');
++  await frame.waitForFunction(expected => location.href === expected && document.documentElement.scrollHeight <= document.documentElement.clientHeight, requestedUrl, {timeout: 10000}).catch(async cause => {
++    const inner = await frame.evaluate(() => ({scrollHeight: document.documentElement.scrollHeight, clientHeight: document.documentElement.clientHeight, bodyHeight: document.body.getBoundingClientRect().height, readyState: document.readyState, token: location.hash, last: [...document.body.children].filter(e => e.tagName !== 'SCRIPT').at(-1).getBoundingClientRect().bottom}));
++    const outer = await page.evaluate(() => ({src: document.getElementById('preview').src, height: document.getElementById('preview').getBoundingClientRect().height, loads: window.portabilityPreviewLoads}));
++    const currentFrame = await (await page.locator('#preview').elementHandle()).contentFrame();
++    const current = await currentFrame.evaluate(() => ({token: location.hash, scrollHeight: document.documentElement.scrollHeight, clientHeight: document.documentElement.clientHeight}));
++    throw new Error(`Aperçu initial non mesuré (${title}) : ${JSON.stringify({inner, outer, current, sameFrame: currentFrame === frame, frameUrl: frame.url(), currentUrl: currentFrame.url()})}`, {cause});
++  });
++  assert.equal(await frame.evaluate(() => location.href), await page.locator('#preview').getAttribute('src'), 'Le document mesuré est celui du dernier aperçu demandé');
+   return frame;
+ }
+ 
++test('import et changement de composition chargent le bon aperçu depuis l’éditeur et depuis l’accueil', async () => {
++  const browser = await chromium.launch();
++  try {
++    for (const fromHome of [false, true]) {
++      const {page, context} = await open(browser);
++      const originalId = await page.locator('#documents').inputValue();
++      if (fromHome) { await click(page, '[data-action=library-home]'); await page.locator('#library-home').waitFor({state: 'visible'}); }
++      const title = fromHome ? 'Import depuis accueil' : 'Import depuis éditeur';
++      const imported = await composition(page, true, title);
++      assert(await page.locator('#editor-page').isVisible());
++      assert.equal(await page.locator('#document-name').inputValue(), title);
++      assert.equal(await imported.evaluate(() => location.href), await page.locator('#preview').getAttribute('src'));
++      assert.match(await page.title(), new RegExp(title));
++      assert.equal(await page.evaluate(() => document.activeElement.id), 'composition-title');
++      if (fromHome) {
++        await click(page, '[data-action=library-home]');
++        await click(page, `[data-document="${originalId}"] [data-library-action=open]`);
++      } else {
++        await page.locator('#documents').selectOption(originalId); await click(page, '[data-action=open-document]');
++      }
++      await page.locator('#document-name').waitFor({state: 'visible'});
++      await page.waitForFunction(() => document.getElementById('document-name').value === 'Mon premier courriel');
++      const restored = await (await page.locator('#preview').elementHandle()).contentFrame();
++      const requestedUrl = await page.locator('#preview').getAttribute('src');
++      await restored.waitForFunction(expected => location.href === expected && document.title === 'Mon premier courriel' && document.documentElement.scrollHeight <= document.documentElement.clientHeight, requestedUrl, {timeout: 10000});
++      assert.equal(await restored.evaluate(() => location.href), await page.locator('#preview').getAttribute('src'), `Composition réouverte depuis ${fromHome ? 'l’accueil' : 'l’éditeur'} : le document chargé doit correspondre à src`);
++      assert.equal(await page.evaluate(() => document.activeElement.id), 'composition-title');
++      assert(await page.locator('#block-editor input,#block-editor textarea').count() > 0);
++      await context.close();
++    }
++  } finally { await browser.close(); }
++});
++
+ test('aperçu isolé : 52 blocs jusqu’au pied de page, redimensionnement et réduction sur les deux distributions', async () => {
+   const host = await server(), browser = await chromium.launch();
+   try {
+@@ -73,7 +115,12 @@ test('aperçu : origine opaque, script étranger et réseau bloqués, messages f
+       const frame = document.getElementById('preview'), token = frame.src.split('#')[1], baseline = frame.style.height;
+       const payload = {type: 'mail-preview-size', token, height: 1, width: frame.clientWidth};
+       const messages = [{source: window, origin: 'null', data: payload}, {source: frame.contentWindow, origin: 'null', data: {...payload, token: 'ancien'}}, {source: frame.contentWindow, origin: 'null', data: {...payload, width: 0}}, {source: frame.contentWindow, origin: 'null', data: {...payload, height: -1}}, {source: frame.contentWindow, origin: location.origin, data: payload}];
+-      return messages.map(message => { dispatchEvent(new MessageEvent('message', message)); return frame.style.height === baseline; });
++      return messages.map(({source, ...message}) => {
++        // Firefox refuse le WindowProxy opaque dans le convertisseur IDL du constructeur.
++        // Événement synthétique au même seam navigateur, avec la vraie référence source.
++        const event = new MessageEvent('message', message); Object.defineProperty(event, 'source', {value: source});
++        dispatchEvent(event); return frame.style.height === baseline;
++      });
+     });
+     assert.deepEqual(spoof, [true, true, true, true, true]); await context.close();
+   } finally { await browser.close(); await host.close(); }
+@@ -159,7 +206,7 @@ test('une mesure reçue avant le chargement du nouvel aperçu ne change pas la h
+     await typed.waitForFunction(() => document.documentElement.scrollHeight <= document.documentElement.clientHeight);
+     const result = await page.evaluate(() => {
+       const f = document.getElementById('preview'), baseline = f.getBoundingClientRect().height, previousToken = f.src.split('#')[1];
+-      const send = (token, height) => { dispatchEvent(new MessageEvent('message', {source: f.contentWindow, origin: 'null', data: {type: 'mail-preview-size', token, height, width: f.clientWidth}})); return f.getBoundingClientRect().height; };
++      const send = (token, height) => { const event = new MessageEvent('message', {origin: 'null', data: {type: 'mail-preview-size', token, height, width: f.clientWidth}}); Object.defineProperty(event, 'source', {value: f.contentWindow}); dispatchEvent(event); return f.getBoundingClientRect().height; };
+       window.previewRace = {send, loaded: false}; f.addEventListener('load', () => { window.previewRace.loaded = true; }, {once: true});
+       /* L’état « nouveau document posé, pas encore chargé » est construit ici, pas espéré d’un rafraîchissement différé : */
+       /* `show` pose un jeton neuf de façon synchrone, et la mesure partielle part dans la même tâche, comme sous Firefox. */
+@@ -180,6 +227,19 @@ test('une mesure reçue avant le chargement du nouvel aperçu ne change pas la h
+     /* Contrôle négatif : une fois le document chargé, la même mesure avec le jeton courant est, elle, appliquée. */
+     const applied = await page.evaluate(half => window.previewRace.send(document.getElementById('preview').src.split('#')[1], half), result.premature);
+     assert(applied < result.baseline / 2 + 8 && applied >= result.premature, JSON.stringify({...result, applied}));
++    // Contrôle positif indépendant : la même frontière accepte aussi un vrai postMessage
++    // issu du document opaque. Aucun appel direct au gestionnaire applicatif.
++    await page.evaluate(height => {
++      window.realPreviewMessage = null;
++      const observe = event => {
++        if (event.data?.height !== height || event.source !== document.getElementById('preview').contentWindow) return;
++        window.realPreviewMessage = {origin: event.origin, height: document.getElementById('preview').clientHeight}; removeEventListener('message', observe);
++      };
++      addEventListener('message', observe);
++    }, result.premature + 20);
++    await settled.evaluate(height => parent.postMessage({type: 'mail-preview-size', token: location.hash.slice(1), height, width: innerWidth}, '*'), result.premature + 20);
++    await page.waitForFunction(() => window.realPreviewMessage, null, {timeout: 5000});
++    assert.deepEqual(await page.evaluate(() => window.realPreviewMessage), {origin: 'null', height: result.premature + 21});
+     await context.close();
+   } finally { await browser.close(); }
+ });
+diff --git a/tests/pwa-contract.test.cjs b/tests/pwa-contract.test.cjs
+index 53a0461..c546b3b 100644
+--- a/tests/pwa-contract.test.cjs
++++ b/tests/pwa-contract.test.cjs
+@@ -18,7 +18,9 @@ test('un prompt consommé disparaît après annulation, acceptation ou rejet ; u
+   }
+ });
+ async function serve(base, portable = false) {
++  const requests = [];
+   const server = http.createServer(async (request, response) => {
++    requests.push(request.url);
+     try {
+       const url = new URL(request.url, 'http://localhost');
+       if (url.pathname === '/outside.txt') { response.end('NETWORK'); return; }
+@@ -30,7 +32,7 @@ async function serve(base, portable = false) {
+     } catch { response.writeHead(404); response.end(); }
+   });
+   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+-  return {server, origin: `http://127.0.0.1:${server.address().port}`};
++  return {server, requests, origin: `http://127.0.0.1:${server.address().port}`};
+ }
+ for (const family of ['prototype', 'app']) test(`${family} : caches par scope, aucune réponse étrangère et favori paramétré hors connexion`, async () => {
+   const browser = await chromium.launch({headless: true}); let server;
+@@ -43,15 +45,27 @@ for (const family of ['prototype', 'app']) test(`${family} : caches par scope, a
+     await page.evaluate(async () => { const cache = await caches.open('foreign-cache'); await cache.put('/outside.txt', new Response('CACHED')); await cache.put('/a/not-precache.txt', new Response('CACHED')); });
+     assert.equal(await page.evaluate(() => fetch('/outside.txt').then(r => r.text())), 'NETWORK');
+     assert.equal(await page.evaluate(() => fetch('/a/not-precache.txt').then(r => r.status)), 404);
+-    await context.setOffline(true);
++    // Le témoin traverse le worker vers le serveur avant la coupure. setOffline seul
++    // ne coupe pas ce chemin sous Firefox : fermer réellement notre serveur privé.
++    for (const tab of [page, other]) {
++      const probe = new URL('icon.svg?missing=1', tab.url()).pathname + '?missing=1';
++      assert(await tab.evaluate(() => fetch('./icon.svg?missing=1', {cache: 'no-store'}).then(r => r.ok)));
++      assert(served.requests.includes(probe), `Le serveur doit recevoir le témoin ${probe}`);
++    }
++    await new Promise(resolve => { server.close(resolve); server.closeAllConnections(); });
++    assert.equal(server.listening, false);
++    await assert.rejects(fetch(origin + '/a/icon.svg?missing=1', {cache: 'no-store'}));
++    const requestCount = served.requests.length;
+     for (const tab of [page, other]) {
+       const url = tab.url(); await tab.goto(url + 'index.html?edition=1');
+       await tab.waitForFunction(() => document.querySelector('#save-state').textContent !== '');
+       assert.equal(await tab.locator('#environment').count(), 1);
+       assert(await tab.evaluate(async () => { try { await fetch('./icon.svg?missing=1'); return false; } catch { return true; } }));
++      for (const resource of ['/outside.txt', '/a/not-precache.txt']) assert(await tab.evaluate(async resource => { try { await fetch(resource); return false; } catch { return true; } }, resource), `${resource} ne doit pas sortir d’un cache étranger`);
+     }
+     await assert.rejects(page.goto(origin + '/a/inconnue.html'));
+     await assert.rejects(other.goto(origin + '/hors-perimetre.html'));
++    assert.equal(served.requests.length, requestCount, 'Aucune requête ne rejoint le serveur fermé pendant les contrôles hors ligne');
+   } finally { if (server) { server.closeAllConnections(); await new Promise(resolve => server.close(resolve)); } await browser.close(); }
+ });
+ test('le portable servi par HTTP reste autonome et ne tente pas d’inscrire un worker', async () => {
+diff --git a/tests/restore-after-refusal-browser.test.cjs b/tests/restore-after-refusal-browser.test.cjs
+index c922183..7c69e93 100644
+--- a/tests/restore-after-refusal-browser.test.cjs
++++ b/tests/restore-after-refusal-browser.test.cjs
+@@ -7,7 +7,10 @@ async function refusedWindow(context) {
+   page.on('pageerror', e => errors.push(e.message));
+   await page.addInitScript(() => {
+     if (window !== window.top) return;
+-    const open = IDBFactory.prototype.open; let attempts = 0; window.writes = 0; const refused = sessionStorage.getItem('refus-initial') === '1'; sessionStorage.setItem('refus-initial', '1');
++    // Cette page jetable reste sur la même URL file://. Le marqueur appartient à la fenêtre,
++    // pas au stockage dont on simule précisément l’indisponibilité.
++    const open = IDBFactory.prototype.open; let attempts = 0; window.writes = 0;
++    const refused = window.name === 'builder-test-refus-initial-consomme'; window.name = 'builder-test-refus-initial-consomme';
+     window.refusedAtStart = refused; // exposé au test : la page rechargée doit démarrer avec le refus déjà consommé
+     IDBFactory.prototype.open = function(...args) {
+       if (!refused && ++attempts === 1) { const request = {}; queueMicrotask(() => request.onerror?.()); return request; }
+@@ -16,6 +19,7 @@ async function refusedWindow(context) {
+     for (const method of ['put', 'add', 'delete', 'clear']) { const original = IDBObjectStore.prototype[method]; IDBObjectStore.prototype[method] = function(...args) { window.writes++; return original.apply(this, args); }; }
+   });
+   await page.goto(portable); await page.waitForFunction(() => window.MailBuilder?.ready);
++  assert.equal(await page.evaluate(() => window.refusedAtStart), false, 'cette fenêtre doit recevoir son unique refus initial');
+   assert.equal(await page.evaluate(() => MailBuilder.recoveryOnly), true, 'le refus initial doit placer la page en mode récupération');
+   return {page, errors};
+ }
+@@ -50,7 +54,11 @@ test('refus initial d’IndexedDB : « Restaurer l’état précédent » propos
+     const library = await exportTemporary(page);
+     assert(JSON.stringify(library).includes('Travail temporaire'), 'l’export contient le travail temporaire');
+     assert.deepEqual(await raw(writer), before);
++    // Reproduire la précondition observée en CI : le marqueur sessionStorage manque au rechargement.
++    // Ce retrait contrôlé ne prétend pas expliquer sa disparition sous Linux.
++    await page.evaluate(() => sessionStorage.removeItem('refus-initial'));
+     await Promise.all([page.waitForEvent('load'), click(page, '#reopen-reload')]); await page.waitForFunction(() => window.MailBuilder?.ready);
++    assert.equal(await page.evaluate(() => window.refusedAtStart), true, 'le refus reste consommé même sans le marqueur sessionStorage');
+     assert.equal(await page.evaluate(() => MailBuilder.recoveryOnly), false);
+     assert.match(await page.locator('#save-state').innerText(), /restaurée depuis ce navigateur/);
+     await enterEditor(page); assert.equal(await page.locator('#document-name').inputValue(), 'Second état');
+diff --git a/tests/save-rescue-browser.test.cjs b/tests/save-rescue-browser.test.cjs
+index 8b4223f..0bee6f6 100644
+--- a/tests/save-rescue-browser.test.cjs
++++ b/tests/save-rescue-browser.test.cjs
+@@ -2,6 +2,7 @@ const test = require('node:test');
+ const http = require('node:http');
+ const path = require('node:path');
+ const {root, evidence, portable, click, open, enterEditor, saved, expand, download, state, store, chromium, fs, assert, engineName} = require('./browser-support.cjs');
++const {rejectLargeWrites, limitNativeQuota} = require('./portability-storage.cjs');
+ 
+ // Données synthétiques uniquement. Le secours doit exporter la bibliothèque en mémoire, à côté du message d’échec.
+ const rescue = '[data-action=rescue-export]';
+@@ -10,14 +11,11 @@ const kinds = {absent: /Stockage indisponible/, inaccessible: /inaccessible/, sa
+ const failed = page => page.locator('#save-state').filter({hasText: 'Modifications non sauvegardées'}).waitFor();
+ 
+ // Quota réel de Chromium : fixé avant la première ouverture du stockage, il refuse une écriture volumineuse.
+-const bulky = 'Objet de remplissage synthétique. '.repeat(20000);
+-// Storage.overrideQuotaForOrigin est une commande CDP : hors Chromium, les tests qui en dépendent sont ignorés avec cette raison,
+-// jamais comptés réussis. La voie `tx.error` est couverte sur tous les moteurs par tests/storage-browser.test.cjs (#123).
++// Sous le plafond natif de 524288 caractères des inputs WebKit, au-dessus du quota de 400000 octets.
++const bulky = 'Objet de remplissage synthétique. '.repeat(15000);
++// Seul le quota physique conserve sa limitation CDP ; les parcours UI sont exercés
++// séparément avec une panne injectée à la frontière IndexedDB sur les trois moteurs.
+ const cdpOnly = engineName !== 'chromium' && 'quota réel fixé par CDP, Chromium seul';
+-async function limitQuota(page) {
+-  const cdp = await page.context().newCDPSession(page);
+-  await cdp.send('Storage.overrideQuotaForOrigin', {origin: 'file://', quotaSize: 400000});
+-}
+ async function saturate(page) { await page.locator('#subject').fill(bulky); await failed(page); }
+ async function refuseWrites(page, name) {
+   await page.evaluate(name => {
+@@ -38,10 +36,10 @@ async function rescueBesideMessage(page, selector = rescue, gap = 32) {
+   return layout;
+ }
+ 
+-test('quota réel dépassé : le secours suit le message sans défilement et exporte la bibliothèque en mémoire', {skip: cdpOnly}, async () => {
++async function rescueAfterFailure(injectFailure, scenario) {
+   const browser = await chromium.launch({headless: true});
+   try {
+-    const {page} = await open(browser, {viewport: {width: 1440, height: 1000}}, limitQuota);
++    const {page} = await open(browser, {viewport: {width: 1440, height: 1000}}, injectFailure);
+     await page.locator('#document-name').fill('Version sauvegardée'); await saved(page);
+     const persisted = await store(page);
+     await saturate(page);
+@@ -58,11 +56,13 @@ test('quota réel dépassé : le secours suit le message sans défilement et exp
+     await page.locator('#subject').fill('Objet allégé'); await saved(page);
+     assert(await page.locator(rescue).isHidden(), 'Le secours disparaît après une sauvegarde réussie.');
+     await fs.mkdir(evidence, {recursive: true});
+-    await fs.writeFile(path.join(evidence, 'secours-sauvegarde.json'), JSON.stringify({scenario: 'quota réel Chromium (Storage.overrideQuotaForOrigin)', desktop, narrow, exportedEqualsMemory: true, storeUnchanged: true}, null, 2));
++    await fs.writeFile(path.join(evidence, scenario === 'quota réel Chromium' ? 'secours-sauvegarde.json' : 'secours-sauvegarde-injection.json'), JSON.stringify({scenario, desktop, narrow, exportedEqualsMemory: true, storeUnchanged: true}, null, 2));
+   } finally { await browser.close(); }
+-});
++}
++test('quota réel dépassé : le secours suit le message sans défilement et exporte la bibliothèque en mémoire', {skip: cdpOnly}, () => rescueAfterFailure(limitNativeQuota, 'quota réel Chromium'));
++test('panne IndexedDB injectée : secours visible, export égal à la mémoire et stockage inchangé', () => rescueAfterFailure(rejectLargeWrites, 'QuotaExceededError injectée, aucun quota physique mesuré'));
+ 
+-test('stockage absent, inaccessible, saturé ou en conflit : messages distincts, secours visible, aucune récupération promise', {skip: cdpOnly}, async () => {
++test('stockage absent, inaccessible, saturé ou en conflit : messages distincts, secours visible, aucune récupération promise', async () => {
+   const browser = await chromium.launch({headless: true}), observed = {}, problems = [];
+   try {
+     const absent = await open(browser, {}, page => page.addInitScript(() => { Object.defineProperty(window, 'indexedDB', {value: undefined, configurable: true}); }));
+@@ -90,7 +90,7 @@ test('stockage absent, inaccessible, saturé ou en conflit : messages distincts,
+     observed.conflit = await second.locator('#error').innerText();
+     try { await rescueBesideMessage(second, '[data-action=read-only-export]', 400); } catch (cause) { problems.push(`conflit : ${cause.message.split('\n')[0]}`); } // #31 : lecture seule, export du bandeau
+ 
+-    const full = await open(browser, {}, limitQuota);
++    const full = await open(browser, {}, rejectLargeWrites);
+     await full.page.locator('#document-name').fill('Avant saturation'); await saved(full.page);
+     await saturate(full.page);
+     observed.sature = await full.page.locator('#error').innerText();
+@@ -107,10 +107,10 @@ test('stockage absent, inaccessible, saturé ou en conflit : messages distincts,
+   } finally { await browser.close(); }
+ });
+ 
+-test('après un échec de sauvegarde, les changements de vue gardent le travail en mémoire ; champs invalides et chargements restent bloquants', {skip: cdpOnly}, async () => {
++test('après un échec de sauvegarde, les changements de vue gardent le travail en mémoire ; champs invalides et chargements restent bloquants', async () => {
+   const browser = await chromium.launch({headless: true});
+   try {
+-    const {page} = await open(browser, {}, limitQuota);
++    const {page} = await open(browser, {}, rejectLargeWrites);
+     await page.locator('#document-name').fill('Version sauvegardée'); await saved(page);
+     const persisted = await store(page), first = (await state(page)).activeId;
+     await saturate(page); await page.locator('#document-name').fill('Travail non sauvegardé'); await failed(page);
+@@ -143,10 +143,10 @@ test('après un échec de sauvegarde, les changements de vue gardent le travail
+ 
+ // Décision du 24 octobre (#32 et #37) : l’export de secours n’est jamais bloqué par une URL invalide ;
+ // la copie et l’export HTML du courriel le restent. Le brouillon n’est pas dans le modèle, donc pas dans le secours.
+-test('un lien en cours de saisie bloque l’export du courriel, jamais l’export de secours', {skip: cdpOnly}, async () => {
++test('un lien en cours de saisie bloque l’export du courriel, jamais l’export de secours', async () => {
+   const browser = await chromium.launch({headless: true});
+   try {
+-    const {page} = await open(browser, {}, limitQuota);
++    const {page} = await open(browser, {}, rejectLargeWrites);
+     await page.locator('#document-name').fill('Version sauvegardée'); await saved(page);
+     await saturate(page); await rescueBesideMessage(page);
+     await page.locator('#article-source').fill('https://'); await page.locator('#article-source').blur();
+diff --git a/tests/scope-buttons-browser.test.cjs b/tests/scope-buttons-browser.test.cjs
+index abf1034..30f1edf 100644
+--- a/tests/scope-buttons-browser.test.cjs
++++ b/tests/scope-buttons-browser.test.cjs
+@@ -1,13 +1,15 @@
+ const test = require('node:test');
+-const {click, open, enterEditor, chromium, assert} = require('./browser-support.cjs');
++const {click, open, enterEditor, chromium, assert, nativeAxTree, note} = require('./browser-support.cjs');
+ 
+-// Intitulés accessibles lus dans l'arbre d'accessibilité de Chromium (CDP), pas dans le DOM.
++// Arbre natif CDP sous Chromium ; noms ARIA calculés par Playwright sur les autres moteurs.
+ async function buttons(page) {
+-  const cdp = await page.context().newCDPSession(page);
+-  try {
+-    const {nodes} = await cdp.send('Accessibility.getFullAXTree');
+-    return nodes.filter(n => !n.ignored && n.role?.value === 'button').map(n => n.name?.value || '');
+-  } finally { await cdp.detach(); }
++  const nodes = await nativeAxTree(page.context(), page);
++  if (nodes) return nodes.filter(n => !n.ignored && n.role?.value === 'button').map(n => n.name?.value || '');
++  note({kind: 'aria-snapshot', property: 'button-accessible-names', nativeAccessibilityTree: false});
++  return (await page.locator('body').ariaSnapshot()).split('\n').flatMap(line => {
++    const match = /^\s*- button "(.*?)"(?: \[.*?\])?(?::.*)?$/.exec(line);
++    return match ? [match[1]] : [];
++  });
+ }
+ const scoped = names => names.filter(n => /^(Dupliquer|Retirer|Supprimer)/.test(n));
+ 
+diff --git a/tests/tab-takeover-browser.test.cjs b/tests/tab-takeover-browser.test.cjs
+index b2bbf7b..96c3977 100644
+--- a/tests/tab-takeover-browser.test.cjs
++++ b/tests/tab-takeover-browser.test.cjs
+@@ -16,6 +16,13 @@ async function expectWritable(page, label) {
+   assert(await page.locator(banner).isHidden(), `${label} : le bandeau de lecture seule doit disparaître.`);
+   assert(await page.locator('#document-name').isEnabled(), `${label} : la saisie doit être de nouveau possible.`);
+ }
++// Une sauvegarde explicite permet aussi de découvrir le jeton périmé sans changer le contenu.
++async function ownershipRefused(page, label) {
++  if (await page.locator(banner).isHidden()) {
++    await expand(page, 'Fichiers et récupération'); await click(page, '[data-action=save-now]');
++  }
++  await expectReadOnly(page, label);
++}
+ const exported = async (page, filename) => JSON.parse(await fs.readFile(await download(page, rescue, filename), 'utf8'));
+ async function failWrites(page) {
+   await page.evaluate(() => {
+@@ -27,8 +34,8 @@ async function second(context, url = portable) {
+   const page = await context.newPage(); await page.goto(url); await page.waitForFunction(() => window.MailBuilder?.ready); await enterEditor(page); return page;
+ }
+ // La première fenêtre enregistre après l’ouverture de la seconde : la saisie suivante de celle-ci entre en conflit.
+-async function conflict(browser) {
+-  const {page: first, context} = await open(browser);
++async function conflict(browser, beforeNavigate) {
++  const {page: first, context} = await open(browser, {}, beforeNavigate);
+   await first.locator('#document-name').fill('Composition commune'); await saved(first);
+   const other = await second(context);
+   await first.locator('#document-name').fill('Version de la première fenêtre'); await saved(first);
+@@ -36,7 +43,7 @@ async function conflict(browser) {
+   return {context, first, other};
+ }
+ 
+-test('reprendre la main ajoute les compositions divergentes en copies horodatées ; l’ancien onglet passe en lecture seule puis se ferme sans rien écrire', async () => {
++test('reprendre la main ajoute les compositions divergentes en copies horodatées ; l’ancien onglet inchangé se ferme sans rien écrire', async () => {
+   const browser = await chromium.launch({headless: true});
+   try {
+     const {context, first, other} = await conflict(browser), errors = [];
+@@ -61,11 +68,12 @@ test('reprendre la main ajoute les compositions divergentes en copies horodatée
+     await expectWritable(other, 'fenêtre qui a repris la main');
+     assert.match(await other.locator('#notice').innerText(), /copie/);
+ 
+-    await expectReadOnly(first, 'ancien onglet');
+-    assert(await first.locator(takeOver).isVisible());
+-    assert.match(await first.locator('#save-state').innerText(), /^Lecture seule/, 'Le statut ne doit plus annoncer une sauvegarde dans l’ancien onglet.');
++    // Sans nouvelle tentative d’écriture, la notification peut arriver plus tard (#138).
++    // La fermeture doit néanmoins préserver le nouveau propriétaire, avec ou sans bandeau.
+     assert.deepEqual(await state(first), firstMemory, 'La mémoire de l’ancien onglet est inchangée.');
+-    assert.deepEqual(await exported(first, 'ancien-onglet.json'), firstMemory);
++    await expand(first, 'Fichiers et récupération');
++    const firstExport = JSON.parse(await fs.readFile(await download(first, '[data-action=export-library]', 'ancien-onglet.json'), 'utf8'));
++    assert.deepEqual(firstExport, firstMemory);
+ 
+     let dialogs = 0; first.on('dialog', async dialog => { dialogs++; await dialog.accept(); });
+     await Promise.all([first.waitForEvent('close'), first.close({runBeforeUnload: true})]);
+@@ -84,18 +92,52 @@ test('l’ancien onglet reprend la main à son tour sans dupliquer une compositi
+   try {
+     const {first, other} = await conflict(browser);
+     await expectReadOnly(other, 'fenêtre en conflit'); await click(other, takeOver); await saved(other);
+-    await expectReadOnly(first, 'ancien onglet');
++    await ownershipRefused(first, 'ancien onglet');
+     const storedBefore = await store(other), otherMemory = await state(other);
+     await click(first, takeOver); await saved(first);
+     const storedAfter = await store(first), firstMemory = await state(first);
+     assert.deepEqual(storedAfter.library.documents, storedBefore.library.documents, 'Aucune copie ni perte quand rien n’a divergé.');
+     assert.deepEqual(storedAfter.library, firstMemory);
+     await expectWritable(first, 'ancien onglet après reprise');
+-    await expectReadOnly(other, 'fenêtre dépossédée');
++    await ownershipRefused(other, 'fenêtre dépossédée');
+     assert.deepEqual(await state(other), otherMemory);
+   } finally { await browser.close(); }
+ });
+ 
++test('sans notification interfenêtres, la première modification de l’ancien onglet est conservée en mémoire et refusée au stockage', async () => {
++  const browser = await chromium.launch({headless: true});
++  try {
++    // Indisponibilité à la frontière navigateur : aucun collaborateur de l’application n’est remplacé.
++    const {first, other} = await conflict(browser, page => page.context().addInitScript(() => { window.BroadcastChannel = undefined; }));
++    await expectReadOnly(other, 'fenêtre en conflit');
++    await click(other, takeOver); await saved(other);
++    const ownerMemory = await state(other), storedAfterTakeover = await store(other), oldMemory = await state(first);
++    assert.equal(storedAfterTakeover.library.documents.length, 2, 'Les compositions divergentes restent présentes après la reprise.');
++    assert.deepEqual(storedAfterTakeover.library, ownerMemory);
++    await first.bringToFront();
++    assert(await first.locator(banner).isHidden(), 'Le scénario exerce effectivement le repli sans notification.');
++    assert(await first.locator('#subject').isEnabled());
++    const subject = 'Travail de l’ancien onglet à conserver après reprise';
++    await first.locator('#subject').fill(subject);
++    await first.waitForFunction(() => {
++      const status = document.querySelector('#save-state').textContent;
++      return status.startsWith('Lecture seule') || status === 'Bibliothèque sauvegardée dans ce navigateur.';
++    });
++    assert.equal((await store(other)).token, storedAfterTakeover.token, 'Une tentative refusée ne doit pas remplacer le jeton du nouveau propriétaire.');
++    await expectReadOnly(first, 'ancien onglet à sa première modification');
++    assert.match(await first.locator('#error').innerText(), /Une autre fenêtre.*Exportez/s);
++    assert.match(await first.locator('#save-state').innerText(), /Lecture seule.*non sauvegardées/);
++    const expectedMemory = structuredClone(oldMemory);
++    expectedMemory.documents.find(doc => doc.id === expectedMemory.activeId).subject = subject;
++    const memoryAfterRefusal = await state(first);
++    assert.deepEqual(memoryAfterRefusal, expectedMemory, 'La modification refusée reste intégralement en mémoire.');
++    assert.deepEqual(await store(other), storedAfterTakeover, 'Le jeton et toutes les données du nouveau propriétaire restent inchangés.');
++    assert.deepEqual(await state(other), ownerMemory, 'Le nouveau propriétaire garde sa mémoire.');
++    assert.deepEqual(await exported(first, 'ancien-onglet-modification-refusee.json'), expectedMemory, 'L’export conserve aussi la modification refusée.');
++    assert.deepEqual(await store(other), storedAfterTakeover, 'L’export de secours n’écrit rien.');
++  } finally { await browser.close(); }
++});
++
+ test('un modèle et une identité créés dans la fenêtre en conflit rejoignent aussi la bibliothèque en copies, sans copier la composition inchangée', async () => {
+   const browser = await chromium.launch({headless: true});
+   try {

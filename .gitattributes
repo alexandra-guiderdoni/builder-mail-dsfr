@@ -1,0 +1,9 @@
+# Preserve verbatim qualification evidence: patch context and template whitespace
+# are part of the recorded hashes. Application and test code keep Git's checks.
+docs/prise-en-charge-backlog-20261025/**/*.patch whitespace=-blank-at-eol
+docs/prise-en-charge-backlog-20261025/**/*.diff whitespace=-blank-at-eol
+docs/prise-en-charge-backlog-20261025/audit-final/run/prompt-*.txt whitespace=-blank-at-eol
+docs/prise-en-charge-backlog-20261025/coordination/recette-messageries/*.reference-*.html whitespace=-blank-at-eol
+docs/verification-publication-shipguard-20261025/artifacts/prompt-*.md whitespace=-blank-at-eol
+docs/verification-publication-shipguard-20261025/artifacts/activated-checklists.md whitespace=-blank-at-eof
+docs/verification-publication-shipguard-20261025/artifacts/supplement/*.diff whitespace=-blank-at-eol

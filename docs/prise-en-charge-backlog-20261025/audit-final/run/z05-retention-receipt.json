@@ -1,0 +1,9 @@
+{
+  "artifact": "visual-tests/_results/runs/audit-20261025-115922108-395c08d1/zone-z05-r1-r1-z05-a1.json",
+  "retention": "intent-to-add",
+  "helper_exit_status": 0,
+  "git_status": "A visual-tests/_results/runs/audit-20261025-115922108-395c08d1/zone-z05-r1-r1-z05-a1.json",
+  "staged_content": false,
+  "head": "395c08d1dfa4d0b8e41416da798bf0313a8bd379",
+  "candidate_files_hash_verified_after_retention": 72
+}

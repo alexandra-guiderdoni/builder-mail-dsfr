@@ -1,0 +1,18 @@
+{
+  "candidate_current": true,
+  "mutant_temp_dirs_remaining": [],
+  "context_artifacts": [
+    {
+      "path": "docs/prise-en-charge-backlog-20261025/rendu/takeover-token-mutant.cjs",
+      "sha256": "a4fd013dbcf84108f6da7d68e8899eadcf2772590428d86cd579521e66947554"
+    },
+    {
+      "path": "docs/prise-en-charge-backlog-20261025/rendu/webkit-takeover-token-mutant-workspace.log",
+      "sha256": "f1545a237efbb519f444026a67e40bb8248598c1a7c4280a7014dc8e3c90556e"
+    }
+  ],
+  "mutant_log_relevant_lines": [
+    "  AssertionError [ERR_ASSERTION]: Une tentative refus\u00e9e ne doit pas remplacer le jeton du nouveau propri\u00e9taire.",
+    "MUTANT_EXIT=1"
+  ]
+}

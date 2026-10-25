@@ -1,0 +1,22 @@
+--- preview-size-before.cjs
++++ tests/preview-size-browser.test.cjs
+@@ -2,6 +2,7 @@
+ const http = require('node:http');
+ const path = require('node:path');
+ const {open, enterEditor, click, expand, saved, chromium, fs, root, assert} = require('./browser-support.cjs');
++const {waitForPreviewResources} = require('./preview-resources.cjs');
+ 
+ async function server() {
+   let forbidden = 0;
+@@ -23,9 +24,9 @@
+   await expand(page, 'Importer du JSON'); await page.locator('#json-input').fill(value); await click(page, '[data-action=json-import]');
+   await page.locator('#notice').filter({hasText: 'Composition ou bibliothèque JSON ajoutée.'}).waitFor(); await saved(page);
+   const frame = await (await page.locator('#preview').elementHandle()).contentFrame();
+-  await frame.waitForFunction(expected => document.title === expected, title);
+-  await frame.evaluate(async () => { await Promise.all([...document.images].map(i => i.decode().catch(() => {}))); await document.fonts.ready; });
++  await frame.waitForFunction(expected => document.title === expected, title, {timeout: 10000});
+   const requestedUrl = await page.locator('#preview').getAttribute('src');
++  await waitForPreviewResources(frame, {url: requestedUrl, title, imageCount: all ? 24 : 0});
+   await frame.waitForFunction(expected => location.href === expected && document.documentElement.scrollHeight <= document.documentElement.clientHeight, requestedUrl, {timeout: 10000}).catch(async cause => {
+     const inner = await frame.evaluate(() => ({scrollHeight: document.documentElement.scrollHeight, clientHeight: document.documentElement.clientHeight, bodyHeight: document.body.getBoundingClientRect().height, readyState: document.readyState, token: location.hash, last: [...document.body.children].filter(e => e.tagName !== 'SCRIPT').at(-1).getBoundingClientRect().bottom}));
+     const outer = await page.evaluate(() => ({src: document.getElementById('preview').src, height: document.getElementById('preview').getBoundingClientRect().height, loads: window.portabilityPreviewLoads}));

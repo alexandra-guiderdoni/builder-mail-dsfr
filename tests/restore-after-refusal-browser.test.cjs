@@ -6,16 +6,24 @@ async function refusedWindow(context) {
   const page = await context.newPage(), errors = []; page.setDefaultTimeout(8000);
   page.on('pageerror', e => errors.push(e.message));
   await page.addInitScript(() => {
-    if (window !== window.top) return;
-    const open = IDBFactory.prototype.open; let attempts = 0; window.writes = 0; const refused = sessionStorage.getItem('refus-initial') === '1'; sessionStorage.setItem('refus-initial', '1');
-    window.refusedAtStart = refused; // exposé au test : la page rechargée doit démarrer avec le refus déjà consommé
+    if (window !== window.top || location.protocol !== 'file:') return;
+    // La demande appartient à cette navigation de recette, jamais au document about:blank,
+    // au stockage ni au nom de fenêtre. Le reload garde le même fichier sans le fragment consommé.
+    const open = IDBFactory.prototype.open; let attempts = 0; window.writes = 0;
+    const requested = location.hash === '#mailbuilder-test-refuse-idb-once';
+    if (requested) history.replaceState(null, '', location.href.split('#')[0]);
+    window.refusedAtStart = !requested; window.fixtureRefusals = 0; window.nativeOpens = 0;
     IDBFactory.prototype.open = function(...args) {
-      if (!refused && ++attempts === 1) { const request = {}; queueMicrotask(() => request.onerror?.()); return request; }
+      if (requested && ++attempts === 1) { window.fixtureRefusals++; const request = {}; queueMicrotask(() => request.onerror?.()); return request; }
+      window.nativeOpens++;
       return open.apply(this, args);
     };
     for (const method of ['put', 'add', 'delete', 'clear']) { const original = IDBObjectStore.prototype[method]; IDBObjectStore.prototype[method] = function(...args) { window.writes++; return original.apply(this, args); }; }
   });
-  await page.goto(portable); await page.waitForFunction(() => window.MailBuilder?.ready);
+  await page.goto(portable + '#mailbuilder-test-refuse-idb-once'); await page.waitForFunction(() => window.MailBuilder?.ready);
+  assert.equal(page.url(), portable, 'le fragment de demande est consommé nativement sur le même fichier');
+  assert.equal(await page.evaluate(() => window.refusedAtStart), false, 'cette fenêtre doit recevoir son unique refus initial');
+  assert.equal(await page.evaluate(() => window.fixtureRefusals), 1, 'une seule ouverture est artificiellement refusée');
   assert.equal(await page.evaluate(() => MailBuilder.recoveryOnly), true, 'le refus initial doit placer la page en mode récupération');
   return {page, errors};
 }
@@ -50,7 +58,13 @@ test('refus initial d’IndexedDB : « Restaurer l’état précédent » propos
     const library = await exportTemporary(page);
     assert(JSON.stringify(library).includes('Travail temporaire'), 'l’export contient le travail temporaire');
     assert.deepEqual(await raw(writer), before);
+    // Reproduire la précondition observée en CI : le marqueur sessionStorage manque au rechargement.
+    // Ce retrait contrôlé ne prétend pas expliquer sa disparition sous Linux.
+    await page.evaluate(() => { sessionStorage.removeItem('refus-initial'); window.name = ''; });
     await Promise.all([page.waitForEvent('load'), click(page, '#reopen-reload')]); await page.waitForFunction(() => window.MailBuilder?.ready);
+    assert.equal(await page.evaluate(() => window.refusedAtStart), true, 'le refus reste consommé même sans le marqueur sessionStorage');
+    assert.equal(await page.evaluate(() => window.fixtureRefusals), 0, 'aucun refus artificiel au rechargement');
+    assert(await page.evaluate(() => window.nativeOpens > 0), 'le rechargement ouvre réellement IndexedDB');
     assert.equal(await page.evaluate(() => MailBuilder.recoveryOnly), false);
     assert.match(await page.locator('#save-state').innerText(), /restaurée depuis ce navigateur/);
     await enterEditor(page); assert.equal(await page.locator('#document-name').inputValue(), 'Second état');
@@ -79,6 +93,8 @@ test('écriture concurrente pendant la récupération : rien n’est écrasé, l
     const reloaded = await page.evaluate(() => ({recoveryOnly: MailBuilder.recoveryOnly, refusedAtStart: window.refusedAtStart, writes: window.writes, saveState: document.querySelector('#save-state').textContent, error: document.getElementById('error').textContent, documents: MailBuilder.library.documents.map(d => d.name)}));
     assert.equal(reloaded.recoveryOnly, false, `le rechargement doit relire la bibliothèque enregistrée : ${JSON.stringify(reloaded)}`);
     assert.equal(reloaded.refusedAtStart, true, `le refus initial doit déjà être consommé au rechargement : ${JSON.stringify(reloaded)}`);
+    assert.equal(await page.evaluate(() => window.fixtureRefusals), 0, 'aucun nouveau refus pendant la récupération concurrente');
+    assert(await page.evaluate(() => window.nativeOpens > 0), 'la bibliothèque concurrente est relue par IndexedDB natif');
     await enterEditor(page); assert.equal(await page.locator('#document-name').inputValue(), 'Écriture concurrente', `le rechargement relit le jeton et l’état concurrents ; page rechargée : ${JSON.stringify(reloaded)} ; stockage : ${JSON.stringify((await raw(page)).current?.library.documents.map(d => d.name))}`);
     assert.deepEqual(await raw(writer), concurrent);
     // Le contrôle de conflit fonctionne dans les deux sens après le rechargement.

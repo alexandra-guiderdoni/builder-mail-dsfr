@@ -1,0 +1,41 @@
+{
+  "run_id": "audit-20261025-115922108-395c08d1",
+  "base_sha": "395c08d1dfa4d0b8e41416da798bf0313a8bd379",
+  "overlay_hash": "c257e8483a78695fa29935b8f3db54b11bc9664a69001a5576cde37dbd114a57",
+  "zone_id": "z05",
+  "round": 1,
+  "agent_id": "r1-z05-a1",
+  "files_read": [
+    ".github/workflows/pages.yml",
+    ".npmrc",
+    "package-lock.json",
+    "package.json"
+  ],
+  "context_read": [
+    "tests/pages-workflow.test.cjs",
+    "scripts/build_app.py generation context",
+    "scripts/build.py generation context",
+    "docs/MAINTENANCE.md",
+    "SPECIFICATION.md",
+    "docs/cadrage-source.md",
+    "/Users/alex/Claude/AGENTS.md"
+  ],
+  "candidate_files_hash_verified_before": 72,
+  "candidate_files_hash_verified_after": 72,
+  "source_mutations": 0,
+  "findings": 0,
+  "observations": [
+    "Lock root matches package manifest; sole lock delta is fast-uri version/resolved/integrity 3.1.8 to 3.1.9.",
+    "AJV transitive range ^3.0.1 admits 3.1.9; resolved URL and digest syntax agree with the declared version.",
+    "Pipeline runs provenance/distribution checks and npm test before the deploy dependency. Publication rights are confined to deploy; checkout credentials are not persisted.",
+    "Actions use immutable-shaped 40-hex references; no source claim is made that they exist remotely or match annotated version labels.",
+    "No flaw demonstrated in the four audited infrastructure files."
+  ],
+  "limits": [
+    "Quick one-round source audit, not exhaustive or compliance.",
+    "No dependency installation, tarball hash verification, npm audit, remote action inspection, build, CI or deployment executed.",
+    "No security conclusion follows from fast-uri version alone.",
+    "The 20-minute CI budget and effectivity of min-release-age under the CI npm runtime were not exercised.",
+    "Generated distributions are excluded and may reflect base outputs in this linked worktree."
+  ]
+}

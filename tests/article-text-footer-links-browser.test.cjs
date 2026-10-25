@@ -1,10 +1,13 @@
 const test = require('node:test');
-const {chromium, open, click, expand, saved, state, enterEditor, selectBlock, download, fs, assert} = require('./browser-support.cjs');
+const {chromium, open, click, expand, saved, state, enterEditor, selectBlock, download, fs, assert, evidence, pageState} = require('./browser-support.cjs');
+const path = require('node:path');
 
 test('article sans image et trois actions de pied de page : import, édition, refus, image, clone et exports hors ligne', async () => {
   const browser = await chromium.launch();
+  let page, stage = 'ouverture';
   try {
-    const {page, observations} = await open(browser, {offline: true});
+    const opened = await open(browser, {offline: true}); page = opened.page;
+    const {observations} = opened;
     const fixture = await page.evaluate(() => {
       const doc = MailBuilder.Model.create('Lettre de recette', [31, 50]), [article, footer] = doc.blocks, image = article.values.f0;
       Object.assign(article.values, {f0: '', f1: '', f2: '', f3: 'https://example.invalid/article', f4: 'Un article sans illustration', f5: 'Le détail utile de cet article', f6: ''});
@@ -18,6 +21,7 @@ test('article sans image et trois actions de pied de page : import, édition, re
     const imported = await state(page), doc = imported.documents.find(d => d.id === imported.activeId), [article, footer] = doc.blocks;
     assert.equal(doc.blocks.length, 2);
     const preview = page.frameLocator('#preview');
+    stage = 'aperçu de l’article importé sans image';
     await preview.locator('a').filter({hasText: 'Un article sans illustration'}).waitFor();
     assert.equal(await preview.locator('img').count(), 0);
     assert.equal(await preview.locator('a[href]').count(), 4);
@@ -31,6 +35,7 @@ test('article sans image et trois actions de pied de page : import, édition, re
     const imageMatch = /^data:(image\/[a-z]+);base64,(.+)$/.exec(fixture.image);
     assert.ok(imageMatch);
     await page.locator('[data-image-field=f0]').setInputFiles({name: 'illustration.' + imageMatch[1].split('/')[1], mimeType: imageMatch[1], buffer: Buffer.from(imageMatch[2], 'base64')});
+    stage = 'aperçu de l’image ajoutée';
     await saved(page); await preview.locator('img').first().waitFor();
     await page.locator('#field-f1').fill('Illustration de recette'); await saved(page);
     assert.equal(await page.locator('.image-field img').count(), 1);
@@ -41,6 +46,7 @@ test('article sans image et trois actions de pied de page : import, édition, re
     assert.equal(withoutImage.values.f0, ''); assert.equal(withoutImage.values.f1, '');
 
     await selectBlock(page, footer.id);
+    stage = 'édition et refus des liens invalides';
     assert.equal(await page.locator('[data-block-action=add-footer-link]').isDisabled(), true);
     assert.equal(await page.locator('#field-footer-label-0').getAttribute('aria-required'), 'true');
     assert.equal(await page.locator('#field-footer-label-0').getAttribute('data-link-label'), '');
@@ -64,6 +70,7 @@ test('article sans image et trois actions de pied de page : import, édition, re
     assert.deepEqual(await state(page), beforeInvalid);
     await click(page, '[data-action=cancel-fields]');
 
+    stage = 'duplication et retrait du pied de page';
     await click(page, '[data-block-action=duplicate]'); await saved(page);
     const clone = await page.evaluate(() => MailBuilder.doc().blocks.find(b => b.id === MailBuilder.selected));
     assert.notEqual(clone.id, footer.id);
@@ -76,6 +83,7 @@ test('article sans image et trois actions de pied de page : import, édition, re
 
     await click(page, '[data-block-action=add-footer-link]'); await saved(page);
     assert.equal(await page.locator('#field-footer-label-0').inputValue(), '');
+    stage = 'aperçu du lien sans intitulé';
     await preview.locator('a:not([href])').filter({hasText: 'Intitulé du lien à renseigner'}).waitFor();
     let downloads = 0; page.on('download', () => downloads++);
     await click(page, '[data-action=export-mail]');
@@ -90,16 +98,19 @@ test('article sans image et trois actions de pied de page : import, édition, re
       await page.locator(`#field-footer-label-${i}`).fill(link.label); await saved(page);
     }
     assert.equal(await page.locator('[data-block-action=add-footer-link]').isDisabled(), true);
+    stage = 'aperçu des liens finaux';
     await preview.locator('a[href]').filter({hasText: finalLinks[1].label}).waitFor();
     assert.equal(await preview.locator('a[href]').count(), 4);
     const final = await page.evaluate(() => MailBuilder.doc());
     assert.deepEqual(final.blocks.find(b => b.id === footer.id).additionalLinks, finalLinks);
+    stage = 'exports JSON et HTML';
     const json = JSON.parse(await fs.readFile(await download(page, '[data-action=export-document]', 'article-texte-trois-liens.json'), 'utf8'));
     assert.deepEqual(json, final);
     const html = await fs.readFile(await download(page, '[data-action=export-mail]', 'article-texte-trois-liens.html'), 'utf8');
     assert.ok(html.includes('Un article sans illustration')); assert.ok(!/<img\b/i.test(html));
     for (const link of finalLinks) { assert.ok(html.includes(link.url)); assert.ok(html.includes(link.label)); }
     assert.ok(html.includes('S’abonner'));
+    stage = 'rechargement et conservation des liens';
     await page.reload(); await page.waitForFunction(() => MailBuilder.ready); await enterEditor(page);
     assert.deepEqual(await page.evaluate(() => MailBuilder.doc()), final);
     await selectBlock(page, footer.id);
@@ -107,5 +118,10 @@ test('article sans image et trois actions de pied de page : import, édition, re
     assert.equal(await page.locator('#field-footer-url-1').inputValue(), finalLinks[1].url);
     assert.deepEqual(observations.errors, []);
     assert.ok(!observations.requests.some(url => /^https?:/.test(url)));
+  } catch (cause) {
+    const diagnostic = {stage, state: page && await pageState(page), active: page && await page.evaluate(() => ({id: MailBuilder.library.activeId, selected: MailBuilder.selected, name: MailBuilder.doc().name})).catch(() => null), preview: page && await page.frameLocator('#preview').locator('html').innerHTML({timeout: 1000}).catch(error => error.message)};
+    await fs.mkdir(evidence, {recursive: true});
+    await fs.writeFile(path.join(evidence, 'article-footer-failure.json'), JSON.stringify(diagnostic, null, 2));
+    throw new Error(`${stage} : ${cause.message}`, {cause});
   } finally { await browser.close(); }
 });

@@ -1,5 +1,6 @@
 const test = require('node:test');
-const {open, saved, chromium, assert} = require('./browser-support.cjs');
+const {open, saved, click, chromium, assert, engineName} = require('./browser-support.cjs');
+const {rejectLargeWrites, limitNativeQuota} = require('./portability-storage.cjs');
 
 // #122 : #error porte deux familles de messages. Les alertes persistantes (échec de sauvegarde, lecture seule) sont
 // portées par l’état (`failed`, `readOnly`) ; les erreurs ponctuelles (champ invalide, action refusée) écrivent dans le
@@ -8,10 +9,7 @@ const {open, saved, chromium, assert} = require('./browser-support.cjs');
 
 // Quota réel de Chromium : fixé avant la première ouverture du stockage.
 const bulky = 'Objet de remplissage synthétique. '.repeat(20000);
-async function limitQuota(page) {
-  const cdp = await page.context().newCDPSession(page);
-  await cdp.send('Storage.overrideQuotaForOrigin', {origin: 'file://', quotaSize: 400000});
-}
+const limitQuota = engineName === 'chromium' ? limitNativeQuota : rejectLargeWrites;
 const failed = page => page.locator('#save-state').filter({hasText: 'Modifications non sauvegardées'}).waitFor();
 
 test('cancel-fields n’éteint pas l’alerte persistante d’échec de sauvegarde', async () => {
@@ -23,7 +21,7 @@ test('cancel-fields n’éteint pas l’alerte persistante d’échec de sauvega
     const persistent = await page.locator('#error').innerText();
     assert.match(persistent, /saturé/, 'l’alerte d’échec décrit le quota saturé');
     // cancel-fields appelle A.error("") : la persistante doit être restaurée depuis l’état.
-    await page.evaluate(() => MailBuilder.Actions['cancel-fields']());
+    await click(page, '[data-action=cancel-fields]');
     const restored = await page.locator('#error').innerText();
     assert.equal(restored, persistent, 'la persistante survit à cancel-fields');
     assert.equal(await page.locator('#error').count(), 1, 'un seul #error dans le DOM');
@@ -86,7 +84,7 @@ test('une sauvegarde réussie éteint durablement l’alerte persistante', async
     assert.match(await page.locator('#error').innerText(), /saturé/);
     await page.locator('#subject').fill('Objet allégé'); await saved(page);
     // Après le succès, cancel-fields ne doit rien restaurer : plus de persistante.
-    await page.evaluate(() => MailBuilder.Actions['cancel-fields']());
+    await click(page, '[data-action=cancel-fields]');
     assert.equal(await page.locator('#error').innerText(), '', 'aucune alerte persistante restaurée après succès');
     assert(await page.locator('#error').evaluate(e => e.hidden), '#error reste masqué');
   } finally { await browser.close(); }

@@ -1,0 +1,43 @@
+{
+  "layer": "agent-browser CLI, sessions jetables réelles",
+  "cases": [
+    {
+      "exitMode": "success",
+      "owned": "sg149-success-1792930285647-035cad0c",
+      "expectedExit": 0,
+      "code": 0,
+      "signal": null,
+      "stdout": "",
+      "stderr": "",
+      "witnessTitleBefore": "Témoin conservé 1792930285647-035cad0c",
+      "witnessTitleAfter": "Témoin conservé 1792930285647-035cad0c",
+      "witnessPreserved": true
+    },
+    {
+      "exitMode": "error",
+      "owned": "sg149-error-1792930285647-035cad0c",
+      "expectedExit": 1,
+      "code": 1,
+      "signal": null,
+      "stdout": "",
+      "stderr": "Erreur contrôlée de recette\n",
+      "witnessTitleBefore": "Témoin conservé 1792930285647-035cad0c",
+      "witnessTitleAfter": "Témoin conservé 1792930285647-035cad0c",
+      "witnessPreserved": true
+    },
+    {
+      "exitMode": "interrupt",
+      "owned": "sg149-interrupt-1792930285647-035cad0c",
+      "expectedExit": 130,
+      "code": 130,
+      "signal": null,
+      "stdout": "",
+      "stderr": "",
+      "witnessTitleBefore": "Témoin conservé 1792930285647-035cad0c",
+      "witnessTitleAfter": "Témoin conservé 1792930285647-035cad0c",
+      "witnessPreserved": true
+    }
+  ],
+  "allWitnessesPreserved": true,
+  "globalCleanupExecuted": false
+}

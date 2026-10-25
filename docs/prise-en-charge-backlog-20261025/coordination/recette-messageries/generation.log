@@ -1,0 +1,21 @@
+{
+  "base": "395c08d1dfa4d0b8e41416da798bf0313a8bd379",
+  "applicationVersion": "de68d7f3ea4e8fc9",
+  "portableSha256": "622a289ddbaa4fdacc0ff96ff85caba21e4ab85225c3e622dc0ecebf2d3c23f7",
+  "validation": [
+    {
+      "format": "png",
+      "status": "PASS",
+      "method": "Import réel du fichier JSON par #project-input dans Chromium Playwright hors ligne, profil jetable ; contenu complet comparé hors identifiants régénérés.",
+      "clipboardExecuted": false,
+      "mailClientExecuted": false
+    },
+    {
+      "format": "jpeg",
+      "status": "PASS",
+      "method": "Import réel du fichier JSON par #project-input dans Chromium Playwright hors ligne, profil jetable ; contenu complet comparé hors identifiants régénérés.",
+      "clipboardExecuted": false,
+      "mailClientExecuted": false
+    }
+  ]
+}

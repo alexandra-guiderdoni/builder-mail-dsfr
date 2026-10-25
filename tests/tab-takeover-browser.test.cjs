@@ -16,6 +16,13 @@ async function expectWritable(page, label) {
   assert(await page.locator(banner).isHidden(), `${label} : le bandeau de lecture seule doit disparaître.`);
   assert(await page.locator('#document-name').isEnabled(), `${label} : la saisie doit être de nouveau possible.`);
 }
+// Une sauvegarde explicite permet aussi de découvrir le jeton périmé sans changer le contenu.
+async function ownershipRefused(page, label) {
+  if (await page.locator(banner).isHidden()) {
+    await expand(page, 'Fichiers et récupération'); await click(page, '[data-action=save-now]');
+  }
+  await expectReadOnly(page, label);
+}
 const exported = async (page, filename) => JSON.parse(await fs.readFile(await download(page, rescue, filename), 'utf8'));
 async function failWrites(page) {
   await page.evaluate(() => {
@@ -27,8 +34,8 @@ async function second(context, url = portable) {
   const page = await context.newPage(); await page.goto(url); await page.waitForFunction(() => window.MailBuilder?.ready); await enterEditor(page); return page;
 }
 // La première fenêtre enregistre après l’ouverture de la seconde : la saisie suivante de celle-ci entre en conflit.
-async function conflict(browser) {
-  const {page: first, context} = await open(browser);
+async function conflict(browser, beforeNavigate) {
+  const {page: first, context} = await open(browser, {}, beforeNavigate);
   await first.locator('#document-name').fill('Composition commune'); await saved(first);
   const other = await second(context);
   await first.locator('#document-name').fill('Version de la première fenêtre'); await saved(first);
@@ -36,7 +43,7 @@ async function conflict(browser) {
   return {context, first, other};
 }
 
-test('reprendre la main ajoute les compositions divergentes en copies horodatées ; l’ancien onglet passe en lecture seule puis se ferme sans rien écrire', async () => {
+test('reprendre la main ajoute les compositions divergentes en copies horodatées ; l’ancien onglet inchangé se ferme sans rien écrire', async () => {
   const browser = await chromium.launch({headless: true});
   try {
     const {context, first, other} = await conflict(browser), errors = [];
@@ -61,11 +68,12 @@ test('reprendre la main ajoute les compositions divergentes en copies horodatée
     await expectWritable(other, 'fenêtre qui a repris la main');
     assert.match(await other.locator('#notice').innerText(), /copie/);
 
-    await expectReadOnly(first, 'ancien onglet');
-    assert(await first.locator(takeOver).isVisible());
-    assert.match(await first.locator('#save-state').innerText(), /^Lecture seule/, 'Le statut ne doit plus annoncer une sauvegarde dans l’ancien onglet.');
+    // Sans nouvelle tentative d’écriture, la notification peut arriver plus tard (#138).
+    // La fermeture doit néanmoins préserver le nouveau propriétaire, avec ou sans bandeau.
     assert.deepEqual(await state(first), firstMemory, 'La mémoire de l’ancien onglet est inchangée.');
-    assert.deepEqual(await exported(first, 'ancien-onglet.json'), firstMemory);
+    await expand(first, 'Fichiers et récupération');
+    const firstExport = JSON.parse(await fs.readFile(await download(first, '[data-action=export-library]', 'ancien-onglet.json'), 'utf8'));
+    assert.deepEqual(firstExport, firstMemory);
 
     let dialogs = 0; first.on('dialog', async dialog => { dialogs++; await dialog.accept(); });
     await Promise.all([first.waitForEvent('close'), first.close({runBeforeUnload: true})]);
@@ -84,15 +92,49 @@ test('l’ancien onglet reprend la main à son tour sans dupliquer une compositi
   try {
     const {first, other} = await conflict(browser);
     await expectReadOnly(other, 'fenêtre en conflit'); await click(other, takeOver); await saved(other);
-    await expectReadOnly(first, 'ancien onglet');
+    await ownershipRefused(first, 'ancien onglet');
     const storedBefore = await store(other), otherMemory = await state(other);
     await click(first, takeOver); await saved(first);
     const storedAfter = await store(first), firstMemory = await state(first);
     assert.deepEqual(storedAfter.library.documents, storedBefore.library.documents, 'Aucune copie ni perte quand rien n’a divergé.');
     assert.deepEqual(storedAfter.library, firstMemory);
     await expectWritable(first, 'ancien onglet après reprise');
-    await expectReadOnly(other, 'fenêtre dépossédée');
+    await ownershipRefused(other, 'fenêtre dépossédée');
     assert.deepEqual(await state(other), otherMemory);
+  } finally { await browser.close(); }
+});
+
+test('sans notification interfenêtres, la première modification de l’ancien onglet est conservée en mémoire et refusée au stockage', async () => {
+  const browser = await chromium.launch({headless: true});
+  try {
+    // Indisponibilité à la frontière navigateur : aucun collaborateur de l’application n’est remplacé.
+    const {first, other} = await conflict(browser, page => page.context().addInitScript(() => { window.BroadcastChannel = undefined; }));
+    await expectReadOnly(other, 'fenêtre en conflit');
+    await click(other, takeOver); await saved(other);
+    const ownerMemory = await state(other), storedAfterTakeover = await store(other), oldMemory = await state(first);
+    assert.equal(storedAfterTakeover.library.documents.length, 2, 'Les compositions divergentes restent présentes après la reprise.');
+    assert.deepEqual(storedAfterTakeover.library, ownerMemory);
+    await first.bringToFront();
+    assert(await first.locator(banner).isHidden(), 'Le scénario exerce effectivement le repli sans notification.');
+    assert(await first.locator('#subject').isEnabled());
+    const subject = 'Travail de l’ancien onglet à conserver après reprise';
+    await first.locator('#subject').fill(subject);
+    await first.waitForFunction(() => {
+      const status = document.querySelector('#save-state').textContent;
+      return status.startsWith('Lecture seule') || status === 'Bibliothèque sauvegardée dans ce navigateur.';
+    });
+    assert.equal((await store(other)).token, storedAfterTakeover.token, 'Une tentative refusée ne doit pas remplacer le jeton du nouveau propriétaire.');
+    await expectReadOnly(first, 'ancien onglet à sa première modification');
+    assert.match(await first.locator('#error').innerText(), /Une autre fenêtre.*Exportez/s);
+    assert.match(await first.locator('#save-state').innerText(), /Lecture seule.*non sauvegardées/);
+    const expectedMemory = structuredClone(oldMemory);
+    expectedMemory.documents.find(doc => doc.id === expectedMemory.activeId).subject = subject;
+    const memoryAfterRefusal = await state(first);
+    assert.deepEqual(memoryAfterRefusal, expectedMemory, 'La modification refusée reste intégralement en mémoire.');
+    assert.deepEqual(await store(other), storedAfterTakeover, 'Le jeton et toutes les données du nouveau propriétaire restent inchangés.');
+    assert.deepEqual(await state(other), ownerMemory, 'Le nouveau propriétaire garde sa mémoire.');
+    assert.deepEqual(await exported(first, 'ancien-onglet-modification-refusee.json'), expectedMemory, 'L’export conserve aussi la modification refusée.');
+    assert.deepEqual(await store(other), storedAfterTakeover, 'L’export de secours n’écrit rien.');
   } finally { await browser.close(); }
 });
 

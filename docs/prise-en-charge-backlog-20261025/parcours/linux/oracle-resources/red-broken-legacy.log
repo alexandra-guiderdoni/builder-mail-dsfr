@@ -1,0 +1,27 @@
+✖ la préparation géométrique refuse aussi une image cassée volontairement masquée (483.518875ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 661.631083
+
+✖ failing tests:
+
+test at tests/preview-resources-browser.test.cjs:61:1
+✖ la préparation géométrique refuse aussi une image cassée volontairement masquée (483.518875ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection (TimeoutError).
+      at async /Users/alex/Claude-worktrees/builder-backlog-qualification-20261025/tests/preview-resources-browser.test.cjs:65:5
+      at async withPreview (/Users/alex/Claude-worktrees/builder-backlog-qualification-20261025/tests/preview-resources-browser.test.cjs:57:5)
+      at async TestContext.<anonymous> (/Users/alex/Claude-worktrees/builder-backlog-qualification-20261025/tests/preview-resources-browser.test.cjs:62:3)
+      at async Test.run (node:internal/test_runner/test:1332:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: { name: 'TimeoutError' },
+    operator: 'rejects',
+    diff: 'simple'
+  }

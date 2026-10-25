@@ -1,0 +1,29 @@
+{
+  "method": "Exact preview.js in VM; simulated load, URL, message and geometry boundaries; no browser proof",
+  "source_sha256": "405e1e538c9ccf28fb1f5f810101627fd7bc9472eac747e24989257be1556146",
+  "checks": [
+    "two overlapping bursts keep first then latest",
+    "invalid render preserves last valid and later valid remains reachable",
+    "no src assignment during unfinished load",
+    "no active-loading URL revoked",
+    "no measurement needed for progress",
+    "current-token measurement rejected until load",
+    "old/unknown token and wrong source/origin/width/height ignored",
+    "valid current measurement accepted",
+    "1000 updates without load create no extra URL",
+    "one live URL after every replacement"
+  ],
+  "assignments": [
+    "blob:probe-0#token-1",
+    "blob:probe-1#token-40",
+    "blob:probe-2#token-80",
+    "blob:probe-3#token-81",
+    "blob:probe-4#token-82",
+    "blob:probe-5#token-1082"
+  ],
+  "created": 6,
+  "revoked": 5,
+  "live": [
+    "blob:probe-5"
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "skill_version": "2.18.0+codex.local-20261025112131",
+  "skill_root": "/Users/alex/.codex/plugins/cache/personal/shipguard-codex/2.18.0+codex.local-20261025112131/skills/sg-code-audit",
+  "sha256": {
+    "SKILL.md": "7212d7983265c9181cdea6d796f742d5aa78750c0c8750e0a6ad814c24fd7629",
+    "references/execution-1.md": "464b06992e1bb173a1530e422862d44ea1dcb3b932de1fbacf6709f52b4f5fa1",
+    "references/execution-2.md": "fad1f87d70d6f1afe3cc370582d7dc53f1da3b93074208873273465f00b3ee65",
+    "references/execution-3.md": "fad281cb8c368c118dc097af41c35329e37315ca1be1879a30b198ba48d0eec0",
+    "references/execution-4.md": "c7153f945ce352401d9de9bf13a65ff9ce1fa013a8dbd7d7e39e7ff19e25051f",
+    "references/checklists.md": "6cb303224d071335eca37b9ca96376424852d0af0b74328c0b2a68859942d625",
+    "references/agent-prompt.md": "5508bb1fe4f8c98b3a1b8bdcc4bce44e457b8e14a3d4a45c8dd0aa418e90af65",
+    "references/output-schema.md": "8d5a9d186a8a2425684b8b1a735f4b135a4a00d84d94d51a16eb102fdcee0b00",
+    "references/verification.md": "6d1af058d223aff766a9b6727ba1cff6fe92d2e4704213c723487a0af86c54db",
+    "references/monitor.md": "9e2a99e60fb5ba2daf9e5b6a46451e0fa40711a922e505c773bd57379738d6e3",
+    "retain-zone-artifact.mjs": "146963d125e07274ded1c1873fbce7ff8fd3294f149312c0829e72d16804965b",
+    "verification-result.mjs": "c6af616d63aadde7dd5a96b604ac2b8e2a51bea3c3ca33ed1bfde890ac5a3770"
+  },
+  "arguments": [
+    "quick",
+    "--all",
+    "--report-only",
+    "--model=auto"
+  ],
+  "focus": null,
+  "fix_mode": false,
+  "round_count": 1,
+  "zone_count": 5,
+  "native_delegation": "collaboration.spawn_agent",
+  "native_completion": "child final notification; collaboration.list_agents",
+  "model": "inherited user-authorized Astra; no override",
+  "concurrency": {
+    "global_slots": 4,
+    "coordinator_slots": 2,
+    "zone_parallel_max": 2
+  },
+  "source_confinement": "linked worktrees separate files/index, not OS permissions; prompt read-only boundary, no claim of per-child sandbox",
+  "stack_activation_notes": [
+    "Python checklist explicitly activated for stdlib Python scripts despite no requirements.txt/pyproject.toml; source language is directly observed",
+    "Infrastructure checklist explicitly activated for required dedicated workflow/build/lock zone; no Docker runtime infra present",
+    "CJS/MJS extensions added to native discovery to cover actual active JavaScript code/tests",
+    "Shell count zero in active auditable files; no Shell checklist activation"
+  ],
+  "codegraph": "absent in candidate root; not used",
+  "repo_rules": "No AGENTS.md/CLAUDE.md in candidate ancestor paths; user-provided CodeGraph instruction respected",
+  "learnings": "No .shipguard/learnings.yaml or accepted-risks.json",
+  "monitor_active": false,
+  "prepared_at": "2026-10-25T14:30:08.503880+00:00"
+}

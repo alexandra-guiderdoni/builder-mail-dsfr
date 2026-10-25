@@ -1,0 +1,23 @@
+RECETTE AUTORISÉE — PNG — repères 01 à 05
+
+Pré-en-tête de recette PNG ; ce texte ne doit pas apparaître dans le corps.
+
+République française
+République française
+Service fictif de recette
+
+01 — Début de la recette PNG
+
+02 — Texte avant illustration. Caractères à préserver : é è à ç œ € —. Cette composition synthétique ne contient aucune donnée personnelle.
+
+Illustration de recette PNG : carré jaune, disque blanc et rectangle corail sur fond bleu.
+03 — Illustration PNG de 480 × 240 pixels ; proportions attendues 2:1.
+
+04 — Texte après illustration. Remplacer uniquement RECETTE_AVANT par RECETTE_APRÈS dans le brouillon du client pour vérifier la retouche.
+
+https://example.org/recette?format=png
+05 — Ouvrir le lien de recette PNG
+
+Fin de la composition synthétique.
+https://example.org/fin-recette
+Lien de fin de recette

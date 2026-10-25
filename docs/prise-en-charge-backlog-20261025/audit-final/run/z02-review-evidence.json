@@ -1,0 +1,62 @@
+{
+  "run_id": "audit-20261025-115922108-395c08d1",
+  "base_sha": "395c08d1dfa4d0b8e41416da798bf0313a8bd379",
+  "overlay_hash": "c257e8483a78695fa29935b8f3db54b11bc9664a69001a5576cde37dbd114a57",
+  "zone_id": "z02",
+  "round": 1,
+  "agent_id": "r1-z02-a1",
+  "candidate_files_hash_verified_before": 72,
+  "candidate_files_hash_verified_after": 72,
+  "files_read": [
+    "app/snum/adapter.js",
+    "app/snum/base.css",
+    "app/snum/page.js",
+    "app/snum/shell.html",
+    "app/snum/style.css",
+    "app/source/catalogue-search.js",
+    "app/source/library-actions.js",
+    "app/source/library.css",
+    "app/source/library.js",
+    "app/source/preview-measure.js",
+    "app/source/preview.js",
+    "app/source/pwa.js",
+    "app/source/shell.html",
+    "app/source/state.js",
+    "app/source/storage.js",
+    "app/source/style.css",
+    "app/source/sw.js",
+    "app/source/view.js",
+    "shared/image-files.js"
+  ],
+  "context_read": [
+    "app/source/editor.js",
+    "SPECIFICATION.md",
+    "docs/cadrage-source.md"
+  ],
+  "claims": [
+    {
+      "claim": "Depuis accueil, Library.open affiche avant refresh; depuis éditeur, State.change rend déjà. UI.preview ne lance plus le cadre caché.",
+      "evidence": "library.js:24-30, state.js:113-119, view.js:116-128, editor.js:7 et :134; VM quatre transitions z02-source-probes.json",
+      "verdict": "Cohérent par lecture et sonde de flot, pas de régression nouvelle prouvée."
+    },
+    {
+      "claim": "Champs, titre et focus suivent la composition active.",
+      "evidence": "view.js refresh/pageTitle, state.js change/recover/takeOver, library.js show/open; handlers editor.js",
+      "verdict": "Contrats suivis dans le code; validation navigateur indépendante laissée à la campagne parent."
+    },
+    {
+      "claim": "Aperçu accepte seulement source iframe + origine opaque + jeton courant + hauteur entière non négative + largeur correspondante après load.",
+      "evidence": "preview.js:18-25; preview-measure.js",
+      "verdict": "Gardes présentes et reliées; aucune contournement démontré dans ce quick."
+    }
+  ],
+  "limits": [
+    "Quick surface, une ronde ; pas de conformité ni GO production.",
+    "Aucun navigateur, suite lourde, build ou service lancé.",
+    "Sonde Library.open exécute la source exacte avec DOM/UI/State simulés ; ne prouve pas le moteur natif.",
+    "Sources tierces et distributions générées exclues par le parent.",
+    "Pas d’audit exhaustif des courses asynchrones ou des parcours messagerie."
+  ],
+  "source_mutations": 0,
+  "commits": 0
+}

@@ -1,0 +1,654 @@
+[
+  {
+    "path": "app/distribution/courriels.schema.json",
+    "reason": "generated distribution"
+  },
+  {
+    "path": "app/distribution/exemple.courriel.json",
+    "reason": "generated distribution"
+  },
+  {
+    "path": "app/distribution/portable.html",
+    "reason": "generated distribution"
+  },
+  {
+    "path": "app/distribution/qualification.courriels.json",
+    "reason": "generated distribution"
+  },
+  {
+    "path": "app/distribution/snum.html",
+    "reason": "generated distribution"
+  },
+  {
+    "path": "app/distribution/web/icon-192.png",
+    "reason": "generated distribution"
+  },
+  {
+    "path": "app/distribution/web/icon-512.png",
+    "reason": "generated distribution"
+  },
+  {
+    "path": "app/distribution/web/icon.svg",
+    "reason": "generated distribution"
+  },
+  {
+    "path": "app/distribution/web/index.html",
+    "reason": "generated distribution"
+  },
+  {
+    "path": "app/distribution/web/manifest.webmanifest",
+    "reason": "generated distribution"
+  },
+  {
+    "path": "app/distribution/web/sw.js",
+    "reason": "generated distribution"
+  },
+  {
+    "path": "docs/AUDIT-SHIPGUARD-2026-10-22.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/FORMAT-JSON.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/MAINTENANCE.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/RECETTE-APPLICATION.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/RECETTE-DEFILEMENT.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/RECETTE.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/SUIVI-APPLICATION.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/SUIVI-CORRECTIONS.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/UTILISATION.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/MATRICE-106.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/MATRICE-258.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/RAPPORT.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/contrastes-20261022/RAPPORT.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/contrastes-20261022/observations.json",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/contrastes-20261022/recu-20261022.json",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/css-20261023/ACTIVATION-FIREFOX.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/css-20261023/BALISAGE-8.2.1.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/css-20261023/CLAVIER-FIREFOX.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/css-20261023/MATRICE-106.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/css-20261023/MATRICE-258.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/css-20261023/RAPPORT.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/css-20261023/activation-firefox.json",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/css-20261023/balisage-8.2.1.json",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/css-20261023/clavier-firefox.json",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/css-20261023/inventaire-applicabilite.json",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/css-20261023/matrice-rgaa.json",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/css-20261023/observations.json",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/css-20261023/publication.json",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/css-20261023/qualification-restante.json",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/css-20261023/recu-20261023.json",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/formulaires-20261022/MATRICE-106.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/formulaires-20261022/MATRICE-258.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/formulaires-20261022/RAPPORT.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/formulaires-20261022/matrice-rgaa.json",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/formulaires-20261022/publication.json",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/formulaires-20261022/recu-20261022.json",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/html-20261023/MATRICE-106.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/html-20261023/MATRICE-258.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/html-20261023/RAPPORT.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/html-20261023/inventaire-applicabilite.json",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/html-20261023/matrice-rgaa.json",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/html-20261023/observations.json",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/html-20261023/publication.json",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/html-20261023/recu-20261023.json",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/liens-20261023/MATRICE-106.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/liens-20261023/MATRICE-258.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/liens-20261023/RAPPORT.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/liens-20261023/candidats-restants.json",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/liens-20261023/inventaire-applicabilite.json",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/liens-20261023/matrice-rgaa.json",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/liens-20261023/observations.json",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/liens-20261023/publication.json",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/liens-20261023/recu-20261023.json",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/matrice-rgaa.json",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/presentation-20261022/MATRICE-106.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/presentation-20261022/MATRICE-258.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/presentation-20261022/RAPPORT.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/presentation-20261022/matrice-rgaa.json",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/presentation-20261022/publication.json",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/presentation-20261022/recu-20261022.json",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/recu-20261022.json",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/titre-page-20261023/MATRICE-106.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/titre-page-20261023/MATRICE-258.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/titre-page-20261023/RAPPORT.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/titre-page-20261023/inventaire-applicabilite.json",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/titre-page-20261023/matrice-rgaa.json",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/titre-page-20261023/observations.json",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/titre-page-20261023/publication.json",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/titre-page-20261023/recu-20261023.json",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/titres-20261022/MATRICE-106.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/titres-20261022/MATRICE-258.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/titres-20261022/RAPPORT.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/titres-20261022/matrice-rgaa.json",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/titres-20261022/presentation-diagnostic.json",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/titres-20261022/publication.json",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/titres-20261022/recu-20261022.json",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/zoom-20261023/RAPPORT.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/zoom-20261023/observations.json",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/accessibilite/zoom-20261023/recu.json",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/cadrage-source.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/cas-acceptation-creation.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/recette-application-observee.json",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/recette-ay11.json",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/recette-defilement-publication.json",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/recette-defilement.json",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/recette-observee.json",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/recette-pages.json",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/recette-publication.json",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/retex-campagne-2026-10/README.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/retex-campagne-2026-10/SHA256.json",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/retex-campagne-2026-10/astra-review/image-race-results.json",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/retex-campagne-2026-10/astra-review/image-race.cjs",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/retex-campagne-2026-10/issues-plan.json",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/retex-campagne-2026-10/issues/01-P1-url-saisie-export.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/retex-campagne-2026-10/issues/02-P2-focus-bloc.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/retex-campagne-2026-10/issues/03-P2-action-sans-libelle.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/retex-campagne-2026-10/issues/04-P2-brouillon-plusieurs-onglets.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/retex-campagne-2026-10/issues/05-P2-restauration-concurrente.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/retex-campagne-2026-10/issues/06-P2-image-obsolete.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/retex-campagne-2026-10/issues/07-P2-liens-source-paragraphes.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/retex-campagne-2026-10/issues/08-P2-validation-images-import.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/retex-campagne-2026-10/issues/09-P2-cache-par-deploiement.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/retex-campagne-2026-10/issues/10-P2-tests-reproductibles.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/retex-campagne-2026-10/issues/11-P3-images-inutilisees.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/retex-campagne-2026-10/issues/12-P3-generation-utf8.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/retex-campagne-2026-10/issues/13-P1-qualification-outlook-melissa.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/retex-campagne-2026-10/issues/INDEX.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/retex-campagne-2026-10/rapport-review-builder-mail-dsfr.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/retex-campagne-2026-10/review-artifacts/checks.json",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/retex-campagne-2026-10/review-artifacts/integrity.json",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/retex-campagne-2026-10/review-artifacts/probe-output.txt",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/retex-campagne-2026-10/review-artifacts/probe-results.json",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/retex-campagne-2026-10/review-artifacts/probes.cjs",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "docs/tickets/accueil-mes-newsletters.md",
+    "reason": "historical documentation/evidence; not active product code"
+  },
+  {
+    "path": "prototype/distribution/portable.html",
+    "reason": "generated distribution"
+  },
+  {
+    "path": "prototype/distribution/web/icon.svg",
+    "reason": "generated distribution"
+  },
+  {
+    "path": "prototype/distribution/web/index.html",
+    "reason": "generated distribution"
+  },
+  {
+    "path": "prototype/distribution/web/manifest.webmanifest",
+    "reason": "generated distribution"
+  },
+  {
+    "path": "prototype/distribution/web/sw.js",
+    "reason": "generated distribution"
+  },
+  {
+    "path": "reference/NOTICE.md",
+    "reason": "third-party canonical reference"
+  },
+  {
+    "path": "reference/catalogue.json",
+    "reason": "third-party canonical reference"
+  },
+  {
+    "path": "reference/dsfr-mail/assets/Marianne-Dark@2x.png",
+    "reason": "third-party canonical reference"
+  },
+  {
+    "path": "reference/dsfr-mail/assets/Marianne-Light@2x.png",
+    "reason": "third-party canonical reference"
+  },
+  {
+    "path": "reference/dsfr-mail/assets/placeholder.16x9.png",
+    "reason": "third-party canonical reference"
+  },
+  {
+    "path": "reference/dsfr-mail/assets/placeholder.1x1.png",
+    "reason": "third-party canonical reference"
+  },
+  {
+    "path": "reference/dsfr-mail/template-generique.html",
+    "reason": "third-party canonical reference"
+  },
+  {
+    "path": "reference/dsfr-web/CGU.txt",
+    "reason": "third-party canonical reference"
+  },
+  {
+    "path": "reference/dsfr-web/LICENSE.txt",
+    "reason": "third-party canonical reference"
+  },
+  {
+    "path": "reference/dsfr-web/dist/component/button/button.min.css",
+    "reason": "third-party canonical reference"
+  },
+  {
+    "path": "reference/dsfr-web/dist/component/form/form.min.css",
+    "reason": "third-party canonical reference"
+  },
+  {
+    "path": "reference/dsfr-web/dist/component/input/input.min.css",
+    "reason": "third-party canonical reference"
+  },
+  {
+    "path": "reference/dsfr-web/dist/component/select/select.min.css",
+    "reason": "third-party canonical reference"
+  },
+  {
+    "path": "reference/dsfr-web/dist/core/core.min.css",
+    "reason": "third-party canonical reference"
+  },
+  {
+    "path": "reference/dsfr-web/dist/fonts/Marianne-Bold.woff2",
+    "reason": "third-party canonical reference"
+  },
+  {
+    "path": "reference/dsfr-web/dist/fonts/Marianne-Medium.woff2",
+    "reason": "third-party canonical reference"
+  },
+  {
+    "path": "reference/dsfr-web/dist/fonts/Marianne-Regular.woff2",
+    "reason": "third-party canonical reference"
+  },
+  {
+    "path": "reference/dsfr-web/dist/icons/arrows/arrow-up-down-line.svg",
+    "reason": "third-party canonical reference"
+  },
+  {
+    "path": "reference/dsfr-web/dist/icons/arrows/arrow-up-line.svg",
+    "reason": "third-party canonical reference"
+  },
+  {
+    "path": "reference/dsfr-web/dist/icons/business/briefcase-fill.svg",
+    "reason": "third-party canonical reference"
+  },
+  {
+    "path": "reference/dsfr-web/dist/icons/media/fullscreen-line.svg",
+    "reason": "third-party canonical reference"
+  },
+  {
+    "path": "reference/dsfr-web/dist/icons/system/close-line.svg",
+    "reason": "third-party canonical reference"
+  },
+  {
+    "path": "reference/dsfr-web/dist/icons/system/external-link-line.svg",
+    "reason": "third-party canonical reference"
+  },
+  {
+    "path": "reference/dsfr-web/dist/icons/system/fr--error-fill.svg",
+    "reason": "third-party canonical reference"
+  },
+  {
+    "path": "reference/dsfr-web/dist/icons/system/fr--info-fill.svg",
+    "reason": "third-party canonical reference"
+  },
+  {
+    "path": "reference/dsfr-web/dist/icons/system/fr--success-fill.svg",
+    "reason": "third-party canonical reference"
+  },
+  {
+    "path": "reference/dsfr-web/dist/icons/system/fr--theme-fill.svg",
+    "reason": "third-party canonical reference"
+  },
+  {
+    "path": "reference/dsfr-web/dist/icons/system/fr--warning-fill.svg",
+    "reason": "third-party canonical reference"
+  },
+  {
+    "path": "reference/dsfr-web/dist/icons/system/question-line.svg",
+    "reason": "third-party canonical reference"
+  },
+  {
+    "path": "reference/dsfr-web/dist/icons/user/account-circle-fill.svg",
+    "reason": "third-party canonical reference"
+  },
+  {
+    "path": "reference/dsfr-web/dist/icons/user/team-line.svg",
+    "reason": "third-party canonical reference"
+  },
+  {
+    "path": "reference/dsfr-web/provenance.json",
+    "reason": "third-party canonical reference"
+  },
+  {
+    "path": "reference/provenance.json",
+    "reason": "third-party canonical reference"
+  }
+]

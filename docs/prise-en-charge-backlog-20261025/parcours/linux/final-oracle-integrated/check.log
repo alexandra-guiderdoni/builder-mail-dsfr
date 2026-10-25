@@ -1,0 +1,7 @@
+
+> builder-mail-dsfr@0.1.0 check
+> python3 scripts/check_provenance.py && python3 scripts/build_app.py --check && python3 scripts/build.py --check
+
+PROVENANCE_OK
+APPLICATION_DISTRIBUTIONS_OK
+DISTRIBUTIONS_OK

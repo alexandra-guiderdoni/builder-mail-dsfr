@@ -1,0 +1,37 @@
+[
+  {
+    "zone_id": "z01",
+    "worktree_path": "/Users/alex/Claude-worktrees/sg-audit-20261025-115922108-395c08d1-z01",
+    "registered": true,
+    "head": "395c08d1dfa4d0b8e41416da798bf0313a8bd379",
+    "candidate_files_verified": 72
+  },
+  {
+    "zone_id": "z02",
+    "worktree_path": "/Users/alex/Claude-worktrees/sg-audit-20261025-115922108-395c08d1-z02",
+    "registered": true,
+    "head": "395c08d1dfa4d0b8e41416da798bf0313a8bd379",
+    "candidate_files_verified": 72
+  },
+  {
+    "zone_id": "z03",
+    "worktree_path": "/Users/alex/Claude-worktrees/sg-audit-20261025-115922108-395c08d1-z03",
+    "registered": true,
+    "head": "395c08d1dfa4d0b8e41416da798bf0313a8bd379",
+    "candidate_files_verified": 72
+  },
+  {
+    "zone_id": "z04",
+    "worktree_path": "/Users/alex/Claude-worktrees/sg-audit-20261025-115922108-395c08d1-z04",
+    "registered": true,
+    "head": "395c08d1dfa4d0b8e41416da798bf0313a8bd379",
+    "candidate_files_verified": 72
+  },
+  {
+    "zone_id": "z05",
+    "worktree_path": "/Users/alex/Claude-worktrees/sg-audit-20261025-115922108-395c08d1-z05",
+    "registered": true,
+    "head": "395c08d1dfa4d0b8e41416da798bf0313a8bd379",
+    "candidate_files_verified": 72
+  }
+]

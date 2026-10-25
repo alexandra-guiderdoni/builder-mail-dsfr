@@ -2,6 +2,7 @@ const test = require('node:test');
 const http = require('node:http');
 const path = require('node:path');
 const {open, enterEditor, click, expand, saved, chromium, fs, root, assert} = require('./browser-support.cjs');
+const {waitForPreviewResources} = require('./preview-resources.cjs');
 
 async function server() {
   let forbidden = 0;
@@ -18,15 +19,95 @@ async function server() {
   return {origin: 'http://127.0.0.1:' + instance.address().port, get forbidden() { return forbidden; }, reset() { forbidden = 0; }, close: () => new Promise(resolve => instance.close(resolve))};
 }
 async function composition(page, all, title) {
+  await page.evaluate(() => { if (window.portabilityPreviewLoads) return; window.portabilityPreviewLoads = []; document.getElementById('preview').addEventListener('load', () => window.portabilityPreviewLoads.push(document.getElementById('preview').src)); });
   const value = await page.evaluate(({all, title}) => JSON.stringify(MailBuilder.Model.create(title, all ? MailBuilder.catalog.components.map(c => c.id) : [0])), {all, title});
   await expand(page, 'Importer du JSON'); await page.locator('#json-input').fill(value); await click(page, '[data-action=json-import]');
   await page.locator('#notice').filter({hasText: 'Composition ou bibliothèque JSON ajoutée.'}).waitFor(); await saved(page);
   const frame = await (await page.locator('#preview').elementHandle()).contentFrame();
-  await frame.waitForFunction(expected => document.title === expected, title);
-  await frame.evaluate(async () => { await Promise.all([...document.images].map(i => i.decode().catch(() => {}))); await document.fonts.ready; });
-  await frame.waitForFunction(() => document.documentElement.scrollHeight <= document.documentElement.clientHeight, null, {timeout: 10000});
+  await frame.waitForFunction(expected => document.title === expected, title, {timeout: 10000});
+  const requestedUrl = await page.locator('#preview').getAttribute('src');
+  await waitForPreviewResources(frame, {url: requestedUrl, title, imageCount: all ? 24 : 0});
+  await frame.waitForFunction(expected => location.href === expected && document.documentElement.scrollHeight <= document.documentElement.clientHeight, requestedUrl, {timeout: 10000}).catch(async cause => {
+    const inner = await frame.evaluate(() => ({scrollHeight: document.documentElement.scrollHeight, clientHeight: document.documentElement.clientHeight, bodyHeight: document.body.getBoundingClientRect().height, readyState: document.readyState, token: location.hash, last: [...document.body.children].filter(e => e.tagName !== 'SCRIPT').at(-1).getBoundingClientRect().bottom}));
+    const outer = await page.evaluate(() => ({src: document.getElementById('preview').src, height: document.getElementById('preview').getBoundingClientRect().height, loads: window.portabilityPreviewLoads}));
+    const currentFrame = await (await page.locator('#preview').elementHandle()).contentFrame();
+    const current = await currentFrame.evaluate(() => ({token: location.hash, scrollHeight: document.documentElement.scrollHeight, clientHeight: document.documentElement.clientHeight}));
+    throw new Error(`Aperçu initial non mesuré (${title}) : ${JSON.stringify({inner, outer, current, sameFrame: currentFrame === frame, frameUrl: frame.url(), currentUrl: currentFrame.url()})}`, {cause});
+  });
+  assert.equal(await frame.evaluate(() => location.href), await page.locator('#preview').getAttribute('src'), 'Le document mesuré est celui du dernier aperçu demandé');
   return frame;
 }
+
+test('une rafale de rendus ne navigue que vers le premier puis le dernier document, même sans mesure', async () => {
+  const browser = await chromium.launch();
+  try {
+    for (const withoutMeasurements of [false, true]) {
+      const {page, context} = await open(browser, {}, page => page.addInitScript(() => {
+        const create = URL.createObjectURL, revoke = URL.revokeObjectURL;
+        window.previewResources = {created: [], revoked: []};
+        URL.createObjectURL = function(blob) { const url = create.call(this, blob); window.previewResources.created.push(url); return url; };
+        URL.revokeObjectURL = function(url) { window.previewResources.revoked.push(url); return revoke.call(this, url); };
+      }));
+      await composition(page, false, 'Avant rafale');
+      const before = await page.evaluate(withoutMeasurements => {
+        const frame = document.getElementById('preview'), baseline = frame.getBoundingClientRect().height;
+        window.previewResources = {created: [], revoked: []}; window.blockedMeasures = 0;
+        if (withoutMeasurements) addEventListener('message', event => { if (event.data?.type === 'mail-preview-size') { if (event.isTrusted) window.blockedMeasures++; event.stopImmediatePropagation(); } }, {capture: true});
+        const initial = frame.src.split('#')[0];
+        for (let index = 0; index < 40; index++) MailBuilder.Preview.show(MailBuilder.Model.create(`Rafale ${index}`, [19]));
+        let invalidRejected = false; try { MailBuilder.Preview.show(null); } catch { invalidRejected = true; }
+        const active = frame.src, event = new MessageEvent('message', {origin: 'null', data: {type: 'mail-preview-size', token: active.split('#')[1], height: 1, width: frame.clientWidth}});
+        Object.defineProperty(event, 'source', {value: frame.contentWindow}); dispatchEvent(event);
+        return {initial, active, baseline, invalidRejected, afterMessage: frame.getBoundingClientRect().height, resources: structuredClone(window.previewResources)};
+      }, withoutMeasurements);
+      assert(before.invalidRejected, 'Un rendu invalide est refusé sans remplacer le dernier document valide en attente');
+      assert.equal(before.resources.created.length, 1, 'Une seule navigation démarre avant le premier load ; les rendus intermédiaires ne créent pas de blobs');
+      assert.equal(before.afterMessage, before.baseline, 'Aucune mesure du document en cours ne redimensionne le dernier rendu encore attendu');
+      const frame = await (await page.locator('#preview').elementHandle()).contentFrame();
+      await frame.waitForFunction(() => document.readyState === 'complete' && document.title === 'Rafale 39', null, {timeout: 10000});
+      const after = await page.evaluate(() => ({src: document.getElementById('preview').src, resources: window.previewResources, blocked: window.blockedMeasures}));
+      assert.equal(await frame.evaluate(() => location.href), after.src, 'Le dernier rendu demandé est réellement chargé');
+      assert.equal(after.resources.created.length, 2, 'Seuls le premier et le dernier rendu de la rafale ont une ressource navigateur');
+      assert.deepEqual(after.resources.revoked, [before.initial, before.active.split('#')[0]], 'Les deux documents remplacés sont effectivement révoqués via l’API native');
+      assert.deepEqual(after.resources.created.filter(url => !after.resources.revoked.includes(url)), [after.src.split('#')[0]], 'Une seule URL vivante subsiste, celle du document courant');
+      if (withoutMeasurements) assert(after.blocked > 0, 'La chaîne de navigation termine même lorsque les messages de mesure sont interceptés');
+      await context.close();
+    }
+  } finally { await browser.close(); }
+});
+
+test('import et changement de composition chargent le bon aperçu depuis l’éditeur et depuis l’accueil', async () => {
+  const browser = await chromium.launch();
+  try {
+    for (const fromHome of [false, true]) {
+      const {page, context} = await open(browser);
+      const originalId = await page.locator('#documents').inputValue();
+      if (fromHome) { await click(page, '[data-action=library-home]'); await page.locator('#library-home').waitFor({state: 'visible'}); }
+      const title = fromHome ? 'Import depuis accueil' : 'Import depuis éditeur';
+      const imported = await composition(page, true, title);
+      assert(await page.locator('#editor-page').isVisible());
+      assert.equal(await page.locator('#document-name').inputValue(), title);
+      assert.equal(await imported.evaluate(() => location.href), await page.locator('#preview').getAttribute('src'));
+      assert.match(await page.title(), new RegExp(title));
+      assert.equal(await page.evaluate(() => document.activeElement.id), 'composition-title');
+      if (fromHome) {
+        await click(page, '[data-action=library-home]');
+        await click(page, `[data-document="${originalId}"] [data-library-action=open]`);
+      } else {
+        await page.locator('#documents').selectOption(originalId); await click(page, '[data-action=open-document]');
+      }
+      await page.locator('#document-name').waitFor({state: 'visible'});
+      await page.waitForFunction(() => document.getElementById('document-name').value === 'Mon premier courriel');
+      const restored = await (await page.locator('#preview').elementHandle()).contentFrame();
+      const requestedUrl = await page.locator('#preview').getAttribute('src');
+      await restored.waitForFunction(expected => location.href === expected && document.title === 'Mon premier courriel' && document.documentElement.scrollHeight <= document.documentElement.clientHeight, requestedUrl, {timeout: 10000});
+      assert.equal(await restored.evaluate(() => location.href), await page.locator('#preview').getAttribute('src'), `Composition réouverte depuis ${fromHome ? 'l’accueil' : 'l’éditeur'} : le document chargé doit correspondre à src`);
+      assert.equal(await page.evaluate(() => document.activeElement.id), 'composition-title');
+      assert(await page.locator('#block-editor input,#block-editor textarea').count() > 0);
+      await context.close();
+    }
+  } finally { await browser.close(); }
+});
 
 test('aperçu isolé : 52 blocs jusqu’au pied de page, redimensionnement et réduction sur les deux distributions', async () => {
   const host = await server(), browser = await chromium.launch();
@@ -73,7 +154,12 @@ test('aperçu : origine opaque, script étranger et réseau bloqués, messages f
       const frame = document.getElementById('preview'), token = frame.src.split('#')[1], baseline = frame.style.height;
       const payload = {type: 'mail-preview-size', token, height: 1, width: frame.clientWidth};
       const messages = [{source: window, origin: 'null', data: payload}, {source: frame.contentWindow, origin: 'null', data: {...payload, token: 'ancien'}}, {source: frame.contentWindow, origin: 'null', data: {...payload, width: 0}}, {source: frame.contentWindow, origin: 'null', data: {...payload, height: -1}}, {source: frame.contentWindow, origin: location.origin, data: payload}];
-      return messages.map(message => { dispatchEvent(new MessageEvent('message', message)); return frame.style.height === baseline; });
+      return messages.map(({source, ...message}) => {
+        // Firefox refuse le WindowProxy opaque dans le convertisseur IDL du constructeur.
+        // Événement synthétique au même seam navigateur, avec la vraie référence source.
+        const event = new MessageEvent('message', message); Object.defineProperty(event, 'source', {value: source});
+        dispatchEvent(event); return frame.style.height === baseline;
+      });
     });
     assert.deepEqual(spoof, [true, true, true, true, true]); await context.close();
   } finally { await browser.close(); await host.close(); }
@@ -159,7 +245,7 @@ test('une mesure reçue avant le chargement du nouvel aperçu ne change pas la h
     await typed.waitForFunction(() => document.documentElement.scrollHeight <= document.documentElement.clientHeight);
     const result = await page.evaluate(() => {
       const f = document.getElementById('preview'), baseline = f.getBoundingClientRect().height, previousToken = f.src.split('#')[1];
-      const send = (token, height) => { dispatchEvent(new MessageEvent('message', {source: f.contentWindow, origin: 'null', data: {type: 'mail-preview-size', token, height, width: f.clientWidth}})); return f.getBoundingClientRect().height; };
+      const send = (token, height) => { const event = new MessageEvent('message', {origin: 'null', data: {type: 'mail-preview-size', token, height, width: f.clientWidth}}); Object.defineProperty(event, 'source', {value: f.contentWindow}); dispatchEvent(event); return f.getBoundingClientRect().height; };
       window.previewRace = {send, loaded: false}; f.addEventListener('load', () => { window.previewRace.loaded = true; }, {once: true});
       /* L’état « nouveau document posé, pas encore chargé » est construit ici, pas espéré d’un rafraîchissement différé : */
       /* `show` pose un jeton neuf de façon synchrone, et la mesure partielle part dans la même tâche, comme sous Firefox. */
@@ -180,6 +266,19 @@ test('une mesure reçue avant le chargement du nouvel aperçu ne change pas la h
     /* Contrôle négatif : une fois le document chargé, la même mesure avec le jeton courant est, elle, appliquée. */
     const applied = await page.evaluate(half => window.previewRace.send(document.getElementById('preview').src.split('#')[1], half), result.premature);
     assert(applied < result.baseline / 2 + 8 && applied >= result.premature, JSON.stringify({...result, applied}));
+    // Contrôle positif indépendant : la même frontière accepte aussi un vrai postMessage
+    // issu du document opaque. Aucun appel direct au gestionnaire applicatif.
+    await page.evaluate(height => {
+      window.realPreviewMessage = null;
+      const observe = event => {
+        if (event.data?.height !== height || event.source !== document.getElementById('preview').contentWindow) return;
+        window.realPreviewMessage = {origin: event.origin, height: document.getElementById('preview').clientHeight}; removeEventListener('message', observe);
+      };
+      addEventListener('message', observe);
+    }, result.premature + 20);
+    await settled.evaluate(height => parent.postMessage({type: 'mail-preview-size', token: location.hash.slice(1), height, width: innerWidth}, '*'), result.premature + 20);
+    await page.waitForFunction(() => window.realPreviewMessage, null, {timeout: 5000});
+    assert.deepEqual(await page.evaluate(() => window.realPreviewMessage), {origin: 'null', height: result.premature + 21});
     await context.close();
   } finally { await browser.close(); }
 });

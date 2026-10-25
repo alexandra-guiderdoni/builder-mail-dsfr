@@ -1,0 +1,86 @@
+{
+  "reviewer": "independent inherited Astra ShipGuard coordinator; writer=root",
+  "reviewed_at": "2026-10-25T14:37:33.585807+00:00",
+  "native_run_id": "audit-20261025-142735923-395c08d1",
+  "base_sha": "395c08d1dfa4d0b8e41416da798bf0313a8bd379",
+  "prior_overlay_sha256": "c43f9e5f67bcee948de67b57d9a51d4b20454bd1ed5a5bdd291de3ecc57b2ec5",
+  "candidate_overlay_sha256": "4c4caff747a77c987be2ec4cbb914c39d3ea5b07b206886f6ab5fc24955f914e",
+  "changed_paths_since_full_audit": [
+    "tests/preview-resources-browser.test.cjs"
+  ],
+  "original_finding": "r1-z04-001",
+  "finding_status_after_delta": "resolved_by_writer_and_independently_reviewed",
+  "source_product_unchanged": true,
+  "other_167_auditable_files_unchanged": true,
+  "new_identity_76_hashes_verified": true,
+  "probe_red_source_sha256": "f589d371cc2beabe75ff703e61d0fb7d82abd32daf45aebc41a6b19fb5a8a4df",
+  "probe_green_source_sha256": "886ebe5fd20df9b2cadfae000e6ca04cfd75d050eb1da844e2adef138a0f0cee",
+  "proof_review": "Read exact diff and executable probe. The probe slices actual withPreview, owns a real loopback HTTP handle, injects only browser boundary, bounds child lifetime; launch/close failures red leak then green close1 and natural exit. Single injected error values preserved. No independent heavy rerun.",
+  "test_results": [
+    {
+      "engine": "chromium",
+      "exit_code": 0,
+      "counts": {
+        "tests": 13,
+        "pass": 13,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "log_sha256": "3a980ead8559b095b68736c4ebb72592b731620d08cce9b58b48c89b6ea89cdf"
+    },
+    {
+      "engine": "firefox",
+      "exit_code": 0,
+      "counts": {
+        "tests": 13,
+        "pass": 13,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "log_sha256": "65b987631d0faf38f937d0b75cef0f1224d5058bf3f37a60e208e292c4e2eba4"
+    },
+    {
+      "engine": "webkit",
+      "exit_code": 0,
+      "counts": {
+        "tests": 13,
+        "pass": 13,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "log_sha256": "1fd363c9cdcf23eb7b97bb11482acf29b5557464382bebbfb6f08fb27fbf4c91"
+    }
+  ],
+  "targeted_engine_binding": "Both test files import chromium alias from browser-support; engineName comes from MAIL_BUILDER_ENGINE and playwright[engineName].launch is invoked. No hardcoded alternative engine in selected files.",
+  "publication_verdict": "GO_FOR_REVIEWED_CORRECTION_PUBLICATION",
+  "production_mail_verdict": "NO_GO_NOT_QUALIFIED",
+  "conditions": [
+    "Exact 4c4 identity, no additional code changes",
+    "Observe normal Pages CI on final committed source before claiming final full-suite/deployment success"
+  ],
+  "limits": [
+    "Full397 macOS/Linux ARM64 executions belong to c43; 4c4 has focused13/13 per engine plus fault injection",
+    "Final committed full CI not observed yet by this reviewer",
+    "No Outlook/Melissa execution",
+    "No global #149 integration",
+    "Historical internal causes #130/#142/#145 remain unknown",
+    "Only isolated single injected errors tested; no claim about simultaneous callback+close failures",
+    "Native canonical c43 remains NO_GO; addendum does not rewrite native zone artifacts"
+  ],
+  "execution_command_provenance": {
+    "artifact": "execution-command.json",
+    "qualification": "Explicit retrospective reconstruction by writer from executed tool-call command, not a newly performed measurement; current wrapper source independently checked",
+    "sha256": "c46b0bcb8bba72c7f38c65ec4650dfb948524b1f847863c4316155131f34df63"
+  },
+  "targeted_files": [
+    "tests/preview-resources-browser.test.cjs",
+    "tests/preview-size-browser.test.cjs",
+    "tests/preview-contract.test.cjs"
+  ]
+}

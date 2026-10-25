@@ -1,0 +1,43 @@
+{
+  "exitCode": 0,
+  "externalLimitSeconds": 900,
+  "externalLimitTriggered": false,
+  "containerRemoved": true,
+  "finishedAt": "2026-10-25T13:13:01.658525+00:00",
+  "classification": "clean-final-linux-full-gate-pass",
+  "footer": {
+    "tests": 397,
+    "suites": 0,
+    "pass": 397,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "duration_ms": 501075.418852
+  },
+  "npmCheckExitCode": 0,
+  "sourceFiles": 346,
+  "sourceChanged": [],
+  "candidateEntries": 76,
+  "candidateChanged": [],
+  "candidateOverlaySha256": "c43f9e5f67bcee948de67b57d9a51d4b20454bd1ed5a5bdd291de3ecc57b2ec5",
+  "sourceManifestSha256": "24096427781f1d0aedd9e22425650d4d3d99b962af1c7374e5c0efdfe7c66493",
+  "fullLogSha256": "f41224e2f93ed2e24790bca82949eedaf29e6dbae73a38754f7208cbc84348ef",
+  "checkLogSha256": "2c5b0592fba6f95b67f8652a4532a338860105551ff0730d53d11a5c3912d63e",
+  "imageDigest": "sha256:47b510dd9230bf0b9bfc9b20102241e577ea7a99334ab4c3ca19f19770e9b8ea",
+  "versions": {
+    "platform": "linux",
+    "architecture": "arm64",
+    "node": "v24.18.0",
+    "playwright": "1.64.1",
+    "browsers": {
+      "chromium": "156.0.8078.4",
+      "firefox": "157.0",
+      "webkit": "27.2"
+    }
+  },
+  "inspectorUsed": false,
+  "browserRescueEvaluation": false,
+  "testArtifactsPreserved": true,
+  "allSourceHashesUnchanged": true
+}

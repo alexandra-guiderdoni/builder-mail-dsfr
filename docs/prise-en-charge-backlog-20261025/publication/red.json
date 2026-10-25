@@ -1,0 +1,66 @@
+{
+  "layer": "fault injection at browser boundary with real owned HTTP handle; exact source function",
+  "source_sha256": "f589d371cc2beabe75ff703e61d0fb7d82abd32daf45aebc41a6b19fb5a8a4df",
+  "rows": [
+    {
+      "mode": "launch-reject",
+      "status": null,
+      "signal": "SIGTERM",
+      "timedOut": true,
+      "observation": {
+        "mode": "launch-reject",
+        "counts": {
+          "listen": 1,
+          "hostClose": 0,
+          "browserClose": 0
+        },
+        "error": "injected-launch-rejection"
+      }
+    },
+    {
+      "mode": "close-reject",
+      "status": null,
+      "signal": "SIGTERM",
+      "timedOut": true,
+      "observation": {
+        "mode": "close-reject",
+        "counts": {
+          "listen": 1,
+          "hostClose": 0,
+          "browserClose": 1
+        },
+        "error": "injected-close-rejection"
+      }
+    },
+    {
+      "mode": "callback-reject",
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "observation": {
+        "mode": "callback-reject",
+        "counts": {
+          "listen": 1,
+          "hostClose": 1,
+          "browserClose": 1
+        },
+        "error": "injected-callback-rejection"
+      }
+    },
+    {
+      "mode": "success",
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "observation": {
+        "mode": "success",
+        "counts": {
+          "listen": 1,
+          "hostClose": 1,
+          "browserClose": 1
+        },
+        "error": null
+      }
+    }
+  ]
+}

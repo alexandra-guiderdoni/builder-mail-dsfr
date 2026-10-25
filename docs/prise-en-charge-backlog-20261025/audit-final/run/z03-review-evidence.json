@@ -1,0 +1,161 @@
+{
+  "identity": {
+    "run_id": "audit-20261025-115922108-395c08d1",
+    "base_sha": "395c08d1dfa4d0b8e41416da798bf0313a8bd379",
+    "overlay_hash": "c257e8483a78695fa29935b8f3db54b11bc9664a69001a5576cde37dbd114a57"
+  },
+  "zone_id": "z03",
+  "round": 1,
+  "agent_id": "r1-z03-a1",
+  "worktree_path": "/Users/alex/Claude-worktrees/sg-audit-20261025-115922108-395c08d1-z03",
+  "manifest_verified_before_and_after": 72,
+  "files_audited": [
+    "prototype/reference/snum-packet.js",
+    "prototype/source/draft-store.js",
+    "prototype/source/editor.js",
+    "prototype/source/model.js",
+    "prototype/source/render-mail.js",
+    "prototype/source/shell.html",
+    "prototype/source/style.css",
+    "prototype/source/sw.js",
+    "scripts/audit_ay11.py",
+    "scripts/audit_expectations.py",
+    "scripts/audit_receipt.py",
+    "scripts/audit_reports.py",
+    "scripts/audit_server_lifecycle.py",
+    "scripts/build.py",
+    "scripts/build_app.py",
+    "scripts/catalogue.py",
+    "scripts/check_provenance.py",
+    "scripts/dsfr_assets.py",
+    "scripts/interchange.py",
+    "scripts/mail_layout.py",
+    "scripts/recipe_firefox.mjs",
+    "scripts/recipe_page_flow_firefox.mjs"
+  ],
+  "additional_context": [
+    "app/source/files.js",
+    "app/source/library-actions.js",
+    "app/source/view.js",
+    "app/snum/page.js",
+    "tests/firefox-support.mjs",
+    "tests/build_contract.py",
+    "tests/audit-expectations.test.cjs",
+    "reference/catalogue.json",
+    "docs/MAINTENANCE.md",
+    "docs/RECETTE-DEFILEMENT.md"
+  ],
+  "syntax_checks": [
+    {
+      "file": "prototype/reference/snum-packet.js",
+      "check": "node --check",
+      "passed": true
+    },
+    {
+      "file": "prototype/source/draft-store.js",
+      "check": "node --check",
+      "passed": true
+    },
+    {
+      "file": "prototype/source/editor.js",
+      "check": "node --check",
+      "passed": true
+    },
+    {
+      "file": "prototype/source/model.js",
+      "check": "node --check",
+      "passed": true
+    },
+    {
+      "file": "prototype/source/render-mail.js",
+      "check": "node --check",
+      "passed": true
+    },
+    {
+      "file": "prototype/source/sw.js",
+      "check": "node --check",
+      "passed": true
+    },
+    {
+      "file": "scripts/audit_ay11.py",
+      "check": "ast.parse",
+      "passed": true
+    },
+    {
+      "file": "scripts/audit_expectations.py",
+      "check": "ast.parse",
+      "passed": true
+    },
+    {
+      "file": "scripts/audit_receipt.py",
+      "check": "ast.parse",
+      "passed": true
+    },
+    {
+      "file": "scripts/audit_reports.py",
+      "check": "ast.parse",
+      "passed": true
+    },
+    {
+      "file": "scripts/audit_server_lifecycle.py",
+      "check": "ast.parse",
+      "passed": true
+    },
+    {
+      "file": "scripts/build.py",
+      "check": "ast.parse",
+      "passed": true
+    },
+    {
+      "file": "scripts/build_app.py",
+      "check": "ast.parse",
+      "passed": true
+    },
+    {
+      "file": "scripts/catalogue.py",
+      "check": "ast.parse",
+      "passed": true
+    },
+    {
+      "file": "scripts/check_provenance.py",
+      "check": "ast.parse",
+      "passed": true
+    },
+    {
+      "file": "scripts/dsfr_assets.py",
+      "check": "ast.parse",
+      "passed": true
+    },
+    {
+      "file": "scripts/interchange.py",
+      "check": "ast.parse",
+      "passed": true
+    },
+    {
+      "file": "scripts/mail_layout.py",
+      "check": "ast.parse",
+      "passed": true
+    },
+    {
+      "file": "scripts/recipe_firefox.mjs",
+      "check": "node --check",
+      "passed": true
+    },
+    {
+      "file": "scripts/recipe_page_flow_firefox.mjs",
+      "check": "node --check",
+      "passed": true
+    }
+  ],
+  "probes": [
+    "z03-probe.cjs",
+    "z03-source-probes.json"
+  ],
+  "limits": [
+    "Quick surface scan, one round; no exhaustive audit or compliance claim.",
+    "No browser/service/build or heavy suite executed. Generated distributions excluded and left at base outputs in child worktree.",
+    "Probes execute current source at controlled download/viewport boundaries; native end-to-end recipes not rerun.",
+    "No proven new defect in generation/provenance or preserved prototype during this surface review.",
+    "First probe attempt lacked a document stub and raised ReferenceError before product actions; corrected probe supplies inert event registration. This was a probe setup error, not a product failure."
+  ]
+}

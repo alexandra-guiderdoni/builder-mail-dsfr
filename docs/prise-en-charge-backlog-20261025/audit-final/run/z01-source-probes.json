@@ -1,0 +1,34 @@
+{
+  "kind": "Exact Model/Render source in VM; DOMParser/table style boundaries simulated; not native layout or clipboard proof",
+  "checks": {
+    "rootLogicalBound": true,
+    "nestedNotAssignedLogicalBound": true,
+    "physicalWidthFallbackRetained": true,
+    "minWidthFallbackRetained": true,
+    "officeStyleTextRetained": true,
+    "modelUnchanged": true,
+    "scriptTextEscaped": true,
+    "javascriptSourceRejected": true,
+    "all52ComponentsRender": true
+  },
+  "rootStyle": "width:620px;mso-table-lspace:0pt;;min-width:0!important;max-width:100%!important;border-collapse:collapse;table-layout:fixed;;width:620px;margin:0;inline-size:min(100%,620px)!important;;width:min(100%,620px);",
+  "nestedStyle": "width:496px;mso-table-rspace:0pt;;min-width:0!important;max-width:100%!important;border-collapse:collapse;table-layout:fixed;;width:min(100%,496px);",
+  "syntaxChecks": [
+    "app/source/checks.js",
+    "app/source/editor.js",
+    "app/source/files.js",
+    "app/source/images.js",
+    "app/source/imports.js",
+    "app/source/model.js",
+    "app/source/render.js"
+  ],
+  "sourceHashes": {
+    "app/source/checks.js": "269abc7b946833886827569ab53b4d4b73ac1837e55da23bbbbc20c6dcdb8f33",
+    "app/source/editor.js": "62f27d26d365432b59c09e2cae7f90297d23af4cf35106b6249cf564c2eecdfc",
+    "app/source/files.js": "29de262aabde814760d1be1cbcfcf95bee8d665870ac4aa7ae2c9230e9473154",
+    "app/source/images.js": "436ee7e24837e1fd280a006767458eba234bf3db53f173b63929e867f6f77d16",
+    "app/source/imports.js": "fa994bb7bf180e56ed15b8eea4fb2b02b345338e21e43802038c1f5d6380273b",
+    "app/source/model.js": "3ab23e20f48d35e0208942e722e0c5f17173e3a8e8cf75483ab3d61992e71367",
+    "app/source/render.js": "a7d95ccd085c0441c535883bc1a7267fb95c18c7a9b9b63ccf872207543ccc1d"
+  }
+}

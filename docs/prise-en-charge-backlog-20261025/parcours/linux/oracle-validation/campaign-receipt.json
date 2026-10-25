@@ -1,0 +1,108 @@
+{
+  "iterations": 5,
+  "elapsedSeconds": 82.55018612509593,
+  "results": [
+    {
+      "iteration": 1,
+      "variant": "original-targeted-13",
+      "exitCode": 0,
+      "externalTestLimitSeconds": 30,
+      "externalLimitTriggered": false,
+      "containerRemoved": true,
+      "finishedAt": "2026-10-25T13:03:03.216033+00:00"
+    },
+    {
+      "iteration": 2,
+      "variant": "original-targeted-13",
+      "exitCode": 0,
+      "externalTestLimitSeconds": 30,
+      "externalLimitTriggered": false,
+      "containerRemoved": true,
+      "finishedAt": "2026-10-25T13:03:18.638257+00:00"
+    },
+    {
+      "iteration": 3,
+      "variant": "original-targeted-13",
+      "exitCode": 0,
+      "externalTestLimitSeconds": 30,
+      "externalLimitTriggered": false,
+      "containerRemoved": true,
+      "finishedAt": "2026-10-25T13:03:34.281410+00:00"
+    },
+    {
+      "iteration": 4,
+      "variant": "original-targeted-13",
+      "exitCode": 0,
+      "externalTestLimitSeconds": 30,
+      "externalLimitTriggered": false,
+      "containerRemoved": true,
+      "finishedAt": "2026-10-25T13:03:49.670655+00:00"
+    },
+    {
+      "iteration": 5,
+      "variant": "original-targeted-13",
+      "exitCode": 0,
+      "externalTestLimitSeconds": 30,
+      "externalLimitTriggered": false,
+      "containerRemoved": true,
+      "finishedAt": "2026-10-25T13:04:06.052170+00:00"
+    }
+  ],
+  "classification": "five-clean-targeted-runs-original-files",
+  "footers": [
+    {
+      "iteration": 1,
+      "tests": 13.0,
+      "pass": 13.0,
+      "fail": 0.0,
+      "cancelled": 0.0,
+      "skipped": 0.0,
+      "todo": 0.0,
+      "duration_ms": 10451.857338
+    },
+    {
+      "iteration": 2,
+      "tests": 13.0,
+      "pass": 13.0,
+      "fail": 0.0,
+      "cancelled": 0.0,
+      "skipped": 0.0,
+      "todo": 0.0,
+      "duration_ms": 10152.527004
+    },
+    {
+      "iteration": 3,
+      "tests": 13.0,
+      "pass": 13.0,
+      "fail": 0.0,
+      "cancelled": 0.0,
+      "skipped": 0.0,
+      "todo": 0.0,
+      "duration_ms": 10227.714296
+    },
+    {
+      "iteration": 4,
+      "tests": 13.0,
+      "pass": 13.0,
+      "fail": 0.0,
+      "cancelled": 0.0,
+      "skipped": 0.0,
+      "todo": 0.0,
+      "duration_ms": 10179.199005
+    },
+    {
+      "iteration": 5,
+      "tests": 13.0,
+      "pass": 13.0,
+      "fail": 0.0,
+      "cancelled": 0.0,
+      "skipped": 0.0,
+      "todo": 0.0,
+      "duration_ms": 10926.268838
+    }
+  ],
+  "totalPass": 65.0,
+  "sourceManifestSha256": "24096427781f1d0aedd9e22425650d4d3d99b962af1c7374e5c0efdfe7c66493",
+  "inspectorUsed": false,
+  "rescueEvaluation": false
+}

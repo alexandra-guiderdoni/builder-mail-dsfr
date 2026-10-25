@@ -1,0 +1,10 @@
+# audit-results.toon
+# run:audit-20261025-115922108-395c08d1 base:395c08d1dfa4d0b8e41416da798bf0313a8bd379 repo:builder-mail-dsfr mode:quick ts:2026-10-25T12:08:15.469887+00:00 rounds:1 agents:5
+# scope:full total:72
+# summary: total=4 critical=0 high=0 medium=3 low=1
+# verified: checked=0 confirmed=0 uncertain=0 rejected=0
+# bugs[4]{id,severity,category,fix_tier,file,line,title,verified,score}:
+r1-z02-001,low,dead-code,mechanical,app/source/view.js,142,catalogPreview possède deux déclarations strictement identiques,null,null
+r1-z03-001,medium,logic-error,test-first,scripts/recipe_firefox.mjs,40,La recette Firefox attend les anciens noms fixes des exports,null,null
+r1-z03-002,medium,logic-error,test-first,scripts/recipe_page_flow_firefox.mjs,57,La recette de défilement exige une taille de catalogue périmée,null,null
+r1-z04-001,medium,logic-error,test-first,tests/creation-browser.test.cjs,29,La matrice attribue cinq scénarios WebKit au moteur demandé,null,null

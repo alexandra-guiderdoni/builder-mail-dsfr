@@ -1,0 +1,56 @@
+{
+  "run_id": "audit-20261025-115922108-395c08d1",
+  "base_sha": "395c08d1dfa4d0b8e41416da798bf0313a8bd379",
+  "zone_id": "z01",
+  "agent_id": "r1-z01-a1",
+  "zone": "app/source/checks.js",
+  "round": 1,
+  "overlay_hash": "c257e8483a78695fa29935b8f3db54b11bc9664a69001a5576cde37dbd114a57",
+  "worktree_path": "/Users/alex/Claude-worktrees/sg-audit-20261025-115922108-395c08d1-z01",
+  "files_read": [
+    "app/source/checks.js",
+    "app/source/editor.js",
+    "app/source/files.js",
+    "app/source/images.js",
+    "app/source/imports.js",
+    "app/source/model.js",
+    "app/source/render.js"
+  ],
+  "context_read": [
+    "shared/image-files.js",
+    "tests/model.test.cjs",
+    "tests/mail-html.test.cjs",
+    "docs/cadrage-source.md",
+    "SPECIFICATION.md"
+  ],
+  "candidate_files_verified_before": 72,
+  "candidate_files_verified_after": 72,
+  "source_mutations": 0,
+  "observations": [
+    {
+      "claim": "La borne logique du correctif est limitée aux tables racines du HTML de copie, et conserve largeur physique, min() et styles Office bruts.",
+      "evidence": "render.js:171-224 ; z01-probe.cjs et z01-source-probes.json",
+      "limit": "La sonde simule DOMParser/table style ; géométrie et cascade CSS natives non exercées."
+    },
+    {
+      "claim": "Le correctif ne change pas les contrôles du modèle, les données ou le contenu sérialisé en amont du DOM.",
+      "evidence": "Validation Model, Render.html/assertOutput et sonde de script échappé/source javascript refusée ; modèle inchangé après copie simulée.",
+      "limit": "Aucune preuve de collage ou de message reçu."
+    },
+    {
+      "claim": "Les imports valident modèle et décodage image avant mutation ; les callbacks différés vérifient leur contexte.",
+      "evidence": "imports.js prepare ; files.js validate ; editor.js gestionnaire image ; shared/image-files.js",
+      "limit": "Lecture quick ; pas une preuve exhaustive des courses."
+    }
+  ],
+  "probes": [
+    "z01-probe.cjs",
+    "z01-source-probes.json"
+  ],
+  "limits": [
+    "Quick une ronde, pas audit approfondi ni conformité ni GO production.",
+    "Aucun navigateur, service, build, suite lourde, commit ou publication.",
+    "Distributions générées héritées du commit base et exclues ; la candidate auditée est base + overlay manifeste.",
+    "Outlook, Mélissa, presse-papiers natif et cascade CSS native restent hors preuve de cette zone."
+  ]
+}

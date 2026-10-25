@@ -1,0 +1,212 @@
+{
+  "run_id": "audit-20261025-142735923-395c08d1",
+  "base_sha": "395c08d1dfa4d0b8e41416da798bf0313a8bd379",
+  "zone_id": "z03",
+  "agent_id": "r1-z03-a1",
+  "zone": "tests/accessibility-browser.test.cjs",
+  "round": 1,
+  "files_audited": 60,
+  "duration_ms": 900000,
+  "bugs": [
+    {
+      "id": "r1-z03-001",
+      "severity": "medium",
+      "category": "logic-error",
+      "subcategory": "engine-evidence-misattribution",
+      "file": "tests/creation-browser.test.cjs",
+      "line": 29,
+      "title": "La matrice attribue cinq scénarios WebKit au moteur demandé",
+      "description": "Préexistant à la base 395c08d1, non introduit par la candidate. Lecture complète des neuf fichiers et du lanceur : selectFiles de tests/run-engines.cjs sélectionne chacun via .launch(); runEngine leur transmet MAIL_BUILDER_ENGINE puis ajoute sans distinction engine demandé à chaque résultat TAP. Dans creation, le wrapper chromium suit ce moteur mais le launcher WebKit reste direct : une invocation Firefox attribue ainsi cinq scénarios réellement WebKit à Firefox. Huit autres fichiers portent le même motif, détaillés dans occurrences ; sept utilisent exclusivement Chromium/WebKit directs pour leurs scénarios. La boucle directe dans npm test par défaut est intentionnelle et ne constitue pas le défaut : celui-ci concerne son inclusion et son attribution dans la matrice multi-moteur. Une caractérisation en mémoire du vrai selectFiles/runEngine avec spawnSync remplacé par un retour TAP synthétique a confirmé la sélection des neuf fichiers et que les deux lignes Chromium/WebKit reçoivent engine=firefox. Aucun navigateur exécuté pendant cet audit ; la détermination des launchers repose sur le code lu. Impact : le total par moteur surestime la couverture du moteur demandé et peut afficher des réussites Firefox pour des scénarios exercés dans d’autres moteurs. Cela ne permet pas à lui seul de déduire un défaut produit.",
+      "fix_tier": "test-first",
+      "fix_tier_reason": "La correction change la sélection des fichiers ou le contrat d’attribution moteur ; caractériser les launchers effectifs et conserver le comportement intentionnel de npm test avant de modifier la matrice.",
+      "fix_applied": false,
+      "fix_commit": "",
+      "fix_evidence": null,
+      "negative_evidence": null,
+      "confidence": "high",
+      "verification_score": null,
+      "verified": null,
+      "introduced_by_candidate": false,
+      "occurrence_count": 9,
+      "occurrences": [
+        {
+          "file": "tests/creation-browser.test.cjs",
+          "line": 29,
+          "detail": "5 scénarios du launcher sélectionné et 5 scénarios WebKit ; tous attribués au moteur demandé.",
+          "preexisting": true
+        },
+        {
+          "file": "tests/copy-check-browser.test.cjs",
+          "line": 47,
+          "detail": "6 tests Chromium/WebKit directs ; tous attribués au moteur demandé.",
+          "preexisting": true
+        },
+        {
+          "file": "tests/export-names-browser.test.cjs",
+          "line": 42,
+          "detail": "2 scénarios du launcher sélectionné et 2 scénarios WebKit ; seconde boucle ligne 66.",
+          "preexisting": true
+        },
+        {
+          "file": "tests/footer-extra-links-browser.test.cjs",
+          "line": 43,
+          "detail": "Sous-tests Chromium/WebKit directs ; le résultat parent est attribué au moteur demandé.",
+          "preexisting": true
+        },
+        {
+          "file": "tests/image-import-browser.test.cjs",
+          "line": 99,
+          "detail": "8 tests Chromium/WebKit directs ; création des images témoins également sous Chromium ligne 35.",
+          "preexisting": true
+        },
+        {
+          "file": "tests/mail-copy-engines-browser.test.cjs",
+          "line": 56,
+          "detail": "Sous-tests Chromium/WebKit directs ; le résultat parent est attribué au moteur demandé.",
+          "preexisting": true
+        },
+        {
+          "file": "tests/mail-dark-contrast-browser.test.cjs",
+          "line": 40,
+          "detail": "2 tests Chromium/WebKit directs ; tous attribués au moteur demandé.",
+          "preexisting": true
+        },
+        {
+          "file": "tests/mail-export-engines-browser.test.cjs",
+          "line": 95,
+          "detail": "Sous-tests Chromium/WebKit directs ; le résultat parent est attribué au moteur demandé.",
+          "preexisting": true
+        },
+        {
+          "file": "tests/mail-weight-browser.test.cjs",
+          "line": 28,
+          "detail": "8 tests Chromium/WebKit directs ; tous attribués au moteur demandé.",
+          "preexisting": true
+        }
+      ]
+    }
+  ],
+  "candidate_overlay_sha256": "c43f9e5f67bcee948de67b57d9a51d4b20454bd1ed5a5bdd291de3ecc57b2ec5",
+  "manifest_sha256": "ddef1e12a739f031902fe235575ae9362b628fd65ec79427ae45a473d5e6552a",
+  "manifest_files_verified_before_audit": 168,
+  "manifest_files_verified_after_audit": 168,
+  "files_read": [
+    "tests/accessibility-browser.test.cjs",
+    "tests/article-text-alt-residual-browser.test.cjs",
+    "tests/article-text-alt-residual.test.cjs",
+    "tests/article-text-footer-links-browser.test.cjs",
+    "tests/article-text-footer-links.test.cjs",
+    "tests/audit-expectations.test.cjs",
+    "tests/audit-receipt.test.cjs",
+    "tests/audit-server-lifecycle.test.cjs",
+    "tests/audit-server.test.cjs",
+    "tests/block-actions-focus-browser.test.cjs",
+    "tests/browser-support.cjs",
+    "tests/browser.test.cjs",
+    "tests/build.test.cjs",
+    "tests/catalogue-search-browser.test.cjs",
+    "tests/catalogue-search.test.cjs",
+    "tests/catalogue-status-browser.test.cjs",
+    "tests/copy-check-browser.test.cjs",
+    "tests/copy-check.test.cjs",
+    "tests/creation-browser.test.cjs",
+    "tests/creation-model.test.cjs",
+    "tests/documents-selector-explicit-browser.test.cjs",
+    "tests/editor-dsfr-browser.test.cjs",
+    "tests/editor-input-preservation-browser.test.cjs",
+    "tests/error-persistence-browser.test.cjs",
+    "tests/export-names-browser.test.cjs",
+    "tests/field-labels-browser.test.cjs",
+    "tests/field-labels.test.cjs",
+    "tests/firefox-support.mjs",
+    "tests/focus-browser.test.cjs",
+    "tests/footer-extra-links-browser.test.cjs",
+    "tests/footer-extra-links.test.cjs",
+    "tests/footer-mailto-browser.test.cjs",
+    "tests/footer-mailto.test.cjs",
+    "tests/form-interactions-browser.test.cjs",
+    "tests/identity-confirmation-browser.test.cjs",
+    "tests/image-gif-frames.test.cjs",
+    "tests/image-import-browser.test.cjs",
+    "tests/image-limits-browser.test.cjs",
+    "tests/image-validation.test.cjs",
+    "tests/import-file-errors-browser.test.cjs",
+    "tests/import-images-browser.test.cjs",
+    "tests/interchange-browser.test.cjs",
+    "tests/library-browser.test.cjs",
+    "tests/library-items-browser.test.cjs",
+    "tests/link-labels-browser.test.cjs",
+    "tests/link-labels.test.cjs",
+    "tests/mail-copy-engines-browser.test.cjs",
+    "tests/mail-css-browser.test.cjs",
+    "tests/mail-css.test.cjs",
+    "tests/mail-dark-contrast-browser.test.cjs",
+    "tests/mail-export-engines-browser.test.cjs",
+    "tests/mail-html.test.cjs",
+    "tests/mail-layout-browser.test.cjs",
+    "tests/mail-presentation-browser.test.cjs",
+    "tests/mail-presentation.test.cjs",
+    "tests/mail-semantics-browser.test.cjs",
+    "tests/mail-semantics.test.cjs",
+    "tests/mail-weight-browser.test.cjs",
+    "tests/mail-weight.test.cjs",
+    "tests/model.test.cjs"
+  ],
+  "cross_module_files_read": [
+    "tests/run-engines.cjs",
+    "tests/engine-expectations.json",
+    "tests/portability-storage.cjs"
+  ],
+  "checks": {
+    "node_check": {
+      "files": 60,
+      "passed": 60,
+      "failed": 0
+    },
+    "engine_attribution_characterization": {
+      "kind": "in-memory VM, no browser, spawnSync stub with synthetic TAP",
+      "selected_files": 9,
+      "requested_engine": "firefox",
+      "synthetic_tap_names": [
+        "copie Chromium",
+        "copie WebKit"
+      ],
+      "observed_result_engines": [
+        "firefox",
+        "firefox"
+      ],
+      "result": "confirmed"
+    },
+    "base_classification": "Eight additional affected files byte-identical to base; creation changed elsewhere but launcher loop preexists."
+  },
+  "candidate_review": {
+    "new_regressions_identified": 0,
+    "modified_files_reviewed": [
+      "tests/article-text-footer-links-browser.test.cjs",
+      "tests/browser-support.cjs",
+      "tests/browser.test.cjs",
+      "tests/creation-browser.test.cjs",
+      "tests/editor-input-preservation-browser.test.cjs",
+      "tests/error-persistence-browser.test.cjs",
+      "tests/link-labels-browser.test.cjs",
+      "tests/mail-layout-browser.test.cjs"
+    ],
+    "observations": [
+      "Clipboard interception records only successful native writes and is explicitly limited to inspection, not paste proof.",
+      "Recompressed image oracle asserts a decodable PNG with expected dimensions and exact embedded image persistence/export.",
+      "Creation transaction callback is held then released; assertions still require native completion and notices.",
+      "IME event sequence is explicitly synthetic and retains node, focus, selection and content assertions.",
+      "Non-Chromium storage failure is explicitly injected at IndexedDB.put; small writes remain native and recovery is asserted.",
+      "Link-label resource wait retains URL and label assertions.",
+      "Mail-layout painted-bar oracle includes a width-4 mutation witness; hidden preheader excluded deliberately while visible text/link/image comparison remains.",
+      "Diagnostic catch in footer-links rethrows its cause."
+    ]
+  },
+  "limitations": [
+    "No heavy test or browser executed in this zone audit; syntax and in-memory characterization only.",
+    "397/397 macOS/Linux receipts are coordinator-supplied evidence, not executions by this reviewer.",
+    "No production GO: Outlook and Mélissa remain unexecuted; #149 global patch not integrated; historical #130/#142/#145 causes unknown.",
+    "Scope is 60 active test/support files; runtime application reviewed by other native zones."
+  ],
+  "report_only": true
+}

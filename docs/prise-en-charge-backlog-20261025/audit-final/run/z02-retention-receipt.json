@@ -1,0 +1,9 @@
+{
+  "artifact": "visual-tests/_results/runs/audit-20261025-115922108-395c08d1/zone-z02-r1-r1-z02-a1.json",
+  "retention": "intent-to-add",
+  "helper_exit_code": 0,
+  "artifact_sha256": "d6c165ed898be9280745e612f0ef89579f4e0921dd5ce076d737f5d810c920dd",
+  "git_status": "A visual-tests/_results/runs/audit-20261025-115922108-395c08d1/zone-z02-r1-r1-z02-a1.json",
+  "staged_content": false,
+  "worktree_path": "/Users/alex/Claude-worktrees/sg-audit-20261025-115922108-395c08d1-z02"
+}

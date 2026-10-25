@@ -1,0 +1,9 @@
+{
+  "iteration": 1,
+  "variant": "original-targeted-13",
+  "exitCode": 0,
+  "externalTestLimitSeconds": 30,
+  "externalLimitTriggered": false,
+  "containerRemoved": true,
+  "finishedAt": "2026-10-25T13:03:03.216033+00:00"
+}

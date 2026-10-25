@@ -22,10 +22,12 @@
   }
   // Changer de vue attend les écritures en cours sans exiger leur succès : après un échec, le travail reste en mémoire.
   async function open(id) {
+    const alreadyVisible = !get("editor-page").hidden;
     A.State.guard(); find(id); await A.State.settle();
     if (id !== A.library.activeId) { await A.State.change(lib => { lib.activeId = id; }); await A.State.settle(); }
-    // Le cadre doit être visible avant de charger son document d’aperçu.
-    show(true); A.UI.refresh();
+    // Depuis l’accueil, le cadre doit être visible avant de charger son aperçu.
+    // Dans l’éditeur, State.change a déjà rendu : une seconde navigation blob peut être perdue sous WebKit.
+    show(true); if (!alreadyVisible) A.UI.refresh();
   }
   async function home() { A.State.guard(); await A.State.settle(); refresh(); show(false); }
   // Message commun : signale un objet daté qui n'a pas été repris tel quel.

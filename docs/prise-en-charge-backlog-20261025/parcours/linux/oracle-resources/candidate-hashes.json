@@ -1,0 +1,5 @@
+{
+  "tests/preview-resources.cjs": "58a0faef9f7439003368d2a00253d72bf083e22dcd3457170746e99f13573794",
+  "tests/preview-resources-browser.test.cjs": "f589d371cc2beabe75ff703e61d0fb7d82abd32daf45aebc41a6b19fb5a8a4df",
+  "tests/preview-size-browser.test.cjs": "d9a14364def9b68400f16a32aea2503be0479a450a809cd9cb1e78a3d7c5c10b"
+}

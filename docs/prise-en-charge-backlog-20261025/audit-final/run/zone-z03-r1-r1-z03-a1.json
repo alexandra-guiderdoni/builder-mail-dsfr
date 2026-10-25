@@ -1,0 +1,50 @@
+{
+  "run_id": "audit-20261025-115922108-395c08d1",
+  "base_sha": "395c08d1dfa4d0b8e41416da798bf0313a8bd379",
+  "zone_id": "z03",
+  "agent_id": "r1-z03-a1",
+  "zone": "prototype/reference/snum-packet.js",
+  "round": 1,
+  "files_audited": 22,
+  "duration_ms": 540000,
+  "bugs": [
+    {
+      "id": "r1-z03-001",
+      "severity": "medium",
+      "category": "logic-error",
+      "subcategory": "stale-recipe-contract",
+      "file": "scripts/recipe_firefox.mjs",
+      "line": 40,
+      "title": "La recette Firefox attend les anciens noms fixes des exports",
+      "description": "Le collecteur attend composition.courriel.json (ligne 40), courriel.html (41) puis bibliotheque.courriels.json (48), alors que les actions courantes passent par Files.exportName et produisent systématiquement un nom daté. La commande reste prescrite dans docs/MAINTENANCE.md:110. La sonde VM z03-probe.cjs exécute les actions export-document/export-mail/export-library avec une frontière de téléchargement capturée : Lettre-de-recette-2026-10-25.courriel.json, Lettre-de-recette-2026-10-25.html, bibliotheque-courriels-2026-10-25.json (z03-source-probes.json). Lorsque ce parcours atteint le premier export, downloaded recherche un autre fichier dans le répertoire neuf et échoue après 10 secondes ; les étapes suivantes ne sont pas qualifiées. Lecture des sources et sonde à frontières contrôlées, pas exécution Firefox complète. Défaut préexistant, sans lien causal démontré avec les correctifs candidats.",
+      "fix_tier": "test-first",
+      "fix_tier_reason": "Le collecteur doit suivre le contrat courant sans affaiblir les exigences produit ; caractériser son oracle avant adaptation.",
+      "fix_applied": false,
+      "fix_commit": "",
+      "fix_evidence": null,
+      "negative_evidence": null,
+      "confidence": "high",
+      "verification_score": null,
+      "verified": null
+    },
+    {
+      "id": "r1-z03-002",
+      "severity": "medium",
+      "category": "logic-error",
+      "subcategory": "stale-recipe-contract",
+      "file": "scripts/recipe_page_flow_firefox.mjs",
+      "line": 57,
+      "title": "La recette de défilement exige une taille de catalogue périmée",
+      "description": "La boucle inclut 1280, 1024 et 390 px, mais exige catalogue.size === 52 à chaque largeur (ligne 57), puis size === 2 après filtrage (67). Le contrat courant de view.js:130-136 utilise 52 composants + 9 familles, soit size=61 en large, et un sélecteur natif size=1 sous 576 px. La sonde z03-probe.cjs exécute exactement l’affectation de la source candidate avec le catalogue épinglé : 61 et 1 (z03-source-probes.json). Dès le premier contrôle, une interface conforme au comportement actuel est donc rejetée, et le reçu ne peut achever les cas de réduction/navigation. La commande reste prescrite dans docs/RECETTE-DEFILEMENT.md:40. Sonde de calcul à frontière simulée, pas validation navigateur ou accessibilité. Défaut préexistant, pas une régression introduite par la candidate.",
+      "fix_tier": "test-first",
+      "fix_tier_reason": "Le collecteur doit suivre le contrat courant sans affaiblir les exigences produit ; caractériser son oracle avant adaptation.",
+      "fix_applied": false,
+      "fix_commit": "",
+      "fix_evidence": null,
+      "negative_evidence": null,
+      "confidence": "high",
+      "verification_score": null,
+      "verified": null
+    }
+  ]
+}

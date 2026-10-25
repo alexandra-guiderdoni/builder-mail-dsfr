@@ -98,8 +98,17 @@ test('un ancien JSON reste récupérable et corrigeable ; les sorties attendent 
       await click(page, `[data-select="${block.id}"]`); await page.locator('#field-' + key).fill('Lire le dossier réparé'); await saved(page);
     }
     assert.equal(await page.evaluate(() => MailBuilder.Render.linkIssues(MailBuilder.doc()).length), 0);
-    await previewBody.locator('a[href]').first().waitFor();
-    const restored = await previewBody.locator('a[href]').evaluateAll(nodes => nodes.map(a => ({label: a.textContent, url: a.getAttribute('href')})));
+    // Un premier lien existe dès la première réparation : attendre les treize évite de lire
+    // un ancien document pendant la navigation finale de l’aperçu.
+    await previewBody.locator('a[href]').filter({hasText: 'Lire le dossier réparé'}).nth(pairs.length - 1).waitFor();
+    const requested = await page.locator('#preview').getAttribute('src');
+    const repairedFrame = await (await page.locator('#preview').elementHandle()).contentFrame();
+    const snapshot = await repairedFrame.waitForFunction(({url, count}) => {
+      if (location.href !== url || document.readyState !== 'complete') return false;
+      const links = [...document.querySelectorAll('a[href]')].map(a => ({label: a.textContent, url: a.getAttribute('href')}));
+      return links.length === count && links.every(a => a.label.trim() === 'Lire le dossier réparé') ? links : false;
+    }, {url: requested, count: pairs.length});
+    const restored = await snapshot.jsonValue(); await snapshot.dispose();
     const expectedURLs = await page.evaluate(() => MailBuilder.doc().blocks.flatMap(b => MailBuilder.Model.component(b.component).links.map(l => b.values[l.url])));
     assert.deepEqual(restored.map(a => a.url), expectedURLs); assert(restored.every(a => a.label.trim() === 'Lire le dossier réparé'));
     const html = await fs.readFile(await download(page, '[data-action=export-mail]', 'courriel-repare.html'), 'utf8');

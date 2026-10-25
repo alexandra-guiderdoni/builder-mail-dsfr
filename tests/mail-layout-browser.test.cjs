@@ -2,6 +2,33 @@ const test = require('node:test');
 const {createHash} = require('node:crypto');
 const {open, confirmChecks, chromium, assert} = require('./browser-support.cjs');
 
+// Le rectangle inclut la bordure fusionnée du tableau (1 px sous WebKit).
+// Mesurer les pixels peints, sans déduire l’épaisseur du CSS qui les produit.
+async function paintedBars(page) {
+  const bars = await page.locator('td').evaluateAll(nodes => nodes.filter(n => n.style.backgroundColor === 'rgb(106, 106, 244)').map(n => {
+    const r = n.getBoundingClientRect(); return {x: r.x, y: r.y, width: r.width, height: r.height};
+  }));
+  const result = [];
+  for (const bar of bars) {
+    const png = await page.screenshot({clip: {x: Math.max(0, Math.floor(bar.x) - 1), y: Math.floor(bar.y + bar.height / 2), width: Math.ceil(bar.width) + 3, height: 1}, scale: 'css'});
+    const painted = await page.evaluate(async data => {
+      const image = new Image(); image.src = 'data:image/png;base64,' + data; await image.decode();
+      const canvas = document.createElement('canvas'); canvas.width = image.width; canvas.height = image.height;
+      const context = canvas.getContext('2d'); context.drawImage(image, 0, 0);
+      const pixels = context.getImageData(0, 0, image.width, 1).data;
+      let run = 0, longest = 0;
+      for (let i = 0; i < pixels.length; i += 4) {
+        run = pixels[i] === 106 && pixels[i + 1] === 106 && pixels[i + 2] === 244 && pixels[i + 3] === 255 ? run + 1 : 0;
+        longest = Math.max(longest, run);
+      }
+      return longest;
+    }, png.toString('base64'));
+    result.push({rectangle: bar.width, painted});
+  }
+  return result;
+}
+const threePixelBars = bars => bars.length === 2 && bars.every(bar => Math.abs(bar.painted - 3) <= 0.75);
+
 test('le courriel copié tient dans un message étroit après retrait des styles de tête', async () => {
   const browser = await chromium.launch({headless: true});
   try {
@@ -45,11 +72,14 @@ test('la copie conserve les filets décoratifs de trois pixels des mises en avan
     await rendered.locator('style').evaluateAll(nodes => nodes.forEach(n => n.remove()));
     for (const width of [800, 390]) {
       await rendered.setViewportSize({width, height: 900});
-      const bars = await rendered.locator('td').evaluateAll(nodes => nodes.filter(n => n.style.backgroundColor === 'rgb(106, 106, 244)').map(n => n.getBoundingClientRect().width));
-      assert.equal(bars.length, 2);
-      // La bordure fusionnée voisine peut ajouter un demi-pixel au rectangle.
-      assert(bars.every(w => Math.abs(w - 3) <= 0.75), `Filets à ${width}px : ${bars.join(', ')}`);
+      const bars = await paintedBars(rendered);
+      assert(threePixelBars(bars), `Filets à ${width}px : ${JSON.stringify(bars)}`);
     }
+    // Témoin négatif : le contrôle doit refuser un vrai filet élargi.
+    await rendered.locator('td').evaluateAll(nodes => nodes.filter(n => n.style.backgroundColor === 'rgb(106, 106, 244)').forEach(n => { n.style.width = '4px'; }));
+    const widened = await paintedBars(rendered);
+    assert.deepEqual(widened.map(bar => bar.painted), [4, 4], 'Le témoin peint réellement quatre pixels.');
+    assert.equal(threePixelBars(widened), false, 'Un filet élargi doit être détecté.');
   } finally { await browser.close(); }
 });
 
@@ -65,8 +95,13 @@ test('les 52 composants copiés conservent texte, liens et images sans déborder
       const original = new DOMParser().parseFromString(A.Render.html(A.doc()), 'text/html');
       const adapted = new DOMParser().parseFromString(A.Render.clipboardHtml(A.doc()), 'text/html');
       if (JSON.stringify([...adapted.images].map(i => [i.src, i.alt])) !== JSON.stringify([...original.images].map(i => [i.src, i.alt]))) throw new Error('La préparation du presse-papiers a changé les images');
+      const preheader = value.blocks.find(b => b.component === 'mail-00').values.f0;
+      for (const output of [original, adapted]) {
+        const first = output.body.firstElementChild;
+        if (first.textContent !== preheader || first.style.display !== 'none' || !/mso-hide\s*:\s*all/.test(first.getAttribute('style'))) throw new Error('Le pré-en-tête doit rester présent et masqué dans les sorties.');
+      }
       const nodes = original.createTreeWalker(original.body, NodeFilter.SHOW_TEXT), text = [];
-      while (nodes.nextNode()) { const value = nodes.currentNode.data.replace(/\s+/g, ' ').trim(); if (value && !nodes.currentNode.parentElement.closest('[style*="mso-hide:all"]')) text.push(value); } // #41 : le pré-en-tête masqué n'est pas du texte reçu
+      while (nodes.nextNode()) { const value = nodes.currentNode.data.replace(/\s+/g, ' ').trim(); if (value && !original.body.firstElementChild.contains(nodes.currentNode)) text.push(value); }
       // Chromium omet les variantes blanches masquées dans sa copie en mode clair, les autres moteurs non : on ne compare que les images visibles.
       return {text, images: [...original.images].filter(i => !i.closest('.hide-white')).map(i => [i.src, i.alt]), links: [...original.querySelectorAll('a')].map(a => a.getAttribute('href')), plain: A.Render.plain(A.doc())};
     });
@@ -85,8 +120,15 @@ test('les 52 composants copiés conservent texte, liens et images sans déborder
       // Cas reçu dans Mélissa : une largeur de table est figée à 800 pixels.
       for (const table of doc.body.children) table.style.width = '800px';
       document.querySelector('#message').innerHTML = doc.body.innerHTML;
-      const nodes = doc.createTreeWalker(doc.body, NodeFilter.SHOW_TEXT), text = [];
-      while (nodes.nextNode()) { const value = nodes.currentNode.data.replace(/\s+/g, ' ').trim(); if (value && !nodes.currentNode.parentElement.closest('[style*="mso-hide:all"]')) text.push(value); } // #41 : le pré-en-tête masqué n'est pas du texte reçu
+      // La réécriture CSSOM ci-dessus retire mso-hide inconnu sous Firefox/WebKit.
+      // La visibilité reçue dépend du rendu, pas de la graphie de cette propriété Office.
+      const message = document.querySelector('#message'), nodes = document.createTreeWalker(message, NodeFilter.SHOW_TEXT), text = [];
+      while (nodes.nextNode()) {
+        const value = nodes.currentNode.data.replace(/\s+/g, ' ').trim();
+        let parent = nodes.currentNode.parentElement, hidden = false;
+        while (parent && parent !== message) { if (getComputedStyle(parent).display === 'none') hidden = true; parent = parent.parentElement; }
+        if (value && !hidden) text.push(value);
+      }
       return {text, images: [...doc.images].filter(i => !i.closest('.hide-white')).map(i => [i.src, i.alt]), links: [...doc.querySelectorAll('a')].map(a => a.getAttribute('href'))};
     }, clipboard.html);
     assert.deepEqual(actual.text, expected.text);

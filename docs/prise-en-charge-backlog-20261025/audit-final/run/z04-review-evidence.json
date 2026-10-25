@@ -1,0 +1,40 @@
+{
+  "identity": {
+    "run_id": "audit-20261025-115922108-395c08d1",
+    "base_sha": "395c08d1dfa4d0b8e41416da798bf0313a8bd379",
+    "overlay_hash": "c257e8483a78695fa29935b8f3db54b11bc9664a69001a5576cde37dbd114a57",
+    "zone_id": "z04",
+    "round": 1,
+    "agent_id": "r1-z04-a1",
+    "worktree_path": "/Users/alex/Claude-worktrees/sg-audit-20261025-115922108-395c08d1-z04"
+  },
+  "manifest_verified_before_and_after": 72,
+  "coverage": {
+    "zone_files_read": 20,
+    "additional_context": [
+      "tests/run-engines.cjs",
+      "app/source/preview.js",
+      "scripts/recipe_firefox.mjs and scripts/recipe_page_flow_firefox.mjs caller searches"
+    ],
+    "observations": [
+      "Clipboard records only after awaited native write/writeText; controlled seam probe preserves sentinel and rejection.",
+      "Injected quota names physicalQuota:false; native Chromium quota remains separate.",
+      "Synthetic MessageEvent retains actual WindowProxy source, with invalid source/origin/token cases; positive real postMessage tests opaque origin.",
+      "PWA test closes owned server, closes sockets, checks Node fetch rejection, checks network probe before and after cutoff.",
+      "Window.name refusal sentinel is installed only in dedicated disposable test page, not application source.",
+      "#138 fallback test preserves old memory and new owner token/data/export; mutation proof artifact is outside this zone and was not reviewed.",
+      "Pixel oracle reads screenshot RGB pixels and rejects independently painted 4px bars; product rendering unchanged by oracle.",
+      "IME event test explicitly identifies synthetic events and cannot qualify native IME."
+    ]
+  },
+  "limits": [
+    "Quick one-round source audit; no exhaustive audit or compliance claim.",
+    "No browser or heavy suite launched; product browser execution belongs to parent campaign.",
+    "Generated distributions in linked worktree are base outputs and excluded; no browser run claimed against them.",
+    "Native clipboard delivery, real physical quota outside Chromium, native IME, Outlook/Melissa remain unproven by this review."
+  ],
+  "probes": [
+    "z04-engine-probe.json",
+    "z04-clipboard-probe.json"
+  ]
+}

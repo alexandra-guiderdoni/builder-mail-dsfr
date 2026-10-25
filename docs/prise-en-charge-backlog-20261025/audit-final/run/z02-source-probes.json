@@ -1,0 +1,72 @@
+{
+  "kind": "VM control-flow probe, DOM/UI/State boundaries stubbed; not native browser proof",
+  "libraryOpen": [
+    {
+      "initialHidden": true,
+      "target": "a",
+      "finalActive": "a",
+      "finalHidden": false,
+      "renders": [
+        {
+          "visible": true,
+          "active": "a"
+        }
+      ],
+      "focus": [
+        "composition-title"
+      ]
+    },
+    {
+      "initialHidden": true,
+      "target": "b",
+      "finalActive": "b",
+      "finalHidden": false,
+      "renders": [
+        {
+          "visible": false,
+          "active": "b"
+        },
+        {
+          "visible": true,
+          "active": "b"
+        }
+      ],
+      "focus": [
+        "composition-title"
+      ]
+    },
+    {
+      "initialHidden": false,
+      "target": "a",
+      "finalActive": "a",
+      "finalHidden": false,
+      "renders": [],
+      "focus": [
+        "composition-title"
+      ]
+    },
+    {
+      "initialHidden": false,
+      "target": "b",
+      "finalActive": "b",
+      "finalHidden": false,
+      "renders": [
+        {
+          "visible": true,
+          "active": "b"
+        }
+      ],
+      "focus": [
+        "composition-title"
+      ]
+    }
+  ],
+  "catalogPreview": {
+    "declarations": [
+      142,
+      151
+    ],
+    "identicalBodies": true,
+    "fullFileRead": true
+  }
+}

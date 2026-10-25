@@ -1,0 +1,171 @@
+{
+  "run_id": "audit-20261025-142735923-395c08d1",
+  "base_sha": "395c08d1dfa4d0b8e41416da798bf0313a8bd379",
+  "zone_id": "z05",
+  "agent_id": "r1-z05-a1",
+  "zone": ".github/workflows/pages.yml",
+  "round": 1,
+  "files_audited": 20,
+  "duration_ms": 180000,
+  "candidate_overlay_sha256": "c43f9e5f67bcee948de67b57d9a51d4b20454bd1ed5a5bdd291de3ecc57b2ec5",
+  "bugs": [
+    {
+      "id": "r1-z05-001",
+      "severity": "medium",
+      "category": "logic-error",
+      "subcategory": "incomplete-node-suite-verdict",
+      "file": "scripts/audit_receipt.py",
+      "line": 105,
+      "title": "Le reçu accepte une suite contenant un test annulé",
+      "description": "Défaut préexistant : audit_receipt.py est byte-identique à la base 395. La sonde exécute réellement Node avec 72 tests réussis et 1 test annulé par AbortController (exit 1, fail 0, skipped 0). parse_suite extrait seulement passed/failed/skipped ; les trois contrôles de collect (406–417) puis verify_receipt acceptent les mêmes compteurs avec un journal et une empreinte cohérents. Le passage par verify_receipt utilise une frontière Path en mémoire, aucun reçu publié. Une campagne dont le nombre de succès atteint BUILDER_AUDIT_TESTS peut donc publier un reçu favorable malgré une annulation supplémentaire. Ce constat concerne l’outil local de reçu, pas npm test direct ni Pages. Il ne contredit pas les journaux finaux 397/397 dont cancelled 0 et exit 0 ont été relus séparément par le coordinateur. Premier essai sans abort explicite : timeout externe de 5 s, non concluant ; essai borné suivant concluant.",
+      "fix_tier": "test-first",
+      "fix_tier_reason": "Caractériser un vrai journal Node annulé et les compteurs complets avant de durcir la décision du reçu ; conserver les formats supportés et le refus de publier en échec.",
+      "fix_applied": false,
+      "fix_commit": "",
+      "fix_evidence": null,
+      "negative_evidence": {
+        "claim": "missing-construct",
+        "complete": true,
+        "scope": [
+          "scripts/",
+          "tests/"
+        ],
+        "exclusions": [
+          ".git/",
+          "node_modules/",
+          "visual-tests/_results/",
+          "generated distributions",
+          "historical docs"
+        ],
+        "searches": [
+          {
+            "query": "rg -n 'parse_suite|suite\\.log|BUILDER_AUDIT_TESTS' scripts tests",
+            "mode": "regex",
+            "matches": [
+              "scripts/audit_receipt.py:23:EXPECTED_TESTS = int(os.environ.get(\"BUILDER_AUDIT_TESTS\", \"72\"))",
+              "scripts/audit_receipt.py:102:def parse_suite(text):",
+              "scripts/audit_receipt.py:255:            counts = parse_suite(log.read_text())",
+              "scripts/audit_receipt.py:405:    suite_path = RAW / \"suite.log\"",
+              "scripts/audit_receipt.py:406:    suite = parse_suite(suite_path.read_text())",
+              "tests/audit_receipt_contract.py:46:    log = root / \"suite.log\"",
+              "tests/audit_receipt_contract.py:59:            \"log\": \"suite.log\",",
+              "tests/audit_receipt_contract.py:104:# parse_suite : les compteurs du rapport de tests viennent du journal brut.",
+              "tests/audit_receipt_contract.py:105:counts = module.parse_suite(\"# pass 7\\n# fail 2\\n# skipped 1\\n\")",
+              "tests/audit_receipt_contract.py:106:expect(counts == {\"passed\": 7, \"failed\": 2, \"skipped\": 1}, \"parse_suite : %r\" % counts)",
+              "tests/audit_receipt_contract.py:108:    module.parse_suite(\"aucun compteur ici\")",
+              "tests/audit_receipt_contract.py:223:    (base / \"suite.log\").write_text(\"ℹ pass 3\\nℹ fail 0\\nℹ skipped 0\\n# gonflé\\n\")"
+            ]
+          }
+        ],
+        "inspected_files": [
+          "scripts/audit_receipt.py",
+          "tests/audit_receipt_contract.py",
+          "tests/audit-receipt.test.cjs"
+        ]
+      },
+      "confidence": "high",
+      "verification_score": null,
+      "verified": null,
+      "introduced_by_candidate": false
+    }
+  ],
+  "audit_evidence": {
+    "files_read": [
+      ".github/workflows/pages.yml",
+      ".npmrc",
+      "package-lock.json",
+      "package.json",
+      "scripts/audit_ay11.py",
+      "scripts/audit_expectations.py",
+      "scripts/audit_receipt.py",
+      "scripts/audit_reports.py",
+      "scripts/audit_server_lifecycle.py",
+      "scripts/build.py",
+      "scripts/build_app.py",
+      "scripts/catalogue.py",
+      "scripts/check_provenance.py",
+      "scripts/dsfr_assets.py",
+      "scripts/interchange.py",
+      "scripts/mail_layout.py",
+      "tests/audit_expectations_contract.py",
+      "tests/audit_receipt_contract.py",
+      "tests/audit_server_lifecycle_contract.py",
+      "tests/build_contract.py"
+    ],
+    "source_manifest_count": 168,
+    "source_manifest_unchanged": true,
+    "preexisting_files": [
+      ".github/workflows/pages.yml",
+      ".npmrc",
+      "package.json",
+      "scripts/audit_ay11.py",
+      "scripts/audit_expectations.py",
+      "scripts/audit_receipt.py",
+      "scripts/audit_reports.py",
+      "scripts/audit_server_lifecycle.py",
+      "scripts/build.py",
+      "scripts/build_app.py",
+      "scripts/catalogue.py",
+      "scripts/check_provenance.py",
+      "scripts/dsfr_assets.py",
+      "scripts/interchange.py",
+      "scripts/mail_layout.py",
+      "tests/audit_expectations_contract.py",
+      "tests/audit_receipt_contract.py",
+      "tests/audit_server_lifecycle_contract.py",
+      "tests/build_contract.py"
+    ],
+    "candidate_delta": "package-lock fast-uri 3.1.8 → 3.1.9 only; registry HTTPS URL and SHA512 changed consistently, still AJV dev dependency",
+    "python_syntax_files": 16,
+    "python_syntax": "ast.parse passed, no bytecode written",
+    "pages_scope": "CI npm ci --ignore-scripts; browser install; npm run check; npm test; deployment needs tests and copies distribution/web+snum+portable only",
+    "checks_not_run": [
+      "npm install/audit",
+      "full tests",
+      "browser tests",
+      "live GitHub Actions",
+      "network vulnerability/version freshness lookup"
+    ],
+    "limits": [
+      "Static quick audit plus isolated in-memory receipt probe",
+      "Dependency lock syntax/relationship checked, not package implementation",
+      "No Outlook/Melissa qualification",
+      "Existing 397/397 receipts not independently rerun"
+    ]
+  },
+  "probes": [
+    {
+      "method": "Actual small Node process plus exact current Python functions; filesystem boundary simulated read-only",
+      "command_argv": [
+        "node",
+        "-e",
+        "const test=require('node:test');for(let i=0;i<72;i++)test('ok '+i,()=>{});const ac=new AbortController();test('cancelled',{signal:ac.signal},()=>new Promise(()=>{}));setTimeout(()=>ac.abort(),25);"
+      ],
+      "timeout_seconds": 5,
+      "node_exit_code": 1,
+      "footer": {
+        "tests": 73,
+        "pass": 72,
+        "fail": 0,
+        "cancelled": 1,
+        "skipped": 0,
+        "todo": 0
+      },
+      "parsed_counts": {
+        "passed": 72,
+        "failed": 0,
+        "skipped": 0
+      },
+      "journal_finish": "accepted",
+      "verify_receipt": "accepted",
+      "stdout": "✔ ok 0 (0.719542ms)\n✔ ok 1 (0.059666ms)\n✔ ok 2 (0.056084ms)\n✔ ok 3 (0.12375ms)\n✔ ok 4 (0.058916ms)\n✔ ok 5 (0.035875ms)\n✔ ok 6 (0.033958ms)\n✔ ok 7 (0.030542ms)\n✔ ok 8 (0.04475ms)\n✔ ok 9 (0.098083ms)\n✔ ok 10 (0.04975ms)\n✔ ok 11 (0.027917ms)\n✔ ok 12 (0.021542ms)\n✔ ok 13 (0.022292ms)\n✔ ok 14 (0.02225ms)\n✔ ok 15 (0.023708ms)\n✔ ok 16 (0.018ms)\n✔ ok 17 (0.01775ms)\n✔ ok 18 (0.018292ms)\n✔ ok 19 (0.0185ms)\n✔ ok 20 (0.037375ms)\n✔ ok 21 (0.023958ms)\n✔ ok 22 (0.019667ms)\n✔ ok 23 (0.018ms)\n✔ ok 24 (0.031167ms)\n✔ ok 25 (0.017875ms)\n✔ ok 26 (0.02425ms)\n✔ ok 27 (0.020208ms)\n✔ ok 28 (0.025584ms)\n✔ ok 29 (0.01775ms)\n✔ ok 30 (0.017041ms)\n✔ ok 31 (0.018542ms)\n✔ ok 32 (0.017625ms)\n✔ ok 33 (0.060333ms)\n✔ ok 34 (0.026334ms)\n✔ ok 35 (0.041541ms)\n✔ ok 36 (0.027167ms)\n✔ ok 37 (0.02025ms)\n✔ ok 38 (0.019583ms)\n✔ ok 39 (0.031417ms)\n✔ ok 40 (0.026291ms)\n✔ ok 41 (0.018125ms)\n✔ ok 42 (0.017625ms)\n✔ ok 43 (0.018625ms)\n✔ ok 44 (0.015458ms)\n✔ ok 45 (0.016875ms)\n✔ ok 46 (0.017125ms)\n✔ ok 47 (0.016542ms)\n✔ ok 48 (0.016208ms)\n✔ ok 49 (0.016666ms)\n✔ ok 50 (0.016375ms)\n✔ ok 51 (0.014917ms)\n✔ ok 52 (0.014125ms)\n✔ ok 53 (0.016ms)\n✔ ok 54 (0.015917ms)\n✔ ok 55 (0.015834ms)\n✔ ok 56 (0.016125ms)\n✔ ok 57 (0.015875ms)\n✔ ok 58 (0.014167ms)\n✔ ok 59 (0.018458ms)\n✔ ok 60 (0.0165ms)\n✔ ok 61 (0.0155ms)\n✔ ok 62 (0.017667ms)\n✔ ok 63 (0.0305ms)\n✔ ok 64 (0.01625ms)\n✔ ok 65 (0.0165ms)\n✔ ok 66 (0.016208ms)\n✔ ok 67 (0.016625ms)\n✔ ok 68 (0.025542ms)\n✔ ok 69 (0.013833ms)\n✔ ok 70 (0.015625ms)\n✔ ok 71 (0.0295ms)\n✖ cancelled (19.203917ms)\nℹ tests 73\nℹ suites 0\nℹ pass 72\nℹ fail 0\nℹ cancelled 1\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 26.829167\n\n✖ failing tests:\n\ntest at [eval]:1:106\n✖ cancelled (19.203917ms)\n  DOMException [AbortError]: This operation was aborted\n      at new DOMException (node:internal/per_context/domexception:76:18)\n      at AbortController.abort (node:internal/abort_controller:565:18)\n      at Timeout._onTimeout ([eval]:1:185)\n      at listOnTimeout (node:internal/timers:605:17)\n      at process.processTimers (node:internal/timers:541:7) {\n    failureType: 'testAborted'\n  }\n",
+      "stderr": "",
+      "stdout_sha256": "a2c391f265a8f5f3585e6b4f135b0a6f948170cdb03f935628e5b99fd1e08eac",
+      "prior_attempt": {
+        "program": "const test=require('node:test');for(let i=0;i<72;i++)test('ok '+i,()=>{});test('cancelled',()=>new Promise(()=>{}));",
+        "outcome": "subprocess.TimeoutExpired at 5 seconds; process killed by subprocess.run; no conclusion from this attempt"
+      },
+      "python_boundary": "Execute compile(read_text(scripts/audit_receipt.py)) with __name__=receipt_probe; Journal.check matches collect lines406–417; ProofPath.read_text/read_bytes return actual Node stdout; is_file returnsTrue; verify_receipt gets controls/journal, tests counters/log SHA256, confirmed_findings=[]"
+    }
+  ]
+}

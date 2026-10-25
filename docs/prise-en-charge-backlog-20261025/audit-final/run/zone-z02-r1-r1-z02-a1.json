@@ -1,0 +1,31 @@
+{
+  "run_id": "audit-20261025-115922108-395c08d1",
+  "base_sha": "395c08d1dfa4d0b8e41416da798bf0313a8bd379",
+  "zone_id": "z02",
+  "agent_id": "r1-z02-a1",
+  "zone": "app/snum/adapter.js",
+  "round": 1,
+  "files_audited": 19,
+  "duration_ms": 420000,
+  "bugs": [
+    {
+      "id": "r1-z02-001",
+      "severity": "low",
+      "category": "dead-code",
+      "subcategory": "duplicate-function-declaration",
+      "file": "app/source/view.js",
+      "line": 142,
+      "title": "catalogPreview possède deux déclarations strictement identiques",
+      "description": "Lecture complète de view.js : catalogPreview est déclaré aux lignes 142 et 151 dans la même portée. Les deux corps sont strictement identiques (comparaison déterministe dans z02-source-probes.json). La seconde déclaration fournit la liaison effective ; éditer seulement la première laisserait le comportement inchangé. Le doublon est préexistant dans la candidate et ne provoque pas de double exécution ni de panne visible actuelle. Il augmente le risque de correction sans effet et constitue du code redondant.",
+      "fix_tier": "mechanical",
+      "fix_tier_reason": "Retirer une seule des deux déclarations strictement identiques conserve la liaison et le comportement ; comparer les corps et vérifier la syntaxe suffit pour ce retrait local.",
+      "fix_applied": false,
+      "fix_commit": "",
+      "fix_evidence": null,
+      "negative_evidence": null,
+      "confidence": "high",
+      "verification_score": null,
+      "verified": null
+    }
+  ]
+}

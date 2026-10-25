@@ -1,0 +1,270 @@
+[
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/REVUE-ORACLE-RESSOURCES.md",
+    "sha256": "28c623ddca28425c8b3cb73d0eabbc88e9d0a46e2224007ecb6b04a1884d4a24"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/supplement-verdict.json",
+    "sha256": "355f0cb08a324854a0a1cf7c71ec4901bfa1eff91073543a4545a30a14e7731e"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/SHA256.json",
+    "sha256": "bf07bcda0cd8b7f75cdbb0ea55ca7b4432d68ee8c9d8740e7fd0b45c058fca08"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/supplement-preview-probe-result.json",
+    "sha256": "9111f79d61dd4aeeb5142ac4af5eb330d98a7f4474f4f618c4e8aa762ebe1d5e"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/audit-results.json",
+    "sha256": "0f8ec5fd7a54c76530f1768cd369b8f010ac3b0af1ec785ef5f92513a9a1d2ea"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/supplement-preview-probe.cjs",
+    "sha256": "9be7ded4b3bd67a461726c17c8ee8f681843469dde8c9c2ee844c36f591676cc"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/current-run.txt",
+    "sha256": "57dc0b01d140d17823c1b19f8236e35de26f16ba437d3fe0586473cf13bc2f83"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/audit-results.toon",
+    "sha256": "e890d5d351ba7fe552a7ecfa59ed7b95b51b597811a01db7872c340431cb7cdc"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/SUPPLEMENT-APER\u00c7U.md",
+    "sha256": "b26f2bc40f90a69d43fa0c8c36725208505076e1f55883b7cb817cc31d3b6212"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/RAPPORT.md",
+    "sha256": "458658d6de7684188ef5f6fdea6f69ff503eecf7d9ceca4d396e9f34eda7237c"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/z03-review-evidence.json",
+    "sha256": "7dd7e51739e91788ec9b34bdc1356f39f0f9c4cd9a41feb696967430af1b54da"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/orchestrator-z03-replay.json",
+    "sha256": "51beb871829c4fa2fa33424ceb18b6aa8f0d85bef43b87e611001da4f63ddb95"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/z01-retention-receipt.json",
+    "sha256": "e3cde77fa2ca80c9d8c11a04671362c483d89d639a62d9c87e66f512230b0d00"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/z03-probe.cjs",
+    "sha256": "753c09885476b62466f8e6f05e512b023f0865049fa179826186387865c3b16c"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/activated-checklists.txt",
+    "sha256": "526d01b7db5b64c3e6933487e0848e66a5385c4a03b8e28dca65a366e878ae83"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/z02-retention-receipt.json",
+    "sha256": "a099ab2b3776ccb5534db2a4b650da9022e6ed99c714c07dae663a5ea4bd75a8"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/z05-source-probes.json",
+    "sha256": "9c4c5f229dcd715d4a8b63e8d735b085aa943386002a686d985572fd6e3b1142"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/z04-engine-probe.json",
+    "sha256": "c26bbd6a950b2a394b8f1a4ecec39c9f074af560e64d1d9dcdb8cd9e6de09dc5"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/candidate.patch",
+    "sha256": "484583ef570294803d324938f826e9e44a62105992eeacd4ae3442360a8689c1"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/z05-retention-receipt.json",
+    "sha256": "662def30f9db3c0ed83dc4f47a5adeed4178e82cf4dd73f556980b0169e8a800"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/z04-retention-receipt.json",
+    "sha256": "10d82f70323046e55fc271b15b4213c39dedb1b85a9da913db6dbed5884fe3af"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/zone-z01-r1-r1-z01-a1.json",
+    "sha256": "9f59c703f4b871c358a9442330ba94a00bd4b127a20e703c417baf83b4a35542"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/z03-retention-receipt.json",
+    "sha256": "83d7d1f7085ac04297a609f97273b342decd040a28449e2b81bfed0da84262de"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/z02-review-evidence.json",
+    "sha256": "104e11f0da54e122bdc09c70baf377ed5ca1ea018c85fca9a158b9377c2cfb2a"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/z03-source-probes.json",
+    "sha256": "51beb871829c4fa2fa33424ceb18b6aa8f0d85bef43b87e611001da4f63ddb95"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/zone-z02-r1-r1-z02-a1.json",
+    "sha256": "d6c165ed898be9280745e612f0ef89579f4e0921dd5ce076d737f5d810c920dd"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/final-validation.json",
+    "sha256": "9dbe8bfadfe910df90330dbaead958233b78d5ccf5b4a762e807992be1d4f6d8"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/zone-z03-r1-r1-z03-a1.json",
+    "sha256": "5fc791b5a7c5c7a8c210bbd54f66d726fdb02faad274c0d148e755ab78b14545"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/dispatch.json",
+    "sha256": "a81f68d57d5b490f695fdea64c0ba2e5479060b0b752e37f0d41c116a04ceea4"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/zones.json",
+    "sha256": "782372bdbe536dbde94e4b42f6ec8f8186947bec4b52219e36ec6483e2c662ed"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/z01-source-probes.json",
+    "sha256": "5f3ab3dace057f3c9ffcaa916936df28c282162ead1ea19e6bbfbe3bae1ea1ab"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/candidate-identity.json",
+    "sha256": "65917efeaec9e08a6a92d7c037c094b6d64f3c17d4a1e5e8e4267036d1ecf6ae"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/prompt-z04.txt",
+    "sha256": "a9377513664ae47909881765fb91f497215f06aca838318465e1085992b989e7"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/prompt-z05.txt",
+    "sha256": "6b8abc0332cd89f21ffe28f6a6dea9f69cb9bd3cd89b635e467913e49e9befe2"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/z01-probe.cjs",
+    "sha256": "44a409bd9d1705d62c566a9265abcae7ead29a6b44214a6a88c5356d9bca7814"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/z01-review-evidence.json",
+    "sha256": "0718f9cc449ff43f156aba1b595638d42601bbfa7e9473cfcd0b3ed23b6524f3"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/prompt-z01.txt",
+    "sha256": "7a64aff5dc8d915f3bd18f722348e8c558af17adf191bd622ea8a8ebe01e032c"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/zone-z05-r1-r1-z05-a1.json",
+    "sha256": "619fca34d2d372bdcd32ad2b4a73b70076bff30bdc62500adafb38d9a1f9b027"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/z04-review-evidence.json",
+    "sha256": "834dead1362851d4a8545b7c8b1727499e2621d91d65bf9c6b04d10f88f41910"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/z02-source-probes.json",
+    "sha256": "6ab21e4adb3529f13bd0cc74288b937a14502a1015c53ee9717d3cc0ea58227b"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/prompt-z02.txt",
+    "sha256": "8d44c605f37c61a760687b1ecbebcc8537f5b00b93a1a2a91a65c4c8bac83b72"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/prompt-z03.txt",
+    "sha256": "91a7a0767e2a10b05db88075185bef7fc6e7354f05424412ec19f31f118bcb22"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/zone-z04-r1-r1-z04-a1.json",
+    "sha256": "43306ac3f589893709f83e7dc06f6a0040729c6c9a1bf78a3c0af78b53d88275"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/orchestrator-engine-replay.json",
+    "sha256": "b988a455626768b054bb4fbe207256c82e7189439fb745a42b3c8b3c0f9cd3e1"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/critical-review-context.json",
+    "sha256": "70add224cd1379283d1a0fc6c2f72ac06382a4d9da931d92b657a311298cae27"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/z04-clipboard-probe.json",
+    "sha256": "3497dedc1bbb1f55274ff197dbd3bd10f207031317d171c84ffd6bda3a488dbc"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/allocation-receipt.json",
+    "sha256": "a9129ef923f487e4d610256382dd18964570095bf063cc10ade979b1e14e7f07"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/z05-review-evidence.json",
+    "sha256": "34e5857b339be0fd6b5332b7a3ae5f3423e43a39fc86ef01c68968daccc5218e"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/overlay/package-lock.json",
+    "sha256": "a17e627c97e52dca237f267a5f002a9ff3bfe276d187c3ed31609752a231a81d"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/overlay/tests/browser-support.cjs",
+    "sha256": "d56fc80d3c569c93301aea1a2e7022c9cb1a2fccc7240d3162fba7ddb65d3c3e"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/overlay/tests/article-text-footer-links-browser.test.cjs",
+    "sha256": "5aaf76b65fda2abb23e05467d478fe264f0ad73efc43600e4a34f29a52beb8c6"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/overlay/tests/tab-takeover-browser.test.cjs",
+    "sha256": "a82136d0389e567f30e8e943086ac89306666ca7ec087a5a324685aad49eb9ee"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/overlay/tests/portability-storage.cjs",
+    "sha256": "99d3bfffcf21e7046f0cd1f33280f422f64b5991f433a90294df1cbcab5da3df"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/overlay/tests/restore-after-refusal-browser.test.cjs",
+    "sha256": "52a6bb002bc45564cde0461d5102421f6a70ee828805febfedaac3c699a7d402"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/overlay/tests/mail-layout-browser.test.cjs",
+    "sha256": "4683ff82aca3cc84f09817fa33ab2461b1285206e3a5fb0f009ab1521d2e067d"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/overlay/tests/portability-clipboard-browser.test.cjs",
+    "sha256": "d1ca8a130d8833b7822ebe3352c7d57183db66b74df2af0c337d23e2445426ff"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/overlay/tests/browser.test.cjs",
+    "sha256": "3bee8e077a3a8ffaf76689a98145bca195ff35581722dc28b0dcf05ecb80c3b4"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/overlay/tests/creation-browser.test.cjs",
+    "sha256": "c6c71f019d84cb91ec4154681248344b7125c98cb6cc8b0e11eccbdf0221ecbb"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/overlay/tests/preview-size-browser.test.cjs",
+    "sha256": "f34fbc022503b698e3ddf1e2ce4cc61ec21d68e19aed850cab23f8f33b2a8b6c"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/overlay/tests/scope-buttons-browser.test.cjs",
+    "sha256": "297308229acf4e7576766765a0ebd966fcfe8811db13cb195c1dd02e5c115e53"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/overlay/tests/save-rescue-browser.test.cjs",
+    "sha256": "c1ca0c65834442f49060a8d279a1b46c0b8dfcd2a29daaa7ac7cf826061b870a"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/overlay/tests/editor-input-preservation-browser.test.cjs",
+    "sha256": "cb9753bcb57bdf23f2217bdeef1a341dae831f2ecc39680822bb9717f49cc717"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/overlay/tests/pwa-contract.test.cjs",
+    "sha256": "a970dca91b94477e9835c26f98216629ffe6faa74d41fa7f2320362030c3eceb"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/overlay/tests/error-persistence-browser.test.cjs",
+    "sha256": "4166b5a7f4c269da413e52ded28f8521a77dfab48a2d4ae791355c1c01d63f44"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/overlay/app/source/render.js",
+    "sha256": "a7d95ccd085c0441c535883bc1a7267fb95c18c7a9b9b63ccf872207543ccc1d"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/overlay/app/source/library.js",
+    "sha256": "77da82afe91af1dd8a349bee92d9c0ad9a1e54abd686e623ff2947dac2afaed3"
+  },
+  {
+    "path": "docs/prise-en-charge-backlog-20261025/audit-final/run/overlay/app/source/view.js",
+    "sha256": "c1e9682c3cc77d20cd1b24c65b04340784866d260dd314f17ec629158fa9bda6"
+  }
+]

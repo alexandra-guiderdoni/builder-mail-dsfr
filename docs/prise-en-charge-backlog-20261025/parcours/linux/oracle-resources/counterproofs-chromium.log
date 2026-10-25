@@ -1,0 +1,13 @@
+✔ la préparation géométrique refuse aussi une image cassée volontairement masquée (453.6355ms)
+✔ la préparation géométrique refuse un inventaire incomplet puis accepte toutes les images (424.654ms)
+✔ la préparation géométrique attend la réponse HTTP réelle d’une image retenue (441.175375ms)
+✔ la préparation géométrique refuse une URL ou un titre périmé puis accepte le document demandé (795.368125ms)
+✔ la préparation géométrique attend fonts.ready pour une vraie police HTTP retenue (428.674375ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2723.161666

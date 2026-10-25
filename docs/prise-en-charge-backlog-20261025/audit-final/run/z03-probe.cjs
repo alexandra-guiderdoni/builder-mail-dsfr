@@ -1,0 +1,11 @@
+const fs=require('node:fs'),vm=require('node:vm'),crypto=require('node:crypto');
+const folder='visual-tests/_results/runs/audit-20261025-115922108-395c08d1';
+const captures=[],A={Model:{document:x=>x,library:x=>x},State:{guard(){},exported(){}},doc:()=>({name:'Lettre de recette'}),library:{},notice(){},Render:{exportHtml:()=>'<p>preuve</p>',weight:()=>({}),warnings:()=>[]},Checks:{warnings:()=>[],confirm:async()=>true}};
+const context={window:{MailBuilder:A},TextEncoder,Date,document:{getElementById:()=>({addEventListener(){}})}};vm.runInNewContext(fs.readFileSync('app/source/files.js','utf8'),context);
+A.Files={...A.Files,json:(_,filename)=>captures.push(filename),download:(_,__,filename)=>captures.push(filename)};
+vm.runInNewContext(fs.readFileSync('app/source/library-actions.js','utf8'),context);
+(async()=>{A.Actions['export-document']();await A.Actions['export-mail']();A.Actions['export-library']();
+const labels=JSON.parse(fs.readFileSync('reference/catalogue.json','utf8'));const expr=fs.readFileSync('app/source/view.js','utf8').match(/select\.size = [^;]+;/)[0];
+const sizes=[false,true].map(narrow=>{const ctx={select:{},narrowWindow:{matches:narrow},visible:labels,families:[...new Set(labels.map(x=>x[1]))]};vm.runInNewContext(expr,ctx);return {narrowWindow:narrow,size:ctx.select.size,expectedByRecipe:52,componentCount:ctx.visible.length,familyCount:ctx.families.length}});
+const result={method:'Source execution at controlled download and viewport boundaries; no browser, no build',exports:{actual:captures,expectedByRecipe:['composition.courriel.json','courriel.html','bibliotheque.courriels.json']},catalogue:sizes,source_sha256:Object.fromEntries(['app/source/files.js','app/source/library-actions.js','app/source/view.js','scripts/recipe_firefox.mjs','scripts/recipe_page_flow_firefox.mjs'].map(p=>[p,crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex')]))};
+fs.writeFileSync(folder+'/z03-source-probes.json',JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result));})();

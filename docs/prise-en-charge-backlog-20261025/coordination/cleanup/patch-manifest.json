@@ -1,0 +1,8 @@
+{
+  "source": "/Users/alex/.codex/plugins/cache/personal/shipguard-codex/2.18.0+codex.local-20261025112131/skills/sg-visual-run/SKILL.md",
+  "version": "2.18.0",
+  "source_sha256": "2a923c2d4911b9078d087cf049777e8c02c5c2391cc31b4fa10b5e6c84ab7915",
+  "proposed_sha256": "1b996db6bf26d0b170fe85206bae9d43cdf747cb57aa3cdd79ea280d13f18b51",
+  "installed_plugin_modified": false,
+  "scope": "sg-visual-run session ownership, cleanup and recovery only"
+}

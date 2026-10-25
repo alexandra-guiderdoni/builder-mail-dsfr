@@ -1,0 +1,44 @@
+[
+  {
+    "engine": "chromium",
+    "exit_code": 0,
+    "footer": [
+      "ℹ tests 13",
+      "ℹ suites 0",
+      "ℹ pass 13",
+      "ℹ fail 0",
+      "ℹ cancelled 0",
+      "ℹ skipped 0",
+      "ℹ todo 0",
+      "ℹ duration_ms 11105.00975"
+    ]
+  },
+  {
+    "engine": "firefox",
+    "exit_code": 0,
+    "footer": [
+      "ℹ tests 13",
+      "ℹ suites 0",
+      "ℹ pass 13",
+      "ℹ fail 0",
+      "ℹ cancelled 0",
+      "ℹ skipped 0",
+      "ℹ todo 0",
+      "ℹ duration_ms 29511.827417"
+    ]
+  },
+  {
+    "engine": "webkit",
+    "exit_code": 0,
+    "footer": [
+      "ℹ tests 13",
+      "ℹ suites 0",
+      "ℹ pass 13",
+      "ℹ fail 0",
+      "ℹ cancelled 0",
+      "ℹ skipped 0",
+      "ℹ todo 0",
+      "ℹ duration_ms 21490.823"
+    ]
+  }
+]

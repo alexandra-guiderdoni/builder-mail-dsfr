@@ -1,0 +1,1058 @@
+{
+  "status": "NOT_EXECUTED",
+  "issues": [
+    13,
+    52
+  ],
+  "candidate": {
+    "baseCommit": "395c08d1dfa4d0b8e41416da798bf0313a8bd379",
+    "applicationVersion": "de68d7f3ea4e8fc9",
+    "portableSha256": "622a289ddbaa4fdacc0ff96ff85caba21e4ab85225c3e622dc0ecebf2d3c23f7",
+    "sourceDiffSha256": "2d37c5fc15f69f1222be28cab3d8b78d364dce1669a862bc4d9582fc1eddf300"
+  },
+  "operator_authorized": null,
+  "run_date": null,
+  "operator_reference_without_personal_data": null,
+  "environment": {
+    "windows_version_build": null,
+    "windows_scaling": null,
+    "firefox_version_channel": null,
+    "firefox_zoom": null,
+    "disposable_profile_reference": null,
+    "screen_reader_version": null
+  },
+  "cases": [
+    {
+      "client": "Outlook classique Windows",
+      "client_version_build": null,
+      "format": "PNG",
+      "route": "A_copie_enrichie_UI",
+      "exact_insertion_path": null,
+      "status": "NOT_EXECUTED",
+      "checks": {
+        "import_ui": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "copy_or_html_insertion": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "images_and_ratio": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "retouch": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "text_order": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "links_keyboard": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "screen_reader_alternatives": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "blocked_images": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "centering_titles_spacing": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "windows_scaling": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "dark_light_and_narrow_wide": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "plain_text": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "authorized_send": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "received_message": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "mime_and_mso_after_transport": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        }
+      },
+      "notes": null
+    },
+    {
+      "client": "Outlook classique Windows",
+      "client_version_build": null,
+      "format": "PNG",
+      "route": "B_HTML_telecharge_voie_a_preciser",
+      "exact_insertion_path": null,
+      "status": "NOT_EXECUTED",
+      "checks": {
+        "import_ui": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "copy_or_html_insertion": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "images_and_ratio": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "retouch": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "text_order": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "links_keyboard": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "screen_reader_alternatives": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "blocked_images": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "centering_titles_spacing": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "windows_scaling": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "dark_light_and_narrow_wide": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "plain_text": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "authorized_send": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "received_message": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "mime_and_mso_after_transport": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        }
+      },
+      "notes": null
+    },
+    {
+      "client": "Outlook classique Windows",
+      "client_version_build": null,
+      "format": "JPEG",
+      "route": "A_copie_enrichie_UI",
+      "exact_insertion_path": null,
+      "status": "NOT_EXECUTED",
+      "checks": {
+        "import_ui": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "copy_or_html_insertion": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "images_and_ratio": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "retouch": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "text_order": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "links_keyboard": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "screen_reader_alternatives": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "blocked_images": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "centering_titles_spacing": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "windows_scaling": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "dark_light_and_narrow_wide": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "plain_text": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "authorized_send": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "received_message": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "mime_and_mso_after_transport": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        }
+      },
+      "notes": null
+    },
+    {
+      "client": "Outlook classique Windows",
+      "client_version_build": null,
+      "format": "JPEG",
+      "route": "B_HTML_telecharge_voie_a_preciser",
+      "exact_insertion_path": null,
+      "status": "NOT_EXECUTED",
+      "checks": {
+        "import_ui": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "copy_or_html_insertion": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "images_and_ratio": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "retouch": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "text_order": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "links_keyboard": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "screen_reader_alternatives": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "blocked_images": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "centering_titles_spacing": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "windows_scaling": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "dark_light_and_narrow_wide": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "plain_text": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "authorized_send": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "received_message": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "mime_and_mso_after_transport": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        }
+      },
+      "notes": null
+    },
+    {
+      "client": "Nouveau Outlook Windows",
+      "client_version_build": null,
+      "format": "PNG",
+      "route": "A_copie_enrichie_UI",
+      "exact_insertion_path": null,
+      "status": "NOT_EXECUTED",
+      "checks": {
+        "import_ui": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "copy_or_html_insertion": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "images_and_ratio": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "retouch": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "text_order": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "links_keyboard": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "screen_reader_alternatives": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "blocked_images": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "centering_titles_spacing": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "windows_scaling": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "dark_light_and_narrow_wide": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "plain_text": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "authorized_send": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "received_message": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "mime_and_mso_after_transport": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        }
+      },
+      "notes": null
+    },
+    {
+      "client": "Nouveau Outlook Windows",
+      "client_version_build": null,
+      "format": "PNG",
+      "route": "B_HTML_telecharge_voie_a_preciser",
+      "exact_insertion_path": null,
+      "status": "NOT_EXECUTED",
+      "checks": {
+        "import_ui": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "copy_or_html_insertion": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "images_and_ratio": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "retouch": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "text_order": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "links_keyboard": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "screen_reader_alternatives": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "blocked_images": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "centering_titles_spacing": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "windows_scaling": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "dark_light_and_narrow_wide": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "plain_text": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "authorized_send": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "received_message": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "mime_and_mso_after_transport": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        }
+      },
+      "notes": null
+    },
+    {
+      "client": "Nouveau Outlook Windows",
+      "client_version_build": null,
+      "format": "JPEG",
+      "route": "A_copie_enrichie_UI",
+      "exact_insertion_path": null,
+      "status": "NOT_EXECUTED",
+      "checks": {
+        "import_ui": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "copy_or_html_insertion": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "images_and_ratio": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "retouch": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "text_order": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "links_keyboard": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "screen_reader_alternatives": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "blocked_images": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "centering_titles_spacing": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "windows_scaling": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "dark_light_and_narrow_wide": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "plain_text": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "authorized_send": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "received_message": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "mime_and_mso_after_transport": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        }
+      },
+      "notes": null
+    },
+    {
+      "client": "Nouveau Outlook Windows",
+      "client_version_build": null,
+      "format": "JPEG",
+      "route": "B_HTML_telecharge_voie_a_preciser",
+      "exact_insertion_path": null,
+      "status": "NOT_EXECUTED",
+      "checks": {
+        "import_ui": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "copy_or_html_insertion": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "images_and_ratio": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "retouch": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "text_order": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "links_keyboard": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "screen_reader_alternatives": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "blocked_images": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "centering_titles_spacing": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "windows_scaling": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "dark_light_and_narrow_wide": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "plain_text": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "authorized_send": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "received_message": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "mime_and_mso_after_transport": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        }
+      },
+      "notes": null
+    },
+    {
+      "client": "Mélissa",
+      "client_version_build": null,
+      "format": "PNG",
+      "route": "A_copie_enrichie_UI",
+      "exact_insertion_path": null,
+      "status": "NOT_EXECUTED",
+      "checks": {
+        "import_ui": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "copy_or_html_insertion": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "images_and_ratio": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "retouch": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "text_order": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "links_keyboard": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "screen_reader_alternatives": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "blocked_images": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "centering_titles_spacing": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "windows_scaling": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "dark_light_and_narrow_wide": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "plain_text": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "authorized_send": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "received_message": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "mime_and_mso_after_transport": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        }
+      },
+      "notes": null
+    },
+    {
+      "client": "Mélissa",
+      "client_version_build": null,
+      "format": "PNG",
+      "route": "B_HTML_telecharge_voie_a_preciser",
+      "exact_insertion_path": null,
+      "status": "NOT_EXECUTED",
+      "checks": {
+        "import_ui": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "copy_or_html_insertion": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "images_and_ratio": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "retouch": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "text_order": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "links_keyboard": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "screen_reader_alternatives": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "blocked_images": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "centering_titles_spacing": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "windows_scaling": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "dark_light_and_narrow_wide": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "plain_text": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "authorized_send": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "received_message": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "mime_and_mso_after_transport": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        }
+      },
+      "notes": null
+    },
+    {
+      "client": "Mélissa",
+      "client_version_build": null,
+      "format": "JPEG",
+      "route": "A_copie_enrichie_UI",
+      "exact_insertion_path": null,
+      "status": "NOT_EXECUTED",
+      "checks": {
+        "import_ui": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "copy_or_html_insertion": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "images_and_ratio": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "retouch": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "text_order": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "links_keyboard": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "screen_reader_alternatives": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "blocked_images": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "centering_titles_spacing": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "windows_scaling": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "dark_light_and_narrow_wide": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "plain_text": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "authorized_send": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "received_message": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "mime_and_mso_after_transport": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        }
+      },
+      "notes": null
+    },
+    {
+      "client": "Mélissa",
+      "client_version_build": null,
+      "format": "JPEG",
+      "route": "B_HTML_telecharge_voie_a_preciser",
+      "exact_insertion_path": null,
+      "status": "NOT_EXECUTED",
+      "checks": {
+        "import_ui": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "copy_or_html_insertion": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "images_and_ratio": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "retouch": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "text_order": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "links_keyboard": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "screen_reader_alternatives": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "blocked_images": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "centering_titles_spacing": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "windows_scaling": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "dark_light_and_narrow_wide": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "plain_text": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "authorized_send": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "received_message": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        },
+        "mime_and_mso_after_transport": {
+          "status": "NOT_EXECUTED",
+          "observed": null,
+          "evidence": []
+        }
+      },
+      "notes": null
+    }
+  ]
+}

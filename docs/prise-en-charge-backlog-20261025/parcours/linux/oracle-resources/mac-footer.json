@@ -1,0 +1,32 @@
+[
+  {
+    "engine": "chromium",
+    "tests": 13.0,
+    "pass": 13.0,
+    "fail": 0.0,
+    "cancelled": 0.0,
+    "skipped": 0.0,
+    "todo": 0.0,
+    "duration_ms": 10327.7775
+  },
+  {
+    "engine": "firefox",
+    "tests": 13.0,
+    "pass": 13.0,
+    "fail": 0.0,
+    "cancelled": 0.0,
+    "skipped": 0.0,
+    "todo": 0.0,
+    "duration_ms": 27284.5335
+  },
+  {
+    "engine": "webkit",
+    "tests": 13.0,
+    "pass": 13.0,
+    "fail": 0.0,
+    "cancelled": 0.0,
+    "skipped": 0.0,
+    "todo": 0.0,
+    "duration_ms": 20646.807334
+  }
+]

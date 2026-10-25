@@ -1,13 +1,15 @@
 const test = require('node:test');
-const {click, open, enterEditor, chromium, assert} = require('./browser-support.cjs');
+const {click, open, enterEditor, chromium, assert, nativeAxTree, note} = require('./browser-support.cjs');
 
-// Intitulés accessibles lus dans l'arbre d'accessibilité de Chromium (CDP), pas dans le DOM.
+// Arbre natif CDP sous Chromium ; noms ARIA calculés par Playwright sur les autres moteurs.
 async function buttons(page) {
-  const cdp = await page.context().newCDPSession(page);
-  try {
-    const {nodes} = await cdp.send('Accessibility.getFullAXTree');
-    return nodes.filter(n => !n.ignored && n.role?.value === 'button').map(n => n.name?.value || '');
-  } finally { await cdp.detach(); }
+  const nodes = await nativeAxTree(page.context(), page);
+  if (nodes) return nodes.filter(n => !n.ignored && n.role?.value === 'button').map(n => n.name?.value || '');
+  note({kind: 'aria-snapshot', property: 'button-accessible-names', nativeAccessibilityTree: false});
+  return (await page.locator('body').ariaSnapshot()).split('\n').flatMap(line => {
+    const match = /^\s*- button "(.*?)"(?: \[.*?\])?(?::.*)?$/.exec(line);
+    return match ? [match[1]] : [];
+  });
 }
 const scoped = names => names.filter(n => /^(Dupliquer|Retirer|Supprimer)/.test(n));
 

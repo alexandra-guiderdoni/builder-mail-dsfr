@@ -69,7 +69,20 @@ for (const [engine, launcher] of [['Chromium', chromium], ['WebKit', webkit]]) {
       assert.deepEqual(templates.map(t => t.subject), [DATED, UNDATED]);
 
       await page.locator('#saved-templates').selectOption({label: 'Modèle daté'}).catch(() => page.locator('#saved-templates').selectOption(templates[0].id));
+      // Retenir la notification de succès IndexedDB, sans changer l’écriture réelle.
+      await page.evaluate(() => {
+        const descriptor = Object.getOwnPropertyDescriptor(IDBTransaction.prototype, 'oncomplete');
+        Object.defineProperty(IDBTransaction.prototype, 'oncomplete', {...descriptor, set(callback) {
+          if (this.mode !== 'readwrite') return descriptor.set.call(this, callback);
+          Object.defineProperty(IDBTransaction.prototype, 'oncomplete', descriptor);
+          descriptor.set.call(this, event => { window.releaseCreationSave = () => callback.call(this, event); });
+        }});
+      });
       await click(page, '[data-action=use-template]'); await page.locator('#editor-page').waitFor({state: 'visible'});
+      await page.waitForFunction(() => typeof window.releaseCreationSave === 'function');
+      assert.match(await page.locator('#save-state').textContent(), /Sauvegarde en cours/);
+      await page.evaluate(() => window.releaseCreationSave());
+      await page.locator('#notice').filter({hasText: /Composition créée depuis le modèle.*L’objet d’origine contenait une date/}).waitFor();
       let doc = await last(page);
       assert.equal(doc.name, 'Modèle daté · composition');
       assert.equal(doc.subject, 'Modèle daté · composition', 'aucun objet daté hérité');

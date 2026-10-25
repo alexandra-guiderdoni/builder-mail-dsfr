@@ -1,0 +1,15 @@
+# audit-results.toon
+# run:audit-20261025-142735923-395c08d1 base:395c08d1dfa4d0b8e41416da798bf0313a8bd379 repo:builder-mail-dsfr mode:quick ts:2026-10-25T14:36:51.993323+00:00 rounds:1 agents:5
+# scope:full diff_files:0 total:168
+# summary: total=9 critical=0 high=0 medium=8 low=1
+# verified: checked=0 confirmed=0 uncertain=0 rejected=0
+# bugs[9]{id,severity,category,fix_tier,file,line,title,verified,score}:
+r1-z01-001,low,dead-code,mechanical,app/source/view.js,151,catalogPreview possède deux déclarations strictement identiques,null,null
+r1-z02-001,medium,logic-error,test-first,scripts/recipe_firefox.mjs,40,La recette Firefox attend les anciens noms fixes des exports,null,null
+r1-z02-002,medium,logic-error,test-first,scripts/recipe_page_flow_firefox.mjs,57,La recette de défilement exige une taille de catalogue périmée,null,null
+r1-z02-003,medium,error-handling,test-first,scripts/audit_server.cjs,8,Une URL malformée rejette le callback du serveur de recette,null,null
+r1-z03-001,medium,logic-error,test-first,tests/creation-browser.test.cjs,29,La matrice attribue cinq scénarios WebKit au moteur demandé,null,null
+r1-z04-001,medium,resource-leak,test-first,tests/preview-resources-browser.test.cjs,45,Un échec navigateur laisse le serveur de contre-épreuve actif,null,null
+r1-z04-002,medium,error-handling,test-first,tests/run-engines.cjs,59,Un processus interrompu après un succès TAP donne un bilan vert,null,null
+r1-z04-003,medium,logic-error,test-first,tests/narrow-window-browser.test.cjs,5,Onze scénarios fixes sont attribués au moteur demandé,null,null
+r1-z05-001,medium,logic-error,test-first,scripts/audit_receipt.py,105,Le reçu accepte une suite contenant un test annulé,null,null

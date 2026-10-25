@@ -1,0 +1,213 @@
+{
+  "run_id": "audit-20261025-142735923-395c08d1",
+  "base_sha": "395c08d1dfa4d0b8e41416da798bf0313a8bd379",
+  "candidate_overlay_sha256": "c43f9e5f67bcee948de67b57d9a51d4b20454bd1ed5a5bdd291de3ecc57b2ec5",
+  "checked": 3,
+  "rejected": 0,
+  "retained": 3,
+  "records": [
+    {
+      "bug_id": "r1-z04-001",
+      "worktree": "/Users/alex/Claude-worktrees/audit-20261025-142735923-395c08d1-z04",
+      "original_replays": [
+        {
+          "query": "rg -n 'after\\\\(|afterEach\\\\(|closeAllConnections|server\\\\.close|host\\\\.close|chromium\\\\.launch|await server\\\\(|await resourceServer\\\\(' tests/preview-resources-browser.test.cjs tests/preview-size-browser.test.cjs tests/browser-support.cjs",
+          "exit_code": 2,
+          "stdout": "",
+          "stderr": "rg: regex parse error:\n    (?:after\\\\(|afterEach\\\\(|closeAllConnections|server\\\\.close|host\\\\.close|chromium\\\\.launch|await server\\\\(|await resourceServer\\\\()\n                                                                                                             ^\nerror: unclosed group\n"
+        }
+      ],
+      "replayed_arguments": [
+        "rg",
+        "-n",
+        "after\\(|afterEach\\(|closeAllConnections|server\\.close|host\\.close|chromium\\.launch|await server\\(|await resourceServer\\(",
+        "tests/preview-resources-browser.test.cjs",
+        "tests/preview-size-browser.test.cjs",
+        "tests/browser-support.cjs"
+      ],
+      "replayed_exit_code": 0,
+      "matching_files": [
+        "tests/preview-resources-browser.test.cjs",
+        "tests/preview-size-browser.test.cjs"
+      ],
+      "all_matches_inspected": true,
+      "canonical_negative_evidence": {
+        "claim": "missing-construct",
+        "complete": true,
+        "scope": [
+          "tests/preview-resources-browser.test.cjs",
+          "tests/preview-size-browser.test.cjs",
+          "tests/browser-support.cjs"
+        ],
+        "exclusions": [
+          ".git/",
+          "node_modules/",
+          "visual-tests/_results/",
+          "generated distributions"
+        ],
+        "searches": [
+          {
+            "query": "rg -n 'after\\(|afterEach\\(|closeAllConnections|server\\.close|host\\.close|chromium\\.launch|await server\\(|await resourceServer\\(' tests/preview-resources-browser.test.cjs tests/preview-size-browser.test.cjs tests/browser-support.cjs",
+            "mode": "regex",
+            "matches": [
+              "tests/preview-resources-browser.test.cjs:45:  const host = await resourceServer(), browser = await chromium.launch();",
+              "tests/preview-resources-browser.test.cjs:58:  } finally { await browser.close(); await host.close(); }",
+              "tests/preview-size-browser.test.cjs:42:  const browser = await chromium.launch();",
+              "tests/preview-size-browser.test.cjs:80:  const browser = await chromium.launch();",
+              "tests/preview-size-browser.test.cjs:113:  const host = await server(), browser = await chromium.launch();",
+              "tests/preview-size-browser.test.cjs:136:  } finally { await browser.close(); await host.close(); }",
+              "tests/preview-size-browser.test.cjs:140:  const host = await server(), browser = await chromium.launch();",
+              "tests/preview-size-browser.test.cjs:165:  } finally { await browser.close(); await host.close(); }",
+              "tests/preview-size-browser.test.cjs:169:  const host = await server(), browser = await chromium.launch();",
+              "tests/preview-size-browser.test.cjs:200:  } finally { await browser.close(); await host.close(); }",
+              "tests/preview-size-browser.test.cjs:204:  const browser = await chromium.launch();",
+              "tests/preview-size-browser.test.cjs:225:  const browser = await chromium.launch();"
+            ]
+          }
+        ],
+        "inspected_files": [
+          "tests/preview-resources-browser.test.cjs",
+          "tests/preview-size-browser.test.cjs",
+          "tests/browser-support.cjs"
+        ],
+        "orchestrator_validation": "Original serialized regex quoting replayed first; independently recorded correctly escaped regex replayed in exact frozen c43 worktree. Native artifacts unchanged."
+      },
+      "decision": "retained_after_independent_complete_search"
+    },
+    {
+      "bug_id": "r1-z04-002",
+      "worktree": "/Users/alex/Claude-worktrees/audit-20261025-142735923-395c08d1-z04",
+      "original_replays": [
+        {
+          "query": "rg -n 'run\\\\.status|run\\\\.signal|run\\\\.error|runEngine|parseTap|timeout' tests/run-engines.cjs tests/run-engines.test.cjs",
+          "exit_code": 0,
+          "stdout": "tests/run-engines.test.cjs:3:const {parseTap, classify, summarize, exitCode, selectFiles} = require('./run-engines.cjs');\ntests/run-engines.test.cjs:10:  assert.deepEqual(parseTap(tap), [\ntests/run-engines.cjs:10:function parseTap(output) {\ntests/run-engines.cjs:52:  const run = spawnSync(process.execPath, ['-e', `const p=require(process.env.PLAYWRIGHT_MODULE||'playwright');p[${JSON.stringify(engine)}].launch().then(b=>b.close()).then(()=>process.exit(0),e=>{console.error(String(e.message).split('\\\\n')[0]);process.exit(1)})`], {cwd: root, encoding: 'utf8', timeout: 60000});\ntests/run-engines.cjs:55:function runEngine(engine, files, dir, root, registry, timeoutMs) {\ntests/run-engines.cjs:58:    const run = spawnSync(process.execPath, ['--test', '--test-concurrency=1', '--test-reporter=tap', path.join(root, 'tests', file)], {cwd: root, encoding: 'utf8', timeout: timeoutMs, maxBuffer: 64 * 1024 * 1024, env: {...process.env, MAIL_BUILDER_ENGINE: engine, MAIL_BUILDER_NOTES: notes}});\ntests/run-engines.cjs:59:    const parsed = parseTap(run.stdout || '');\ntests/run-engines.cjs:88:  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'mail-builder-engines-')), timeoutMs = Number(option('timeout-ms')) || 180000;\ntests/run-engines.cjs:93:    const run = runEngine(engine, files, dir, root, registry, timeoutMs);\ntests/run-engines.cjs:101:module.exports = {parseTap, classify, summarize, exitCode, selectFiles, ENGINES};\n",
+          "stderr": ""
+        }
+      ],
+      "replayed_arguments": [
+        "rg",
+        "-n",
+        "run\\.status|run\\.signal|run\\.error|runEngine|parseTap|timeout",
+        "tests/run-engines.cjs",
+        "tests/run-engines.test.cjs"
+      ],
+      "replayed_exit_code": 0,
+      "matching_files": [
+        "tests/run-engines.cjs",
+        "tests/run-engines.test.cjs"
+      ],
+      "all_matches_inspected": true,
+      "canonical_negative_evidence": {
+        "claim": "missing-construct",
+        "complete": true,
+        "scope": [
+          "tests/run-engines.cjs",
+          "tests/run-engines.test.cjs"
+        ],
+        "exclusions": [
+          ".git/",
+          "node_modules/",
+          "visual-tests/_results/",
+          "generated distributions"
+        ],
+        "searches": [
+          {
+            "query": "rg -n 'run\\.status|run\\.signal|run\\.error|runEngine|parseTap|timeout' tests/run-engines.cjs tests/run-engines.test.cjs",
+            "mode": "regex",
+            "matches": [
+              "tests/run-engines.cjs:10:function parseTap(output) {",
+              "tests/run-engines.cjs:52:  const run = spawnSync(process.execPath, ['-e', `const p=require(process.env.PLAYWRIGHT_MODULE||'playwright');p[${JSON.stringify(engine)}].launch().then(b=>b.close()).then(()=>process.exit(0),e=>{console.error(String(e.message).split('\\\\n')[0]);process.exit(1)})`], {cwd: root, encoding: 'utf8', timeout: 60000});",
+              "tests/run-engines.cjs:53:  return run.status === 0 ? null : (run.stderr.trim() || 'lancement impossible');",
+              "tests/run-engines.cjs:55:function runEngine(engine, files, dir, root, registry, timeoutMs) {",
+              "tests/run-engines.cjs:58:    const run = spawnSync(process.execPath, ['--test', '--test-concurrency=1', '--test-reporter=tap', path.join(root, 'tests', file)], {cwd: root, encoding: 'utf8', timeout: timeoutMs, maxBuffer: 64 * 1024 * 1024, env: {...process.env, MAIL_BUILDER_ENGINE: engine, MAIL_BUILDER_NOTES: notes}});",
+              "tests/run-engines.cjs:59:    const parsed = parseTap(run.stdout || '');",
+              "tests/run-engines.cjs:60:    if (!parsed.length) parsed.push({name: '(fichier entier)', status: 'fail', message: run.error ? String(run.error.message) : `aucun r\u00e9sultat TAP, code ${run.status}`});",
+              "tests/run-engines.cjs:88:  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'mail-builder-engines-')), timeoutMs = Number(option('timeout-ms')) || 180000;",
+              "tests/run-engines.cjs:93:    const run = runEngine(engine, files, dir, root, registry, timeoutMs);",
+              "tests/run-engines.cjs:101:module.exports = {parseTap, classify, summarize, exitCode, selectFiles, ENGINES};",
+              "tests/run-engines.test.cjs:3:const {parseTap, classify, summarize, exitCode, selectFiles} = require('./run-engines.cjs');",
+              "tests/run-engines.test.cjs:10:  assert.deepEqual(parseTap(tap), ["
+            ]
+          }
+        ],
+        "inspected_files": [
+          "tests/run-engines.cjs",
+          "tests/run-engines.test.cjs"
+        ],
+        "orchestrator_validation": "Original serialized regex quoting replayed first; independently recorded correctly escaped regex replayed in exact frozen c43 worktree. Native artifacts unchanged."
+      },
+      "decision": "retained_after_independent_complete_search"
+    },
+    {
+      "bug_id": "r1-z05-001",
+      "worktree": "/Users/alex/Claude-worktrees/audit-20261025-142735923-395c08d1-z05",
+      "original_replays": [
+        {
+          "query": "rg -n 'parse_suite|suite\\.log|BUILDER_AUDIT_TESTS' scripts tests",
+          "exit_code": 0,
+          "stdout": "scripts/audit_receipt.py:23:EXPECTED_TESTS = int(os.environ.get(\"BUILDER_AUDIT_TESTS\", \"72\"))\nscripts/audit_receipt.py:102:def parse_suite(text):\nscripts/audit_receipt.py:255:            counts = parse_suite(log.read_text())\nscripts/audit_receipt.py:405:    suite_path = RAW / \"suite.log\"\nscripts/audit_receipt.py:406:    suite = parse_suite(suite_path.read_text())\ntests/audit_receipt_contract.py:46:    log = root / \"suite.log\"\ntests/audit_receipt_contract.py:59:            \"log\": \"suite.log\",\ntests/audit_receipt_contract.py:104:# parse_suite : les compteurs du rapport de tests viennent du journal brut.\ntests/audit_receipt_contract.py:105:counts = module.parse_suite(\"# pass 7\\n# fail 2\\n# skipped 1\\n\")\ntests/audit_receipt_contract.py:106:expect(counts == {\"passed\": 7, \"failed\": 2, \"skipped\": 1}, \"parse_suite : %r\" % counts)\ntests/audit_receipt_contract.py:108:    module.parse_suite(\"aucun compteur ici\")\ntests/audit_receipt_contract.py:223:    (base / \"suite.log\").write_text(\"\u2139 pass 3\\n\u2139 fail 0\\n\u2139 skipped 0\\n# gonfl\u00e9\\n\")\n",
+          "stderr": ""
+        }
+      ],
+      "replayed_arguments": [
+        "rg",
+        "-n",
+        "parse_suite|suite\\.log|BUILDER_AUDIT_TESTS",
+        "scripts/",
+        "tests/"
+      ],
+      "replayed_exit_code": 0,
+      "matching_files": [
+        "scripts/audit_receipt.py",
+        "tests/audit_receipt_contract.py"
+      ],
+      "all_matches_inspected": true,
+      "canonical_negative_evidence": {
+        "claim": "missing-construct",
+        "complete": true,
+        "scope": [
+          "scripts/",
+          "tests/"
+        ],
+        "exclusions": [
+          ".git/",
+          "node_modules/",
+          "visual-tests/_results/",
+          "generated distributions",
+          "historical docs"
+        ],
+        "searches": [
+          {
+            "query": "rg -n 'parse_suite|suite\\.log|BUILDER_AUDIT_TESTS' scripts/ tests/",
+            "mode": "regex",
+            "matches": [
+              "scripts/audit_receipt.py:23:EXPECTED_TESTS = int(os.environ.get(\"BUILDER_AUDIT_TESTS\", \"72\"))",
+              "scripts/audit_receipt.py:102:def parse_suite(text):",
+              "scripts/audit_receipt.py:255:            counts = parse_suite(log.read_text())",
+              "scripts/audit_receipt.py:405:    suite_path = RAW / \"suite.log\"",
+              "scripts/audit_receipt.py:406:    suite = parse_suite(suite_path.read_text())",
+              "tests/audit_receipt_contract.py:46:    log = root / \"suite.log\"",
+              "tests/audit_receipt_contract.py:59:            \"log\": \"suite.log\",",
+              "tests/audit_receipt_contract.py:104:# parse_suite : les compteurs du rapport de tests viennent du journal brut.",
+              "tests/audit_receipt_contract.py:105:counts = module.parse_suite(\"# pass 7\\n# fail 2\\n# skipped 1\\n\")",
+              "tests/audit_receipt_contract.py:106:expect(counts == {\"passed\": 7, \"failed\": 2, \"skipped\": 1}, \"parse_suite : %r\" % counts)",
+              "tests/audit_receipt_contract.py:108:    module.parse_suite(\"aucun compteur ici\")",
+              "tests/audit_receipt_contract.py:223:    (base / \"suite.log\").write_text(\"\u2139 pass 3\\n\u2139 fail 0\\n\u2139 skipped 0\\n# gonfl\u00e9\\n\")"
+            ]
+          }
+        ],
+        "inspected_files": [
+          "scripts/audit_receipt.py",
+          "tests/audit_receipt_contract.py",
+          "tests/audit-receipt.test.cjs"
+        ],
+        "orchestrator_validation": "Original serialized regex quoting replayed first; independently recorded correctly escaped regex replayed in exact frozen c43 worktree. Native artifacts unchanged."
+      },
+      "decision": "retained_after_independent_complete_search"
+    }
+  ],
+  "critical_high_count": 0,
+  "verification_agents": "not required; no critical/high findings",
+  "checked_at": "2026-10-25T14:36:00.228207+00:00"
+}

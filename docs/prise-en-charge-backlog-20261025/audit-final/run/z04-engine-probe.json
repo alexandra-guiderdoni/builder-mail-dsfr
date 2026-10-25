@@ -1,0 +1,60 @@
+{
+  "probe": "Execute test registration and stop at launcher boundary; no browser started",
+  "requestedEngine": "firefox",
+  "observed": [
+    {
+      "test": "point de départ « Information de service » : nom et objet explicites, modifiables immédiatement (Chromium)",
+      "actualLauncher": "firefox",
+      "matrixAssignedEngine": "firefox"
+    },
+    {
+      "test": "point de départ « Lettre d’information » : nom et objet explicites, modifiables immédiatement (Chromium)",
+      "actualLauncher": "firefox",
+      "matrixAssignedEngine": "firefox"
+    },
+    {
+      "test": "point de départ « Invitation » : nom et objet explicites, modifiables immédiatement (Chromium)",
+      "actualLauncher": "firefox",
+      "matrixAssignedEngine": "firefox"
+    },
+    {
+      "test": "point de départ « modèle enregistré » : objet daté remplacé et signalé, objet sans date conservé (Chromium)",
+      "actualLauncher": "firefox",
+      "matrixAssignedEngine": "firefox"
+    },
+    {
+      "test": "point de départ « copie d’une composition » : objet daté remplacé et signalé, nom numéroté (Chromium)",
+      "actualLauncher": "firefox",
+      "matrixAssignedEngine": "firefox"
+    },
+    {
+      "test": "point de départ « Information de service » : nom et objet explicites, modifiables immédiatement (WebKit)",
+      "actualLauncher": "webkit",
+      "matrixAssignedEngine": "firefox"
+    },
+    {
+      "test": "point de départ « Lettre d’information » : nom et objet explicites, modifiables immédiatement (WebKit)",
+      "actualLauncher": "webkit",
+      "matrixAssignedEngine": "firefox"
+    },
+    {
+      "test": "point de départ « Invitation » : nom et objet explicites, modifiables immédiatement (WebKit)",
+      "actualLauncher": "webkit",
+      "matrixAssignedEngine": "firefox"
+    },
+    {
+      "test": "point de départ « modèle enregistré » : objet daté remplacé et signalé, objet sans date conservé (WebKit)",
+      "actualLauncher": "webkit",
+      "matrixAssignedEngine": "firefox"
+    },
+    {
+      "test": "point de départ « copie d’une composition » : objet daté remplacé et signalé, nom numéroté (WebKit)",
+      "actualLauncher": "webkit",
+      "matrixAssignedEngine": "firefox"
+    }
+  ],
+  "counts": {
+    "firefox": 5,
+    "webkit": 5
+  }
+}

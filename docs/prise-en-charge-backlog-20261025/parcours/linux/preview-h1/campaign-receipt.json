@@ -1,0 +1,20 @@
+{
+  "classification": "H1-concurrency-not-required-sequential-also-stalls",
+  "completedTrials": 12,
+  "cancelledSetupTrials": 1,
+  "summary": {
+    "A": {
+      "runs": 6,
+      "pass": 3,
+      "boundedDecodeStalls": 3
+    },
+    "B": {
+      "runs": 6,
+      "pass": 4,
+      "boundedDecodeStalls": 2
+    }
+  },
+  "sourceChanged": [],
+  "allOwnedContainersRemoved": true,
+  "finishedAt": "2026-10-25T12:50:37.451244+00:00"
+}

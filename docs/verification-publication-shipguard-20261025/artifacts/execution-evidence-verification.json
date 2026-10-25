@@ -1,0 +1,71 @@
+{
+  "verified_at": "2026-10-25T14:28:27.078359+00:00",
+  "candidate_overlay_sha256": "c43f9e5f67bcee948de67b57d9a51d4b20454bd1ed5a5bdd291de3ecc57b2ec5",
+  "method": "Read supplied historical logs/receipts and recompute their SHA256/current source correspondence; no heavy suite rerun",
+  "checks": [
+    {
+      "check": "sourceManifestSha256",
+      "expected": "24096427781f1d0aedd9e22425650d4d3d99b962af1c7374e5c0efdfe7c66493",
+      "actual": "24096427781f1d0aedd9e22425650d4d3d99b962af1c7374e5c0efdfe7c66493",
+      "passed": true
+    },
+    {
+      "check": "fullLogSha256",
+      "expected": "f41224e2f93ed2e24790bca82949eedaf29e6dbae73a38754f7208cbc84348ef",
+      "actual": "f41224e2f93ed2e24790bca82949eedaf29e6dbae73a38754f7208cbc84348ef",
+      "passed": true
+    },
+    {
+      "check": "checkLogSha256",
+      "expected": "2c5b0592fba6f95b67f8652a4532a338860105551ff0730d53d11a5c3912d63e",
+      "actual": "2c5b0592fba6f95b67f8652a4532a338860105551ff0730d53d11a5c3912d63e",
+      "passed": true
+    },
+    {
+      "check": "final76 Linux snapshot matches",
+      "mismatches": [],
+      "passed": true
+    },
+    {
+      "check": "full168 Linux snapshot matches",
+      "mismatches": [],
+      "passed": true
+    },
+    {
+      "check": "macos counts",
+      "counts": {
+        "tests": 397,
+        "pass": 397,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "passed": true,
+      "log_sha256": "e8645af92e7e48ec592acaed03fde1680e728591b65e60c0cc5023d2988f8ba9"
+    },
+    {
+      "check": "linux counts",
+      "counts": {
+        "tests": 397,
+        "pass": 397,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "passed": true,
+      "log_sha256": "f41224e2f93ed2e24790bca82949eedaf29e6dbae73a38754f7208cbc84348ef"
+    },
+    {
+      "check": "overlay receipts",
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "limitations": [
+    "Historical execution receipts establish these runs, not independent rerun",
+    "Linux ARM64 only; no x86_64 proof",
+    "No Outlook/Melissa production-client proof"
+  ]
+}

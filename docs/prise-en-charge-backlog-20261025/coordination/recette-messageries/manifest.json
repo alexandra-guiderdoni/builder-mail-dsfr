@@ -1,0 +1,131 @@
+{
+  "createdAt": "2026-10-25T12:28:31.281Z",
+  "baseCommit": "395c08d1dfa4d0b8e41416da798bf0313a8bd379",
+  "branch": "fix/backlog-qualification-20261025",
+  "dirtyCandidate": true,
+  "diffFile": "candidate-sources.patch",
+  "diffScope": [
+    "app/source",
+    "scripts",
+    "shared",
+    "package.json",
+    "package-lock.json"
+  ],
+  "diffSha256": "2d37c5fc15f69f1222be28cab3d8b78d364dce1669a862bc4d9582fc1eddf300",
+  "distributionBuildCheck": "APPLICATION_DISTRIBUTIONS_OK",
+  "applicationVersion": "de68d7f3ea4e8fc9",
+  "catalogue": "6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278f74858e8cddd6e72af8b",
+  "portableSha256": "622a289ddbaa4fdacc0ff96ff85caba21e4ab85225c3e622dc0ecebf2d3c23f7",
+  "generator": "generer-kit.cjs",
+  "runtime": {
+    "node": "v24.18.0",
+    "playwright": "1.64.1",
+    "browser": "156.0.8078.4",
+    "platform": "darwin",
+    "arch": "arm64"
+  },
+  "validation": [
+    {
+      "format": "png",
+      "status": "PASS",
+      "method": "Import réel du fichier JSON par #project-input dans Chromium Playwright hors ligne, profil jetable ; contenu complet comparé hors identifiants régénérés.",
+      "clipboardExecuted": false,
+      "mailClientExecuted": false
+    },
+    {
+      "format": "jpeg",
+      "status": "PASS",
+      "method": "Import réel du fichier JSON par #project-input dans Chromium Playwright hors ligne, profil jetable ; contenu complet comparé hors identifiants régénérés.",
+      "clipboardExecuted": false,
+      "mailClientExecuted": false
+    }
+  ],
+  "limitations": [
+    "Les références sont produites par Model/Render natifs ; elles ne prouvent ni copie UI ni presse-papiers ni collage/client/réception.",
+    "Le diff couvre les entrées de génération modifiées ; les tests et les documents du chantier ne font pas partie de ce diff de candidat.",
+    "Le portable copié est figé par son SHA256 ; les reconstructions ultérieures du chantier ne mettent pas ce kit à jour."
+  ],
+  "files": [
+    {
+      "path": "PROCEDURE.md",
+      "bytes": 11332,
+      "sha256": "0c8ce041e7d8ce93109e04a3c66dd7b5bbe878a6dcfdbaae2157077263774c1b"
+    },
+    {
+      "path": "builder-candidat.html",
+      "bytes": 1331343,
+      "sha256": "622a289ddbaa4fdacc0ff96ff85caba21e4ab85225c3e622dc0ecebf2d3c23f7"
+    },
+    {
+      "path": "candidate-sources.patch",
+      "bytes": 5928,
+      "sha256": "2d37c5fc15f69f1222be28cab3d8b78d364dce1669a862bc4d9582fc1eddf300"
+    },
+    {
+      "path": "generation.log",
+      "bytes": 826,
+      "sha256": "4e7ad52e83177c50fb00f48f3e143c82d4d60fbe87e5bb5bab136d3791720751"
+    },
+    {
+      "path": "generer-kit.cjs",
+      "bytes": 7243,
+      "sha256": "8b7440224e57d8715738f0f090576d3c040c12f83a5bd4e3d4c5a11d9785778b"
+    },
+    {
+      "path": "illustration-originale.jpg",
+      "bytes": 8948,
+      "sha256": "a26fecaacac98f9226d04d33340fd96835d5ca03c9afd701693f2473a18e9fc7"
+    },
+    {
+      "path": "illustration-originale.png",
+      "bytes": 8993,
+      "sha256": "4176020a5a15608f8d5c523a441a8ad4ca7f96a53e3b844fac5ac53789791a20"
+    },
+    {
+      "path": "recette-jpeg.json",
+      "bytes": 27842,
+      "sha256": "9b1458abc4a82979244fd6255ba4dc9c559eb2382ad703d96412977862dab04a"
+    },
+    {
+      "path": "recette-jpeg.reference-copie.html",
+      "bytes": 65291,
+      "sha256": "f5fe70f9587fed9c1d6a7205c390fba4b2e1ac74d136ebb2cc0108d45e953847"
+    },
+    {
+      "path": "recette-jpeg.reference-export.html",
+      "bytes": 58720,
+      "sha256": "dbd3a17f7232ffded7c2eec038435c0daeccd649ec3509428b1d392fceadc5fc"
+    },
+    {
+      "path": "recette-jpeg.txt",
+      "bytes": 880,
+      "sha256": "5cd66c9da4943d4c8efab6cf78eea0b409f080ee04a3cbc9682f1f5b455e6a75"
+    },
+    {
+      "path": "recette-png.json",
+      "bytes": 27893,
+      "sha256": "b812a8e4b7684268a50a37136998b452b3b79f1166796f5987e456d6afe3733b"
+    },
+    {
+      "path": "recette-png.reference-copie.html",
+      "bytes": 65343,
+      "sha256": "6101111f5075af58a2c54a06481f0754a1bbb2d8f733b35bbae134ae633575d2"
+    },
+    {
+      "path": "recette-png.reference-export.html",
+      "bytes": 58772,
+      "sha256": "5111dedb2aea377342733e3a94ae40efa70e456630c3c42057db3bb7837f43f2"
+    },
+    {
+      "path": "recette-png.txt",
+      "bytes": 873,
+      "sha256": "71b871247956683821d56c380640aaf7325af41cdd840cc433002b12dd4c35a4"
+    },
+    {
+      "path": "recu-operateur.json",
+      "bytes": 27509,
+      "sha256": "f7b56ca145d25a7d7d77f9b32e341e7b51e1c5a1d6d5114d83948c674f440979"
+    }
+  ],
+  "sealedAt": "2026-10-25T12:30:02.589080+00:00"
+}

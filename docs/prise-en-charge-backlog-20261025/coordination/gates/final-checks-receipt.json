@@ -1,0 +1,32 @@
+{
+  "recorded_at": "2026-10-25T13:03:21.565035+00:00",
+  "checks": [
+    {
+      "check": "final-check",
+      "command": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "exit_code": 0
+    },
+    {
+      "check": "final-diff-check",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit_code": 0
+    },
+    {
+      "check": "final-npm-audit",
+      "command": [
+        "npm",
+        "audit",
+        "--json"
+      ],
+      "exit_code": 0
+    }
+  ]
+}

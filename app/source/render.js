@@ -186,7 +186,9 @@
       const layout = table.hasAttribute("data-mail-columns") && !table.classList.contains("mail-columns-stack") ? "auto" : "fixed";
       add(table, "min-width:0!important;max-width:100%!important;border-collapse:collapse;table-layout:" + layout + ";");
       if (table.parentElement === doc.body) {
-        add(table, "width:620px;margin:0;");
+        // Une messagerie peut remplacer width par 800px. La borne logique reste
+        // prioritaire ; WebKit ignore max-width sur les tables à largeur fixe.
+        add(table, "width:620px;margin:0;inline-size:min(100%,620px)!important;");
       }
       // WebKit ignore max-width sur une table de largeur fixe en pixels, imbriquée ou racine.
       // min() la borne à son conteneur ; un moteur qui ignore min() garde la largeur fixe.

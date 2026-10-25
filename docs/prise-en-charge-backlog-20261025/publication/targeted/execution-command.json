@@ -1,0 +1,36 @@
+{
+  "recorded_at": "2026-10-25T14:38:03.152866+00:00",
+  "provenance": "Exact command and environment from the root tool execution; recorded after completion without re-running tests",
+  "cwd": "/Users/alex/Claude-worktrees/builder-backlog-qualification-20261025",
+  "node_path": "/Users/alex/.local/bin/node",
+  "node_version": "v24.18.0",
+  "command": [
+    "node",
+    "--test",
+    "--test-concurrency=1",
+    "tests/preview-resources-browser.test.cjs",
+    "tests/preview-size-browser.test.cjs",
+    "tests/preview-contract.test.cjs"
+  ],
+  "runs": [
+    {
+      "env_override": {
+        "MAIL_BUILDER_ENGINE": "chromium"
+      },
+      "stdout_stderr_file": "chromium.log"
+    },
+    {
+      "env_override": {
+        "MAIL_BUILDER_ENGINE": "firefox"
+      },
+      "stdout_stderr_file": "firefox.log"
+    },
+    {
+      "env_override": {
+        "MAIL_BUILDER_ENGINE": "webkit"
+      },
+      "stdout_stderr_file": "webkit.log"
+    }
+  ],
+  "candidate_overlay": "4c4caff747a77c987be2ec4cbb914c39d3ea5b07b206886f6ab5fc24955f914e"
+}

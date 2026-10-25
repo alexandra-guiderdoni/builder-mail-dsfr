@@ -1,0 +1,38 @@
+{
+  "method": "Source execution at controlled download and viewport boundaries; no browser, no build",
+  "exports": {
+    "actual": [
+      "Lettre-de-recette-2026-10-25.courriel.json",
+      "Lettre-de-recette-2026-10-25.html",
+      "bibliotheque-courriels-2026-10-25.json"
+    ],
+    "expectedByRecipe": [
+      "composition.courriel.json",
+      "courriel.html",
+      "bibliotheque.courriels.json"
+    ]
+  },
+  "catalogue": [
+    {
+      "narrowWindow": false,
+      "size": 61,
+      "expectedByRecipe": 52,
+      "componentCount": 52,
+      "familyCount": 9
+    },
+    {
+      "narrowWindow": true,
+      "size": 1,
+      "expectedByRecipe": 52,
+      "componentCount": 52,
+      "familyCount": 9
+    }
+  ],
+  "source_sha256": {
+    "app/source/files.js": "29de262aabde814760d1be1cbcfcf95bee8d665870ac4aa7ae2c9230e9473154",
+    "app/source/library-actions.js": "76b2cf550ee153a39993f1b3fb3d7e5c8e2a8cf1f20f807198bb83aea1e58549",
+    "app/source/view.js": "c1e9682c3cc77d20cd1b24c65b04340784866d260dd314f17ec629158fa9bda6",
+    "scripts/recipe_firefox.mjs": "091c00c19fe370a73360398676fafb829096b1b1cdcaebd7d73483b64225eec1",
+    "scripts/recipe_page_flow_firefox.mjs": "8171b526a7dc8854f2d6023ec97353dca560a88cb501f2bd1a1953348770e254"
+  }
+}

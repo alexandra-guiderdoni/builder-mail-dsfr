@@ -1,0 +1,117 @@
+{
+  "run_id": "audit-20261025-142735923-395c08d1",
+  "base_sha": "395c08d1dfa4d0b8e41416da798bf0313a8bd379",
+  "zone_id": "z02",
+  "agent_id": "r1-z02-a1",
+  "zone": "prototype/reference/snum-packet.js",
+  "round": 1,
+  "files_audited": 14,
+  "duration_ms": 370000,
+  "bugs": [
+    {
+      "id": "r1-z02-001",
+      "severity": "medium",
+      "category": "logic-error",
+      "subcategory": "stale-recipe-contract",
+      "file": "scripts/recipe_firefox.mjs",
+      "line": 40,
+      "title": "La recette Firefox attend les anciens noms fixes des exports",
+      "description": "Défaut préexistant : les 14 fichiers de cette zone sont byte-identiques à base 395c08d1. Le collecteur attend composition.courriel.json, courriel.html et bibliotheque.courriels.json (lignes 40, 41, 48), tandis que library-actions.js:113-125 utilise Files.exportName. Une sonde VM en lecture seule du module réel files.js, avec date figée 25/10/2026, produit Lettre-de-recette-2026-10-25.courriel.json, Lettre-de-recette-2026-10-25.html et bibliotheque-courriels-2026-10-25.json. Lorsque le parcours atteint un export, downloaded recherche un autre nom dans son répertoire neuf et échoue après dix secondes. La recette demeure prescrite dans docs/MAINTENANCE.md:110. Contrat vérifié par lecture et sonde de fonction ; parcours Firefox complet non exécuté. Aucun lien causal avec les correctifs candidats.",
+      "fix_tier": "test-first",
+      "fix_tier_reason": "Le comportement du collecteur ou de sa réponse HTTP change ; caractériser le cas en échec avant tout correctif.",
+      "fix_applied": false,
+      "fix_commit": "",
+      "fix_evidence": null,
+      "negative_evidence": null,
+      "confidence": "high",
+      "verification_score": null,
+      "verified": null
+    },
+    {
+      "id": "r1-z02-002",
+      "severity": "medium",
+      "category": "logic-error",
+      "subcategory": "stale-recipe-contract",
+      "file": "scripts/recipe_page_flow_firefox.mjs",
+      "line": 57,
+      "title": "La recette de défilement exige une taille de catalogue périmée",
+      "description": "Défaut préexistant, fichier identique à base 395c08d1. La boucle impose catalogue.size === 52 à 1280, 1024 et 390 px puis size === 2 après filtrage. Le contrat courant view.js:130-136 calcule 52 composants + neuf familles en large, et size=1 sous 576 px. La sonde VM exécutant la ligne exacte select.size de la source, avec les familles du catalogue canonique, produit respectivement 61 et 1. Le premier contrôle rejette donc une interface conforme au contrat courant ; le reste des cas ne peut être qualifié. Lecture et sonde de calcul uniquement, aucun navigateur lancé. Ce défaut ne provient pas du candidat.",
+      "fix_tier": "test-first",
+      "fix_tier_reason": "Le comportement du collecteur ou de sa réponse HTTP change ; caractériser le cas en échec avant tout correctif.",
+      "fix_applied": false,
+      "fix_commit": "",
+      "fix_evidence": null,
+      "negative_evidence": null,
+      "confidence": "high",
+      "verification_score": null,
+      "verified": null
+    },
+    {
+      "id": "r1-z02-003",
+      "severity": "medium",
+      "category": "error-handling",
+      "subcategory": "url-parser-rejection",
+      "file": "scripts/audit_server.cjs",
+      "line": 8,
+      "title": "Une URL malformée rejette le callback du serveur de recette",
+      "description": "Défaut préexistant : audit_server.cjs est byte-identique à base 395c08d1. Le parsing new URL(request.url, http://localhost) est exécuté avant le bloc try de lecture du fichier. Pour request.url égal à //[, la sonde VM du callback réel, avec serveur et fichiers remplacés par des frontières inertes, obtient ERR_INVALID_URL et aucune écriture de réponse. Le callback async fourni directement à http.createServer renvoie alors une promesse rejetée ; cela peut interrompre le processus Node en mode usuel de rejet non géré au lieu de retourner une réponse 4xx. Impact borné au serveur de recette lié à 127.0.0.1 ; aucun effet démontré sur le builder distribué. Rejet du callback reproduit sans réseau ; arrêt du processus serveur non exécuté.",
+      "fix_tier": "test-first",
+      "fix_tier_reason": "Le comportement du collecteur ou de sa réponse HTTP change ; caractériser le cas en échec avant tout correctif.",
+      "fix_applied": false,
+      "fix_commit": "",
+      "fix_evidence": null,
+      "negative_evidence": null,
+      "confidence": "high",
+      "verification_score": null,
+      "verified": null
+    }
+  ],
+  "candidate_overlay_sha256": "c43f9e5f67bcee948de67b57d9a51d4b20454bd1ed5a5bdd291de3ecc57b2ec5",
+  "audit_evidence": {
+    "manifest_hashes_verified": 168,
+    "zone_files_read": [
+      "prototype/reference/snum-packet.js",
+      "prototype/source/draft-store.js",
+      "prototype/source/editor.js",
+      "prototype/source/model.js",
+      "prototype/source/render-mail.js",
+      "prototype/source/shell.html",
+      "prototype/source/style.css",
+      "prototype/source/sw.js",
+      "scripts/audit_browser.cjs",
+      "scripts/audit_contrasts.cjs",
+      "scripts/audit_server.cjs",
+      "scripts/recipe_firefox.mjs",
+      "scripts/recipe_installation.cjs",
+      "scripts/recipe_page_flow_firefox.mjs"
+    ],
+    "zone_files_unchanged_from_base": true,
+    "source_writes": false,
+    "heavy_tests_run": false,
+    "browser_or_real_server_executed": false,
+    "probes": {
+      "export_names": [
+        "Lettre-de-recette-2026-10-25.courriel.json",
+        "Lettre-de-recette-2026-10-25.html",
+        "bibliotheque-courriels-2026-10-25.json"
+      ],
+      "catalogue_sizes": {
+        "components": 52,
+        "families": 9,
+        "wide": 61,
+        "narrow": 1
+      },
+      "url_callback": {
+        "input": "//[",
+        "error": "ERR_INVALID_URL",
+        "response_written": false
+      },
+      "probe_error_then_correction": "Première sonde catalogue a supposé un objet components et échoué TypeError ; le fichier canonique est une liste [label,family]. Après lecture du format réel, la sonde corrigée utilise cette liste et retourne 61/1."
+    },
+    "limits": [
+      "Lecture statique et sondes VM à frontières contrôlées, pas de validation navigateur supplémentaire.",
+      "Aucune régression nouvellement introduite établie dans z02 ; trois défauts préexistants consignés.",
+      "Outlook/Mélissa non exécutés ; aucune conclusion GO production."
+    ]
+  }
+}
