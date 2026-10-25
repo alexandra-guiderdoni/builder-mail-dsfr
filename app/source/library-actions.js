@@ -101,7 +101,8 @@
     "cancel-fields": () => {
       // Les brouillons d’URL (#37) comptent parmi les champs restaurés.
       const restored = new Set([...A.invalid, ...[...A.drafts.values()].map(d => d.input)]);
-      A.UI.clearFieldErrors(); A.invalid.clear(); A.drafts.clear(); A.error(""); A.UI.refresh();
+      // L’erreur ponctuelle est effacée, puis l’alerte persistante (échec ou lecture seule) est restaurée si elle existe (#122).
+      A.UI.clearFieldErrors(); A.invalid.clear(); A.drafts.clear(); A.error(""); A.State.restoreErrorFromState(); A.UI.refresh();
       // Le rendu a remplacé le bouton activé : le focus va au premier champ restauré dans l’ordre du document (#43).
       const first = [...document.querySelectorAll("input[id],textarea[id]")].find(input => restored.has(input.id));
       (first || get("block-editor").querySelector('[data-action="cancel-fields"]'))?.focus();

@@ -22,11 +22,15 @@
   A.removed = new Map();
   A.doc = () => A.library.documents.find(d => d.id === A.library.activeId);
   A.error = message => { const e = get("error"); e.textContent = message; e.hidden = !message; if (message) cancelSuccess(); };
+  // Les alertes persistantes (échec de sauvegarde, lecture seule) sont stockées : une erreur ponctuelle (A.error(""))
+  // efface la vue sans détruire cette mémoire. `restoreErrorFromState` replace la persistante quand elle est pertinente.
+  let persistentError = "";
+  const setPersistentError = message => { persistentError = message; A.error(message); };
   let noticeTicket = 0;
   // Un écrivain différé passe le jeton relevé au départ : si une autre annonce est passée entre-temps, il se tait.
   A.notice = (message, since) => { if (since !== undefined && since !== noticeTicket) return; get("notice").textContent = message; noticeTicket++; };
   // Tant que le travail n’est pas sauvegardé, l’export de secours suit le message d’échec.
-  function failing(value) { failed = value; get("save-rescue").hidden = !value || !!readOnly; }
+  function failing(value) { failed = value; get("save-rescue").hidden = !value || !!readOnly; if (!value) persistentError = ""; }
   const readOnlyError = () => new Error(readOnly === "version" ? "Cette fenêtre utilise une autre version de l’atelier : exportez la bibliothèque en mémoire, puis rechargez la page avant de reprendre la main." : "Une autre fenêtre détient la bibliothèque : cette fenêtre est en lecture seule. Exportez la bibliothèque en mémoire ou reprenez la main.");
   function lock(kind, reason) {
     if (readOnly === "version") return;
@@ -83,7 +87,7 @@
             const saved = await A.Storage.save(task.library, token); token = saved.token; base = task.library;
             if (task.current === revision) { failing(false); if (!A.invalid.size && !A.drafts.size) A.error(""); const text = A.invalid.size || A.drafts.size ? "Bibliothèque sauvegardée ; les champs invalides restent non enregistrés." : "Bibliothèque sauvegardée dans ce navigateur."; show(text); announceSuccess(text); }
           } catch (cause) {
-            failing(true); A.error(`${cause.message} ${cause.storage === "conflit" ? "Exportez la bibliothèque en mémoire pour conserver ce travail, puis rechargez cette page." : "Exportez la bibliothèque en mémoire pour conserver ce travail."}`);
+            failing(true); setPersistentError(`${cause.message} ${cause.storage === "conflit" ? "Exportez la bibliothèque en mémoire pour conserver ce travail, puis rechargez cette page." : "Exportez la bibliothèque en mémoire pour conserver ce travail."}`);
             show("Modifications non sauvegardées. Exportez votre bibliothèque.", true);
             if (cause.storage === "conflit") lock("conflit", "Une autre fenêtre a enregistré la bibliothèque après la dernière sauvegarde de celle-ci.");
           }
@@ -124,7 +128,7 @@
       failing(true); A.recoveryOnly = true; absent = cause.storage === "absent";
       const advice = absent ? "Exportez la bibliothèque en mémoire pour conserver votre travail : la fermeture de cette page l’efface." : "Cette page n’écrit rien dans la bibliothèque locale : exportez la bibliothèque en mémoire pour conserver votre travail.";
       const restore = !cause.storage && await restorable() ? " Une sauvegarde précédente lisible existe : « Restaurer l’état précédent », dans « Fichiers et récupération », permet de la relire." : "";
-      A.error(`${cause.message} ${advice}${restore}`);
+      setPersistentError(`${cause.message} ${advice}${restore}`);
       show(absent ? "Stockage indisponible : travail en mémoire seulement." : "Bibliothèque non restaurée.", true);
       if (absent) get("storage-help").textContent = "Aucun stockage n’est disponible dans ce navigateur : exportez une copie pour conserver votre travail.";
     }
@@ -215,9 +219,9 @@
   }
   channel?.addEventListener("message", event => {
     if (!A.ready || event.data?.type !== "takeover" || event.data.token === token) return;
-    lock("reprise", "Une autre fenêtre a repris la main sur la bibliothèque."); A.error("Une autre fenêtre a repris la main sur la bibliothèque : cette fenêtre passe en lecture seule.");
+    lock("reprise", "Une autre fenêtre a repris la main sur la bibliothèque."); setPersistentError("Une autre fenêtre a repris la main sur la bibliothèque : cette fenêtre passe en lecture seule.");
   });
-  function outdated() { lock("version", "Une nouvelle version de l’atelier est active dans une autre fenêtre."); A.error("Une nouvelle version de l’atelier est active dans une autre fenêtre : cette fenêtre passe en lecture seule."); }
+  function outdated() { lock("version", "Une nouvelle version de l’atelier est active dans une autre fenêtre."); setPersistentError("Une nouvelle version de l’atelier est active dans une autre fenêtre : cette fenêtre passe en lecture seule."); }
   const exported = () => { exportedRevision = revision; };
   function reload() {
     if ((failed || pending || A.invalid.size || A.pendingInputs) && exportedRevision !== revision) throw new Error("Exportez d’abord la bibliothèque en mémoire : le rechargement efface le travail non enregistré de cette fenêtre.");
@@ -229,5 +233,6 @@
   // Le rechargement et l’activation d’une mise à jour exigent, eux, une sauvegarde réussie.
   async function flush() { await settle(); if (failed || pending || A.recoveryOnly) throw new Error("La sauvegarde doit réussir avant de recharger l’application."); }
   const saved = () => !failed && !pending && !A.recoveryOnly;
-  A.State = Object.freeze({guard, guardEdit, setDraft, dropDraft, dropFooterDraft, change, save, start, recover, settle, flush, saved, takeOver, outdated, reload, exported, noticeTicket: () => noticeTicket});
+  const restoreErrorFromState = () => { if ((failed || readOnly) && persistentError) A.error(persistentError); };
+  A.State = Object.freeze({guard, guardEdit, setDraft, dropDraft, dropFooterDraft, change, save, start, recover, settle, flush, saved, takeOver, outdated, reload, exported, noticeTicket: () => noticeTicket, restoreErrorFromState});
 })();
