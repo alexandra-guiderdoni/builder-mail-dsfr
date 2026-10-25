@@ -23,6 +23,34 @@
       return "&nbsp;| " + markup.replace(/\{\{(f1|f2)\}\}/g, (_, key) => escape(key === "f1" ? link.url : incomplete ? "Intitulé du lien à renseigner" : link.label));
     }).join("");
   }
+  // Issue #71 : le lien source est injecté dans le cadre visuel du bloc (table wlkm-cl)
+  // au lieu d'une table enveloppe séparée. Le dernier wlkm-cl rencontré est ciblé par comptage
+  // de balance de balises <table>/</table> ; si aucun cadre wlkm-cl n'est présent (mail-04/07/51),
+  // l'ancienne table externe reste utilisée pour préserver le lien.
+  function injectSourceLink(result, source, label) {
+    const safeLabel = escape(label?.trim() || "Consulter la source");
+    const row = `<tr><td class="darkmode-1" style="padding:0 10px 16px 10px;font-family:Tahoma,Geneva,sans-serif;font-size:14px;line-height:20px;text-align:left;overflow-wrap:anywhere;word-break:break-word"><a href="${escape(source)}" style="color:#000091">${safeLabel}</a></td></tr>`;
+    const key = 'class="wlkm-cl darkmode"';
+    const marker = result.lastIndexOf(key);
+    if (marker >= 0) {
+      const openEnd = result.indexOf('>', marker) + 1;
+      const re = /<\/?table\b[^>]*>/gi;
+      re.lastIndex = openEnd;
+      let depth = 1, match;
+      while ((match = re.exec(result))) {
+        if (match[0].startsWith('</')) { depth--; if (depth === 0) {
+          const before = result.slice(0, match.index);
+          const after = result.slice(match.index);
+          // Si le td de contenu porte une bordure basse pour séparer les articles, elle est
+          // déplacée sur la ligne du lien source afin que le contenu et le lien soient unifiés.
+          const stripped = before.replace(/(<td\b[^>]*style="[^"]*?)border-bottom:1px solid #e5e5e5;?([^"]*"[^>]*>(?![\s\S]*<td\b))/, "$1$2");
+          const unified = stripped !== before ? row.replace('text-align:left;overflow-wrap', 'text-align:left;border-bottom:1px solid #e5e5e5;overflow-wrap') : row;
+          return stripped + unified + after;
+        }} else depth++;
+      }
+    }
+    return result + `<table role="presentation" style="text-align:left;text-align:start;width:100%;border-spacing:0;border:0"><tr><td style="padding:0;text-align:center;overflow-wrap:anywhere;word-break:break-word"><table role="presentation" style="text-align:left;text-align:start;width:100%;max-width:600px;margin-left:auto;margin-right:auto"><tr><td style="padding:8px 52px 20px;font-family:Tahoma,Geneva,sans-serif;font-size:14px;overflow-wrap:anywhere;word-break:break-word"><a href="${escape(source)}" style="color:#000091">${safeLabel}</a></td></tr></table></td></tr></table>`;
+  }
   // Pré-en-tête (#41) : texte masqué par la technique usuelle, compatible Outlook (mso-hide).
   const PREHEADER = "mail-00", preheaderTemplate = '<div style="display:none;max-height:0;overflow:hidden;mso-hide:all;">{{f0}}</div>';
   // Seul le premier mail-00 est utilisé ; il passe en tête du corps, où les messageries lisent l'aperçu.
@@ -67,7 +95,7 @@
       const extras = footerLinks(definition.semanticTemplate, value, preview), end = template.indexOf("</a>", template.indexOf("{{f2}}")) + "</a>".length;
       result = fill(template.slice(0, end)) + extras + fill(template.slice(end));
     } else result = fill(template);
-    if (value.source) result += `<table role="presentation" style="text-align:left;text-align:start;width:100%;border-spacing:0;border:0"><tr><td style="padding:0;text-align:center;overflow-wrap:anywhere;word-break:break-word"><table role="presentation" style="text-align:left;text-align:start;width:100%;max-width:600px;margin-left:auto;margin-right:auto"><tr><td style="padding:8px 52px 20px;font-family:Tahoma,Geneva,sans-serif;font-size:14px;overflow-wrap:anywhere;word-break:break-word"><a href="${escape(value.source)}" style="color:#000091">${escape(value.sourceLabel?.trim() || "Consulter la source")}</a></td></tr></table></td></tr></table>`;
+    if (value.source) result = injectSourceLink(result, value.source, value.sourceLabel);
     return result;
   }
   function body(value, preview = false) { M.document(value); const context = []; return used(value).map(b => block(b, context, preview)).join("\n"); }
