@@ -57,3 +57,4 @@ iframe { display:block; width:100%; height:760px; border:1px solid var(--border-
 .mail-weight[data-level=alert] { color:var(--text-default-error); background:var(--background-contrast-error); border-left:4px solid var(--border-plain-error); padding:8px 12px; font-weight:700; }
 
 body:has(#check-dialog[open]) #preview { pointer-events: none; }
+.preview-placeholder { box-sizing:border-box; width:100%; border:1px solid var(--border-default-grey); background:var(--background-alt-grey); color:var(--text-mention-grey); padding:16px; }
