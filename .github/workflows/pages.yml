@@ -13,7 +13,7 @@ jobs:
     timeout-minutes: 30
     env:
       # PLACEHOLDER CANDIDATE_SHA: remplacer uniquement après le vrai commit candidat.
-      CANDIDATE_SHA: '172699adf3280aec6ba3f598085660b39702fe16'
+      CANDIDATE_SHA: '0a63a182afb8bdd280343540072b78791bd50151'
     steps:
       - name: Réserver les preuves hors checkout et vérifier le SHA matérialisé
         shell: bash
