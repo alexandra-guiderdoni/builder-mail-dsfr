@@ -1,40 +1,94 @@
-name: Publier l’atelier sur GitHub Pages
+name: 'Validation Linux isolation modale et Node corrigé'
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:
   contents: read
 
-concurrency:
-  group: github-pages
-  cancel-in-progress: false
-
 jobs:
-  tests:
+  validation:
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/diag/modal-node-qualification'
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    permissions:
-      contents: read
+    env:
+      # PLACEHOLDER CANDIDATE_SHA: remplacer uniquement après le vrai commit candidat.
+      CANDIDATE_SHA: '9598f5491f318fab48d4cd0ab0b7012d849bd6aa'
     steps:
-      - name: Lire les sources
+      - name: Réserver les preuves hors checkout et vérifier le SHA matérialisé
+        shell: bash
+        run: |
+          ARTIFACT_DIR="$RUNNER_TEMP/modal-node-qualification-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          mkdir "$ARTIFACT_DIR"
+          printf 'ARTIFACT_DIR=%s\n' "$ARTIFACT_DIR" >> "$GITHUB_ENV"
+          printf '{"candidateSha":"%s","workflowSha":"%s","runId":"%s","runAttempt":"%s","maxFullSuiteInvocations":1}\n' "$CANDIDATE_SHA" "$GITHUB_SHA" "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT" > "$ARTIFACT_DIR/plan.json"
+          [[ "$CANDIDATE_SHA" =~ ^[0-9a-f]{40}$ ]]
+          test "$CANDIDATE_SHA" != 0000000000000000000000000000000000000000
+      - name: Lire le commit candidat à la racine originale
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: ${{ env.CANDIDATE_SHA }}
           persist-credentials: false
-      - name: Fixer la version de Node
+      - name: Fixer Node
         uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
         with:
           node-version: '24.22.1'
-      - name: Installer Playwright depuis le verrou
-        run: npm ci --ignore-scripts
+      - name: Vérifier Linux et conserver les sources exactes
+        shell: bash
+        run: |
+          {
+            cat /etc/os-release
+            printf 'ImageOS=%s\nImageVersion=%s\nRunnerArch=%s\n' "$ImageOS" "$ImageVersion" "$RUNNER_ARCH"
+            uname -r
+            node --version
+            npm --version
+            git rev-parse HEAD
+          } > "$ARTIFACT_DIR/host.log"
+          . /etc/os-release
+          test "$ID" = ubuntu
+          test "$VERSION_ID" = 26.04
+          test "$RUNNER_ARCH" = X64
+          test "$(node --version)" = v24.22.1
+          test "$(git rev-parse HEAD)" = "$CANDIDATE_SHA"
+          python3 - <<'PY'
+          import hashlib, json, os, subprocess
+          from pathlib import Path
+          root = Path(os.environ['GITHUB_WORKSPACE'])
+          names = subprocess.check_output(['git', 'ls-files', '-z']).decode().split('\0')
+          rows = [{'path': name, 'sha256': hashlib.sha256((root / name).read_bytes()).hexdigest()} for name in names if name]
+          original_pages = next(row['sha256'] for row in rows if row['path'] == '.github/workflows/pages.yml')
+          if original_pages != '4f4b1198df1df22259cad4076b168caee55774ec1cdb8a35f786b657aff514a4':
+              raise SystemExit('candidate pages.yml differs from the reviewed original; do not test diagnostic YAML as subject')
+          receipt = {'candidateSha': os.environ['CANDIDATE_SHA'], 'portableFileURL': (root / 'app/distribution/portable.html').as_uri(), 'files': rows}
+          with (Path(os.environ['ARTIFACT_DIR']) / 'source-before.json').open('x') as stream:
+              json.dump(receipt, stream, indent=2)
+              stream.write('\n')
+          PY
+      - name: Installer Playwright depuis le verrou candidat
+        shell: bash
+        run: |
+          set -o pipefail
+          npm ci --ignore-scripts --min-release-age=3 2>&1 | tee "$ARTIFACT_DIR/npm-ci.log"
+          node -e 'const fs=require("node:fs"),path=require("node:path"),pw=require("playwright/package.json"),core=require("playwright-core/package.json");if(pw.version!=="1.64.1"||core.version!=="1.64.1"||process.version!=="v24.22.1"||process.platform!=="linux"||process.arch!=="x64")process.exit(1);console.log(JSON.stringify({node:process.version,platform:process.platform,arch:process.arch,playwright:pw.version,playwrightCore:core.version,browsersDeclared:JSON.parse(fs.readFileSync(path.join(path.dirname(require.resolve("playwright-core/package.json")),"browsers.json"),"utf8")),browserRuntimeMeasured:false},null,2));' > "$ARTIFACT_DIR/packages.json"
       - name: Installer Chromium, WebKit et leurs dépendances système
-        run: npx --no-install playwright install --with-deps chromium webkit
-      - name: Contrôler les distributions et la provenance
-        run: npm run check
-      - name: Préparer le rapport TAP
+        shell: bash
+        run: |
+          set -o pipefail
+          npx --no-install playwright install --with-deps chromium webkit 2>&1 | tee "$ARTIFACT_DIR/browser-install.log"
+      - name: Reconstruire sans modifier le commit candidat
+        shell: bash
+        run: |
+          set -o pipefail
+          npm run build 2>&1 | tee "$ARTIFACT_DIR/build.log"
+          git diff --exit-code
+      - name: Vérifier distributions et provenance
+        shell: bash
+        run: |
+          set -o pipefail
+          npm run check 2>&1 | tee "$ARTIFACT_DIR/check.log"
+      - name: Préparer TAP en conservant NODE_OPTIONS hérité
         id: reporter
+        shell: bash
         run: |
           node <<'NODE'
           const fs = require('node:fs');
@@ -42,38 +96,62 @@ jobs:
           const options = previous + (previous ? ' ' : '') + '--test-reporter=tap';
           fs.appendFileSync(process.env.GITHUB_OUTPUT, 'options=' + JSON.stringify(options) + '\n');
           NODE
-      - name: Exécuter la suite de tests
+      - name: Exécuter une seule fois la suite complète du candidat
+        shell: bash
         env:
           NODE_OPTIONS: ${{ fromJSON(steps.reporter.outputs.options) }}
-        run: npm test
-
-  deploy:
-    needs: tests
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
-    steps:
-      - name: Lire les sources
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - name: Vérifier les distributions et préparer le site
         run: |
-          python3 scripts/build_app.py --check
-          python3 scripts/build.py --check
-          mkdir _site
-          cp -R app/distribution/web/. _site/
-          cp app/distribution/snum.html _site/snum.html
-          cp app/distribution/portable.html _site/atelier-portable.html
-      - name: Déposer les seuls fichiers publics
-        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+          python3 - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+          root, artifacts = Path(os.environ['GITHUB_WORKSPACE']), Path(os.environ['ARTIFACT_DIR'])
+          receipt = json.loads((artifacts / 'source-before.json').read_text())
+          for row in receipt['files']:
+              if hashlib.sha256((root / row['path']).read_bytes()).hexdigest() != row['sha256']:
+                  raise SystemExit('source changed before suite: ' + row['path'])
+          with (artifacts / 'source-rechecked.json').open('x') as stream:
+              json.dump({'candidateSha': receipt['candidateSha'], 'fileCount': len(receipt['files']), 'allEqual': True}, stream)
+              stream.write('\n')
+          PY
+          test ! -e "$ARTIFACT_DIR/npm-test.tap"
+          set -o pipefail
+          set +e
+          npm test 2>&1 | tee "$ARTIFACT_DIR/npm-test.tap"
+          node_statuses=("${PIPESTATUS[@]}")
+          set -e
+          printf '{"testExit":%s,"teeExit":%s,"fullSuiteInvocations":1,"retries":0}\n' "${node_statuses[0]}" "${node_statuses[1]}" > "$ARTIFACT_DIR/result.json"
+          if test "${node_statuses[0]}" != 0; then exit "${node_statuses[0]}"; fi
+          exit "${node_statuses[1]}"
+      - name: Sceller les preuves disponibles même en échec
+        if: always()
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+          root = Path(os.environ['ARTIFACT_DIR'])
+          changed = []
+          if root.is_dir():
+              receipt_path = root / 'source-before.json'
+              if receipt_path.is_file():
+                  receipt = json.loads(receipt_path.read_text())
+                  workspace = Path(os.environ['GITHUB_WORKSPACE'])
+                  changed = [row['path'] for row in receipt['files'] if not (workspace / row['path']).is_file() or hashlib.sha256((workspace / row['path']).read_bytes()).hexdigest() != row['sha256']]
+                  with (root / 'source-after.json').open('x') as stream:
+                      json.dump({'candidateSha': receipt['candidateSha'], 'fileCount': len(receipt['files']), 'changed': changed}, stream)
+                      stream.write('\n')
+              rows = [{'path': str(p.relative_to(root)), 'bytes': p.stat().st_size, 'sha256': hashlib.sha256(p.read_bytes()).hexdigest()} for p in sorted(root.rglob('*')) if p.is_file() and p.name != 'MANIFEST.json']
+              with (root / 'MANIFEST.json').open('x') as stream:
+                  json.dump(rows, stream, indent=2)
+                  stream.write('\n')
+          if changed:
+              raise SystemExit('tracked sources changed during validation')
+          PY
+      - name: Conserver les preuves sans publier de site
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          path: _site
-      - name: Publier
-        id: deployment
-        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
+          name: modal-node-qualification-linux-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ env.ARTIFACT_DIR }}/
+          if-no-files-found: error
+          retention-days: 7
