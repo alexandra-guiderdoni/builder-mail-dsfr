@@ -47,7 +47,13 @@ Le DSFR web est incorporé dans le builder uniquement, avec Marianne 400/500/700
 
 ## Générer et vérifier
 
-Prérequis de développement : Python 3.10+, Node.js 22+ et npm. Playwright est épinglé dans le verrou ; `.npmrc` fixe une maturité de trois jours. L’application n’a aucune dépendance d’exécution npm.
+Prérequis de développement : Python 3.10+, Node.js 24.22.1 (version épinglée en CI) et npm. Playwright est épinglé dans le verrou ; `.npmrc` fixe une maturité de trois jours. L’application n’a aucune dépendance d’exécution npm.
+
+Node.js 24.22.1 intègre le correctif Brotli de [CVE-2026-111497](https://nodejs.org/en/blog/vulnerability/october-2026-security-releases), confirmé dans sa [note de version](https://nodejs.org/en/blog/release/v24.22.1/). Le seul pin Node actif du dépôt est celui de `.github/workflows/pages.yml`. Les versions, commandes et scripts gelés des investigations sous `docs/goal-six-issues-20261025/` et `docs/prise-en-charge-backlog-20261025/`, ainsi que les reçus datés, restent historiques : ne pas les réécrire ni les reprendre comme environnement de validation courant.
+
+L’appel direct à `node:zlib` dans `tests/typing-performance-browser.test.cjs` compresse des PNG synthétiques avec `deflateSync` ; il ne décode pas de Brotli. En revanche, [le client HTTP de Playwright 1.64.1](https://github.com/microsoft/playwright/blob/v1.64.1/packages/playwright-core/src/server/fetch.ts#L506-L525) sait décompresser les réponses `Content-Encoding: br` avec Node. Cette surface indirecte justifie de corriger le runtime de recette ; elle ne prouve pas qu’une réponse Brotli hostile ait été reçue. L’inventaire des dépendances et téléchargements n’est pas un audit exhaustif d’exposition.
+
+Pour qualifier une mise à jour du runtime, conserver le SHA, `node --version`, `npm --version`, la plateforme et les sorties de `npm run build`, `npm run check` et `npm test` sur ce même SHA. Utiliser une branche de contrôle sans job de déploiement pour la validation Linux ; ne pas lancer Pages sur main pour cette seule vérification. Garder les échecs éventuels des investigations #145/#150 distincts, sans changer leurs assertions, délais ou résultats historiques.
 
 ```sh
 PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm ci --ignore-scripts

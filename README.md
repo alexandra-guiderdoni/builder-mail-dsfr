@@ -34,7 +34,7 @@ Pour la recette métier, importer [la bibliothèque des neuf familles](app/distr
 
 ## Développer et vérifier
 
-Python 3.10+ et Node.js 22+ servent à la génération et aux recettes, uniquement sur le poste de développement :
+Python 3.10+ et Node.js 24.22.1 (version épinglée en CI) servent à la génération et aux recettes, uniquement sur le poste de développement :
 
 ```sh
 python3 scripts/build_app.py
