@@ -1,5 +1,5 @@
 const test = require('node:test');
-const {chromium, open, click, expand, saved, selectBlock, confirmChecks, state, assert} = require('./browser-support.cjs');
+const {chromium, open, click, expand, saved, selectBlock, confirmChecks, announced, state, assert} = require('./browser-support.cjs');
 
 const OLD = 'https://exemple.invalid/ancien', NEW = 'https://exemple.invalid/nouveau';
 async function setup(page) {
@@ -59,6 +59,7 @@ test('non-régression de #1 : copie et exports restent bloqués sans réutiliser
     await page.locator('#article-source').fill(NEW);
     assert.equal(await page.locator('[data-field-error]').count(), 0);
     await click(page, '[data-action=export-mail]'); await confirmChecks(page); // fenêtre de contrôle de #36
+    await announced(page, 'Courriel proposé au téléchargement.');
     const out = await page.evaluate(() => window.__out);
     assert.equal(out.length, 1); assert(out[0].data.includes(NEW)); assert(!out[0].data.includes('ancien'));
     await click(page, '[data-action=copy]'); await confirmChecks(page); await page.locator('#notice').filter({hasText: 'Courriel copié'}).waitFor();

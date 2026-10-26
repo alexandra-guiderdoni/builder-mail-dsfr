@@ -1,7 +1,7 @@
 const test = require('node:test');
 const path = require('node:path');
 const {createHash} = require('node:crypto');
-const {root, evidence, open, click, enterEditor, expand, saved, state, download, confirmChecks, chromium, nativeAx, nativeAxTree, nativeAxNode, fs, assert} = require('./browser-support.cjs');
+const {root, evidence, open, click, enterEditor, expand, saved, state, download, confirmChecks, announced, chromium, nativeAx, nativeAxTree, nativeAxNode, fs, assert} = require('./browser-support.cjs');
 const pairs = [[1, 'f2'], [31, 'f4'], [33, 'f3'], [40, 'f1'], [41, 'f1'], [42, 'f1'], [43, 'f1'], [43, 'f3'], [45, 'f3'], [47, 'f2'], [48, 'f2'], [49, 'f2'], [50, 'f2']];
 const directory = path.join(evidence, 'link-labels');
 async function receipt(name, observations, completed) {
@@ -113,6 +113,7 @@ test('un ancien JSON reste récupérable et corrigeable ; les sorties attendent 
     assert.deepEqual(restored.map(a => a.url), expectedURLs); assert(restored.every(a => a.label.trim() === 'Lire le dossier réparé'));
     const html = await fs.readFile(await download(page, '[data-action=export-mail]', 'courriel-repare.html'), 'utf8');
     assert(html.includes('Lire le dossier réparé')); await click(page, '[data-action=copy]'); await confirmChecks(page);
+    await announced(page, 'Courriel copié en HTML et texte.');
     assert.equal(await page.evaluate(() => window.clipboardWrites), 1); assert.equal(await page.locator('[data-field-error]').count(), 0);
     observations.push({step: 'progressive-repair', repaired: 13, htmlDownloaded: true, clipboardWrites: 1});
     // L’autre voie d’import accepte aussi ces anciennes données sans imposer leur correction globale.

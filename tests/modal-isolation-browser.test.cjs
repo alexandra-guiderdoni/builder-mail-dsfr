@@ -70,8 +70,8 @@ test('la confirmation retire les deux aperçus, reçoit le pointeur parent et re
         assert.equal(Buffer.concat(chunks).toString('utf8'), expectedHtml);
       }
       await page.locator('#check-dialog').waitFor({state: 'hidden'});
-      assert.equal(await page.locator('iframe').count(), 2);
       await page.locator('#catalogue-preview').waitFor({state: 'visible'});
+      assert.equal(await page.locator('iframe').count(), 2);
       assert.equal(await page.locator('#catalogue-preview').getAttribute('data-component'), 'mail-19');
       catalogue = await catalogueDocument(page);
       assert.equal(catalogue.html, expectedCatalogue, `contenu enfant du catalogue conservé après ${action}`);
