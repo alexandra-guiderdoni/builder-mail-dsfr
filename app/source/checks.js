@@ -97,35 +97,47 @@
   }
   // Boîte de confirmation : une confirmation par copie ou téléchargement ; chaque avertissement mène à son bloc.
   let pending = null;
-  function settle(result) {
+  const releases = new Set();
+  function releaseClosed() {
+    if (get("check-dialog").open) return;
+    for (const release of releases) { releases.delete(release); release(); }
+  }
+  function settle(result, failure) {
     if (!pending) return;
-    const {resolve, origin} = pending; pending = null;
-    if (get("check-dialog").open) get("check-dialog").close();
-    if (result !== "go" && !result?.block) origin?.focus();
-    resolve(result === "go");
-    if (result?.block) {
-      A.selected = result.block; A.UI.blockList(); A.UI.fields();
-      (get(result.field) || get("block-editor").querySelector("textarea,input"))?.focus();
-    }
+    const {resolve, reject, origin, release} = pending; pending = null;
+    releases.add(release);
+    try { if (get("check-dialog").open) get("check-dialog").close(); } catch (cause) { failure ||= cause; }
+    try { releaseClosed(); } catch (cause) { failure ||= cause; }
+    try {
+      if (result !== "go" && !result?.block) origin?.focus();
+      if (result?.block) {
+        A.selected = result.block; A.UI.blockList(); A.UI.fields();
+        (get(result.field) || get("block-editor").querySelector("textarea,input"))?.focus();
+      }
+    } catch (cause) { failure ||= cause; }
+    if (failure) reject(failure); else resolve(result === "go");
   }
   function confirm(action, list) {
     if (!list.length || !get("check-dialog")) return Promise.resolve(true);
-    if (pending) settle(false);
     const esc = A.Render.escape, copy = action === "copy";
     get("check-dialog-title").textContent = copy ? "Vérifier avant de copier" : "Vérifier avant de télécharger";
     get("check-dialog-description").textContent = `${list.length} point${list.length > 1 ? "s" : ""} à vérifier. Ces avertissements ne bloquent pas : corrigez le bloc concerné ou poursuivez.`;
     get("check-list").innerHTML = list.map((w, i) => `<li><p>${esc(w.message)}</p><button class="fr-btn fr-btn--tertiary" type="button" data-check-index="${i}">Aller au bloc ${A.doc().blocks.findIndex(b => b.id === w.block) + 1}</button></li>`).join("");
     get("check-confirm").textContent = copy ? "Copier quand même" : "Télécharger quand même";
-    return new Promise(resolve => {
-      pending = {resolve, list, origin: document.activeElement};
-      // Le focus part du titre : la liste peut dépasser l’écran, et les points se lisent avant les boutons.
-      get("check-dialog").showModal(); get("check-dialog").scrollTop = 0; get("check-dialog-title").focus();
+    return new Promise((resolve, reject) => {
+      const release = A.Preview.suspend();
+      if (pending) settle(false);
+      pending = {resolve, reject, release, list, origin: document.activeElement};
+      try {
+        // Le focus part du titre : la liste peut dépasser l’écran, et les points se lisent avant les boutons.
+        get("check-dialog").showModal(); get("check-dialog").scrollTop = 0; get("check-dialog-title").focus();
+      } catch (cause) { settle(false, cause); }
     });
   }
   if (typeof document !== "undefined" && document.getElementById("check-dialog")) {
     get("check-cancel").addEventListener("click", () => settle(false));
     // Un événement « close » tardif ne doit pas fermer une boîte rouverte entre-temps.
-    get("check-dialog").addEventListener("close", () => { if (!get("check-dialog").open) settle(false); });
+    get("check-dialog").addEventListener("close", () => { if (!get("check-dialog").open) { settle(false); releaseClosed(); } });
     get("check-form").addEventListener("submit", event => { event.preventDefault(); settle("go"); });
     get("check-list").addEventListener("click", event => {
       const button = event.target.closest("[data-check-index]"), warning = button && pending?.list[Number(button.dataset.checkIndex)];

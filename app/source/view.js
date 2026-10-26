@@ -113,8 +113,8 @@
     document.title = get("editor-page").hidden ? `Mes newsletters – ${brand}` : `${name ? `${name} – ` : ""}Éditeur – ${brand}`;
   }
   function summary() { get("composition-summary").textContent = `${A.doc().blocks.length} blocs dans « ${A.doc().name} »`; }
-  function preview() {
-    pageTitle(); if (!get("editor-page").hidden) A.Preview.show(A.doc());
+  function preview(onLoad) {
+    pageTitle(); if (!get("editor-page").hidden) A.Preview.show(A.doc(), onLoad);
     summary();
     // #41 : avertissement des pré-en-têtes multiples, calculé avec l’aperçu différé, jamais à la frappe (#34).
     const warnings = A.Render.warnings(A.doc()); if (warnings.length) get("composition-summary").textContent += `. ${warnings.join(". ")}`;
@@ -140,21 +140,9 @@
   }
   // Aperçu d’un composant avant insertion : une composition jetable d’un seul bloc, jamais enregistrée.
   function catalogPreview() {
-    const frame = get("catalogue-preview"), id = get("catalogue").value, skip = get("catalogue-preview-skip");
-    frame.hidden = skip.hidden = !id;
-    if (!id) { frame.removeAttribute("srcdoc"); frame.dataset.component = ""; return; }
-    if (frame.dataset.component === id) return;
-    frame.dataset.component = id;
-    frame.srcdoc = A.Render.html(M.create("Aperçu du composant", [id]), true);
-  }
-  // Aperçu d’un composant avant insertion : une composition jetable d’un seul bloc, jamais enregistrée.
-  function catalogPreview() {
-    const frame = get("catalogue-preview"), id = get("catalogue").value, skip = get("catalogue-preview-skip");
-    frame.hidden = skip.hidden = !id;
-    if (!id) { frame.removeAttribute("srcdoc"); frame.dataset.component = ""; return; }
-    if (frame.dataset.component === id) return;
-    frame.dataset.component = id;
-    frame.srcdoc = A.Render.html(M.create("Aperçu du composant", [id]), true);
+    const id = get("catalogue").value;
+    get("catalogue-preview-skip").hidden = !id;
+    A.Preview.catalogue(id);
   }
   // Annonce vocale du nombre de résultats : 500 ms de repos après la dernière frappe, soit plus que l’intervalle
   // entre deux touches d’une saisie courante, pour ne dire que le résultat final et non chaque lettre.

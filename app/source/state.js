@@ -104,9 +104,9 @@
   function previewAfterInput() {
     clearTimeout(previewTimer);
     previewTimer = setTimeout(() => requestAnimationFrame(() => setTimeout(() => {
-      const started = performance.now();
-      document.getElementById("preview").addEventListener("load", () => { previewCost = performance.now() - started; }, {once: true});
-      A.UI.preview();
+      // Preview possède l'élément, qui peut être retiré pendant la confirmation.
+      // Son coût exclut le temps passé dans la modale et les navigations remplacées.
+      A.UI.preview(cost => { previewCost = cost; });
     })), previewCost > 50 ? 3 * previewCost : 0);
   }
   function change(mutator, redraw = true, input = false) {
