@@ -70,7 +70,25 @@ jobs:
           set -o pipefail
           npm ci --ignore-scripts --min-release-age=3 2>&1 | tee "$ARTIFACT_DIR/npm-ci.log"
           node -e 'const fs=require("node:fs"),path=require("node:path"),pw=require("playwright/package.json"),core=require("playwright-core/package.json");if(pw.version!=="1.64.1"||core.version!=="1.64.1"||process.version!=="v24.22.1"||process.platform!=="linux"||process.arch!=="x64")process.exit(1);console.log(JSON.stringify({node:process.version,platform:process.platform,arch:process.arch,playwright:pw.version,playwrightCore:core.version,browsersDeclared:JSON.parse(fs.readFileSync(path.join(path.dirname(require.resolve("playwright-core/package.json")),"browsers.json"),"utf8")),browserRuntimeMeasured:false},null,2));' > "$ARTIFACT_DIR/packages.json"
+      - name: Utiliser le miroir Ubuntu officiel pour ce runner de validation
+        timeout-minutes: 1
+        shell: bash
+        run: |
+          cp /etc/apt/sources.list.d/ubuntu.sources "$ARTIFACT_DIR/apt-before.sources"
+          sudo python3 - <<'PY'
+          from pathlib import Path
+          path = Path('/etc/apt/sources.list.d/ubuntu.sources')
+          if path.resolve() != path:
+              raise SystemExit('unexpected linked apt source')
+          before = path.read_text()
+          after = before.replace('http://azure.archive.ubuntu.com/ubuntu', 'http://archive.ubuntu.com/ubuntu').replace('https://azure.archive.ubuntu.com/ubuntu', 'https://archive.ubuntu.com/ubuntu')
+          if after == before:
+              raise SystemExit('expected Azure Ubuntu mirror absent; do not change another source')
+          path.write_text(after)
+          PY
+          cp /etc/apt/sources.list.d/ubuntu.sources "$ARTIFACT_DIR/apt-after.sources"
       - name: Installer Chromium, WebKit et leurs dépendances système
+        timeout-minutes: 5
         shell: bash
         run: |
           set -o pipefail
@@ -99,7 +117,7 @@ jobs:
       - name: Exécuter une seule fois la suite complète du candidat
         shell: bash
         env:
-          NODE_OPTIONS: ${{ fromJSON(steps.reporter.outputs.options) }}
+          NODE_OPTIONS: ${{ fromJSON(steps.reporter.outputs.options || '""') }}
         run: |
           python3 - <<'PY'
           import hashlib, json, os
