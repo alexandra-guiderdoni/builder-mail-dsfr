@@ -81,9 +81,10 @@ jobs:
           if path.resolve() != path:
               raise SystemExit('unexpected linked apt source')
           before = path.read_text()
-          after = before.replace('http://azure.archive.ubuntu.com/ubuntu', 'http://archive.ubuntu.com/ubuntu').replace('https://azure.archive.ubuntu.com/ubuntu', 'https://archive.ubuntu.com/ubuntu')
-          if after == before:
-              raise SystemExit('expected Azure Ubuntu mirror absent; do not change another source')
+          expected = 'URIs: mirror+file:/etc/apt/apt-mirrors.txt'
+          if before.count(expected) != 2:
+              raise SystemExit('expected runner mirror-file entries absent; do not change another source')
+          after = before.replace(expected, 'URIs: http://archive.ubuntu.com/ubuntu')
           path.write_text(after)
           PY
           cp /etc/apt/sources.list.d/ubuntu.sources "$ARTIFACT_DIR/apt-after.sources"
