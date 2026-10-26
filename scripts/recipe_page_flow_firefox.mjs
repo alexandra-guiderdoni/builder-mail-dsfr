@@ -30,7 +30,7 @@ async function child() {
  throw Error('Aperçu encore défilant ou document absent : '+src);
 }
 async function key(value){await firefox.call('input.performActions',{context:firefox.context,actions:[{type:'key',id:'keyboard',actions:[{type:'keyDown',value},{type:'keyUp',value}]}]})}
-async function dimensions(){return await firefox.evaluate(`(()=>{const box=e=>({client:e.clientHeight,scroll:e.scrollHeight,height:e.getBoundingClientRect().height,top:e.getBoundingClientRect().top,bottom:e.getBoundingClientRect().bottom}),select=document.getElementById('catalogue');return{viewport:{width:innerWidth,height:innerHeight,dpr:devicePixelRatio,outerWidth,outerHeight},list:box(document.getElementById('block-list')),catalogue:{...box(select),size:select.size,count:select.options.length,value:select.value,last:box(select.options[select.options.length-1])},text:box(document.getElementById('field-f0')),json:box(document.getElementById('json-input')),focus:document.activeElement.id,selection:[document.getElementById('field-f0').selectionStart,document.getElementById('field-f0').selectionEnd],pageWidth:document.documentElement.scrollWidth}})()`)}
+async function dimensions(){return await firefox.evaluate(`(()=>{const box=e=>({client:e.clientHeight,scroll:e.scrollHeight,height:e.getBoundingClientRect().height,top:e.getBoundingClientRect().top,bottom:e.getBoundingClientRect().bottom}),select=document.getElementById('catalogue');return{viewport:{width:innerWidth,height:innerHeight,dpr:devicePixelRatio,outerWidth,outerHeight},list:box(document.getElementById('block-list')),catalogue:{...box(select),size:select.size,count:select.options.length,groups:select.querySelectorAll('optgroup').length,value:select.value,last:box(select.options[select.options.length-1])},text:box(document.getElementById('field-f0')),json:box(document.getElementById('json-input')),focus:document.activeElement.id,selection:[document.getElementById('field-f0').selectionStart,document.getElementById('field-f0').selectionEnd],pageWidth:document.documentElement.scrollWidth}})()`)}
 try {
  await fs.copyFile(new URL(import.meta.url),path.join(out,'collecteur.mjs'));
  await new Promise(resolve=>host.listen(0,'127.0.0.1',resolve));
@@ -49,12 +49,12 @@ try {
    const long=Array.from({length:35},(_,i)=>'Ligne '+i+' — contenu de recette sans barre interne.').join('\n');
    await firefox.field('#field-f0',long);await firefox.wait(`document.getElementById('save-state').textContent==='Bibliothèque sauvegardée dans ce navigateur.'`);
    await firefox.details('Ajouter un composant');await firefox.details('Importer du JSON');await firefox.field('#json-input',packet);
-   for(const width of factor===1?[1280,1024,390]:[null]) {
+   for(const width of factor===1?[390,1024,1280]:[null]) {
     if(width)await firefox.call('browsingContext.setViewport',{context:firefox.context,viewport:{width,height:900}});
     await firefox.evaluate('document.fonts.ready.then(()=>true)');
     await firefox.wait(`(()=>{const e=document.getElementById('field-f0');return e.clientHeight>=e.scrollHeight-1})()`);
     const preview=await child(),data=await dimensions();
-    assert(data.list.client>=data.list.scroll-1);assert(data.catalogue.client>=data.catalogue.scroll-1);assert.equal(data.catalogue.size,52);assert.equal(data.catalogue.count,52);
+    assert(data.list.client>=data.list.scroll-1);assert(data.catalogue.client>=data.catalogue.scroll-1);assert.equal(data.catalogue.size,data.viewport.width<=575?1:61);assert.equal(data.catalogue.count,52);assert.equal(data.catalogue.groups,9);
     assert(data.text.client>=data.text.scroll-1&&data.text.height>500);assert(data.json.height<300&&data.json.scroll>data.json.client);
     assert(data.pageWidth<=data.viewport.width+1);
     const name=surface+'-'+factor+'-'+(width||'natif'),artifact=path.join(out,name+'.json');

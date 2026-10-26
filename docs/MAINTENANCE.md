@@ -114,9 +114,12 @@ Sur le Mac de développement avec Firefox installé :
 
 ```sh
 node scripts/recipe_firefox.mjs
+node scripts/recipe_page_flow_firefox.mjs
 ```
 
-`FIREFOX_BINARY` permet de désigner l’exécutable Firefox ; `SNUM_RECIPE_PACKET` permet d’utiliser un paquet de recette local. Sans ce dernier, le scénario utilise un paquet synthétique. Le scénario convertit dans la page SNUM dédiée, télécharge le JSON puis l’importe dans le builder. La recette crée son propre profil, ferme uniquement le processus qu’elle a lancé et conserve un reçu sous `evidence/application/`. Elle n’exerce pas Windows.
+`FIREFOX_BINARY` permet de désigner l’exécutable Firefox ; `SNUM_RECIPE_PACKET` permet d’utiliser un paquet de recette local. Sans ce dernier, le scénario utilise un paquet synthétique. Le scénario convertit dans la page SNUM dédiée, télécharge le JSON puis l’importe dans le builder. La recette crée son propre profil, ferme uniquement le processus qu’elle a lancé et conserve un reçu sous `evidence/application/`. Elle n’exerce pas Windows. Les exports nommés et datés sont téléchargés réellement ; les avertissements avant export HTML ou copie sont confirmés par activation clavier. Depuis la recompression des images à l’import, le contrôle compare les sorties à l’image enregistrée et décodable, plutôt qu’aux octets du fichier source.
+
+La recette de mise en page vérifie les 52 options et leurs 9 groupes : taille native 61 en vue large, 1 jusqu’à 575 px. Elle exerce 390, 1024 et 1280 px, puis la navigation dans la liste en vue large, sur les variantes portable et web, ainsi que le zoom natif à 200 %.
 
 Pour éprouver sur le Mac l’installation réelle dans un profil Chromium isolé :
 

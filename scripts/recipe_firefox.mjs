@@ -15,6 +15,15 @@ async function downloaded(filename) {
   for (let i = 0; i < 100; i++) { try { const text = await fs.readFile(destination, 'utf8'); if (text) return {path: destination, text}; } catch {} await new Promise(resolve => setTimeout(resolve, 100)); }
   throw new Error(`Téléchargement absent : ${filename}`);
 }
+async function confirmOutput(action, notice) {
+  await firefox.click(`[data-action=${action}]`);
+  await firefox.wait(`document.querySelector('#check-dialog').open || document.querySelector('#notice').textContent.startsWith(${JSON.stringify(notice)}) || !document.querySelector('#error').hidden`);
+  const error = await firefox.evaluate(`document.querySelector('#error').hidden ? '' : document.querySelector('#error').textContent`);
+  assert.equal(error, '');
+  if (await firefox.evaluate(`document.querySelector('#check-dialog').open`)) await firefox.click('#check-confirm');
+  await firefox.wait(`document.querySelector('#notice').textContent.startsWith(${JSON.stringify(notice)})`);
+}
+const exportName = (base, extension) => firefox.evaluate(`MailBuilder.Files.exportName(${base}, ${JSON.stringify(extension)})`);
 const saved = () => firefox.wait(`document.querySelector('#save-state').textContent==='Bibliothèque sauvegardée dans ce navigateur.'`);
 try {
   await firefox.start(); report.browser = firefox.version;
@@ -32,20 +41,24 @@ try {
   const converted = await downloaded('snum.composition.courriel.json');
   await firefox.navigate(portable); await firefox.details('Fichiers et récupération'); await firefox.files('#project-input', converted.path);
   await firefox.wait(`document.querySelector('#notice').textContent.startsWith('Import ajouté à la bibliothèque')`); await saved();
-  const article = await firefox.evaluate(`MailBuilder.doc().blocks.find(b=>b.source===${JSON.stringify(packet.articles[0].url)}).id`);
+  const article = await firefox.evaluate(`MailBuilder.doc().blocks.find(b=>b.values.f3===${JSON.stringify(packet.articles[0].url)}).id`);
   await firefox.click(`[data-select="${article}"]`); await firefox.click('[data-block-action=duplicate]');
   await firefox.details('Ajouter un composant'); await firefox.evaluate(`(()=>{document.querySelector('#catalogue').value='mail-29';return true})()`); await firefox.click('[data-action=add-block]');
   await firefox.files('[data-image-field]', path.join(root, 'app/assets/icon-192.png')); await firefox.wait(`document.querySelector('#notice').textContent.includes('Image locale incorporée')`); await saved();
   report.checks.push('52 composants disponibles ; compositions, modèle, identité, conversion SNUM séparée puis import JSON générique, duplication et image locale par l’interface');
-  await firefox.details('Fichiers et récupération'); await firefox.click('[data-action=export-document]'); const project = await downloaded('composition.courriel.json');
-  await firefox.click('[data-action=export-mail]'); const mail = await downloaded('courriel.html');
-  const image = (await fs.readFile(path.join(root, 'app/assets/icon-192.png'))).toString('base64');
-  assert(mail.text.includes(image)); assert(project.text.includes(image)); assert.equal(mail.text.split(packet.articles[0].url.replaceAll('&', '&amp;')).length - 1, 2);
-  await firefox.click('[data-action=copy]'); await firefox.wait(`document.querySelector('#notice').textContent.startsWith('Courriel copié en HTML et texte.')`);
+  await firefox.details('Fichiers et récupération'); await firefox.click('[data-action=export-document]'); const project = await downloaded(await exportName('MailBuilder.doc().name', 'courriel.json'));
+  await confirmOutput('export-mail', 'Courriel proposé au téléchargement.'); const mail = await downloaded(await exportName('MailBuilder.doc().name', 'html'));
+  // #96 : l’image est recompressée à l’import ; les sorties doivent conserver l’image enregistrée, pas les octets source.
+  const image = await firefox.evaluate(`MailBuilder.doc().blocks.find(b=>b.component==='mail-29').values.f0`);
+  assert.match(image, /^data:image\/png;base64,/);
+  const dimensions = await firefox.evaluate(`(async()=>{const image=new Image();image.src=${JSON.stringify(image)};await image.decode();return [image.naturalWidth,image.naturalHeight]})()`);
+  assert.deepEqual(dimensions, [192, 192]);
+  assert(mail.text.includes(image)); assert.equal(JSON.parse(project.text).blocks.find(b=>b.component==='mail-29').values.f0, image); assert.equal(mail.text.split(packet.articles[0].url.replaceAll('&', '&amp;')).length - 1, 2);
+  await confirmOutput('copy', 'Courriel copié en HTML et texte.');
   report.checks.push('téléchargements réels avec image et liens source dupliqués ; écriture du presse-papiers par activation clavier native');
   const badPath = path.join(directory, 'invalid.json'); const bad = JSON.parse(project.text); bad.version = 99; await fs.writeFile(badPath, JSON.stringify(bad));
   const count = await firefox.evaluate('MailBuilder.library.documents.length'); await firefox.files('#project-input', badPath); await firefox.wait(`document.querySelector('#error').textContent.includes('Version de composition')`); assert.equal(await firefox.evaluate('MailBuilder.library.documents.length'), count);
-  await firefox.click('[data-action=export-library]'); const library = await downloaded('bibliotheque.courriels.json');
+  await firefox.click('[data-action=export-library]'); const library = await downloaded(await exportName(JSON.stringify('bibliotheque-courriels'), 'json'));
   const snapshot = JSON.parse(library.text); assert.equal(snapshot.templates.length, 1); assert.equal(snapshot.identities.length, 1);
   report.checks.push('import invalide refusé ; fichier de bibliothèque contenant compositions, modèle et identité');
   await firefox.capture('fichier-portable.png'); await firefox.stop(); await firefox.start(); await firefox.navigate(portable);
