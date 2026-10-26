@@ -14,6 +14,7 @@ test('la confirmation retire les deux documents de fond et les reconstruit aprè
   assert.equal(f.element('catalogue-preview'), undefined);
   assert.equal(old.isConnected, false); assert.equal(oldCatalogue.isConnected, false);
   f.element('check-cancel').emit('click');
+  f.drainClose();
   assert.equal(await confirmation, false);
   assert.notEqual(f.element('preview'), old);
   assert.notEqual(f.element('catalogue-preview'), oldCatalogue);
@@ -32,7 +33,7 @@ test('une navigation interrompue reprend seulement le dernier rendu et ignore lo
   }
   assert.throws(() => f.A.Preview.show(null));
   assert.equal(f.blobs.size, count, 'aucun Blob créé pendant la suspension');
-  f.tick(10000); f.element('check-cancel').emit('click'); await confirmation;
+  f.tick(10000); f.element('check-cancel').emit('click'); f.drainClose(); await confirmation;
   const current = f.element('preview'), url = current.src;
   old.emit('load');
   assert.equal(current.src, url); assert.deepEqual(costs, []);
@@ -52,12 +53,13 @@ test('une confirmation remplace la précédente sans remonter le fond ; close ta
   const first = f.A.Checks.confirm('copy', warning(f));
   const replacements = f.replacements.length;
   const second = f.A.Checks.confirm('export', warning(f));
-  assert.equal(await first, false);
   assert.equal(f.replacements.length, replacements, 'aucune insertion entre confirmations');
   f.drain(); // close de la première alors que la seconde est ouverte
+  assert.equal(await first, false);
   assert.equal(f.element('check-dialog').open, true); assert.equal(f.element('preview'), undefined);
   let outputs = 0; second.then(go => { if (go) outputs++; });
   f.element('check-form').emit('submit'); f.element('check-form').emit('submit');
+  f.drainClose();
   assert.equal(await second, true); await Promise.resolve(); assert.equal(outputs, 1);
   f.drain(); assert.ok(f.element('preview')); assert.equal(f.replacements.length, replacements + 2);
 });
@@ -67,7 +69,10 @@ for (const phase of ['showModal', 'focus']) test(`l’échec de ${phase} restaur
   const primary = new Error('primary-' + phase);
   if (phase === 'showModal') f.element('check-dialog').showError = primary;
   else f.element('check-dialog-title').focusError = primary;
-  await assert.rejects(f.A.Checks.confirm('copy', warning(f)), error => error === primary);
+  const confirmation = f.A.Checks.confirm('copy', warning(f));
+  const rejected = assert.rejects(confirmation, error => error === primary);
+  if (phase === 'focus') f.drainClose();
+  await rejected;
   assert.equal(f.element('check-dialog').open, false); assert.ok(f.element('preview')); assert.ok(f.element('catalogue-preview'));
 });
 
@@ -96,7 +101,7 @@ test('le coût d’un rendu terminé n’est pas notifié de nouveau après une 
   f.A.Preview.show(f.doc, cost => costs.push(cost)); f.tick(8); f.element('preview').emit('load');
   assert.deepEqual(costs, [8]);
   const confirmation = f.A.Checks.confirm('copy', warning(f)); f.tick(20000);
-  f.element('check-cancel').emit('click'); await confirmation;
+  f.element('check-cancel').emit('click'); f.drainClose(); await confirmation;
   f.tick(4); f.element('preview').emit('load');
   assert.deepEqual(costs, [8]);
 });
@@ -113,7 +118,7 @@ test('la frappe différée et le dernier choix catalogue survivent au retrait de
   f.element('catalogue').value = 'mail-19';
   assert.doesNotThrow(() => f.element('catalogue').emit('change'));
   assert.equal(f.element('preview'), undefined);
-  f.element('check-cancel').emit('click'); assert.equal(await confirmation, false);
+  f.element('check-cancel').emit('click'); f.drainClose(); assert.equal(await confirmation, false);
   const current = f.element('preview');
   const html = await f.blobs.get(current.src.split('#')[0]).text();
   assert.ok(html.includes('Dernière frappe'));

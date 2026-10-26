@@ -6,7 +6,8 @@ const catalogue = JSON.parse(execFileSync('python3', ['-c', 'import json;from sc
 
 function fixture() {
   const nodes = new Map(), windows = new Map(), timers = new Map(), blobs = new Map(), revoked = [], replacements = [];
-  let now = 0, serial = 0;
+  let now = 0, serial = 0, cloneFailure = null;
+  const closeTasks = new Set();
   class Element {
     constructor(tag = 'DIV', id = '') {
       this.tagName = tag; this.id = id; this.listeners = new Map(); this.style = {}; this.dataset = {};
@@ -28,6 +29,7 @@ function fixture() {
     getAttribute(key) { return this.attributes.get(key) ?? null; }
     removeAttribute(key) { this.attributes.delete(key); if (key === 'src' || key === 'srcdoc') this[key] = ''; }
     cloneNode() {
+      if (cloneFailure) { const failure = cloneFailure; cloneFailure = null; throw failure; }
       const copy = new Element(this.tagName, this.id);
       copy.attributes = new Map(this.attributes); copy.style = {...this.style}; copy.dataset = {...this.dataset};
       copy.hidden = this.hidden; copy.className = this.className; copy.src = this.src; copy.srcdoc = this.srcdoc;
@@ -42,7 +44,12 @@ function fixture() {
     getBoundingClientRect() { return {x: 0, y: 0, width: 640, height: 570}; }
     focus() { if (this.focusError) throw this.focusError; document.activeElement = this; }
     showModal() { if (this.showError) throw this.showError; this.open = true; }
-    close() { this.open = false; timers.set(++serial, () => this.emit('close')); }
+    close() {
+      if (!this.open) return;
+      this.open = false;
+      const id = ++serial; closeTasks.add(id);
+      timers.set(id, () => { closeTasks.delete(id); this.emit('close'); });
+    }
     querySelectorAll() { return []; }
     querySelector() { return null; }
     contains() { return false; }
@@ -71,6 +78,8 @@ function fixture() {
   return {A, doc, document, nodes, load, context, blobs, revoked, replacements,
     element: id => nodes.get(id), tick: amount => { now += amount; },
     message: event => { for (const fn of windows.get('message') || []) fn(event); },
+    failNextClone(error) { cloneFailure = error; },
+    drainClose() { const id = closeTasks.values().next().value; if (id === undefined) throw Error('no close event queued'); const fn = timers.get(id); timers.delete(id); fn(); },
     drain() { for (let i = 0; timers.size && i < 20; i++) { const batch = [...timers.values()]; timers.clear(); for (const fn of batch) fn(); } if (timers.size) throw Error('fixture timers did not settle'); }};
 }
 module.exports = {fixture};

@@ -97,25 +97,58 @@
   }
   // Boîte de confirmation : une confirmation par copie ou téléchargement ; chaque avertissement mène à son bloc.
   let pending = null;
-  const releases = new Set();
-  function releaseClosed() {
-    if (get("check-dialog").open) return;
-    for (const release of releases) { releases.delete(release); release(); }
+  // close est mis en file par le navigateur : attribuer chaque événement au cycle fermé,
+  // même si une seconde boîte a déjà été ouverte puis fermée entre-temps.
+  let cycle = null;
+  const closing = [];
+  function queueClosed() {
+    if (!cycle || get("check-dialog").open) return;
+    closing.push(cycle); cycle = null;
   }
-  function settle(result, failure) {
-    if (!pending) return;
-    const {resolve, reject, origin, release} = pending; pending = null;
-    releases.add(release);
-    try { if (get("check-dialog").open) get("check-dialog").close(); } catch (cause) { failure ||= cause; }
-    try { releaseClosed(); } catch (cause) { failure ||= cause; }
+  function restoreFocus(entry) {
+    if (entry.focusRestored) return;
+    entry.focusRestored = true;
+    const {result, origin} = entry;
     try {
       if (result !== "go" && !result?.block) origin?.focus();
       if (result?.block) {
         A.selected = result.block; A.UI.blockList(); A.UI.fields();
         (get(result.field) || get("block-editor").querySelector("textarea,input"))?.focus();
       }
-    } catch (cause) { failure ||= cause; }
-    if (failure) reject(failure); else resolve(result === "go");
+    } catch (cause) { entry.failure ||= cause; }
+  }
+  function finish(entry) {
+    if (entry.finished) return;
+    // Un événement ancien ne doit pas voler le focus d'une nouvelle confirmation.
+    if (!cycle && !closing.length) restoreFocus(entry);
+    entry.finished = true;
+    if (entry.failure) entry.reject(entry.failure); else entry.resolve(entry.result === "go");
+  }
+  function releaseCycle(closed) {
+    let lateFailure;
+    for (const entry of closed.entries) {
+      try { entry.release(); } catch (cause) {
+        if (entry.finished) lateFailure ||= cause;
+        else entry.failure ||= cause;
+      }
+      finish(entry);
+    }
+    // Une autorisation déjà rejetée ne peut être rejetée deux fois : exposer l'erreur secondaire.
+    if (lateFailure) throw lateFailure;
+  }
+  function settle(result, failure) {
+    if (!pending) return;
+    const entry = pending; pending = null;
+    entry.result = result; entry.failure ||= failure;
+    const dialog = get("check-dialog");
+    try { if (dialog.open) dialog.close(); } catch (cause) { entry.failure ||= cause; }
+    if (dialog.open) { entry.failure ||= new Error("La boîte de confirmation n’a pas été fermée."); finish(entry); }
+    else {
+      // L'accès au bloc reste immédiat ; seul le retour des iframes attend close.
+      restoreFocus(entry);
+      if (cycle.opened) queueClosed();
+      else { const unopened = cycle; cycle = null; releaseCycle(unopened); }
+    }
   }
   function confirm(action, list) {
     if (!list.length || !get("check-dialog")) return Promise.resolve(true);
@@ -127,17 +160,28 @@
     return new Promise((resolve, reject) => {
       const release = A.Preview.suspend();
       if (pending) settle(false);
-      pending = {resolve, reject, release, list, origin: document.activeElement};
+      // Une fermeture native peut être en file sans avoir encore livré son événement.
+      queueClosed();
+      if (!cycle) cycle = {entries: [], opened: false};
+      pending = {resolve, reject, release, list, origin: document.activeElement, result: false, finished: false};
+      cycle.entries.push(pending);
       try {
         // Le focus part du titre : la liste peut dépasser l’écran, et les points se lisent avant les boutons.
-        get("check-dialog").showModal(); get("check-dialog").scrollTop = 0; get("check-dialog-title").focus();
+        get("check-dialog").showModal(); cycle.opened = true;
+        get("check-dialog").scrollTop = 0; get("check-dialog-title").focus();
       } catch (cause) { settle(false, cause); }
     });
   }
   if (typeof document !== "undefined" && document.getElementById("check-dialog")) {
     get("check-cancel").addEventListener("click", () => settle(false));
-    // Un événement « close » tardif ne doit pas fermer une boîte rouverte entre-temps.
-    get("check-dialog").addEventListener("close", () => { if (!get("check-dialog").open) { settle(false); releaseClosed(); } });
+    get("check-dialog").addEventListener("close", () => {
+      if (!closing.length && !get("check-dialog").open && cycle) {
+        if (pending) { pending.result = false; pending = null; }
+        queueClosed();
+      }
+      const closed = closing.shift();
+      if (closed) releaseCycle(closed);
+    });
     get("check-form").addEventListener("submit", event => { event.preventDefault(); settle("go"); });
     get("check-list").addEventListener("click", event => {
       const button = event.target.closest("[data-check-index]"), warning = button && pending?.list[Number(button.dataset.checkIndex)];
