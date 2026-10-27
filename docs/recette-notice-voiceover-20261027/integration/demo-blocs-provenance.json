@@ -1,0 +1,10 @@
+{
+  "source": "builder-demo-newsletter-voiceover-20261027/voiceover-demo.jsonl",
+  "source_sha256": "744af4eb1c817550ec144b46ab188aecca5cfe8a603bd71b1895cd6e5af62133",
+  "lines_inclusive": [
+    271,
+    320
+  ],
+  "build": "earlier CSS-only candidate on same base, no Files delay; not a rerun on final candidate",
+  "scope": "native block action announcements and surrounding focus navigation"
+}

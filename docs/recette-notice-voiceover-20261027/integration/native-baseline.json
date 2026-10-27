@@ -1,0 +1,11 @@
+{
+  "observed_at": "2026-10-27T20:23:32.989974+00:00",
+  "macOS": "26.5.2",
+  "voiceover_initial": "on (System Settings AX_VOICEOVER_ENABLED)",
+  "applescript_control_initial": false,
+  "applescript_control_enabled_with_user_confirmation": true,
+  "terminal_to_voiceover_initial": "on; pre-existing temporary grant from demo; no new grant",
+  "old_authentication_sheet": "our pending revocation canceled; no authentication bypass",
+  "candidate_html_sha256": "ed29190fa300086939fdf115683a7c4e99e7213d5a3fe82b59d89f31e0dd8048",
+  "scope": "#157 only; no production publication"
+}

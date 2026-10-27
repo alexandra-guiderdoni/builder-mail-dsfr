@@ -71,6 +71,40 @@ test('chargement d’image : la description différée n’écrase pas une annon
   } finally { await browser.close(); }
 });
 
+test('copie confirmée : le succès attend le retour du document après la fermeture modale', async () => {
+  const browser = await chromium.launch({headless: true});
+  try {
+    const {page} = await open(browser);
+    await page.evaluate(() => {
+      window.__copyAfterModal = {documentReturned: false, writes: 0, announcements: []};
+      document.getElementById('check-dialog').addEventListener('close', () => {
+        // Modélise le retour asynchrone du document aux consommateurs après la fermeture.
+        setTimeout(() => { window.__copyAfterModal.documentReturned = true; }, 0);
+      }, {once: true});
+      navigator.clipboard.write = async items => {
+        window.__copyAfterModal.writes++;
+        window.__copyAfterModal.types = items[0].types;
+      };
+      const notice = MailBuilder.notice;
+      MailBuilder.notice = (message, since) => {
+        if (message.startsWith('Courriel copié en HTML et texte.')) {
+          window.__copyAfterModal.announcements.push(window.__copyAfterModal.documentReturned);
+        }
+        return notice(message, since);
+      };
+      window.__copyAfterModal.done = MailBuilder.Files.copy();
+    });
+    await page.locator('#check-dialog').waitFor({state: 'visible'});
+    await click(page, '#check-confirm');
+    await page.evaluate(() => window.__copyAfterModal.done);
+    const result = await page.evaluate(() => window.__copyAfterModal);
+    assert.equal(result.writes, 1, 'une seule écriture après confirmation');
+    assert.deepEqual(result.types, ['text/html', 'text/plain']);
+    assert.deepEqual(result.announcements, [true], 'le succès ne précède pas le retour asynchrone du document');
+    assert.match(await notice(page), /Courriel copié en HTML et texte/);
+  } finally { await browser.close(); }
+});
+
 test('copie du courriel : « Courriel copié » n’écrase pas une annonce plus récente', async () => {
   const browser = await chromium.launch({headless: true});
   try {

@@ -70,8 +70,12 @@
      // A.notice écrire sans contrôle (comportement d’avant #122, suffisant pour ce flux à un seul écrivain).
     clearTimeout(weightTimer); showWeight(result); A.notice(""); const ticket = A.State.noticeTicket?.();
     // Avertissements confirmables du contrôle avant copie (#36), absents du convertisseur SNUM.
-    if (A.Checks && !(await A.Checks.confirm("copy", A.Checks.warnings(A.doc(), result)))) return;
+    const warnings = A.Checks?.warnings(A.doc(), result);
+    if (warnings && !(await A.Checks.confirm("copy", warnings))) return;
     await navigator.clipboard.write([new ClipboardItem({"text/html": new Blob([html], {type: "text/html"}), "text/plain": new Blob([A.Render.plain(A.doc())], {type: "text/plain"})})]);
+    // Après une modale, le document redevient accessible de façon asynchrone : laisser la région live se réexposer.
+    // Le jeton d’origine reste contrôlé par A.notice ; une annonce plus récente garde la priorité pendant ce délai.
+    if (warnings?.length) await new Promise(resolve => setTimeout(resolve, 250));
     A.notice([`Courriel copié en HTML et texte. ${result.level === "ok" ? "" : `${WARNINGS[result.level]} ${CAUTION} `}Contrôlez le collage et les images dans votre messagerie.`, ...A.Render.warnings(A.doc())].join(" "), ticket);
   }
   A.Files = Object.freeze({download, json, safeName, exportDate, exportName, image, validate, copy, weightText, measureWeight, scheduleWeight, staleWeight});

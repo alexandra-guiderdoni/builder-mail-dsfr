@@ -1,0 +1,6 @@
+{
+  "uninstrumented_html_sha256": "de046311361fc02aa22981e93ac22e4ef7b85c6eb8f2eb4be2fc725b3ced6325",
+  "sequence_fixture_sha256": "1377042de8959fdf4a4b7c875151b9e7c524dedea2b3ef44afd11b133ae7780b",
+  "sequence_delta": "add test-only positive/negative controls and timed calls to unchanged MailBuilder.notice; no VoiceOver speech injection",
+  "product_delta": "notice empty CSS kept rendered; actual copy success postponed 250ms only if warnings required confirmation; original notice ticket retained"
+}

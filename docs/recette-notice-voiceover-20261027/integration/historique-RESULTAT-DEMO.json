@@ -1,0 +1,34 @@
+{
+  "created_at": "2026-10-27T19:25:48.340360+00:00",
+  "title": "La Fabrique publique — novembre 2026",
+  "blocks": 9,
+  "editor_controls": {
+    "expected": 41,
+    "spoken": 41
+  },
+  "home_controls": {
+    "expected": 13,
+    "spoken": 13
+  },
+  "dialog_states": 7,
+  "oracle": "Native VoiceOver AppleScript content of last phrase; no synthetic speech output",
+  "runtime": "macOS 26.5.2; VoiceOver 10; Chrome for Testing 156.0.8078.4",
+  "build": "isolated notice fix worktree; not published main",
+  "warnings": [
+    "Copy payload 102.5 KiB, above prudent 90 KiB threshold",
+    "Footer retains catalogue official privacy URL"
+  ],
+  "scope_limits": [
+    "Current workflow states only; not all conditional app states or catalogue components",
+    "No global RGAA conformance verdict",
+    "No Outlook or Melissa delivery qualification"
+  ],
+  "cleanup": {
+    "collectors": "stopped",
+    "clipboard": "original restored; temporary backup removed",
+    "voiceover_applescript_control": "disabled and verified",
+    "terminal_voiceover_permission": "revocation awaits macOS Touch ID",
+    "voiceover": "still enabled pending cleanup",
+    "local_server": "127.0.0.1:18792 kept for visible editor"
+  }
+}

@@ -1,0 +1,17 @@
+✔ les sections ouvertes restent dans la fenêtre avec les espacements de texte augmentés (3146.536125ms)
+✔ les erreurs de champs restent associées à chacun et disparaissent après correction ou annulation (2736.409125ms)
+✔ la région notice reste accessible avant et après un message sans déplacer le focus (2388.90125ms)
+✔ import de projet : « Import ajouté » n’écrase pas une annonce plus récente (2559.0805ms)
+✔ chargement d’image : la description différée n’écrase pas une annonce plus récente (2547.514291ms)
+✔ copie confirmée : le succès attend le retour du document après la fermeture modale (2776.398125ms)
+✔ copie du courriel : « Courriel copié » n’écrase pas une annonce plus récente (2416.140667ms)
+✔ récupération d’un état précédent : « État précédent relu » n’écrase pas une annonce plus récente (2200.758ms)
+✔ reprise de la main : « Main reprise » n’écrase pas une annonce plus récente (2380.610417ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 15146.983208

@@ -1,0 +1,48 @@
+{"timestamp": "2026-10-27T20:25:36.594788+00:00", "action": "open-copy-confirmation", "target": "native button Copier le courriel", "origin": "http://127.0.0.1:18807/"}
+{"timestamp": "2026-10-27T20:26:05.849359+00:00", "action": "confirm-copy", "target": "native button Copier quand même", "observed_dialog": "7 warnings; fictitious recipe only; focused heading Vérifier avant de copier"}
+{"timestamp": "2026-10-27T20:27:24.232083+00:00", "action": "open-copy-via-VoiceOver", "guard": "keyboard cursor label starts Copier le courriel", "method": "native VoiceOver cursor action; no CUA observation during speech"}
+{"timestamp": "2026-10-27T20:27:58.129731+00:00", "action": "find-next-dialog-button", "native_phrase": "Aller au bloc 2 bouton"}
+{"timestamp": "2026-10-27T20:27:59.375312+00:00", "action": "find-next-dialog-button", "native_phrase": "Aller au bloc 3 bouton"}
+{"timestamp": "2026-10-27T20:28:00.604381+00:00", "action": "find-next-dialog-button", "native_phrase": "Aller au bloc 4 bouton"}
+{"timestamp": "2026-10-27T20:28:01.870678+00:00", "action": "find-next-dialog-button", "native_phrase": "Aller au bloc 4 bouton"}
+{"timestamp": "2026-10-27T20:28:03.096091+00:00", "action": "find-next-dialog-button", "native_phrase": "Aller au bloc 5 bouton"}
+{"timestamp": "2026-10-27T20:28:04.326466+00:00", "action": "find-next-dialog-button", "native_phrase": "Aller au bloc 6 bouton"}
+{"timestamp": "2026-10-27T20:28:05.554140+00:00", "action": "find-next-dialog-button", "native_phrase": "Aller au bloc 6 bouton"}
+{"timestamp": "2026-10-27T20:28:06.787696+00:00", "action": "find-next-dialog-button", "native_phrase": "Annuler bouton"}
+{"timestamp": "2026-10-27T20:28:08.029041+00:00", "action": "find-next-dialog-button", "native_phrase": "Copier quand même bouton"}
+{"timestamp": "2026-10-27T20:28:08.029275+00:00", "action": "confirm-copy-via-VoiceOver", "native_phrase": "Copier quand même bouton"}
+{"timestamp": "2026-10-27T20:28:33.285682+00:00", "action": "after-copy-speech-window", "native_phrase": "Vous êtes actuellement sur bouton. Pour cliquer ce bouton, appuyez sur Contrôle-Option-Espace. Appuyez sur Contrôle-Option-Commande-Barre Oblique pour faire apparaître le menu Plus de contenus."}
+{"timestamp": "2026-10-27T20:32:08.594445+00:00", "action": "no-dialog-comparison-start: one custom header", "native_phrase": "Vérification native de la copie — ticket 157 Objet du courriel modifier le texte"}
+{"timestamp": "2026-10-27T20:32:09.110809+00:00", "action": "find-next-button-no-dialog-case", "native_phrase": "Annuler le retrait du bloc « Titre principal » bouton"}
+{"timestamp": "2026-10-27T20:32:10.345703+00:00", "action": "find-next-button-no-dialog-case", "native_phrase": "1. En-tête Marianne Recette 157 — contenu témoin de copie Sélectionné bouton de basculement"}
+{"timestamp": "2026-10-27T20:32:11.562071+00:00", "action": "find-next-button-no-dialog-case", "native_phrase": "Logo Marianne pour le thème clair: Aucun fichier choisi Formats acceptés : PNG, JPEG, GIF ou WebP, jusqu’à 10 Mio, 8192 pixels par côté et 16 777 216 pixels au total. Une nouvelle image est réduite à 152 pixels de large au plus, puis enregistrée en JPEG si elle est opaque, ou en PNG si elle comporte de la transparence ; un WebP est converti. Un GIF animé est gardé tel quel jusqu’à 1 Mio. Au-delà de 300 Kio après compression, un avertissement s’affiche. Les images déjà présentes ne sont pas modifiées. bouton"}
+{"timestamp": "2026-10-27T20:32:12.783995+00:00", "action": "find-next-button-no-dialog-case", "native_phrase": "Logo Marianne pour le thème sombre: Aucun fichier choisi Formats acceptés : PNG, JPEG, GIF ou WebP, jusqu’à 10 Mio, 8192 pixels par côté et 16 777 216 pixels au total. Une nouvelle image est réduite à 152 pixels de large au plus, puis enregistrée en JPEG si elle est opaque, ou en PNG si elle comporte de la transparence ; un WebP est converti. Un GIF animé est gardé tel quel jusqu’à 1 Mio. Au-delà de 300 Kio après compression, un avertissement s’affiche. Les images déjà présentes ne sont pas modifiées. bouton"}
+{"timestamp": "2026-10-27T20:32:14.017260+00:00", "action": "find-next-button-no-dialog-case", "native_phrase": "Revenir au bloc sélectionné bouton"}
+{"timestamp": "2026-10-27T20:32:15.234540+00:00", "action": "find-next-button-no-dialog-case", "native_phrase": "Monter estompé bouton"}
+{"timestamp": "2026-10-27T20:32:16.490983+00:00", "action": "find-next-button-no-dialog-case", "native_phrase": "Descendre estompé bouton"}
+{"timestamp": "2026-10-27T20:32:17.716752+00:00", "action": "find-next-button-no-dialog-case", "native_phrase": "Dupliquer le bloc bouton"}
+{"timestamp": "2026-10-27T20:32:18.938839+00:00", "action": "find-next-button-no-dialog-case", "native_phrase": "Retirer le bloc bouton"}
+{"timestamp": "2026-10-27T20:32:20.180004+00:00", "action": "find-next-button-no-dialog-case", "native_phrase": "Annuler les champs invalides bouton"}
+{"timestamp": "2026-10-27T20:32:21.400256+00:00", "action": "find-next-button-no-dialog-case", "native_phrase": "Copier le courriel Poids du courriel à copier : 30,2 Kio (30 949 octets), images comprises. bouton"}
+{"timestamp": "2026-10-27T20:32:21.400468+00:00", "action": "copy-no-dialog-via-VoiceOver", "native_phrase": "Copier le courriel Poids du courriel à copier : 30,2 Kio (30 949 octets), images comprises. bouton"}
+{"timestamp": "2026-10-27T20:32:46.655741+00:00", "action": "after-no-dialog-speech-window", "native_phrase": "Vous êtes actuellement sur bouton. Pour cliquer ce bouton, appuyez sur Contrôle-Option-Espace. Appuyez sur Contrôle-Option-Commande-Barre Oblique pour faire apparaître le menu Plus de contenus."}
+{"timestamp": "2026-10-27T20:35:48.396304+00:00", "action": "open-copy-probe-250ms", "variant": "delayed-copy-probe-v2.html", "fixture": "same saved composition reduced to custom header plus default title; one warning"}
+{"timestamp": "2026-10-27T20:38:18.369486+00:00", "action": "paired-uninstrumented-copy-start", "fixture": "same custom header plus default title; one warning", "method": "actual coordinate click for confirmation, as for delayed probe"}
+{"timestamp": "2026-10-27T20:42:57.825314+00:00", "action": "start-final-controlled-transitions", "origin": "http://127.0.0.1:18809/sequence.html", "protocol": "7 steps every 8 seconds; 3 original notice transitions; negative plain text; native reader output only"}
+{"time": "2026-10-27T20:47:01.373323+00:00", "action": "native-find-next-button-final-setup", "phrase": "Revenir au bloc sélectionné bouton"}
+{"time": "2026-10-27T20:47:02.185957+00:00", "action": "native-find-next-button-final-setup", "phrase": "Monter estompé bouton"}
+{"time": "2026-10-27T20:47:03.014403+00:00", "action": "native-find-next-button-final-setup", "phrase": "Descendre bouton"}
+{"time": "2026-10-27T20:47:03.814403+00:00", "action": "native-find-next-button-final-setup", "phrase": "Dupliquer le bloc bouton"}
+{"time": "2026-10-27T20:47:04.600010+00:00", "action": "native-find-next-button-final-setup", "phrase": "Retirer le bloc bouton"}
+{"time": "2026-10-27T20:47:05.397936+00:00", "action": "native-find-next-button-final-setup", "phrase": "Annuler les champs invalides bouton"}
+{"time": "2026-10-27T20:47:06.215166+00:00", "action": "native-find-next-button-final-setup", "phrase": "Copier le courriel Poids du courriel à copier : 68,7 Kio (70 437 octets), images comprises. bouton"}
+{"time": "2026-10-27T20:57:37.440175+00:00", "action": "final-copy-modal-find-next-button", "native_cursor": "Aller au bloc 2 bouton"}
+{"time": "2026-10-27T20:57:38.377572+00:00", "action": "final-copy-modal-find-next-button", "native_cursor": "Aller au bloc 3 bouton"}
+{"time": "2026-10-27T20:57:39.308152+00:00", "action": "final-copy-modal-find-next-button", "native_cursor": "Aller au bloc 4 bouton"}
+{"time": "2026-10-27T20:57:40.271540+00:00", "action": "final-copy-modal-find-next-button", "native_cursor": "Aller au bloc 4 bouton"}
+{"time": "2026-10-27T20:57:41.220529+00:00", "action": "final-copy-modal-find-next-button", "native_cursor": "Aller au bloc 5 bouton"}
+{"time": "2026-10-27T20:57:42.153047+00:00", "action": "final-copy-modal-find-next-button", "native_cursor": "Aller au bloc 6 bouton"}
+{"time": "2026-10-27T20:57:43.112587+00:00", "action": "final-copy-modal-find-next-button", "native_cursor": "Aller au bloc 6 bouton"}
+{"time": "2026-10-27T20:57:44.048763+00:00", "action": "final-copy-modal-find-next-button", "native_cursor": "Annuler bouton"}
+{"time": "2026-10-27T20:57:44.993372+00:00", "action": "final-copy-modal-find-next-button", "native_cursor": "Copier quand même bouton"}
+{"time": "2026-10-27T20:57:51.767307+00:00", "action": "final-native-confirm-copy", "native_cursor": "Copier quand même bouton", "candidate": "uninstrumented final portable de046311361fc02aa22981e93ac22e4ef7b85c6eb8f2eb4be2fc725b3ced6325"}

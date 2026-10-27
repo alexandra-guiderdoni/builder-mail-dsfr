@@ -1,0 +1,53 @@
+{
+  "base": "377b2a864ee47b4d45e3127e2d941642cf6e84ea",
+  "files": {
+    "app/source/files.js": "f1845b3c7757c80281c475fa19a3e93a5f59a2ec9e402b2f4ca49aa542283850",
+    "app/source/style.css": "057086eccabf08937bfc3dac6193d2cd4d51edb258e47031c588c5823a8979f4",
+    "tests/accessibility-browser.test.cjs": "d65c82c0fddad835c5c52810a91199856748d31cb4214d8ae93a40ed3a64a638",
+    "tests/notice-protection-browser.test.cjs": "527538c791d5887a43a11250176c80c3eebd90c5af3c425e604e3aef5d360367",
+    "app/distribution/portable.html": "de046311361fc02aa22981e93ac22e4ef7b85c6eb8f2eb4be2fc725b3ced6325",
+    "app/distribution/snum.html": "c8d5e5a786cac3561fc4a85a1506206e3531c662e2101f715f2992302956f9b7",
+    "app/distribution/web/index.html": "6ba4401bacf564c589d60711fdce9c1c8bd58fa6cf595c65a6bbf06a17dc1f15",
+    "app/distribution/web/sw.js": "672213e1525d1f2f017e33455341ea4cd7ef66dfa5c0637c0fccca59e423628c"
+  },
+  "served_native_candidate_sha256": "de046311361fc02aa22981e93ac22e4ef7b85c6eb8f2eb4be2fc725b3ced6325",
+  "full_suite": {
+    "pass": 430,
+    "fail": 0,
+    "skip": 0,
+    "exit": 0
+  },
+  "targeted": {
+    "chromium": 28,
+    "firefox": 9,
+    "webkit": 9
+  },
+  "native_real_copy": {
+    "success_phrase": "Courriel copié en HTML et texte. Contrôlez le collage et les images dans votre messagerie.",
+    "captured_at_utc": "2026-10-27T20:57:52.345437+00:00",
+    "trace": "native-copy-after-reader-restart.jsonl",
+    "uninstrumented": true,
+    "blocks": 6,
+    "confirmation": true,
+    "clipboard_html_and_plain_captured": true,
+    "native_ui_after": "success text present; modal absent; keyboard focus on Copier le courriel",
+    "clipboard_uncompressed_sha256": {
+      "html": "26e361b6245f0a2fa7982aa7245232fb4e8005a718a55a5814083e24951ffc7b",
+      "text": "b8512cd9e29c25e0da7b006fb6548b55ad3059898968859de6914de533668465"
+    }
+  },
+  "cleanup": {
+    "collectors": "stopped; some intentionally interrupted after evidence, exit 130 is not a test PASS",
+    "servers_18807_18809": "stopped",
+    "clipboard": "original native pasteboard restored and byte/type equality verified; private backup removed",
+    "owned_tab": "closed through File / Close Tab; personal tabs preserved",
+    "voiceover": "on, initial state of this task preserved after one off/on diagnostic restart",
+    "applescript_control": "disable attempted; native Utility AX timed out; final checkbox verification pending user answer",
+    "terminal_to_voiceover": "pre-existing on; not changed; no new access granted"
+  },
+  "limits": [
+    "Native last-phrase polling, not an exhaustive audio stream or human listening",
+    "No global RGAA, Outlook/Melissa or other reader/browser qualification",
+    "Earlier timing probe and incomplete focus attempts retained separately from final uninstrumented copy"
+  ]
+}

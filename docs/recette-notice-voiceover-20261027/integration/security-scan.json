@@ -1,0 +1,17 @@
+{
+  "scope": "added code lines in staged diff; documentation and raw binary evidence excluded",
+  "files": [
+    "app/distribution/portable.html",
+    "app/distribution/snum.html",
+    "app/distribution/web/index.html",
+    "app/distribution/web/sw.js",
+    "app/source/files.js",
+    "docs/recette-notice-voiceover-20261027/integration/delayed-copy-probe.js",
+    "docs/recette-notice-voiceover-20261027/integration/sequence-final-probe.js",
+    "tests/accessibility-browser.test.cjs",
+    "tests/notice-protection-browser.test.cjs"
+  ],
+  "added_lines": 89,
+  "matches": [],
+  "result": "CLEAN"
+}

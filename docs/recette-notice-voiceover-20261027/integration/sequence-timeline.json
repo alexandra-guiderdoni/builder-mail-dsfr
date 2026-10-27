@@ -1,0 +1,37 @@
+[
+  {
+    "id": "positive-first",
+    "text": "Témoin vocal alpha : la collecte des annonces fonctionne.",
+    "time": "2026-10-27T20:43:12.647Z"
+  },
+  {
+    "id": "notice-first",
+    "text": "Notice bravo : le premier message de vérification est disponible.",
+    "time": "2026-10-27T20:43:20.646Z"
+  },
+  {
+    "id": "notice-replace",
+    "text": "Notice charlie : le message précédent est maintenant remplacé.",
+    "time": "2026-10-27T20:43:28.644Z"
+  },
+  {
+    "id": "notice-clear",
+    "text": "",
+    "time": "2026-10-27T20:43:36.643Z"
+  },
+  {
+    "id": "notice-after-clear",
+    "text": "Notice delta : le message après effacement est disponible.",
+    "time": "2026-10-27T20:43:44.643Z"
+  },
+  {
+    "id": "negative",
+    "text": "Témoin négatif echo : ce texte ne doit pas être annoncé.",
+    "time": "2026-10-27T20:43:52.642Z"
+  },
+  {
+    "id": "positive-last",
+    "text": "Témoin vocal foxtrot : la collecte reste active à la fin.",
+    "time": "2026-10-27T20:44:00.642Z"
+  }
+]

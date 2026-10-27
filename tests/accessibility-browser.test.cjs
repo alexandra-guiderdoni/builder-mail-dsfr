@@ -1,5 +1,5 @@
 const test = require('node:test');
-const {chromium, open, click, expand, assert} = require('./browser-support.cjs');
+const {chromium, open, click, expand, assert, nativeAx, nativeAxNode} = require('./browser-support.cjs');
 
 test('les sections ouvertes restent dans la fenêtre avec les espacements de texte augmentés', async () => {
   const browser = await chromium.launch();
@@ -36,5 +36,36 @@ test('les erreurs de champs restent associées à chacun et disparaissent après
     await page.locator('#library-name').fill(''); await click(page, '#library-confirm');
     assert.match((await described('#library-name')).text, /Renseignez un nom/);
     assert.equal(await page.evaluate(() => document.activeElement.id), 'library-name');
+  } finally { await browser.close(); }
+});
+
+// Une région de statut retirée de l’arbre lorsqu’elle est vide peut perdre sa première annonce.
+// Cette garde vérifie la présence native ; la preuve vocale VoiceOver reste une recette distincte.
+test('la région notice reste accessible avant et après un message sans déplacer le focus', async () => {
+  const browser = await chromium.launch();
+  try {
+    const {page} = await open(browser);
+    await page.locator('#document-name').focus();
+    for (const message of ['', 'Annonce de vérification', 'Annonce de remplacement', '', 'Nouvelle annonce après effacement']) {
+      await page.evaluate(text => MailBuilder.notice(text), message);
+      const region = await page.locator('#notice').evaluate(element => ({
+        role: element.getAttribute('role'), live: element.getAttribute('aria-live'),
+        display: getComputedStyle(element).display, hidden: element.hidden,
+        text: element.textContent, focus: document.activeElement.id
+      }));
+      assert.equal(region.role, 'status');
+      assert.equal(region.live, 'polite');
+      assert.notEqual(region.display, 'none', 'la région reste présente même vide');
+      assert.equal(region.hidden, false);
+      assert.equal(region.text, message);
+      assert.equal(region.focus, 'document-name');
+      if (nativeAx) {
+        const ax = await nativeAxNode(page, '#notice');
+        assert.ok(ax, 'Chromium doit fournir le nœud natif de la région notice');
+        assert.equal(ax.ignored, false, 'le statut reste exposé dans l’arbre natif');
+        assert.equal(ax.role.value, 'status');
+        assert.equal(ax.properties.find(property => property.name === 'live')?.value.value, 'polite');
+      }
+    }
   } finally { await browser.close(); }
 });

@@ -1,0 +1,72 @@
+{
+  "status": "TARGETED_VOICEOVER_FIX_VALIDATED",
+  "baseCommit": "377b2a864ee47b4d45e3127e2d941642cf6e84ea",
+  "platform": "macOS 26.5.2",
+  "reader": "VoiceOver 10 native, Thomas French",
+  "browser": "Google Chrome 156.0.8078.48",
+  "oracle": "Actual VoiceOver last phrase content, sampled to timestamped JSONL; no synthesized output",
+  "cases": [
+    {
+      "case": "positive-first",
+      "before": true,
+      "after": true
+    },
+    {
+      "case": "notice-first",
+      "before": false,
+      "after": true
+    },
+    {
+      "case": "notice-replace",
+      "before": true,
+      "after": true
+    },
+    {
+      "case": "notice-after-clear",
+      "before": false,
+      "after": true
+    },
+    {
+      "case": "negative",
+      "before": false,
+      "after": false
+    },
+    {
+      "case": "positive-last",
+      "before": true,
+      "after": true
+    }
+  ],
+  "delta": ".notice:empty display:none replaced with margin:0",
+  "limitations": [
+    "One browser/reader/platform combination",
+    "Timed synthetic messages invoke unchanged MailBuilder.notice",
+    "No successful end-to-end duplicate action executed; setup stopped before action",
+    "Native text output captured; no claim of human audio listening or global RGAA compliance"
+  ],
+  "cleanup": {
+    "voiceover": "off verified",
+    "voiceOverAppleScript": "off verified",
+    "terminalToVoiceOverAutomation": "off verified",
+    "ownedTabs": "closed",
+    "server": "stopped"
+  },
+  "verification": {
+    "node": "24.22.1",
+    "check": "PASS",
+    "fullSuite": {
+      "total": 429,
+      "passed": 429,
+      "failed": 0,
+      "skipped": 0
+    },
+    "targetedBeforeFix": "FAIL as expected: empty notice display:none",
+    "targetedAfterFix": {
+      "total": 13,
+      "passed": 13
+    },
+    "newGuardFirefox": "PASS",
+    "newGuardWebKit": "PASS",
+    "publication": "not committed or pushed; isolated worktree; main untouched and clean"
+  }
+}

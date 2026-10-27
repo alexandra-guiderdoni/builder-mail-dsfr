@@ -1,0 +1,36 @@
+✔ les sections ouvertes restent dans la fenêtre avec les espacements de texte augmentés (1727.067791ms)
+✔ les erreurs de champs restent associées à chacun et disparaissent après correction ou annulation (815.612041ms)
+✔ la région notice reste accessible avant et après un message sans déplacer le focus (704.418375ms)
+✔ chromium : composition vide bloquée ; composition saine copiée et téléchargée sans étape (1706.780542ms)
+✔ chromium : avertissements confirmés une fois par copie ou téléchargement (1652.687959ms)
+✔ chromium : chaque avertissement mène directement à son bloc (1044.475875ms)
+✔ webkit : composition vide bloquée ; composition saine copiée et téléchargée sans étape (1756.317ms)
+✔ webkit : avertissements confirmés une fois par copie ou téléchargement (2002.386458ms)
+✔ webkit : chaque avertissement mène directement à son bloc (1791.095208ms)
+✔ chromium : poids affiché et copié, accents et images compris (2773.231958ms)
+✔ chromium : repères à 90 et 102 Kio autour des seuils, sans blocage de la copie (4110.743167ms)
+✔ chromium : aucun calcul du poids pendant la frappe, un seul après la pause (3438.428666ms)
+✔ chromium : poids indisponible tant que la copie est refusée, puis convertisseur SNUM (1277.996584ms)
+✔ webkit : poids affiché et copié, accents et images compris (2504.421417ms)
+✔ webkit : repères à 90 et 102 Kio autour des seuils, sans blocage de la copie (4576.302917ms)
+✔ webkit : aucun calcul du poids pendant la frappe, un seul après la pause (3940.374208ms)
+✔ webkit : poids indisponible tant que la copie est refusée, puis convertisseur SNUM (1866.983667ms)
+✔ template : « enregistré » n’écrase pas l’annonce d’un bloc ajouté pendant la sauvegarde (1427.662875ms)
+✔ identity : « enregistré » n’écrase pas l’annonce d’un bloc ajouté pendant la sauvegarde (780.259291ms)
+✔ export-stored : la copie brute du stockage n’écrase pas une annonce plus récente (730.98325ms)
+✔ readingTicket : une annonce extérieure entre deux imports silencie la fin de chaque import (847.994208ms)
+✔ les réussites différées de création, modèle, import et copie n’écrasent pas une annonce plus récente (918.130458ms)
+✔ import de projet : « Import ajouté » n’écrase pas une annonce plus récente (1350.743375ms)
+✔ chargement d’image : la description différée n’écrase pas une annonce plus récente (731.509291ms)
+✔ copie confirmée : le succès attend le retour du document après la fermeture modale (940.574875ms)
+✔ copie du courriel : « Courriel copié » n’écrase pas une annonce plus récente (915.574792ms)
+✔ récupération d’un état précédent : « État précédent relu » n’écrase pas une annonce plus récente (687.344208ms)
+✔ reprise de la main : « Main reprise » n’écrase pas une annonce plus récente (767.439792ms)
+ℹ tests 28
+ℹ suites 0
+ℹ pass 28
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 24711.289875
