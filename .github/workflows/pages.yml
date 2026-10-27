@@ -16,6 +16,9 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    container:
+      image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:47b510dd9230bf0b9bfc9b20102241e577ea7a99334ab4c3ca19f19770e9b8ea
+      options: --init --ipc=host
     permissions:
       contents: read
     steps:
@@ -27,25 +30,17 @@ jobs:
         uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
         with:
           node-version: '24.22.1'
+      - name: Fixer la version de Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.12.14'
       - name: Installer Playwright depuis le verrou
         run: npm ci --ignore-scripts
-      - name: Installer Chromium, WebKit et leurs dépendances système
-        run: npx --no-install playwright install --with-deps chromium webkit
       - name: Contrôler les distributions et la provenance
         run: npm run check
-      - name: Préparer le rapport TAP
-        id: reporter
-        run: |
-          node <<'NODE'
-          const fs = require('node:fs');
-          const previous = process.env.NODE_OPTIONS || '';
-          const options = previous + (previous ? ' ' : '') + '--test-reporter=tap';
-          fs.appendFileSync(process.env.GITHUB_OUTPUT, 'options=' + JSON.stringify(options) + '\n');
-          NODE
       - name: Exécuter la suite de tests
-        env:
-          NODE_OPTIONS: ${{ fromJSON(steps.reporter.outputs.options) }}
-        run: npm test
+        run: |
+          NODE_OPTIONS="${NODE_OPTIONS:+$NODE_OPTIONS }--test-reporter=tap" npm test
 
   deploy:
     needs: tests
