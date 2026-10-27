@@ -1,0 +1,6 @@
+{
+  "common_prefix_bytes": 1,
+  "common_suffix_bytes": 138478,
+  "native_delta": "meta charset='utf-8'><!DOCTYPE",
+  "expected_delta": "!doctype"
+}

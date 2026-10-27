@@ -22,8 +22,10 @@
   }
   // Sans largeur d’affichage connue, la cible retombe sur le plafond.
   const targetWidth = display => display > 0 ? Math.min(contract.maxWidth, 2 * display) : contract.maxWidth;
+  const inputLimits = "Formats acceptés : PNG, JPEG, GIF ou WebP, jusqu’à 10 Mio, 8192 pixels par côté et 16\u202f777\u202f216 pixels au total.";
+  const inputHelp = () => `${inputLimits} GIF animé : ${mio(contract.animatedGifBytes)} au maximum.`;
   function help(componentId, key) {
-    return `Formats acceptés : PNG, JPEG, GIF ou WebP, jusqu’à 10 Mio, 8192 pixels par côté et 16 777 216 pixels au total. Une nouvelle image est réduite à ${number(targetWidth(displayWidth(componentId, key)))} pixels de large au plus, puis enregistrée en JPEG si elle est opaque, ou en PNG si elle comporte de la transparence ; un WebP est converti. Un GIF animé est gardé tel quel jusqu’à 1 Mio. Au-delà de 300 Kio après compression, un avertissement s’affiche. Les images déjà présentes ne sont pas modifiées.`;
+    return `${inputLimits} Une nouvelle image est réduite à ${number(targetWidth(displayWidth(componentId, key)))} pixels de large au plus, puis enregistrée en JPEG si elle est opaque, ou en PNG si elle comporte de la transparence ; un WebP est converti. Un GIF animé est gardé tel quel jusqu’à 1 Mio. Au-delà de 300 Kio après compression, un avertissement s’affiche. Les images déjà présentes ne sont pas modifiées.`;
   }
   // Compte les images d’un GIF jusqu’à la deuxième : au-delà d’une image, il est animé.
   function gifFrames(bytes) {
@@ -79,5 +81,5 @@
     const warning = result.bytes > contract.warningBytes ? ` Attention : ${kio(result.bytes)} après compression, au-delà des 300 Kio conseillés par image ; le courriel sera plus lourd à envoyer et à recevoir. Choisissez si possible une image plus légère.` : "";
     return `Image locale incorporée à la composition : ${summary}.${warning}`;
   }
-  A.Images = Object.freeze({contract, displayWidth, targetWidth, help, gifFrames, prepare, describe});
+  A.Images = Object.freeze({contract, displayWidth, targetWidth, help, inputHelp, gifFrames, prepare, describe});
 })();

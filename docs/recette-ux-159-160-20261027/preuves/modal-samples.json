@@ -1,0 +1,55 @@
+{
+  "budget": "5 paired runs fixed before execution; no early stop",
+  "results": [
+    {
+      "variant": "baseline",
+      "run": 1,
+      "exit": 0
+    },
+    {
+      "variant": "candidate",
+      "run": 1,
+      "exit": 0
+    },
+    {
+      "variant": "baseline",
+      "run": 2,
+      "exit": 1
+    },
+    {
+      "variant": "candidate",
+      "run": 2,
+      "exit": 0
+    },
+    {
+      "variant": "baseline",
+      "run": 3,
+      "exit": 0
+    },
+    {
+      "variant": "candidate",
+      "run": 3,
+      "exit": 0
+    },
+    {
+      "variant": "baseline",
+      "run": 4,
+      "exit": 0
+    },
+    {
+      "variant": "candidate",
+      "run": 4,
+      "exit": 0
+    },
+    {
+      "variant": "baseline",
+      "run": 5,
+      "exit": 0
+    },
+    {
+      "variant": "candidate",
+      "run": 5,
+      "exit": 0
+    }
+  ]
+}

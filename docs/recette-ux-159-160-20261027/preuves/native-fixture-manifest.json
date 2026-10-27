@@ -1,0 +1,13 @@
+{
+  "fixture_library_sha256": "19ed5b58a44be626f72a1580ac2a12524e320aae931467e8d69db07e25ecfc21",
+  "product_baseline": "11f445fcea8c5527ead2d53fbd5fb00d116603b4",
+  "files": {
+    "baseline-fixture.html": "fc9dda233dfdc883fc4bb33be913b365e145c8d12d7b205ba7dd292053453455",
+    "baseline.html": "de046311361fc02aa22981e93ac22e4ef7b85c6eb8f2eb4be2fc725b3ced6325",
+    "candidate.html": "9508679e6a6a144e29ecc799d382b664259f43e914263980c532a46cec1cc79b",
+    "candidate-fixture.html": "a9556a06ae872389e9864f6cfa5b5457a64653a6df337ef73e364e4c1240b042"
+  },
+  "instrumentation": "Identical data-only bootstrap plus its exact added CSP hash on both fixtures; plain product CSP unchanged; no synthetic speech",
+  "preparation_failure": "First bootstrap was blocked by product CSP because missing its own script hash; no native product result drawn from that attempt",
+  "bootstrap_csp_hash": "sha256-5AQCk6esdXi/2skc31bYUZ1sR9o2ZKsDcE8cZTzYeR0="
+}

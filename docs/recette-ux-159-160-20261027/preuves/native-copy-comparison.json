@@ -1,0 +1,12 @@
+{
+  "html": {
+    "identical": true,
+    "bytes": 138509,
+    "sha256": "e7a8923f97c5ba0b952d616145a1020a5606472fda8be34d145561db5d468fa4"
+  },
+  "txt": {
+    "identical": true,
+    "bytes": 583,
+    "sha256": "860a0805989af477d805f4332c1d2d925a1882ef1eb4bc7b7da81463e25e6086"
+  }
+}

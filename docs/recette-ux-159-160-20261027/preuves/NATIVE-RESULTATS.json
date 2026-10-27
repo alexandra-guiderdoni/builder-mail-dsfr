@@ -1,0 +1,44 @@
+{
+  "images": [
+    {
+      "control": "Image facultative",
+      "before_chars": 537,
+      "after_chars": 228,
+      "before_time": "2026-10-27T21:40:23.697073+00:00",
+      "after_time": "2026-10-27T21:47:41.859619+00:00",
+      "scope": "native text output, not human understanding or audio duration"
+    },
+    {
+      "control": "Logo Marianne pour le thème clair",
+      "before_chars": 512,
+      "after_chars": 203,
+      "before_time": "2026-10-27T21:40:52.882716+00:00",
+      "after_time": "2026-10-27T21:48:30.218411+00:00",
+      "scope": "native text output, not human understanding or audio duration"
+    },
+    {
+      "control": "Logo Marianne pour le thème sombre",
+      "before_chars": 513,
+      "after_chars": 204,
+      "before_time": "2026-10-27T21:40:54.078730+00:00",
+      "after_time": "2026-10-27T21:48:31.480740+00:00",
+      "scope": "native text output, not human understanding or audio duration"
+    }
+  ],
+  "copy": {
+    "before_chars": 296,
+    "after_chars": 136,
+    "before_time": "2026-10-27T21:41:26.643615+00:00",
+    "after_time": "2026-10-27T21:51:06.218135+00:00",
+    "success_phrase_unchanged": true,
+    "success_before_time": "2026-10-27T21:42:35.366060+00:00",
+    "success_after_time": "2026-10-27T21:52:52.942091+00:00"
+  },
+  "catalogue": {
+    "before_add": "Generic action name only",
+    "after_add": "Composant choisi : « Texte de clôture ». Ajout après le bloc 2 « Article avec vignette et lien ».",
+    "actual_result_before_after": "Bloc « Texte de clôture » ajouté en position 3 sur 4.",
+    "missing_selection_refusal_preserved": true
+  },
+  "human_audio_listening": false
+}

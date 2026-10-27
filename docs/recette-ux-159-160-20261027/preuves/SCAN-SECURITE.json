@@ -1,0 +1,16 @@
+{
+  "target": "git diff --cached --unified=0",
+  "added_code_lines": 844,
+  "patterns": [
+    "hardcoded credential",
+    "eval/exec/Function",
+    "string setTimeout",
+    "direct innerHTML assignment",
+    "SQL concatenation",
+    "console.log",
+    "TODO/FIXME/HACK/XXX"
+  ],
+  "matches": [],
+  "scope": "Added code lines only; not a global security audit",
+  "result": "Scan propre : aucun pattern dangereux détecté dans le diff."
+}

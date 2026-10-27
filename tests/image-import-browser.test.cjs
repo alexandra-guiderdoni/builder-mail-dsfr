@@ -105,9 +105,21 @@ for (const engine of [chromium, webkit]) {
       const help = await page.locator('#field-f0').evaluate(input => (input.getAttribute('aria-describedby') || '').split(/\s+/).map(id => document.getElementById(id)).filter(Boolean).map(e => ({text: e.textContent, visible: e.checkVisibility()})));
       assert.equal(help.length, 1, 'une aide d’import liée au champ');
       assert(help[0].visible);
-      for (const expected of [/PNG, JPEG, GIF ou WebP/, /10 Mio/, /8192 pixels par côté/, /16\s777\s216 pixels au total/, /1\s000 pixels de large/, /JPEG/, /PNG/, /transparence/, /WebP est converti/, /GIF animé/, /1 Mio/, /300 Kio/, /déjà présentes ne sont pas modifiées/]) assert.match(help[0].text, expected);
+      for (const expected of [/PNG, JPEG, GIF ou WebP/, /10 Mio/, /8192 pixels par côté/, /16\s777\s216 pixels au total/, /GIF animé/, /1 Mio/]) assert.match(help[0].text, expected);
+      const detail = page.locator('[data-image-details=f0]');
+      assert.equal(await detail.locator('p').isVisible(), false);
+      await detail.locator('summary').focus(); await detail.locator('summary').press('Enter');
+      assert.equal(await detail.locator('p').isVisible(), true);
+      const complete = await detail.locator('p').textContent();
+      for (const expected of [/PNG, JPEG, GIF ou WebP/, /10 Mio/, /8192 pixels par côté/, /16\s777\s216 pixels au total/, /1\s000 pixels de large/, /JPEG/, /PNG/, /transparence/, /WebP est converti/, /GIF animé/, /1 Mio/, /300 Kio/, /déjà présentes ne sont pas modifiées/]) assert.match(complete, expected);
       await selectBlock(page, ids.header);
-      assert.match(await page.locator('#field-f0').evaluate(input => document.getElementById(input.getAttribute('aria-describedby')).textContent), /152 pixels de large/);
+      for (const [key, label] of [['f0', /clair/], ['f2', /sombre/]]) {
+        const logoDetail = page.locator(`[data-image-details=${key}]`);
+        assert.match(await logoDetail.locator('summary').textContent(), label);
+        await logoDetail.locator('summary').focus(); await logoDetail.locator('summary').press('Enter');
+        assert.equal(await logoDetail.locator('p').isVisible(), true);
+        assert.match(await logoDetail.locator('p').textContent(), /152 pixels de large/);
+      }
       const contract = await page.evaluate(() => ({target: [76, 460, 500, 600, 700, 0, undefined].map(MailBuilder.Images.targetWidth), display: Object.fromEntries(MailBuilder.catalog.components.filter(c => c.fields.some(f => f.type === 'image')).map(c => [c.id, Object.fromEntries(c.fields.filter(f => f.type === 'image').map(f => [f.key, MailBuilder.Images.displayWidth(c.id, f.key)]))]))}));
       assert.deepEqual(contract, {target: [152, 920, 1000, 1200, 1200, 1200, 1200], display: DISPLAY});
     } finally { await browser.close(); }

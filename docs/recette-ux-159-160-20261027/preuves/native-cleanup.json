@@ -1,0 +1,16 @@
+{
+  "at": "2026-10-27T21:59:00.670407+00:00",
+  "owned_window": "Fin de recette UX 158–160 closed; prior Nouvel onglet window preserved",
+  "owned_storage": "IndexedDB builder-mail-dsfr-library on http://127.0.0.1:18831 deleted only after exclusive recipe ownership check; success visible in native AX",
+  "server_18831": "stopped",
+  "voiceover": "ON verified, initial state preserved after one diagnostic restart",
+  "voiceover_applescript": "ON verified; user explicitly authorized activation and retention",
+  "new_macos_access": "none",
+  "clipboard": "private original backup retained until the final automated suite; restore remains required",
+  "clipboard_restoration": {
+    "status": "verified",
+    "result": "CLIPBOARD_RESTORED_AND_BACKUP_REMOVED",
+    "private_backup_removed": true,
+    "at": "2026-10-27T22:07:57.517802+00:00"
+  }
+}

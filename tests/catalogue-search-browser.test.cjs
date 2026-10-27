@@ -73,6 +73,8 @@ test('les liens des aperçus restent au clavier, avec un accès rapide qui les c
   if (engine === playwright.chromium) {
     await page.locator('[data-action=export-mail]').focus();
     await page.keyboard.press('Tab');
+    assert.equal(await page.evaluate(() => document.activeElement.parentElement.id), 'mail-weight-details', 'le détail du poids est accessible avant l’aperçu');
+    await page.keyboard.press('Tab');
     assert.equal(await page.evaluate(() => document.activeElement.textContent), 'Passer l’aperçu du courriel');
   } else await skipMail.focus();
   await page.keyboard.press('Enter');

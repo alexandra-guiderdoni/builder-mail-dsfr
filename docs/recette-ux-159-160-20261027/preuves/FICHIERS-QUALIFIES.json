@@ -1,0 +1,28 @@
+{
+  "base": "11f445fcea8c5527ead2d53fbd5fb00d116603b4",
+  "at": "2026-10-27T22:02:24.578815+00:00",
+  "files": {
+    "app/source/files.js": "a5d1ff6a9ba3b854291e54300fa753ceb122683c2b6458e09058308ef1683a32",
+    "app/source/images.js": "7ba950ac15e06e772cad37b4070f4b98f1894e11ca5dee5197a25365ec9c0b7e",
+    "app/source/view.js": "03816b862133453e95149024f1331e1360f5d752ebb6841892450cac8e396358",
+    "app/source/shell.html": "f0d4ab459a00890d7c0074ec0015bd0e5e96dd90101e9a5d528bb0bbfbbea198",
+    "tests/accessibility-browser.test.cjs": "c3a0a2387a5b476c795d9d47f3925e131cfdb5400a16c9589ca292d3a50556db",
+    "tests/catalogue-search-browser.test.cjs": "3c980b56ae6d27737f9ac6ea6e8d3d917e4d2c418af47c3646d020926b0f06be",
+    "tests/catalogue-insertion-help-browser.test.cjs": "c73d53456b7c5996e630ef03cd880891a3ff1bdd09d0b7d43e7c1f0954b8a4fc",
+    "tests/image-help-details-browser.test.cjs": "d0bcbb7765e05435a54284b50343cf0d11541262dbb10767e30f9dfe8f083d13",
+    "tests/image-import-browser.test.cjs": "aa624d84283ea8d06ceef81e325478a7dd8271a8f41dbd9346200914561ecfa9",
+    "tests/mail-weight-browser.test.cjs": "deb8ca1287bce48b8628817ba9aaffec706ddcce194d7d9f68f5645a9a08c553",
+    "tests/weight-summary-browser.test.cjs": "eae6ecc021ad946846e71369b154dc221541e4b416163e19470771bd77faa614",
+    "app/distribution/portable.html": "9508679e6a6a144e29ecc799d382b664259f43e914263980c532a46cec1cc79b",
+    "app/distribution/snum.html": "4ec4860b5ef64a778c6b0f94302081dd0c3b854b381ee4baade23d307a3bd933",
+    "app/distribution/web/index.html": "3a3cb7b6a933fed6f0b76bd4bb064191b876f60dff20d7f921cdae1645a1866d",
+    "app/distribution/web/sw.js": "092a8a4aeb0532ac0f07cfc0b0b4c98166ccff06ccdfea4be127804e52e1afcf"
+  },
+  "native_plain_candidate_sha256": "9508679e6a6a144e29ecc799d382b664259f43e914263980c532a46cec1cc79b",
+  "versions": {
+    "node": "24.22.1",
+    "playwright": "1.64.1",
+    "native_browser": "Chrome for Testing 156.0.8078.4",
+    "native_reader": "VoiceOver 10 French on macOS 26.5.2"
+  }
+}

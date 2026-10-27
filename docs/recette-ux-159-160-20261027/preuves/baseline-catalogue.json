@@ -1,0 +1,170 @@
+[
+  {
+    "width": 575,
+    "initial": {
+      "size": 1,
+      "value": "mail-00",
+      "count": 52,
+      "button": "Ajouter après le bloc sélectionné",
+      "description": null,
+      "destination": "1. En-tête MarianneVotre service"
+    },
+    "unique": {
+      "size": 1,
+      "value": "mail-51",
+      "count": 1,
+      "button": "Ajouter après le bloc sélectionné",
+      "description": null,
+      "destination": "1. En-tête MarianneVotre service"
+    },
+    "chosen": {
+      "size": 1,
+      "value": "mail-51",
+      "count": 1,
+      "button": "Ajouter après le bloc sélectionné",
+      "description": null,
+      "destination": "1. En-tête MarianneVotre service"
+    },
+    "retained": {
+      "size": 1,
+      "value": "mail-51",
+      "count": 52,
+      "button": "Ajouter après le bloc sélectionné",
+      "description": null,
+      "destination": "1. En-tête MarianneVotre service"
+    },
+    "disappeared": {
+      "size": 1,
+      "value": "mail-41",
+      "count": 1,
+      "button": "Ajouter après le bloc sélectionné",
+      "description": null,
+      "destination": "1. En-tête MarianneVotre service"
+    },
+    "zero": {
+      "size": 1,
+      "value": "",
+      "count": 0,
+      "button": "Ajouter après le bloc sélectionné",
+      "description": null,
+      "destination": "1. En-tête MarianneVotre service"
+    },
+    "refusal": {
+      "before": 6,
+      "after": 6,
+      "error": "Choisissez un composant du catalogue."
+    }
+  },
+  {
+    "width": 576,
+    "initial": {
+      "size": 61,
+      "value": "",
+      "count": 52,
+      "button": "Ajouter après le bloc sélectionné",
+      "description": null,
+      "destination": "1. En-tête MarianneVotre service"
+    },
+    "unique": {
+      "size": 2,
+      "value": "",
+      "count": 1,
+      "button": "Ajouter après le bloc sélectionné",
+      "description": null,
+      "destination": "1. En-tête MarianneVotre service"
+    },
+    "chosen": {
+      "size": 2,
+      "value": "mail-51",
+      "count": 1,
+      "button": "Ajouter après le bloc sélectionné",
+      "description": null,
+      "destination": "1. En-tête MarianneVotre service"
+    },
+    "retained": {
+      "size": 61,
+      "value": "mail-51",
+      "count": 52,
+      "button": "Ajouter après le bloc sélectionné",
+      "description": null,
+      "destination": "1. En-tête MarianneVotre service"
+    },
+    "disappeared": {
+      "size": 2,
+      "value": "",
+      "count": 1,
+      "button": "Ajouter après le bloc sélectionné",
+      "description": null,
+      "destination": "1. En-tête MarianneVotre service"
+    },
+    "zero": {
+      "size": 2,
+      "value": "",
+      "count": 0,
+      "button": "Ajouter après le bloc sélectionné",
+      "description": null,
+      "destination": "1. En-tête MarianneVotre service"
+    },
+    "refusal": {
+      "before": 6,
+      "after": 6,
+      "error": "Choisissez un composant du catalogue."
+    }
+  },
+  {
+    "width": 1280,
+    "initial": {
+      "size": 61,
+      "value": "",
+      "count": 52,
+      "button": "Ajouter après le bloc sélectionné",
+      "description": null,
+      "destination": "1. En-tête MarianneVotre service"
+    },
+    "unique": {
+      "size": 2,
+      "value": "",
+      "count": 1,
+      "button": "Ajouter après le bloc sélectionné",
+      "description": null,
+      "destination": "1. En-tête MarianneVotre service"
+    },
+    "chosen": {
+      "size": 2,
+      "value": "mail-51",
+      "count": 1,
+      "button": "Ajouter après le bloc sélectionné",
+      "description": null,
+      "destination": "1. En-tête MarianneVotre service"
+    },
+    "retained": {
+      "size": 61,
+      "value": "mail-51",
+      "count": 52,
+      "button": "Ajouter après le bloc sélectionné",
+      "description": null,
+      "destination": "1. En-tête MarianneVotre service"
+    },
+    "disappeared": {
+      "size": 2,
+      "value": "",
+      "count": 1,
+      "button": "Ajouter après le bloc sélectionné",
+      "description": null,
+      "destination": "1. En-tête MarianneVotre service"
+    },
+    "zero": {
+      "size": 2,
+      "value": "",
+      "count": 0,
+      "button": "Ajouter après le bloc sélectionné",
+      "description": null,
+      "destination": "1. En-tête MarianneVotre service"
+    },
+    "refusal": {
+      "before": 6,
+      "after": 6,
+      "error": "Choisissez un composant du catalogue."
+    }
+  }
+]

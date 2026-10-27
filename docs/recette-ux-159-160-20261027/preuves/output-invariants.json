@@ -1,0 +1,14 @@
+{
+  "identical": true,
+  "checked": [
+    "clipboard HTML",
+    "export HTML",
+    "plain text",
+    "weight",
+    "all complete image helps"
+  ],
+  "weight": {
+    "bytes": 138487,
+    "level": "alert"
+  }
+}

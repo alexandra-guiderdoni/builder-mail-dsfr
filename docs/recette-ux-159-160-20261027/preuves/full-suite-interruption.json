@@ -1,0 +1,12 @@
+{
+  "reason": "User explicitly added meta-description and project-input accessible naming corrections while suite ran; stopped before source/build edits to avoid mixed-tree evidence",
+  "at": "2026-10-27T21:31:26.026405+00:00",
+  "result": "INTERRUPTED, not PASS",
+  "log": "full-suite-before-additional-fixes.log",
+  "before_interrupt": {
+    "pass": 191,
+    "failed": 1,
+    "cancelled": 57,
+    "failure": "catalogue keyboard sequence expected preview skip immediately; new weight disclosure is now an intermediate control"
+  }
+}

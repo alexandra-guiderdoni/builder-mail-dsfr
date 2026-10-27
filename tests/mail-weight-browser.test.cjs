@@ -30,7 +30,8 @@ for (const engine of ['chromium', 'webkit']) {
     const browser = await playwright[engine].launch();
     try {
       const {page, observations} = await open(browser, {offline: true, ...permissions(engine)}, capture);
-      assert.match(await page.locator('[data-action=copy]').getAttribute('aria-describedby') || '', /\bmail-weight\b/);
+      assert.equal(await page.locator('[data-action=copy]').getAttribute('aria-describedby'), 'mail-weight-summary');
+      assert.equal(await page.locator('#mail-weight-summary').isVisible(), true);
       const article = await index(page, 'mail-31');
       await compose(page, article => MailBuilder.State.change(lib => {
         const doc = lib.documents.find(d => d.id === lib.activeId);
@@ -82,6 +83,14 @@ for (const engine of ['chromium', 'webkit']) {
         await displayed(page, target);
         const weight = page.locator('#mail-weight');
         assert.equal(await weight.getAttribute('data-level'), level, String(target));
+        const summary = page.locator('#mail-weight-summary');
+        assert.equal(await summary.getAttribute('data-level'), level);
+        assert.equal(await summary.getAttribute('data-bytes'), String(target));
+        const short = await summary.textContent();
+        assert.match(short, /Kio.*images comprises/);
+        if (level === 'ok') assert.doesNotMatch(short, /Attention|Alerte/);
+        else assert.match(short, new RegExp((level === 'alert' ? 'Alerte' : 'Attention') + '.*Gmail.*sans garantie'));
+
         const label = await weight.textContent();
         assert.ok(label.includes(target.toLocaleString('fr-FR') + ' octets'), label);
         if (level === 'ok') assert.doesNotMatch(label, /Attention|Alerte/);
@@ -128,13 +137,15 @@ for (const engine of ['chromium', 'webkit']) {
       const during = renders.filter(at => at >= inputs[0] && at <= inputs.at(-1));
       assert.ok(during.every(at => at - Math.max(...inputs.filter(i => i <= at)) >= PAUSE - 20), `${during.length} rendus de copie pendant la frappe`);
       assert.ok(weights.length >= 1);
-      // Chaque mise à jour du poids suit une pause de saisie : jamais pendant une frappe soutenue.
-      for (const update of weights) {
+      // L’invalidation pending est légère et immédiate ; seules les mesures chiffrées attendent la pause.
+      const measured = weights.filter(update => update.bytes !== undefined);
+      assert.ok(measured.length >= 1);
+      for (const update of measured) {
         const last = Math.max(...inputs.filter(at => at <= update.at));
         assert.ok(update.at - last >= PAUSE - 20, `poids recalculé ${Math.round(update.at - last)} ms après une frappe`);
       }
       const gaps = inputs.slice(1).map((at, i) => at - inputs[i]).filter(gap => gap >= PAUSE - 20).length;
-      assert.ok(weights.length <= gaps + 1, `${weights.length} calculs pour ${gaps} pauses`);
+      assert.ok(measured.length <= gaps + 1, `${measured.length} calculs pour ${gaps} pauses`);
       assert.equal(weights.at(-1).bytes, String(final));
       // Copie lancée avant la fin de la pause : le poids affiché devient aussitôt celui du HTML copié.
       const immediate = await page.evaluate(async () => {
@@ -147,7 +158,7 @@ for (const engine of ['chromium', 'webkit']) {
         return {before, shown, html: MailBuilder.Render.clipboardHtml(MailBuilder.doc())};
       });
       const result = await copied(page);
-      assert.equal(immediate.before, String(final), 'aucun calcul avant la pause');
+      assert.equal(immediate.before, undefined, 'la mesure ancienne est invalidée avant la copie immédiate');
       assert.equal(result.text, immediate.html);
       assert.equal(immediate.shown, String(result.size));
       assert.equal(result.size, bytes(immediate.html));
@@ -166,6 +177,9 @@ for (const engine of ['chromium', 'webkit']) {
       await page.waitForFunction(() => document.getElementById('mail-weight')?.dataset.level === 'unavailable', null, {timeout: 10000});
       assert.match(await page.locator('#mail-weight').textContent(), /indisponible/);
       assert.equal(await page.locator('#mail-weight').getAttribute('data-bytes'), null);
+      assert.equal(await page.locator('#mail-weight-summary').getAttribute('data-level'), 'unavailable');
+      assert.equal(await page.locator('#mail-weight-summary').getAttribute('data-bytes'), null);
+      assert.match(await page.locator('#mail-weight-summary').textContent(), /indisponible/);
       await click(page, '[data-action=copy]');
       await page.locator('#error').filter({hasText: 'intitulé'}).waitFor();
       assert.equal((await copied(page)).count, 0);

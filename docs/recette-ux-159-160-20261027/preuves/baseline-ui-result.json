@@ -1,0 +1,13 @@
+{
+  "blocks_after_add": 4,
+  "order": [
+    "mail-02",
+    "mail-31",
+    "mail-51",
+    "mail-47"
+  ],
+  "selected_rank": 3,
+  "focused_field": "Texte de clôture",
+  "native_announcement": "Bloc « Texte de clôture » ajouté en position 3 sur 4.",
+  "source": "CUA native AX observation after final baseline action"
+}

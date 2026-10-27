@@ -48,6 +48,16 @@
     element.dataset.level = result.level;
     if (Number.isSafeInteger(result.bytes)) element.dataset.bytes = String(result.bytes); else delete element.dataset.bytes;
     element.textContent = text;
+    // Le builder propose une synthèse visible ; SNUM garde sa description complète existante.
+    const summary = document.getElementById("mail-weight-summary");
+    if (summary) {
+      summary.dataset.level = result.level;
+      if (Number.isSafeInteger(result.bytes)) {
+        summary.dataset.bytes = String(result.bytes);
+        const base = `Poids à copier : ${kio(result.bytes)} Kio, images comprises.`;
+        summary.textContent = result.level === "ok" ? base : `${base} ${result.level === "alert" ? "Alerte" : "Attention"} : risque de troncature dans Gmail. Repères sans garantie.`;
+      } else { delete summary.dataset.bytes; summary.textContent = text; }
+    }
   }
   function measureWeight() {
     clearTimeout(weightTimer);

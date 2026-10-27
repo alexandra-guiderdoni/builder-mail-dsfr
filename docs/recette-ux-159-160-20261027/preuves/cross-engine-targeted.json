@@ -1,0 +1,10 @@
+[
+  {
+    "engine": "firefox",
+    "exit": 0
+  },
+  {
+    "engine": "webkit",
+    "exit": 0
+  }
+]

@@ -1,6 +1,53 @@
 const test = require('node:test');
 const {chromium, open, click, expand, assert, nativeAx, nativeAxNode} = require('./browser-support.cjs');
 
+test('dialogues : noms présents au repos, puis intitulés précis avant ouverture', async () => {
+  const browser = await chromium.launch();
+  try {
+    const {page} = await open(browser);
+    for (const id of ['library-dialog-title', 'identity-dialog-title', 'library-confirm']) {
+      assert.ok((await page.locator(`#${id}`).textContent()).trim(), `${id} ne reste pas vide dans le document`);
+    }
+    await page.evaluate(() => MailBuilder.Library.ask('rename', MailBuilder.library.activeId));
+    assert.equal(await page.locator('#library-dialog').isVisible(), true);
+    assert.equal(await page.locator('#library-dialog-title').textContent(), 'Renommer la composition');
+    assert.equal(await page.locator('#library-confirm').textContent(), 'Enregistrer le nom');
+    if (nativeAx) {
+      const dialog = await nativeAxNode(page, '#library-dialog');
+      const confirm = await nativeAxNode(page, '#library-confirm');
+      assert.ok(dialog && confirm);
+      assert.equal(dialog.name.value, 'Renommer la composition');
+      assert.equal(confirm.name.value, 'Enregistrer le nom');
+    }
+    await click(page, '#library-cancel');
+    assert.equal(await page.locator('#library-dialog').isVisible(), false);
+  } finally { await browser.close(); }
+});
+
+test('import JSON : nom explicite cohérent avec le libellé visible et description de la page', async () => {
+  const browser = await chromium.launch();
+  try {
+    const {page} = await open(browser);
+    const description = page.locator('meta[name=description]');
+    assert.equal(await description.count(), 1);
+    assert.match(await description.getAttribute('content'), /newsletters.*DSFR.*HTML.*JSON/);
+    await expand(page, 'Fichiers et récupération');
+    const input = page.locator('#project-input');
+    const label = await page.locator('label[for=project-input]').textContent();
+    assert.equal(await page.locator('label[for=project-input]').isVisible(), true);
+    assert.equal(await input.isVisible(), true);
+    assert.equal(await input.getAttribute('aria-label'), label);
+    assert.equal(await page.getByLabel(label, {exact: true}).getAttribute('id'), 'project-input');
+    assert.equal(await input.getAttribute('accept'), 'application/json,.json');
+    if (nativeAx) {
+      const node = await nativeAxNode(page, '#project-input');
+      assert.ok(node);
+      assert.equal(node.ignored, false);
+      assert.equal(node.name.value, label);
+    }
+  } finally { await browser.close(); }
+});
+
 test('les sections ouvertes restent dans la fenêtre avec les espacements de texte augmentés', async () => {
   const browser = await chromium.launch();
   try {

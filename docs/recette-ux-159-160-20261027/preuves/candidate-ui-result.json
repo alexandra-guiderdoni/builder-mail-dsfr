@@ -1,0 +1,13 @@
+{
+  "blocks_after_add_and_image_removal": 4,
+  "order": [
+    "mail-02",
+    "mail-31 without image",
+    "mail-51",
+    "mail-47"
+  ],
+  "selected_rank_after_image_removal": 2,
+  "focused_field": "Image facultative: Aucun fichier choisi",
+  "native_add_announcement": "Bloc « Texte de clôture » ajouté en position 3 sur 4.",
+  "source": "CUA native AX observation after recorded native actions"
+}

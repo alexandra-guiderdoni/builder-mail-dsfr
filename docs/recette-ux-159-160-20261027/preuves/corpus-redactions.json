@@ -1,0 +1,26 @@
+[
+  {
+    "public_file": "native-baseline.jsonl",
+    "raw_file_sha256": "283cf47f3e554355d268107ea76fd1382854cde26592a0fe335013bc44d88a54",
+    "withheld_rows": 1,
+    "raw_location": "private local proof directory; not committed"
+  },
+  {
+    "public_file": "native-candidate.jsonl",
+    "raw_file_sha256": "f7df3ad1fb9c31e5c632b70b3b06e1138083966ffb10b7e8e8dcf1d9b393dc9f",
+    "withheld_rows": 1,
+    "raw_location": "private local proof directory; not committed"
+  },
+  {
+    "public_file": "native-candidate-catalogue.jsonl",
+    "raw_file_sha256": "1f6b8015bec8c35ca5b808fcd8e3cf748ac5d0d20df4a4bfe1ad97f08ba4ca91",
+    "withheld_rows": 0,
+    "raw_location": "private local proof directory; not committed"
+  },
+  {
+    "public_file": "native-actions.jsonl",
+    "raw_file_sha256": "03f75c62cb3094ac79684c37cf069f8fb8f0fc375b72cb3e3159ef66309ce19e",
+    "withheld_rows": 2,
+    "raw_location": "private local proof directory; not committed"
+  }
+]

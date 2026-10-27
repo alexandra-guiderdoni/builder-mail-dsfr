@@ -1,0 +1,140 @@
+{
+  "events": [
+    {
+      "type": "focus",
+      "id": "field-f4",
+      "at": 634
+    },
+    {
+      "type": "input",
+      "id": "field-f4",
+      "at": 640
+    },
+    {
+      "type": "input",
+      "id": "field-f4",
+      "at": 716
+    },
+    {
+      "type": "input",
+      "id": "field-f4",
+      "at": 779
+    },
+    {
+      "type": "input",
+      "id": "field-f4",
+      "at": 843
+    },
+    {
+      "type": "input",
+      "id": "field-f4",
+      "at": 908
+    },
+    {
+      "type": "input",
+      "id": "field-f4",
+      "at": 971
+    },
+    {
+      "type": "input",
+      "id": "field-f4",
+      "at": 1035
+    },
+    {
+      "type": "input",
+      "id": "field-f4",
+      "at": 1097
+    },
+    {
+      "type": "input",
+      "id": "field-f4",
+      "at": 1160
+    },
+    {
+      "type": "input",
+      "id": "field-f4",
+      "at": 1224
+    },
+    {
+      "type": "input",
+      "id": "field-f4",
+      "at": 1287
+    },
+    {
+      "type": "input",
+      "id": "field-f4",
+      "at": 1351
+    },
+    {
+      "type": "input",
+      "id": "field-f4",
+      "at": 1415
+    },
+    {
+      "type": "input",
+      "id": "field-f4",
+      "at": 1478
+    },
+    {
+      "type": "input",
+      "id": "field-f4",
+      "at": 1541
+    },
+    {
+      "type": "input",
+      "id": "field-f4",
+      "at": 1604
+    },
+    {
+      "type": "input",
+      "id": "field-f4",
+      "at": 1667
+    },
+    {
+      "type": "input",
+      "id": "field-f4",
+      "at": 1729
+    },
+    {
+      "type": "input",
+      "id": "field-f4",
+      "at": 1793
+    },
+    {
+      "type": "input",
+      "id": "field-f4",
+      "at": 1856
+    },
+    {
+      "type": "input",
+      "id": "field-f4",
+      "at": 1919
+    },
+    {
+      "type": "input",
+      "id": "field-f4",
+      "at": 1983
+    },
+    {
+      "type": "input",
+      "id": "field-f4",
+      "at": 2046
+    },
+    {
+      "type": "input",
+      "id": "field-f4",
+      "at": 2109
+    },
+    {
+      "type": "input",
+      "id": "field-f4",
+      "at": 2172
+    }
+  ],
+  "focus": "<textarea class=\"fr-input\" id=\"field-f4\" data-field=\"f4\" rows=\"3\" data-link-label=\"\" aria-required=\"true\" style=\"min-height: 88px; height: 88px;\">Titre cliquable</textarea>",
+  "hasFocus": true,
+  "hidden": false,
+  "value": "abcdefghijklmnopqrstuvwxyTitre cliquable",
+  "error": "",
+  "errors": []
+}

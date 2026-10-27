@@ -1,0 +1,14 @@
+{
+  "html": {
+    "native_bytes": 138509,
+    "expected_bytes": 138487,
+    "identical": false,
+    "native_sha256": "e7a8923f97c5ba0b952d616145a1020a5606472fda8be34d145561db5d468fa4"
+  },
+  "txt": {
+    "native_bytes": 583,
+    "expected_bytes": 583,
+    "identical": true,
+    "native_sha256": "860a0805989af477d805f4332c1d2d925a1882ef1eb4bc7b7da81463e25e6086"
+  }
+}
