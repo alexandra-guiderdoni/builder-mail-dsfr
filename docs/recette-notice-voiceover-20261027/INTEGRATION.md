@@ -46,6 +46,12 @@ Les collecteurs et les deux serveurs possédés (18807/18809) sont arrêtés. Se
 
 VoiceOver reste actif comme au début de cette reprise. L’autorisation macOS Terminal → VoiceOver, préexistante, n’a pas été modifiée et aucun accès n’a été ajouté. La désactivation du contrôle AppleScript a été tentée ; l’Utilitaire VoiceOver a ensuite expiré sur deux lectures natives. La confirmation visuelle de la case reste donc **en attente**, malgré le refus de lecture AppleEvent observé ensuite. Ce refus seul ne prouve pas l’état de la case.
 
-Les revues Fable/ShipGuard/connu-inconnu antérieures validaient le cadrage du ticket, pas ce complément de code. Le scan textuel du diff ne détecte aucun des motifs dangereux recherchés. Aucun déploiement ni push : `.github/workflows/pages.yml` déclenche la publication Pages sur `push main`. Le ticket ne doit pas être déclaré livré sur le site à partir de cette seule intégration locale.
+Les revues Fable/ShipGuard/connu-inconnu antérieures validaient le cadrage du ticket, pas ce complément de code. Le scan textuel du diff ne détecte aucun des motifs dangereux recherchés. À la fin de la recette locale, aucun déploiement ni push : `.github/workflows/pages.yml` déclenche la publication Pages sur `push main`. Le ticket ne doit pas être déclaré livré sur le site à partir de cette seule intégration locale.
 
 Les captures HTML du presse-papiers et le journal rouge sont stockés en gzip déterministe pour conserver leurs octets bruts, y compris les espaces de fin de ligne. Les empreintes HTML citées portent sur les données décompressées ; `gzip -dc fichier.html.gz` permet leur inspection.
+
+## Décisions après la recette
+
+L’utilisatrice indique ensuite « Il me gène pas » et accepte de laisser le contrôle AppleScript de VoiceOver en l’état. Sa désactivation et la confirmation de la case ne sont donc plus requises pour terminer cette tâche. Son état effectif reste non confirmé ; aucun accès supplémentaire n’est accordé et aucune réactivation n’est effectuée. Le reçu et son manifeste conservent sans réécriture le constat historique de la recette.
+
+L’instruction suivante « commit et push » autorise la publication des commits sur `main`, avec le déclenchement associé du workflow Pages. Cette autorisation ne constitue pas un résultat de CI ni une preuve de déploiement réussi.
