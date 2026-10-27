@@ -1,0 +1,26 @@
+# Modèle canonique : copier vers visual-tests/builder/web-offline.yaml après sauvegarde de la scène locale.
+# Les preuves fonctionnelles restent dans les tests PWA versionnés ; aucun oracle parallèle ici.
+name: "Hors connexion : observation et preuve canonique séparées"
+description: "Observer la composition préparée ; ne pas créditer la coupure réseau depuis le seul mode offline de l’outil."
+priority: low
+requires_auth: false
+timeout: 180s
+tags: [preproduction, offline]
+steps:
+  - action: open
+    url: "{base_url}/web/"
+  - action: llm-check
+    description: "Observer la composition synthétique, le catalogue et les données conservées ; identifier séparément la preuve de coupure réseau."
+    criteria: >-
+      L’indicateur offline de l’outil, un contrôleur présent, un rechargement réussi,
+      un HTTP 404 ou un refus CSP ne prouvent pas la coupure réseau du service worker.
+      Ne jamais arrêter {base_url}, qui peut être partagé, ni un serveur ou profil non possédé.
+      Sans témoin ayant atteint le serveur avant coupure puis réellement rejeté après
+      coupure, rendre ERROR avec le motif « oracle hors connexion non conclusif ».
+      Conserver la capture comme observation, sans la transformer en PASS grâce à un reçu externe.
+      Pour la preuve fonctionnelle, réutiliser tests/pwa-contract.test.cjs et tests/pwa-browser.test.cjs :
+      leurs serveurs privés sont arrêtés, les témoins sont rejetés et les données contrôlées après rechargement.
+      Le reçu canonique doit être identifié par candidat et runtime ; il reste distinct de cette capture.
+      Voir docs/MAINTENANCE.md, section « Recette ShipGuard hors connexion ».
+    severity: medium
+    screenshot: "web-offline.png"

@@ -136,7 +136,20 @@ async function duplicateBlock(page) {
 }
 async function selectBlock(page, id) { await click(page, `[data-select="${id}"]`); }
 /* Sélectionne un bloc et attend que la sélection soit effective ; un clic perdu échoue ici, pas plus loin. */
-async function selectBlockEffective(page, id) { await selectBlock(page, id); await page.waitForFunction(blockId => MailBuilder.selected === blockId && document.querySelector('#block-editor textarea,#block-editor input'), id); }
+async function selectBlockEffective(page, id, {focusInView = false} = {}) {
+  await selectBlock(page, id);
+  if (!focusInView) {
+    await page.waitForFunction(blockId => MailBuilder.selected === blockId && document.querySelector('#block-editor textarea,#block-editor input'), id);
+    return;
+  }
+  // La sélection et le focus peuvent précéder le défilement natif, notamment sous WebKit.
+  await page.waitForFunction(blockId => {
+    const field = document.querySelector('#block-editor textarea,#block-editor input');
+    if (MailBuilder.selected !== blockId || !field || document.activeElement !== field || !field.getClientRects().length) return false;
+    const top = field.getBoundingClientRect().top;
+    return top >= 0 && top < innerHeight;
+  }, id, {timeout: 5000});
+}
 /* Ramène la page au premier plan : Firefox ne traite pas l’activation d’un bouton par Entrée dans un onglet sans focus. */
 async function focusPage(page) { await page.bringToFront(); await page.waitForFunction(() => document.hasFocus()); }
 const state = page => page.evaluate(() => JSON.parse(JSON.stringify(MailBuilder.library)));

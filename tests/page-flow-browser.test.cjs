@@ -1,5 +1,5 @@
 const test = require('node:test');
-const {open, click, saved, expand, selectBlock, chromium, assert} = require('./browser-support.cjs');
+const {open, click, saved, expand, selectBlock, selectBlockEffective, chromium, assert} = require('./browser-support.cjs');
 
 const longText = Array.from({length: 35}, (_, i) => `Ligne ${i + 1} : un contenu de recette qui reste entièrement lisible.`).join('\n');
 async function importAll(page) {
@@ -15,6 +15,29 @@ async function importAll(page) {
 }
 const box = locator => locator.evaluate(e => ({client: e.clientHeight, scroll: e.scrollHeight, height: e.getBoundingClientRect().height, overflow: getComputedStyle(e).overflowY, maxHeight: getComputedStyle(e).maxHeight}));
 
+test('un focus placé sans défilement ne satisfait pas l’attente du champ visible', async () => {
+  const browser = await chromium.launch();
+  try {
+    const {page} = await open(browser), blocks = await importAll(page);
+    await page.evaluate(() => {
+      const focus = HTMLElement.prototype.focus;
+      HTMLElement.prototype.focus = function (options) {
+        return focus.call(this, this.closest('#block-editor') ? {...options, preventScroll: true} : options);
+      };
+    });
+    await selectBlockEffective(page, blocks[0].id);
+    const position = () => page.evaluate(() => {
+      const field = document.querySelector('#block-editor textarea,#block-editor input');
+      return {focused: document.activeElement === field, top: field.getBoundingClientRect().top, height: innerHeight};
+    });
+    const before = await position();
+    assert(before.focused && (before.top < 0 || before.top >= before.height), JSON.stringify(before));
+    await assert.rejects(selectBlockEffective(page, blocks[0].id, {focusInView: true}), {name: 'TimeoutError'});
+    const after = await position();
+    assert(after.focused && (after.top < 0 || after.top >= after.height), JSON.stringify(after));
+  } finally { await browser.close(); }
+});
+
 test('la liste entière reste dans la page et le retour au bloc fonctionne depuis un champ invalide', async () => {
   const browser = await chromium.launch();
   try {
@@ -22,8 +45,7 @@ test('la liste entière reste dans la page et le retour au bloc fonctionne depui
     const list = await box(page.locator('#block-list'));
     assert(list.client >= list.scroll - 1 && list.maxHeight === 'none', JSON.stringify(list));
     for (const block of [blocks[0], blocks.at(-1)]) {
-      await selectBlock(page, block.id);
-      await page.waitForFunction(() => document.activeElement?.id, null, {timeout: 5000}); // le gestionnaire de sélection passe par attempt() : on attend le focus au lieu de le lire aussitôt
+      await selectBlockEffective(page, block.id, {focusInView: true});
       const active = await page.evaluate(() => ({id: document.activeElement.id, y: document.activeElement.getBoundingClientRect().top, h: innerHeight}));
       assert(active.id && active.y >= 0 && active.y < active.h, JSON.stringify(active));
       await page.locator('#article-source').fill('invalide');

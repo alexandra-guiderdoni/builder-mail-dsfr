@@ -86,6 +86,23 @@ Presse-papiers : seul Chromium accorde `clipboard-read` à Playwright, donc seul
 
 Les installations et résultats locaux ShipGuard sous `visual-tests/` restent aussi ignorés : ils contiennent une copie de l’outillage et des chemins propres à la campagne. La suite produit reproductible et versionnée est sous `tests/`. Le compte rendu d’audit conserve les erreurs du plugin et faux liens du crawler ; ils ne sont pas transformés en défauts produit.
 
+### Recette ShipGuard hors connexion
+
+Le [modèle maintenu de la scène](recettes-shipguard/web-offline.yaml) sépare l’observation visuelle et la preuve fonctionnelle. Après sauvegarde de l’ancienne scène locale si elle existe, le copier dans le répertoire ignoré :
+
+```sh
+mkdir -p visual-tests/builder
+cp docs/recettes-shipguard/web-offline.yaml visual-tests/builder/web-offline.yaml
+```
+
+L’oracle reste celui de `tests/pwa-contract.test.cjs` (témoin traversant le worker, arrêt du serveur privé, refus réseau, absence de requête après coupure) et `tests/pwa-browser.test.cjs` (rechargement, bibliothèque et image conservées). Pour conserver leur reçu, choisir un dossier de preuve neuf ; exemple depuis la racine avec les dépendances et navigateurs épinglés déjà provisionnés :
+
+```sh
+MAIL_BUILDER_EVIDENCE=evidence/shipguard-offline node tests/run-engines.cjs --engines=chromium --files=pwa-contract.test.cjs,pwa-browser.test.cjs --json=evidence/shipguard-offline/engines.json
+```
+
+Consigner avec ce reçu le SHA, l’état de l’arbre ou l’empreinte du diff, les empreintes des distributions et les versions effectives. Ne pas réutiliser un reçu d’un autre candidat. `set offline` seul ne coupe pas nécessairement le réseau du worker ; HTTP 404 et refus CSP ne prouvent pas cette coupure. La scène visuelle reste `ERROR` si elle n’a pas son propre témoin probant, même si la suite canonique passe : ce sont deux résultats distincts. Ne jamais arrêter le serveur `{base_url}` partagé pour cette scène. Un contexte neuf sans cache n’est pas une condition supplémentaire ; aucun second oracle ou changement du worker n’est requis pour réparer la recette.
+
 Pour les défilements internes (#28), voir la [recette ciblée](RECETTE-DEFILEMENT.md). Le catalogue natif reçoit une taille égale au nombre de résultats ; les textareas de contenu sont mesurés à la création, à la saisie et au changement de largeur, y compris après masquage. Ne pas étendre cette adaptation au JSON technique.
 
 L’utilisateur a autorisé le seul script canonique de mesure dans l’aperçu : `allow-scripts` sans `allow-same-origin`, empreinte SHA-256 ajoutée aux CSP cumulées du parent et du Blob, réseau toujours interdit dans l’enfant. Le parent vérifie fenêtre source, origine opaque, jeton de navigation, largeur et hauteur entière avant tout ajustement. La mesure utilise le corps et la gouttière native éventuelle, sans réutiliser l’ancienne hauteur du cadre. Conserver l’échappement `<\/script>` dans le module parent assemblé en HTML. `preview-contract`, `preview-size-browser` et `page-flow-browser` exercent ce contrat ; `scripts/recipe_page_flow_firefox.mjs` le complète dans Firefox natif, sur profils isolés, sans installer de navigateur.
