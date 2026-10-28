@@ -1,5 +1,12 @@
 # Historique des livraisons
 
+## Non publié — Images par adresse HTTPS (#192)
+
+- Les 24 champs image proposent une source locale ou une adresse HTTPS directe. Le fichier local précédent est conservé pour revenir en arrière ; aucune image existante n’est recompressée ou convertie.
+- Les références distantes sont conservées dans les sorties et portent un format v2 explicite, refusé par les anciennes versions. Les fichiers entièrement locaux restent v1. La politique réseau ne s’ouvre que pour les images du builder ; les autres restrictions restent inchangées.
+- La disponibilité est constatée seulement dans le navigateur. Le poids distant reste inconnu, les hébergeurs reçoivent des requêtes et le mode distant ne garantit ni hors connexion, ni archivage, ni réception en messagerie.
+
+
 ## Non publié — Comprendre le poids du courriel (#191)
 
 - La synthèse et le détail nomment le HTML préparé pour la copie ; la confirmation de téléchargement nomme sa propre sortie. Répartition exacte entre styles de tête, données d’images et reste du HTML, avec occurrences, fichiers distincts et variantes de logos.

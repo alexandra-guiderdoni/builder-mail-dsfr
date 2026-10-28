@@ -181,3 +181,27 @@ test('aucun contrôle réseau : le module ne contient aucune API de requête', (
   const source = fs.readFileSync('app/source/checks.js', 'utf8');
   assert.doesNotMatch(source, /\bfetch\s*\(|XMLHttpRequest|WebSocket|EventSource|sendBeacon|\bimport\s*\(|new\s+Image\b|\.src\s*=/);
 });
+
+test('#192 : les URL d’images ont les exemples positifs et négatifs des contrôles retenus', () => {
+  const make = address => {
+    const doc = M.create('Contrôle des images', [index('mail-31')]), block = doc.blocks[0];
+    for (const field of M.component(block.component).fields) {
+      if (field.type === 'text') block.values[field.key] = 'Contenu éditorial rédigé';
+      if (field.type === 'url') block.values[field.key] = 'https://www.exemple-info.gouv.fr/article';
+    }
+    block.remoteImages = {f0: address}; M.versions(doc); return M.document(doc);
+  };
+  for (const [address, expected] of [
+    ['https://images.example/logo.png', ['demo-domain']],
+    ['https://www.exemple-info.gouv.fr/a%E2%80%AEb.png', ['bidi']],
+    ['https://exеmple.fr/logo.png', ['mixed-script']],
+    ['https://www.exemple-info.gouv.fr/logo.png', []],
+    ['https://пример.рф/logo.png', []],
+    ['https://www.exemple-info.gouv.fr/فارسی.png', []]
+  ]) {
+    const doc = make(address), warnings = C.warnings(doc, ok);
+    assert.deepEqual(warnings.map(w => w.rule), expected, address);
+    for (const warning of warnings) { assert.equal(warning.field, 'remote-image-url-f0'); assert.equal(warning.block, doc.blocks[0].id); }
+  }
+  for (const address of ['http://www.exemple-info.gouv.fr/logo.png', 'https:www.exemple-info.gouv.fr/logo.png']) assert.throws(() => make(address), /HTTPS/);
+});
