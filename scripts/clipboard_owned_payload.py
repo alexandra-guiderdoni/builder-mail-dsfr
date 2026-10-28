@@ -10,6 +10,7 @@ import os
 import re
 import stat
 import sys
+from html.entities import html5
 from html.parser import HTMLParser
 from pathlib import Path
 
@@ -26,6 +27,38 @@ RAW_START = re.compile(
     r'''<[A-Za-z][\w:.-]*(?:[ \t\r\n\f]+[A-Za-z_:][A-Za-z0-9_:.-]*(?:[ \t\r\n\f]*=[ \t\r\n\f]*(?:"[^"]*"|'[^']*'|[^\s"'=<>`]+))?)*[ \t\r\n\f]*/?>'''
 )
 RAW_END = re.compile(r'</[A-Za-z][\w:.-]*[ \t\r\n\f]*>')
+RAW_REFERENCE = re.compile(r'&(?:#[^;\s<>&]*;?|[A-Za-z][A-Za-z0-9]*;?)')
+
+
+def raw_references(value):
+    """Sous-ensemble conservateur, avant tout décodage tolérant d'HTMLParser."""
+    result = set()
+    for match in RAW_REFERENCE.finditer(value):
+        token = match.group()
+        if not token.endswith(';'):
+            return None
+        if token.startswith('&#'):
+            digits = token[2:-1]
+            hexadecimal = digits.startswith(('x', 'X'))
+            if hexadecimal:
+                digits = digits[1:]
+            if not re.fullmatch(r'[0-9a-fA-F]{1,6}' if hexadecimal else r'[0-9]{1,7}', digits):
+                return None
+            scalar = int(digits, 16 if hexadecimal else 10)
+            if (scalar == 0 or scalar > 0x10ffff or 0xd800 <= scalar <= 0xdfff
+                    or 0xfdd0 <= scalar <= 0xfdef or (scalar & 0xffff) in (0xfffe, 0xffff)
+                    or scalar < 32 and scalar not in (9, 10, 13) or 0x7f <= scalar <= 0x9f):
+                return None
+        elif token[1:] not in html5:
+            return None
+        result.add(token)
+    return result
+
+
+def raw_controls_allowed(value):
+    """C0/C1 bruts refusés, sauf les quatre espaces de contrôle HTML."""
+    return all((ord(char) >= 32 and not 0x7f <= ord(char) <= 0x9f)
+               or char in '\t\n\f\r' for char in value)
 
 
 def plain(value):
@@ -159,6 +192,13 @@ def qualify_owned(expected_html, expected_plain, observed_html, observed_plain):
               'normalization': 'Plain: initial BOM and CRLF only; HTML text: whitespace; CSS: whole lexemes including comments'}
     if not result['plain_exact']:
         result['reason'] = 'PLAIN_NOT_EXPECTED'
+        return result
+    if not raw_controls_allowed(expected_html) or not raw_controls_allowed(observed_html):
+        result['reason'] = 'UNRECOGNIZED_RAW_CONTROL'
+        return result
+    expected_refs, observed_refs = raw_references(expected_html), raw_references(observed_html)
+    if expected_refs is None or observed_refs is None or not observed_refs.issubset(expected_refs):
+        result['reason'] = 'UNRECOGNIZED_RAW_REFERENCE'
         return result
     try:
         expected, observed = parse(expected_html), parse(observed_html)

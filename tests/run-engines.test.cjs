@@ -134,7 +134,7 @@ test('les lancements mixtes sont observés par fichier sans gonfler la couvertur
 });
 
 
-test('runEngine conserve un vrai budget dépassé après le premier test réussi, avec ses pièces brutes', t => {
+test('runEngine conserve un vrai budget dépassé après le premier test réussi, avec ses pièces brutes', async t => {
   const fs = require('node:fs'), path = require('node:path'), os = require('node:os');
   const {runEngine} = require('./run-engines.cjs');
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'builder-runner-budget-owned-'));
@@ -143,7 +143,9 @@ test('runEngine conserve un vrai budget dépassé après le premier test réussi
     fs.mkdirSync(path.join(root, 'tests')); const dir = path.join(root, 'results'); fs.mkdirSync(dir);
     const stub = path.join(root, 'fake-playwright.cjs');
     fs.writeFileSync(stub, "module.exports=Object.fromEntries(['chromium','webkit','firefox'].map(name=>[name,{async launch(){throw Error('aucun navigateur attendu')}}]));");
-    fs.writeFileSync(path.join(root, 'tests', 'budget.test.cjs'), "const test=require('node:test');test('premier témoin',()=>{});test('attente maintenue',()=>new Promise(()=>setInterval(()=>{},1000)));");
+    const workerTrace = path.join(root, 'owned-worker.jsonl');
+    // Cette fixture ne doit pas survivre au parent node --test tué par le budget : attente intrinsèquement finie.
+    fs.writeFileSync(path.join(root, 'tests', 'budget.test.cjs'), `const fs=require('node:fs'),test=require('node:test');const log=kind=>fs.appendFileSync(${JSON.stringify(workerTrace)},JSON.stringify({kind,pid:process.pid,ppid:process.ppid,at:Date.now()})+'\\n');log('boot');test('premier témoin',()=>{});test('attente maintenue',()=>new Promise(resolve=>setTimeout(()=>{log('bounded-completion');resolve();},2000)));`);
     process.env.PLAYWRIGHT_MODULE = stub;
     const run = runEngine('firefox', ['budget.test.cjs'], dir, root, [], 1000);
     assert(run.results.some(r => r.status === 'pass' && r.name === 'premier témoin'));
@@ -156,6 +158,21 @@ test('runEngine conserve un vrai budget dépassé après le premier test réussi
     assert(fs.readFileSync(run.executions[0].stdout, 'utf8').includes('ok 1 - premier témoin'));
   } finally {
     if (previous === undefined) delete process.env.PLAYWRIGHT_MODULE; else process.env.PLAYWRIGHT_MODULE = previous;
+    const trace = path.join(root, 'owned-worker.jsonl'), deadline = Date.now() + 5000;
+    const rows = () => fs.existsSync(trace) ? fs.readFileSync(trace, 'utf8').split('\n').filter(Boolean).map(line => JSON.parse(line)) : [];
+    let observed = rows(), worker = observed.find(row => row.kind === 'boot'), disappeared = false;
+    while (Date.now() < deadline) {
+      observed = rows(); worker ||= observed.find(row => row.kind === 'boot');
+      if (worker && observed.some(row => row.kind === 'bounded-completion')) {
+        // Signal 0 = interrogation d'existence uniquement ; jamais de signal destructif, jamais de PID historique.
+        try { process.kill(worker.pid, 0); } catch (error) { if (error.code !== 'ESRCH') throw error; disappeared = true; break; }
+      }
+      await new Promise(resolve => setTimeout(resolve, 25));
+    }
+    assert(worker, 'le worker propre a laissé son reçu de démarrage');
+    assert(observed.some(row => row.kind === 'bounded-completion'), 'la borne naturelle de la fixture a réellement terminé');
+    assert(disappeared, `sortie du worker propre non observée ; preuves conservées dans ${root}`);
+    t.diagnostic(JSON.stringify({kind: 'owned-fixture-cleanup', pid: worker.pid, boundedCompletion: true, existenceQuery: 'ESRCH', exitCallback: 'not-observed-not-claimed'}));
     fs.rmSync(root, {recursive: true, force: true});
   }
 });

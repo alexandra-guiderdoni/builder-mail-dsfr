@@ -49,6 +49,17 @@ cases = [
     ('closing HTML comment suffix', html.replace('</p>', '</p <!--PRIVATE_SENTINEL-->>'), plain, False),
     ('start tag slash suffix', html.replace('<p id=', '<p /PRIVATE_SENTINEL id='), plain, False),
     ('known closing whitespace', html.replace('</p>', '</P  >'), plain, True),
+    ('invalid decimal reference text', html.replace('SYNTHETIC', 'SYN&#1;THETIC'), plain, False),
+    ('invalid hex reference text', html.replace('SYNTHETIC', 'SYN&#x1;THETIC'), plain, False),
+    ('invalid uppercase hex reference', html.replace('SYNTHETIC', 'SYN&#X01;THETIC'), plain, False),
+    ('invalid decimal reference attr', html.replace('id="known"', 'id="kno&#1;wn"'), plain, False),
+    ('invalid hex reference attr', html.replace('id="known"', 'id="kno&#x1;wn"'), plain, False),
+    ('padded long invalid reference', html.replace('SYNTHETIC', 'SYN&#000000000000000001;THETIC'), plain, False),
+    ('missing semicolon decimal', html.replace('SYNTHETIC', 'SYN&#1THETIC'), plain, False),
+    ('missing semicolon hex attr', html.replace('id="known"', 'id="kno&#x1wn"'), plain, False),
+    ('invalid reference HTML comment', html.replace('<!-- KNOWN -->', '<!-- KN&#1;OWN -->'), plain, False),
+    ('invalid reference CSS comment', html.replace('/* KNOWN */', '/* KN&#x1;OWN */'), plain, False),
+    ('invalid reference CSS data', html.replace('color:red;', 'color:r&#1;ed;', 1), plain, False),
     ('unknown text suffix', html.replace('</body>', ' PRIVATE_SUFFIX</body>'), plain, False),
     ('unknown HTML comment', html.replace('</body>', '<!-- PRIVATE_COMMENT --></body>'), plain, False),
     ('unknown CSS comment', html.replace('color:red;', '/* PRIVATE_CSS_COMMENT */color:red;', 1), plain, False),
@@ -71,6 +82,44 @@ for name, actual_html, actual_plain, accepted in cases:
     result = owned.qualify_owned(html, plain, actual_html, actual_plain)
     expect(result['qualified'] is accepted, name)
     expect(not any('PRIVATE_' in str(value) for value in result.values()), name + ' receipt no payload')
+
+# C0/C1 bruts non HTML refusés avant la normalisation Unicode des espaces.
+for codepoint in list(range(32)) + list(range(0x7f, 0xa0)):
+    if codepoint in (9, 10, 12, 13):
+        continue
+    control = chr(codepoint)
+    for context, actual in [
+        ('text', html.replace('SYNTHETIC', control + 'SYNTHETIC')),
+        ('attribute', html.replace('id="known"', 'id="kno' + control + 'wn"')),
+    ]:
+        expect(not owned.qualify_owned(html, plain, actual, plain)['qualified'],
+               'raw control %x in %s' % (codepoint, context))
+for whitespace in ('\t', '\n', '\f', '\r'):
+    expect(owned.qualify_owned(html, plain, html.replace('SYNTHETIC', whitespace + 'SYNTHETIC'), plain)['qualified'],
+           'ordinary HTML whitespace remains recognized')
+
+# Raw reference policy is also enforced when an unsafe spelling exists in the reference itself.
+for name, reference in [
+    ('unknown named entity', '<p>&PRIVATE;</p>'),
+    ('invalid numeric source', '<p>&#1;</p>'),
+    ('out of range scalar', '<p>&#1114112;</p>'),
+    ('surrogate scalar', '<p>&#55296;</p>'),
+    ('noncharacter scalar', '<p>&#65535;</p>'),
+    ('C1 scalar mapping', '<p>&#128;</p>'),
+    ('padded long valid scalar', '<p>&#00000000000000000065;</p>'),
+    ('known named missing semicolon', '<p>&amp</p>'),
+]:
+    expect(not owned.qualify_owned(reference, plain, reference, plain)['qualified'], name)
+for name, reference in [
+    ('known named', '<p>SYNTHETIC &amp; &nbsp;</p>'),
+    ('known decimal', '<p>SYNTHETIC &#65;</p>'),
+    ('known hex', '<p>SYNTHETIC &#x41;</p>'),
+    ('escaped reference example', '<p>SYNTHETIC &amp;#1;</p>'),
+]:
+    expect(owned.qualify_owned(reference, plain, reference, plain)['qualified'], name)
+expect(not owned.qualify_owned('<p>SYNTHETIC A</p>', plain,
+                              '<p>SYNTHETIC &#65;</p>', plain)['qualified'],
+       'unrecognized raw spelling conservatively refused even if scalar is valid')
 
 with tempfile.TemporaryDirectory() as directory:
     base = Path(directory)
