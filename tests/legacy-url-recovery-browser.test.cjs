@@ -1,31 +1,25 @@
 const test = require('node:test');
 const path = require('node:path');
 const fs = require('node:fs/promises');
-const os = require('node:os');
-const {execFileSync} = require('node:child_process');
-const {pathToFileURL} = require('node:url');
 const {chromium, portable, assert} = require('./browser-support.cjs');
-const OLD = 'c4ceadabcabd52a9184481236b39ff87b18368de';
 const RAW = 'https:exemple.invalid/page-abregee';
 const FIXED = 'https://exemple.invalid/destination-choisie';
 
 async function previousLibrary(t, url = RAW) {
-  const directory = await fs.mkdtemp(path.join(os.tmpdir(), 'builder-193-owned-'));
-  t.after(() => fs.rm(directory, {recursive: true, force: true}));
-  const file = path.join(directory, 'ancien.html');
-  await fs.writeFile(file, execFileSync('git', ['show', `${OLD}:app/distribution/portable.html`], {cwd: path.resolve(__dirname, '..'), maxBuffer: 8 * 1024 * 1024}));
   const browser = await chromium.launch(); t.after(() => browser.close());
   const context = await browser.newContext({offline: true, acceptDownloads: true}), page = await context.newPage();
-  await page.goto(pathToFileURL(file).href); await page.waitForFunction(() => window.MailBuilder?.ready);
-  const original = await page.evaluate(async url => {
-    const A = MailBuilder, healthy = A.Model.create('Composition saine conservée', [5, 19]), legacy = A.Model.create('Composition ancienne à corriger', [40]);
-    const field = A.Model.component('mail-40').fields.find(f => f.type === 'url');
-    legacy.blocks[0].values[field.key] = url;
-    if (A.Model.checkUrl(url)) throw new Error('Le témoin ancien doit accepter cette URL');
-    await A.State.change(lib => { lib.documents = [healthy, legacy]; lib.activeId = healthy.id; });
-    return await A.Storage.load();
-  }, url);
+  const library = JSON.parse(await fs.readFile(path.join(__dirname, 'fixtures/legacy-url-library.json'), 'utf8'));
+  const block = library.documents[1].blocks[0];
+  block.values[Object.keys(block.values).find(key => block.values[key] === RAW)] = url;
   await page.goto(portable); await page.waitForFunction(() => window.MailBuilder?.ready);
+  // Snapshot validé avec le vrai modèle c4ceada ; aucun historique Git requis dans le checkout CI.
+  const original = {token: 'legacy-record-fixture', app: '9a0d696c3102153a', library};
+  await page.evaluate(async record => {
+    const db = await new Promise((resolve, reject) => { const request = indexedDB.open('builder-mail-dsfr-library', 1); request.onsuccess = () => resolve(request.result); request.onerror = () => reject(request.error); });
+    try { await new Promise((resolve, reject) => { const tx = db.transaction('library', 'readwrite'); tx.objectStore('library').put(record, 'current'); tx.oncomplete = resolve; tx.onerror = tx.onabort = () => reject(tx.error); }); }
+    finally { db.close(); }
+  }, original);
+  await page.reload(); await page.waitForFunction(() => window.MailBuilder?.ready);
   return {page, context, original};
 }
 
@@ -36,7 +30,7 @@ async function downloadedJson(page, selector) {
   return JSON.parse(Buffer.concat(chunks).toString());
 }
 
-test('#193 : bibliothèque réellement enregistrée par l’ancienne version, récupération guidée puis écriture explicite', async t => {
+test('#193 : bibliothèque issue de l’ancien modèle, récupération guidée puis écriture explicite', async t => {
   const {page, original} = await previousLibrary(t);
   const before = await page.evaluate(async () => ({stored: await MailBuilder.Storage.load(), documents: MailBuilder.library.documents.length, recovery: MailBuilder.recoveryOnly}));
   t.diagnostic(JSON.stringify({beforeRecovery: {memoryDocuments: before.documents, storedDocuments: before.stored.library.documents.length, recovery: before.recovery}}));

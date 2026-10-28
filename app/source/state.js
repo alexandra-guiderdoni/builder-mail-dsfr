@@ -136,7 +136,7 @@
     } catch (cause) {
       failing(true); A.recoveryOnly = true; absent = cause.storage === "absent";
       const legacy = record && A.LegacyRecovery?.offer(record);
-      const advice = legacy ? "Les données enregistrées sont conservées : utilisez la récupération guidée ci-dessous pour corriger les anciennes adresses." : record ? "Les données enregistrées restent intactes : utilisez « Exporter les données enregistrées brutes », dans « Fichiers et récupération », pour les conserver." : absent ? "Exportez la bibliothèque en mémoire pour conserver votre travail : la fermeture de cette page l’efface." : "Cette page n’écrit rien dans la bibliothèque locale : exportez la bibliothèque en mémoire pour conserver votre travail.";
+      const advice = legacy ? "Les données enregistrées sont conservées : utilisez la récupération guidée ci-dessous pour corriger les anciennes adresses." : absent ? "Exportez la bibliothèque en mémoire pour conserver votre travail : la fermeture de cette page l’efface." : "Cette page n’écrit rien dans la bibliothèque locale : exportez la bibliothèque en mémoire pour conserver votre travail.";
       const restore = !legacy && !cause.storage && await restorable() ? " Une sauvegarde précédente lisible existe : « Restaurer l’état précédent », dans « Fichiers et récupération », permet de la relire." : "";
       setPersistentError(`${cause.message} ${advice}${restore}`);
       show(absent ? "Stockage indisponible : travail en mémoire seulement." : "Bibliothèque non restaurée.", true);

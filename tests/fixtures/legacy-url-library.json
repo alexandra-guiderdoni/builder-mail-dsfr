@@ -1,0 +1,55 @@
+{
+  "schema": "dsfr-mail/library",
+  "version": 1,
+  "catalogue": "6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278f74858e8cddd6e72af8b",
+  "activeId": "healthy-document",
+  "documents": [
+    {
+      "schema": "dsfr-mail/document",
+      "version": 1,
+      "catalogue": "6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278f74858e8cddd6e72af8b",
+      "id": "healthy-document",
+      "name": "Composition saine conservée",
+      "subject": "Composition saine conservée",
+      "blocks": [
+        {
+          "id": "healthy-block-0",
+          "component": "mail-05",
+          "values": {
+            "f0": "Titre"
+          },
+          "source": ""
+        },
+        {
+          "id": "healthy-block-1",
+          "component": "mail-19",
+          "values": {
+            "f0": "Texte"
+          },
+          "source": ""
+        }
+      ]
+    },
+    {
+      "schema": "dsfr-mail/document",
+      "version": 1,
+      "catalogue": "6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278f74858e8cddd6e72af8b",
+      "id": "legacy-document",
+      "name": "Composition ancienne à corriger",
+      "subject": "Composition ancienne à corriger",
+      "blocks": [
+        {
+          "id": "legacy-block",
+          "component": "mail-40",
+          "values": {
+            "f0": "https:exemple.invalid/page-abregee",
+            "f1": "Bouton primaire"
+          },
+          "source": ""
+        }
+      ]
+    }
+  ],
+  "templates": [],
+  "identities": []
+}
