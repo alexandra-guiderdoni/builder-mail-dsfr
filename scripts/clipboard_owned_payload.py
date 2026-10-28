@@ -120,15 +120,16 @@ def known_meta(token):
 
 
 def unwrap(tokens):
-    """Reconnaît uniquement l'enveloppe Firefox HTML4 exacte observée."""
+    """Enveloppe neutre exacte, avec déclaration HTML4 connue facultative."""
     pattern = [('start', 'html'), ('start', 'head'), ('start', 'meta'),
                ('end', 'head'), ('start', 'body')]
-    if (len(tokens) >= 8 and tokens[0] == ('decl', HTML4)
-            and [t[:2] for t in tokens[1:6]] == pattern
+    start = 1 if tokens[:1] == [('decl', HTML4)] else 0
+    if (len(tokens) >= start + 7
+            and [t[:2] for t in tokens[start:start + 5]] == pattern
             and tokens[-2:] == [('end', 'body'), ('end', 'html')]
-            and all(tokens[i][2] == {} for i in (1, 2, 5))
-            and known_meta(tokens[3])):
-        return tokens[6:-2], True
+            and all(tokens[start + i][2] == {} for i in (0, 1, 4))
+            and known_meta(tokens[start + 2])):
+        return tokens[start + 5:-2], True
     return tokens, False
 
 

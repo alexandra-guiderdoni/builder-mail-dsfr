@@ -24,10 +24,20 @@ html = '<!doctype html><html lang="fr"><head><meta charset="utf-8"><style>/* KNO
 plain = 'SYNTHETIC\n'
 wrapper = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"><html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"></head><body>{}</body></html>'
 wrapped = wrapper.format(html.replace('<!doctype html>', '').replace('<meta charset="utf-8">', '<meta http-equiv="content-type" content="text/html; charset=utf-8">'))
+no_outer_decl = wrapper.split('>', 1)[1].format(html)
 cases = [
     ('exact expected', html, plain, True),
     ('known wrapper and replacement meta', wrapped, plain, True),
     ('known wrapper only', wrapper.format(html), plain, True),
+    ('known wrapper without outer doctype with inner declaration', no_outer_decl, plain, True),
+    ('no outer doctype private HTML attribute', no_outer_decl.replace('<html>', '<html data-private=PRIVATE_SENTINEL>', 1), plain, False),
+    ('no outer doctype private head attribute', no_outer_decl.replace('<head>', '<head data-private=PRIVATE_SENTINEL>', 1), plain, False),
+    ('no outer doctype private body attribute', no_outer_decl.replace('<body>', '<body data-private=PRIVATE_SENTINEL>', 1), plain, False),
+    ('no outer doctype meta in wrong position', no_outer_decl.replace('<head><meta http-equiv="content-type" content="text/html; charset=utf-8"></head><body>', '<head></head><body><meta http-equiv="content-type" content="text/html; charset=utf-8">', 1), plain, False),
+    ('no outer doctype private meta suffix', no_outer_decl.replace('charset=utf-8', 'charset=utf-8;PRIVATE_SENTINEL', 1), plain, False),
+    ('no outer doctype private comment', no_outer_decl.replace('</head>', '<!--PRIVATE_SENTINEL--></head>', 1), plain, False),
+    ('no outer doctype private closing suffix', no_outer_decl.replace('</body>', '</body PRIVATE_SENTINEL>'), plain, False),
+    ('unknown outer declaration', '<!DOCTYPE PRIVATE_SENTINEL>' + no_outer_decl, plain, False),
     ('known meta case only', wrapped.replace('content-type', 'Content-Type'), plain, True),
     ('known CSS declaration deletion', html.replace(' width:620px;', ''), plain, True),
     ('known style entirely deleted', html.replace('<style>/* KNOWN */ p {color:red; width:620px; content:"KNOWN"}</style>', ''), plain, True),
