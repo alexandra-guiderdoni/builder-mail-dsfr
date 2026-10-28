@@ -230,7 +230,9 @@
       if (readOnly === "version") { A.UI.refresh(); show("Bibliothèque sauvegardée ; cette fenêtre reste en lecture seule : exportez puis rechargez-la.", true); return; }
       readOnly = null;
       get("editing").disabled = false; get("read-only").hidden = true; A.invalid.clear(); A.UI.clearFieldErrors();
-      A.UI.refresh(); A.error(""); show("Bibliothèque sauvegardée dans ce navigateur."); announceSuccess("Bibliothèque sauvegardée dans ce navigateur."); get(get("editor-page").hidden ? "home-title" : "composition-title").focus();
+      A.UI.refresh(); A.error("");
+      const savedText = A.drafts.size ? "Bibliothèque sauvegardée ; les champs invalides restent non enregistrés." : "Bibliothèque sauvegardée dans ce navigateur.";
+      show(savedText); announceSuccess(savedText); get(get("editor-page").hidden ? "home-title" : "composition-title").focus();
       A.notice(!record ? "Main reprise : la bibliothèque en mémoire est enregistrée de nouveau dans ce navigateur." : copies ? `Main reprise : ${copies > 1 ? `${copies} copies horodatées ajoutées` : "une copie horodatée ajoutée"} à la bibliothèque enregistrée, sans rien remplacer. L’autre fenêtre ne peut plus enregistrer ; elle passe en lecture seule au plus tard à sa prochaine modification.` : "Main reprise : rien n’avait changé dans cette fenêtre, la bibliothèque enregistrée est conservée telle quelle.", ticket);
     } catch (cause) {
       show("Reprise impossible : rien n’a été enregistré.", true);

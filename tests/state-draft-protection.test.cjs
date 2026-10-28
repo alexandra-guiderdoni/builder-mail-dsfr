@@ -71,6 +71,7 @@ test('reprise : le brouillon suit une copie de composition sans entrer dans le m
   assert.notEqual(draft.block, old.block); assert.equal(draft.input, old.input);
   assert.equal(h.A.selected, draft.block, 'le bloc sélectionné suit la copie');
   assert.equal(JSON.stringify(h.record().library).includes(DRAFT), false);
+  assert.match(h.element('save-state').textContent, /champs invalides restent non enregistrés/);
   assert.throws(() => h.A.State.guard(), /Corrigez ce lien/);
   h.A.State.dropDraft(draft.doc, draft.block, draft.input);
   assert.doesNotThrow(() => h.A.State.guard());
