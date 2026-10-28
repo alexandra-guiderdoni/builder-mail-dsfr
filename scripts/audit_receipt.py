@@ -14,6 +14,7 @@ import re
 import subprocess
 import sys
 import unicodedata
+from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -100,14 +101,68 @@ def find_one(directory, pattern):
 
 
 def parse_suite(text):
-    """Compteurs du journal de tests Node (formats `ℹ pass N` et `# pass N`)."""
-    counts = {}
-    for key, label in [("passed", "pass"), ("failed", "fail"), ("skipped", "skipped")]:
-        found = re.search(rf"(?:ℹ|#) {label} (\d+)\b", text)
-        if not found:
-            raise AuditError(f"Journal de tests sans compteur « {label} »")
-        counts[key] = int(found.group(1))
+    """Résumé terminal complet Node, TAP ou spec ; jamais des compteurs partiels."""
+    counts, positions = {}, []
+    for key, label in [
+        ("total", "tests"), ("passed", "pass"), ("failed", "fail"),
+        ("cancelled", "cancelled"), ("skipped", "skipped"), ("todo", "todo"),
+    ]:
+        found = list(re.finditer(rf"^(?:ℹ|#) {label} (\d+)[ \t]*\r?$", text, re.MULTILINE))
+        if len(found) != 1:
+            raise AuditError(f"Journal de tests : compteur « {label} » absent ou multiple")
+        counts[key] = int(found[0].group(1))
+        positions.append(found[0].start())
+    duration = list(re.finditer(
+        r"^(?:ℹ|#) duration_ms (\d+(?:\.\d+)?)[ \t]*\r?$", text, re.MULTILINE
+    ))
+    if len(duration) != 1:
+        raise AuditError("Journal de tests sans durée terminale unique : résumé incomplet")
+    if positions != sorted(positions) or duration[0].start() < positions[-1]:
+        raise AuditError("Journal de tests : ordre du résumé terminal incohérent")
+    if re.search(r"^(?:not )?ok\s+\d+\b", text[duration[0].end():], re.MULTILINE):
+        raise AuditError("Journal de tests : résultats TAP après le résumé terminal")
+    if counts["total"] != sum(counts[k] for k in ["passed", "failed", "cancelled", "skipped", "todo"]):
+        raise AuditError("Journal de tests : total incohérent avec les résultats")
     return counts
+
+
+def evidence_path(path):
+    """Pièce réellement lue, relative au dépôt si possible, absolue sinon."""
+    resolved = path.resolve()
+    try:
+        return str(resolved.relative_to(ROOT.resolve()))
+    except ValueError:
+        return str(resolved)
+
+
+def collection_provenance(raw, browser):
+    """Ne jamais déduire la date de collecte d'une date de génération ou d'un mtime."""
+    collected_at = browser.get("collected_at")
+    try:
+        parsed = datetime.fromisoformat(collected_at) if isinstance(collected_at, str) else None
+    except ValueError:
+        parsed = None
+    known = parsed is not None and parsed.utcoffset() is not None
+    run_id = browser.get("run_id")
+    return {
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "audited_at": collected_at if known else None,
+        "collection_time_source": evidence_path(raw / "browser.json") + ":collected_at" if known else None,
+        "reported_collection_run_id": run_id if isinstance(run_id, str) and run_id.strip() else None,
+        "raw_directory": evidence_path(raw),
+    }
+
+
+def heading_outline(value):
+    """Un relevé positif exige des titres identifiés, pas une égalité vide."""
+    return isinstance(value, list) and bool(value) and all(
+        isinstance(item, dict)
+        and type(item.get("level")) is int
+        and 1 <= item["level"] <= 6
+        and isinstance(item.get("text"), str)
+        and bool(item["text"].strip())
+        for item in value
+    )
 
 
 def confirm(finding, journal, proof, qualification, **fields):
@@ -128,21 +183,23 @@ def titles_finding(raw, journal, semantic):
         "test": "9.1.3",
         "qualification": "NON_QUALIFIE",
         "pages": ["P05", "P13"],
-        "observation": "Titres et rubriques visuels en strong/span ; aucun h1-h6 ni role=heading dans ces documents.",
+        "observation": "Structure des titres non qualifiée avant vérification des exports de cette campagne.",
         "expected": "Structurer les titres correspondant aux contenus, avec une hiérarchie cohérente.",
         "reproduction": "Ouvrir exports/02.html et exports/10.html puis examiner les titres visuels et leur sémantique DOM.",
-        "review": "Contre-audit statique indépendant Astra : défaut majeur confirmé ; correction UI distincte approuvée.",
-        "evidence": [
-            "evidence/accessibilite-20261022/exports/02.html",
-            "evidence/accessibilite-20261022/exports/10.html",
-        ],
+        "review": "Aucune qualification de cette campagne avant les contrôles structurels ; aucune restitution vocale déduite.",
+        "evidence": [],
         "source": "https://accessibilite.numerique.gouv.fr/methode/criteres-et-tests/#9.1.3",
     }
-    texts = {}
+    texts, evidence_digests = {}, {}
     for name in ["02.html", "10.html"]:
         path = raw / "exports" / name
         if path.is_file():
-            texts[name] = path.read_text()
+            content = path.read_bytes()
+            texts[name] = content.decode("utf-8")
+            identifier = evidence_path(path)
+            finding["evidence"].append(identifier)
+            evidence_digests[identifier] = hashlib.sha256(content).hexdigest()
+    finding["evidence_sha256"] = evidence_digests
     exports_present = journal.check(
         "titres-exports-presents",
         len(texts) == 2,
@@ -151,17 +208,21 @@ def titles_finding(raw, journal, semantic):
     if semantic:
         visual = semantic.get("visual", {}).get("observations", [])
         outputs = semantic.get("outputs", {})
+        semantic_path = raw / "semantic-retest.json"
+        semantic_bytes = semantic_path.read_bytes() if semantic_path.is_file() else None
         proven = journal.check(
             "titres-retest-semantique",
             exports_present
             and len(visual) == 54
             and all(item.get("pixelEquivalent") is True for item in visual)
-            and outputs.get("accessibleTree") is not None
+            and all(heading_outline(outputs.get(key)) for key in ["accessibleTree", "expected", "copied"])
             and outputs.get("accessibleTree")
             == outputs.get("expected")
             == outputs.get("copied")
+            and semantic_bytes is not None
+            and json.loads(semantic_bytes) == semantic
             and all(re.search(r"<h[1-6]\b", text) for text in texts.values()),
-            "54 observations visuelles équivalentes, arbre AX = attendu = copié, h1-h6 dans les exports",
+            "54 observations visuelles équivalentes, titres AX non vides = attendus = copiés, h1-h6 dans les exports et pièce sémantique courante",
         )
         if proven:
             confirm(
@@ -170,9 +231,13 @@ def titles_finding(raw, journal, semantic):
                 "titres-retest-semantique",
                 "A_RETESTER",
                 previous_qualification="NC_CONFIRMEE",
-                observation="32 champs de titres adaptés ; titres natifs vérifiés dans aperçu, téléchargement, copie et arbre AX. Qualification éditoriale et restitution vocale encore manquantes.",
-                review="Astra : GO structurel local ; aucune conformité RGAA globale ni compatibilité Outlook nouvelle affirmée.",
-                evidence=[str((raw / "semantic-retest.json").relative_to(ROOT))],
+                observation="Relevés de titres non vides et identifiés cohérents entre attendu, arbre accessible et copie ; exports pourvus de titres HTML. Qualification éditoriale et restitution vocale encore manquantes.",
+                review="Contrôle structurel local sur les pièces courantes ; aucune nouvelle revue indépendante, conformité RGAA globale ou compatibilité Outlook affirmée.",
+                evidence=[*finding["evidence"], evidence_path(semantic_path)],
+                evidence_sha256={
+                    **finding["evidence_sha256"],
+                    evidence_path(semantic_path): hashlib.sha256(semantic_bytes).hexdigest(),
+                },
             )
     else:
         proven = journal.check(
@@ -181,7 +246,11 @@ def titles_finding(raw, journal, semantic):
             "exports lus sans h1-h6 ni role=heading",
         )
         if proven:
-            confirm(finding, journal, "titres-defaut-observe", "NC_CONFIRMEE")
+            confirm(
+                finding, journal, "titres-defaut-observe", "NC_CONFIRMEE",
+                observation="Aucun h1-h6 ni role=heading dans les deux exports lus de cette campagne ; structure éditoriale à instruire.",
+                review="Contrôle statique des exports courants, sans restitution vocale ni verdict global.",
+            )
     return finding
 
 
@@ -261,8 +330,8 @@ def verify_receipt(receipt, root):
                     problems.append(
                         f"tests « {key} » déclaré {tests.get(key)!r}, journal {value}"
                     )
-            if counts["failed"] or counts["skipped"]:
-                problems.append("tests en échec ou ignorés dans le journal")
+            if not counts["total"] or any(counts[k] for k in ["failed", "cancelled", "skipped", "todo"]):
+                problems.append("suite vide, tests en échec, annulés, ignorés ou TODO dans le journal")
     for finding in receipt.get("confirmed_findings", []):
         if finding.get("qualification") not in CONFIRMING:
             continue
@@ -270,9 +339,14 @@ def verify_receipt(receipt, root):
         if finding.get("proof") not in names:
             problems.append(f"constat {label} sans contrôle réussi nommé en preuve")
         evidence = finding.get("evidence") or []
+        digests = finding.get("evidence_sha256")
+        if finding.get("id") == "MAIL-TITRES-001" and not isinstance(digests, dict):
+            problems.append(f"constat {label} sans empreintes des pièces lues")
         for item in [evidence] if isinstance(evidence, str) else evidence:
             if not (root / item).is_file():
                 problems.append(f"constat {label} : pièce absente {item}")
+            elif isinstance(digests, dict) and sha(root / item) != digests.get(item):
+                problems.append(f"constat {label} : empreinte absente ou différente {item}")
         if not evidence:
             problems.append(f"constat {label} sans pièce")
     if problems:
@@ -410,6 +484,8 @@ def collect(journal):
         f"{suite['passed']} réussis pour {EXPECTED_TESTS} attendus",
     )
     check("suite-tests-sans-echec", suite["failed"] == 0, f"{suite['failed']} en échec")
+    check("suite-tests-sans-annulation", suite["cancelled"] == 0, f"{suite['cancelled']} annulés")
+    check("suite-tests-sans-todo", suite["todo"] == 0, f"{suite['todo']} TODO")
     check(
         "suite-tests-sans-ignore", suite["skipped"] == 0, f"{suite['skipped']} ignorés"
     )
@@ -573,7 +649,7 @@ def collect(journal):
     attempts = sorted(RAW.glob("supplements-attempt-*/manifest.json"))
     receipt = {
         "schema_version": 2,
-        "audited_at": "2026-10-22",
+        **collection_provenance(RAW, browser),
         "target_percent": 100,
         "official_compliance_rate": None,
         "human_qualification": False,

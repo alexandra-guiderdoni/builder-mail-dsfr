@@ -24,6 +24,20 @@ async function confirmOutput(action, notice) {
   await firefox.wait(`document.querySelector('#notice').textContent.startsWith(${JSON.stringify(notice)})`);
 }
 const exportName = (base, extension) => firefox.evaluate(`MailBuilder.Files.exportName(${base}, ${JSON.stringify(extension)})`);
+const cleanupReceipt = async () => {
+  let receipt;
+  try { receipt = await firefox.stop(); } catch (cause) { receipt = {status: 'error', cleanup_error: {message: cause.message}}; }
+  if (!receipt || typeof receipt !== 'object' || !Object.hasOwn(receipt, 'cleanup_error') || receipt.cleanup_error === undefined) receipt = {status: 'unknown', cleanup_error: 'Fermeture sans reçu vérifiable.'};
+  report.cleanup_receipts ||= [];
+  if (report.cleanup_receipts.at(-1) !== receipt) report.cleanup_receipts.push(receipt);
+  if (receipt.cleanup_error !== null || receipt.exit_observed !== true || !(receipt.status === 'closed' || (receipt.status === 'not-started' && firefox.allocation === null && receipt.child_pid === null))) {
+    report.cleanup_error = receipt.cleanup_error || 'Fin du processus de recette non explicitement observée.';
+    process.exitCode = 1;
+  }
+  return receipt;
+};
+const stopped = async () => { const receipt = await cleanupReceipt(); if (receipt?.status !== 'closed') report.cleanup_error ||= 'Aucun processus fermé avant relance.'; if (report.cleanup_error) throw new Error('Fermeture Firefox non prouvée ; relance refusée.'); };
+
 const saved = () => firefox.wait(`document.querySelector('#save-state').textContent==='Bibliothèque sauvegardée dans ce navigateur.'`);
 try {
   await firefox.start(); report.browser = firefox.version;
@@ -61,12 +75,18 @@ try {
   await firefox.click('[data-action=export-library]'); const library = await downloaded(await exportName(JSON.stringify('bibliotheque-courriels'), 'json'));
   const snapshot = JSON.parse(library.text); assert.equal(snapshot.templates.length, 1); assert.equal(snapshot.identities.length, 1);
   report.checks.push('import invalide refusé ; fichier de bibliothèque contenant compositions, modèle et identité');
-  await firefox.capture('fichier-portable.png'); await firefox.stop(); await firefox.start(); await firefox.navigate(portable);
+  await firefox.capture('fichier-portable.png'); await stopped(); await firefox.start(); await firefox.navigate(portable);
   assert.equal(await firefox.evaluate('MailBuilder.library.documents.length'), count); assert.equal(await firefox.evaluate('MailBuilder.library.templates.length'), 1);
   report.checks.push('redémarrage complet de Firefox : bibliothèque portable restaurée');
   const base = path.join(root, 'app/distribution/web');
   server = http.createServer(async (request, response) => {
-    try { const pathname = new URL(request.url, 'http://localhost').pathname, file = path.resolve(base, '.' + (pathname === '/' ? '/index.html' : pathname)); if (!file.startsWith(base + path.sep)) { response.writeHead(403); response.end(); return; } const types = {'.html': 'text/html', '.js': 'text/javascript', '.webmanifest': 'application/manifest+json', '.svg': 'image/svg+xml', '.png': 'image/png'}; response.writeHead(200, {'Content-Type': types[path.extname(file)]}); response.end(await fs.readFile(file)); } catch { response.writeHead(404); response.end(); }
+    try {
+      const pathname = new URL(request.url, 'http://localhost').pathname, file = path.resolve(base, '.' + (pathname === '/' ? '/index.html' : pathname));
+      if (!file.startsWith(base + path.sep)) { response.writeHead(403); response.end(); return; }
+      const types = {'.html': 'text/html', '.js': 'text/javascript', '.webmanifest': 'application/manifest+json', '.svg': 'image/svg+xml', '.png': 'image/png'};
+      const body = await fs.readFile(file);
+      response.writeHead(200, {'Content-Type': types[path.extname(file)]}); response.end(body);
+    } catch { response.writeHead(404); response.end(); }
   });
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve)); const url = `http://127.0.0.1:${server.address().port}/`;
   await firefox.navigate(url); await firefox.wait('!!navigator.serviceWorker.controller');
@@ -74,7 +94,7 @@ try {
   assert.equal(await firefox.evaluate('MailBuilder.library.documents.length'), count + 1);
   await new Promise(resolve => { server.close(resolve); server.closeAllConnections(); });
   await assert.rejects(fetch(url)); await firefox.navigate(url); assert.equal(await firefox.evaluate('MailBuilder.library.documents.length'), count + 1);
-  await firefox.stop(); await firefox.start(); await firefox.navigate(url); assert.equal(await firefox.evaluate('MailBuilder.library.documents.length'), count + 1);
+  await stopped(); await firefox.start(); await firefox.navigate(url); assert.equal(await firefox.evaluate('MailBuilder.library.documents.length'), count + 1);
   await firefox.capture('web-hors-ligne-apres-redemarrage.png');
   report.checks.push('bibliothèque transportée vers la variante web ; rechargement serveur arrêté puis redémarrage complet hors connexion');
   report.errors = firefox.errors; assert.deepEqual(report.errors, []); report.verdict = 'PARCOURS_FIREFOX_OBSERVE';
@@ -82,7 +102,7 @@ try {
 } catch (cause) { report.verdict = 'ECHEC'; report.failure = cause.stack; process.exitCode = 1; }
 finally {
   if (server?.listening) await new Promise(resolve => { server.close(resolve); server.closeAllConnections(); });
-  await firefox.stop(); await fs.writeFile(path.join(directory, 'receipt.json'), JSON.stringify(report, null, 2));
+  await cleanupReceipt(); if (report.cleanup_error) report.verdict = 'ECHEC_NETTOYAGE'; await fs.writeFile(path.join(directory, 'receipt.json'), JSON.stringify(report, null, 2));
   await fs.writeFile(path.join(root, 'evidence/application/firefox-last.json'), JSON.stringify({receipt: path.relative(root, path.join(directory, 'receipt.json')), ...report}, null, 2));
   console.log(JSON.stringify({verdict: report.verdict, checks: report.checks, failure: report.failure, receipt: path.relative(root, path.join(directory, 'receipt.json'))}));
 }

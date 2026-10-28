@@ -17,13 +17,24 @@ async function documents(page, generation, previous) {
   }
   await frames.preview.evaluate(generation => {
     if (window.__backgroundControl) throw new Error('document déjà instrumenté');
-    window.__backgroundControl = {generation, clicks: []};
+    window.__backgroundControl = {generation, documentOrigin: performance.timeOrigin, url: location.href, clicks: [], inputs: []};
+    for (const type of ['pointerdown', 'mousedown', 'pointerup', 'mouseup', 'click']) document.addEventListener(type, event => {
+      window.__backgroundControl.inputs.push({type, trusted: event.isTrusted, x: event.clientX, y: event.clientY});
+    });
     document.addEventListener('click', event => window.__backgroundControl.clicks.push({trusted: event.isTrusted, x: event.clientX, y: event.clientY}));
   }, generation);
   await frames.preview.locator('body').click({position: {x: 20, y: 20}});
   const seen = await frames.preview.evaluate(() => window.__backgroundControl);
   assert.equal(seen.generation, generation);
-  assert.equal(seen.clicks.length, 1, 'un clic par nouveau document');
+  // Mesures seulement après le geste : aucun délai/attente additionnel avant le contrôle positif.
+  let missingClick;
+  if (seen.clicks.length !== 1) {
+    try {
+      missingClick = {generation, seen, child: await frames.preview.evaluate(() => ({href: location.href, ready: document.readyState, focus: document.hasFocus(), body: document.body?.getBoundingClientRect().toJSON()})),
+        parent: await page.evaluate(() => ({scroll: scrollY, focus: document.hasFocus(), active: document.activeElement?.id || document.activeElement?.tagName, modal: !!document.querySelector(':modal'), frames: [...document.querySelectorAll('iframe')].map(el => ({id: el.id, src: el.src, rect: el.getBoundingClientRect().toJSON(), pointer: getComputedStyle(el).pointerEvents}))}))};
+    } catch (cause) { missingClick = {generation, seen, diagnosticError: cause.message}; }
+  }
+  assert.equal(seen.clicks.length, 1, 'un clic par nouveau document' + (missingClick ? ' — ' + JSON.stringify(missingClick) : ''));
   assert.equal(seen.clicks[0].trusted, true);
   return frames;
 }

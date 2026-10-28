@@ -2,9 +2,8 @@
 // éditorial (table 496 px) du bloc, pas dans une sous-table (vignette 135 px de
 // mail-31 ou sous-colonne 236 px de mail-46), et pas dans un td par erreur.
 //
-// Ces tests déterminent la table-parent du lien source par parsing DOM indépendant
-// du helper d'injection : on repart de l'index du lien dans la chaîne et on remonte
-// par une pile LIFO des <table>/</table> ouvertes du début jusqu'à cette position.
+// Ces tests inspectent la parenté du HTML source, sans laisser un DOM réparer les
+// rangées mal imbriquées. L’oracle a ses propres témoins et mutants purs.
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
@@ -21,45 +20,7 @@ const {Model: M, Render: R} = MailBuilder;
 // gros binaire dans le fichier de test.
 const VALID_PNG = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
 
-// Pile des tables ouvertes à la position d'un repère ; renvoie l'ouverture (`<table ...>`)
-// qui est l'ancêtre direct, puis les ouvertures encore ouvertes à l'index donné.
-function openingAncestorsAt(html, index) {
-  const re = /<(table|\/table)\b[^>]*>/gi;
-  const stack = [];
-  let m;
-  while ((m = re.exec(html)) && m.index < index) {
-    if (m[0].startsWith('</')) stack.pop();
-    else stack.push(m[0]);
-  }
-  return stack;
-}
-
-// Trouve l'ancêtre `<table ...>` le plus proche du repère.
-function nearestTableOpen(html, needle) {
-  const idx = html.indexOf(needle);
-  assert.ok(idx >= 0, `Lien source introuvable dans le HTML (${needle}).`);
-  const stack = openingAncestorsAt(html, idx);
-  assert.ok(stack.length > 0, "Le lien source n'est contenu dans aucune table.");
-  return stack[stack.length - 1];
-}
-
-// Extrait la largeur rendue (px) d'une balise `<table ...>` depuis son style ou son
-// attribut width ; renvoie 0 si aucune largeur fixe en pixels n'est trouvée.
-function tableWidthPx(openTag) {
-  const styleMatch = openTag.match(/\bstyle="([^"]*)"/i);
-  if (styleMatch) {
-    const w = styleMatch[1].match(/(?:^|[;\s])width\s*:\s*(\d+)px/i);
-    if (w) return Number(w[1]);
-  }
-  const attr = openTag.match(/\bwidth="(\d+)"/i);
-  return attr ? Number(attr[1]) : 0;
-}
-
-// Nom de balise de l'ouverture (`table`, `td`...) extrait d'un tag ouvrant.
-function tagName(openTag) {
-  const m = openTag.match(/^<\s*([a-zA-Z]+)/);
-  return m ? m[1].toLowerCase() : '';
-}
+const {assertEditorialSource, tableWidthPx} = require('./editorial-oracle.cjs');
 
 // Marqueur stable sans ambiguïté : l'ancre complète du lien source émise par
 // injectSourceLink utilise toujours l'attribut style="color:#000091".
@@ -76,10 +37,9 @@ test("mail-31 avec vignette : le lien source est inséré dans le cadre éditori
   b.source = 'https://exemple.invalid/source';
   b.sourceLabel = 'Lire la source';
   const html = R.html(doc);
-  const parent = nearestTableOpen(html, SOURCE_ANCHOR_PREFIX);
-  const width = tableWidthPx(parent);
-  assert.equal(tagName(parent), 'table', 'Le parent immédiat du lien source doit être une balise <table>.');
-  assert.equal(width, 496, `Le lien source doit vivre dans le cadre éditorial 496 px, trouvé ${width} px. Ouverture: ${parent}`);
+  const result = assertEditorialSource(html, SOURCE_ANCHOR_PREFIX);
+  assert.equal(result.rowParent.tag, 'table', 'La rangée source est enfant direct de la table éditoriale.');
+  assert.equal(result.width, 496);
 });
 
 test("mail-46 : le lien source n'est pas inséré dans un <td> et vit dans le cadre éditorial 496 px", () => {
@@ -88,10 +48,9 @@ test("mail-46 : le lien source n'est pas inséré dans un <td> et vit dans le ca
   b.source = 'https://exemple.invalid/source';
   b.sourceLabel = 'Lire la source';
   const html = R.html(doc, true);
-  const parent = nearestTableOpen(html, SOURCE_ANCHOR_PREFIX);
-  assert.equal(tagName(parent), 'table', `Le parent immédiat doit être <table>, pas ${tagName(parent)}. Ouverture: ${parent}`);
-  const width = tableWidthPx(parent);
-  assert.equal(width, 496, `Le lien source doit vivre dans le cadre éditorial 496 px, trouvé ${width} px. Ouverture: ${parent}`);
+  const result = assertEditorialSource(html, SOURCE_ANCHOR_PREFIX);
+  assert.equal(result.rowParent.tag, 'table', 'La rangée source n’est pas insérée dans un td.');
+  assert.equal(result.width, 496);
 });
 
 test("mail-31 avec vignette : la nouvelle rangée du lien n'est pas enfant de la sous-table 135 px", () => {
@@ -103,11 +62,11 @@ test("mail-31 avec vignette : la nouvelle rangée du lien n'est pas enfant de la
   b.values.f4 = 'Titre';
   b.source = 'https://exemple.invalid/source';
   const html = R.html(doc);
-  const stack = openingAncestorsAt(html, html.indexOf(SOURCE_ANCHOR_PREFIX));
+  const stack = assertEditorialSource(html, SOURCE_ANCHOR_PREFIX).tables;
   // Aucune des tables ouvertes au-dessus du lien ne doit avoir une largeur
   // inférieure à 496 px (toute table de 135 ou 236 est une sous-table).
   for (const open of stack) {
-    const w = tableWidthPx(open);
-    if (w) assert.ok(w >= 496, `Table ancêtre de largeur ${w} px (<496) détectée au-dessus du lien source : ${open}`);
+    const w = tableWidthPx(open.opening);
+    if (w) assert.ok(w >= 496, `Table ancêtre de largeur ${w} px (<496) détectée au-dessus du lien source : ${open.opening}`);
   }
 });

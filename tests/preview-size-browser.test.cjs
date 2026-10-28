@@ -188,8 +188,8 @@ test('la frappe continue conserve le champ et la position de lecture sans effond
           window.typing.observer = new MutationObserver(() => window.typing.heights.push(f.getBoundingClientRect().height));
           window.typing.observer.observe(f, {attributes: true, attributeFilter: ['style']});
         });
-        const suffix = ' suite continue du contenu'; await input.pressSequentially(suffix, {delay: 8}); await saved(page);
-        await frame.waitForFunction(text => document.body.textContent.includes(text), suffix, {timeout: 10000});
+        const suffix = ` suite continue ${web ? 'web' : 'portable'} ${index}`; await input.pressSequentially(suffix, {delay: 8}); await saved(page);
+        await frame.waitForFunction(text => document.readyState === "complete" && document.body?.textContent.includes(text), suffix, {timeout: 10000});
         const result = await input.evaluate(e => { const t = window.typing; t.observer.disconnect(); return {same: t.node === e, samples: t.samples, top: t.top, initial: t.initial, heights: t.heights, value: e.value}; });
         assert(result.same); assert.equal(result.value, initial + suffix); assert.equal(result.samples.length, suffix.length);
         assert(result.samples.every(s => s.same && s.selection === s.length && Math.abs(s.top - result.top) < 1), JSON.stringify(result.samples));

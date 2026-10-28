@@ -5,7 +5,7 @@ const path = require('node:path');
 const root = path.join(__dirname, '..');
 
 function run(...flags) {
-  return spawnSync('python3', ['-B', ...flags, 'tests/audit_receipt_contract.py'], {cwd: root, encoding: 'utf8'});
+  return spawnSync('python3', ['-B', ...flags, 'tests/audit_receipt_contract.py'], {cwd: root, encoding: 'utf8', env: {...process.env, RECEIPT_NODE: process.execPath}});
 }
 
 test('le reçu d’audit refuse un état favorable sans preuve, avec les assertions Python actives', () => {

@@ -2,11 +2,12 @@
 const {chromium} = require('playwright');
 const fs = require('node:fs/promises'), path = require('node:path'), assert = require('node:assert/strict');
 const {createHash} = require('node:crypto');
+const {newCollection, beginCollection, finishCollection, collectionFailure} = require('./collector_receipt.cjs');
 const root = path.resolve(__dirname, '..');
 const output = path.resolve(root, process.env.BUILDER_CONTRAST_OUTPUT || 'evidence/contrastes-20261022/mesures');
 const baseline = path.resolve(root, process.env.BUILDER_CONTRAST_BASELINE || 'evidence/contrastes-20261022/baseline');
 const hash = value => createHash('sha256').update(value).digest('hex');
-const report = {completed: false, bypassCSP: false, humanQualification: false, screenReaderExecuted: false, observations: [], negativeControls: [], errors: []};
+const report = newCollection(root, {completed: false, bypassCSP: false, humanQualification: false, screenReaderExecuted: false, observations: [], negativeControls: [], errors: []});
 const click = async (page, selector) => {const e = page.locator(selector); await e.waitFor({state:'visible'}); await e.focus(); await e.press('Enter');};
 
 function rgba(value) {
@@ -140,9 +141,9 @@ async function collect(page, scene, selectors, width) {
   }
 }
 (async()=>{
-  await fs.mkdir(output,{recursive:true});
+  await beginCollection(output, 'receipt.json', report);
   const source=JSON.parse(await fs.readFile(path.join(baseline,'browser.json'),'utf8'));
-  const files=[...Object.keys(source.measuredFilesSha256),'reference/dsfr-web/dist/component/select/select.min.css','scripts/audit_contrasts.cjs'];
+  const files=[...Object.keys(source.measuredFilesSha256),'reference/dsfr-web/dist/component/select/select.min.css','scripts/audit_contrasts.cjs','scripts/collector_receipt.cjs'];
   report.sourceSha256=Object.fromEntries(await Promise.all(files.map(async file=>[file,hash(await fs.readFile(path.join(root,file)))])));
   for (const [file,digest] of Object.entries(source.measuredFilesSha256)) assert.equal(report.sourceSha256[file],digest,'Source différente de la capture de référence');
   assert.equal(contrast([0,0,0],[255,255,255]),21); assert.equal(contrast([238,238,238],[238,238,238]),1);
@@ -188,9 +189,9 @@ async function collect(page, scene, selectors, width) {
       await context.close();
     }
     assert.equal(report.observations.length,80); assert.equal(report.negativeControls.length,5); assert.deepEqual(report.errors,[]); report.completed=true;
-  } finally {await browser.close();}
-})().catch(error=>{report.errors.push(error.stack);process.exitCode=1;}).finally(async()=>{
-  for (const [file,digest] of Object.entries(report.sourceSha256||{})) if (hash(await fs.readFile(path.join(root,file)))!==digest) {report.completed=false;report.errors.push('Source modifiée pendant la collecte : '+file);process.exitCode=1;}
-  await fs.writeFile(path.join(output,'receipt.json'),JSON.stringify(report,null,2)+'\n');
-  console.log(JSON.stringify({completed:report.completed,observations:report.observations.length,negativeControls:report.negativeControls.length,errors:report.errors}));
+  } finally {try {await browser.close();} catch (error) {collectionFailure(report, 'cleanup', error);}}
+})().catch(error=>{collectionFailure(report, 'collection', error);process.exitCode=1;}).finally(async()=>{
+  await finishCollection({root, output, filename: 'receipt.json', report, sources: report.sourceSha256});
+  if (!report.completed) process.exitCode=1;
+  console.log(JSON.stringify({run_id:report.run_id,completed:report.completed,observations:report.observations.length,negativeControls:report.negativeControls.length,errors:report.errors}));
 });

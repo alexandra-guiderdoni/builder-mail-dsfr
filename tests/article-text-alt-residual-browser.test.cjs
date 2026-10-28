@@ -1,6 +1,6 @@
 const test = require('node:test');
 const {chromium, open, expand, saved, state, assert} = require('./browser-support.cjs');
-const engine = process.env.MAIL_BUILDER_ENGINE === 'webkit' ? require('playwright').webkit : chromium;
+const engine = process.env.MAIL_BUILDER_ENGINE === 'webkit' ? require(process.env.PLAYWRIGHT_MODULE || 'playwright').webkit : chromium;
 const RESIDUE = 'Alternative résiduelle synthétique';
 
 test('import d’un article sans image : aucune alternative résiduelle dans le HTML, le texte ni le JSON réexporté', async () => {

@@ -42,9 +42,18 @@ def refused(module, receipt, root):
     return None
 
 
+def suite_log(passed=3, failed=0, cancelled=0, skipped=0, todo=0, marker="ℹ"):
+    total = passed + failed + cancelled + skipped + todo
+    return "\n".join(
+        f"{marker} {label} {value}"
+        for label, value in [("tests", total), ("suites", 0), ("pass", passed), ("fail", failed),
+                             ("cancelled", cancelled), ("skipped", skipped), ("todo", todo), ("duration_ms", "1.2")]
+    ) + "\n"
+
+
 def synthetic_receipt(module, root):
     log = root / "suite.log"
-    log.write_text("ℹ pass 3\nℹ fail 0\nℹ skipped 0\n")
+    log.write_text(suite_log())
     proof = root / "preuve.html"
     proof.write_text("<p>Titre visuel</p>\n")
     journal = module.Journal()
@@ -53,9 +62,7 @@ def synthetic_receipt(module, root):
     return {
         "controls": journal.summary(),
         "tests": {
-            "passed": 3,
-            "failed": 0,
-            "skipped": 0,
+            **module.parse_suite(log.read_text()),
             "log": "suite.log",
             "log_sha256": hashlib.sha256(log.read_bytes()).hexdigest(),
         },
@@ -102,8 +109,23 @@ else:
     expect(False, "un journal vide ne prouve rien et doit être refusé")
 
 # parse_suite : les compteurs du rapport de tests viennent du journal brut.
-counts = module.parse_suite("# pass 7\n# fail 2\n# skipped 1\n")
-expect(counts == {"passed": 7, "failed": 2, "skipped": 1}, "parse_suite : %r" % counts)
+counts = module.parse_suite(suite_log(passed=7, failed=2, skipped=1, marker="#"))
+expect(counts == {"total": 10, "passed": 7, "failed": 2, "cancelled": 0, "skipped": 1, "todo": 0}, "parse_suite : %r" % counts)
+for label, invalid in {
+    "compteurs partiels": "# pass 3\n# fail 0\n# skipped 0\n",
+    "durée finale absente": suite_log().replace("ℹ duration_ms 1.2\n", ""),
+    "total incohérent": suite_log().replace("ℹ tests 3", "ℹ tests 4"),
+    "compteur ambigu": suite_log() + "ℹ pass 3\n",
+    "annulations absentes": suite_log().replace("ℹ cancelled 0\n", ""),
+    "durée avant les compteurs": "ℹ duration_ms 1.2\n" + suite_log().replace("ℹ duration_ms 1.2\n", ""),
+    "résultat après résumé": suite_log() + "ok 4 - résultat tardif\n",
+}.items():
+    try:
+        module.parse_suite(invalid)
+    except module.AuditError:
+        pass
+    else:
+        expect(False, "journal incomplet/incohérent accepté : " + label)
 try:
     module.parse_suite("aucun compteur ici")
 except module.AuditError:
@@ -164,6 +186,62 @@ with tempfile.TemporaryDirectory() as directory:
         "un nouveau test sémantique vide ne peut pas basculer le constat",
     )
 
+    # Une égalité d'arbres vides ou mal formés ne prouve aucun titre exposé.
+    for name in ["02.html", "10.html"]:
+        (raw / "exports" / name).write_text("<h1>Titre natif</h1>\n")
+    outline = [{"level": 1, "text": "Titre natif"}]
+    for label, output, good in [
+        ("vide", [], False), ("absent", None, False),
+        ("texte blanc", [{"level": 1, "text": "  "}], False),
+        ("niveau invalide", [{"level": 7, "text": "Titre"}], False),
+        ("niveau booléen", [{"level": True, "text": "Titre"}], False),
+        ("forme inconnue", ["Titre"], False), ("non vide", outline, True),
+    ]:
+        semantic = {"visual": {"observations": [{"pixelEquivalent": True}] * 54},
+                    "outputs": {key: output for key in ["accessibleTree", "expected", "copied"]}}
+        (raw / "semantic-retest.json").write_text(json.dumps(semantic))
+        journal = module.Journal()
+        result = module.titles_finding(raw, journal, semantic)
+        expect((result["qualification"] == "A_RETESTER") is good, "preuve AX : " + label)
+        expect("titres natifs vérifiés" not in result["observation"] and "GO structurel" not in result["review"],
+               "ne pas suraffirmer des titres natifs ou une revue indépendante")
+    changed = copy.deepcopy(semantic)
+    changed["outputs"]["copied"] = [{"level": 2, "text": "Autre"}]
+    (raw / "semantic-retest.json").write_text(json.dumps(changed))
+    result = module.titles_finding(raw, module.Journal(), changed)
+    expect(result["qualification"] != "A_RETESTER", "relevés non vides divergents refusés")
+    result = module.titles_finding(raw, module.Journal(), semantic)
+    expect(result["qualification"] != "A_RETESTER", "argument différent de sa pièce disque refusé")
+
+    # Les deux campagnes pointent chacune sur les pièces réellement lues, avec empreintes.
+    findings = []
+    for campaign in ["courante-a", "courante-b"]:
+        current = base / campaign
+        (current / "exports").mkdir(parents=True)
+        for name in ["02.html", "10.html"]:
+            (current / "exports" / name).write_text(f"<p>{campaign} {name}</p>")
+        result = module.titles_finding(current, module.Journal(), None)
+        findings.append(result)
+        wanted = [(current / "exports" / name).resolve() for name in ["02.html", "10.html"]]
+        actual = [(ROOT / item).resolve() for item in result["evidence"]]
+        expect(actual == wanted, "pièces de " + campaign)
+        expect(result["evidence_sha256"] == {item: module.sha(ROOT / item) for item in result["evidence"]},
+               "empreintes des pièces de " + campaign)
+    expect(findings[0]["evidence"] != findings[1]["evidence"], "campagnes distinctes, pièces distinctes")
+    provenance = module.collection_provenance(raw, {})
+    expect(provenance["audited_at"] is None and provenance["collection_time_source"] is None,
+           "date de collecte inconnue : aucune date historique ou de génération substituée")
+    expect(provenance["generated_at"] and provenance["raw_directory"] == module.evidence_path(raw),
+           "génération datée séparément et répertoire de preuve courant")
+    for invalid_time in ["2026-10-22", "date inconnue", "2026-10-28T10:00:00"]:
+        expect(module.collection_provenance(raw, {"collected_at": invalid_time})["audited_at"] is None,
+               "date de collecte non zonée/invalide : " + invalid_time)
+    collected_at = "2026-10-28T10:00:00+00:00"
+    provenance = module.collection_provenance(raw, {"collected_at": collected_at, "run_id": "synthetic-current"})
+    expect(provenance["audited_at"] == collected_at and provenance["reported_collection_run_id"] == "synthetic-current"
+           and provenance["collection_time_source"].endswith("browser.json:collected_at"),
+           "date et identifiant rapportés par la preuve courante, sans provenance runtime inventée")
+
     # Constat de présentation : confirmé seulement avec des attributs relevés.
     path = base / "presentation.json"
     path.write_text("{}")
@@ -219,6 +297,35 @@ with tempfile.TemporaryDirectory() as directory:
     for label, change in cases.items():
         expect(refused(module, mutated(change), base), "reçu refusé attendu : " + label)
 
+    # Compteurs complets mais annulation/TODO/skip : jamais un reçu favorable.
+    for label, log_text in [
+        ("annulation seule", suite_log(cancelled=1)),
+        ("échec et annulation", suite_log(failed=1, cancelled=1)),
+        ("ignoré", suite_log(skipped=1)),
+        ("TODO", suite_log(todo=1)), ("suite vide", suite_log(passed=0)),
+    ]:
+        (base / "suite.log").write_text(log_text)
+        broken = copy.deepcopy(receipt)
+        broken["tests"].update(module.parse_suite(log_text), log_sha256=module.sha(base / "suite.log"))
+        expect(refused(module, broken, base), "reçu refusé : " + label)
+    (base / "suite.log").write_text(suite_log())
+
+    # Une ancienne pièce présente ne remplace pas une pièce courante disparue ou modifiée.
+    current = base / "courante-a"
+    journal = module.Journal()
+    finding = module.titles_finding(current, journal, None)
+    with_finding = copy.deepcopy(receipt)
+    with_finding.update(controls=journal.summary(), confirmed_findings=[finding])
+    expect(refused(module, with_finding, base) is None, "preuve courante avec empreintes acceptée")
+    old = base / "evidence/accessibilite-20261022/exports"
+    old.mkdir(parents=True)
+    for name in ["02.html", "10.html"]:
+        (old / name).write_text("<p>Ancienne preuve</p>")
+    (current / "exports/02.html").write_text("<p>Pièce modifiée</p>")
+    expect(refused(module, with_finding, base), "pièce courante modifiée, ancienne pièce présente")
+    (current / "exports/02.html").unlink()
+    expect(refused(module, with_finding, base), "pièce courante absente, ancienne pièce présente")
+
     # Journal de tests modifié après coup : l’empreinte ne correspond plus.
     (base / "suite.log").write_text("ℹ pass 3\nℹ fail 0\nℹ skipped 0\n# gonflé\n")
     expect(refused(module, receipt, base), "journal de tests modifié après coup")
@@ -241,5 +348,31 @@ with tempfile.TemporaryDirectory() as directory:
         not (base / "docs").exists() or not list((base / "docs").glob("recu-*.json")),
         "aucun reçu ne doit être écrit sans preuves",
     )
+
+if os.environ.get("RECEIPT_NODE"):
+    with tempfile.TemporaryDirectory(prefix="receipt-node-") as directory:
+        base = Path(directory)
+        child = base / "child.cjs"
+        for label, source, expected_failure in [
+            ("succès", "const t=require('node:test');t('ok',()=>{});", 0),
+            ("annulation réelle", "const t=require('node:test');const c=new AbortController();t('ok',()=>{});t('pending',{signal:c.signal},()=>new Promise(()=>{}));setImmediate(()=>c.abort());", 1),
+        ]:
+            child.write_text(source)
+            # Le Node parent du wrapper est lui-même un test : ne pas faire
+            # passer l'enfant autonome pour son worker de test hérité.
+            child_env = {key: value for key, value in os.environ.items() if key != "NODE_TEST_CONTEXT"}
+            run = subprocess.run([os.environ["RECEIPT_NODE"], "--test", "--test-reporter=tap", str(child)],
+                                 capture_output=True, text=True, timeout=10, env=child_env)
+            counts = module.parse_suite(run.stdout)
+            # Suivant le producteur Node, abort peut être compté fail plutôt
+            # que cancelled : ne pas inventer une annulation seule native.
+            expect(bool(counts["failed"] or counts["cancelled"]) is bool(expected_failure),
+                   label + " : échec ou annulation effectivement compté par Node")
+            receipt = synthetic_receipt(module, base)
+            (base / "suite.log").write_text(run.stdout)
+            receipt["tests"].update(counts, log_sha256=module.sha(base / "suite.log"))
+            expect(bool(refused(module, receipt, base)) is bool(expected_failure),
+                   label + " : reçu issu du vrai journal Node")
+            print("Node réel : %s, status=%s, compteurs=%s" % (label, run.returncode, counts))
 
 print("contrôles du reçu : %d vérifiés" % CHECKED)

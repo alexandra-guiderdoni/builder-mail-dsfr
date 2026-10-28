@@ -3,9 +3,11 @@ const {chromium} = require('playwright');
 const fs = require('node:fs/promises');
 const path = require('node:path');
 const crypto = require('node:crypto');
+const {newCollection, beginCollection, finishCollection, collectionFailure} = require('./collector_receipt.cjs');
 const root = path.resolve(__dirname, '..'), output = path.resolve(root, process.env.BUILDER_AUDIT_OUTPUT || 'evidence/accessibilite-20261022');
 const axePath = '/Users/alex/Claude/git-hors-workflow/ay11-pre-audit/node_modules/axe-core/axe.min.js';
 const snapshots = [], interactions = [], errors = [];
+const report = newCollection(root, {bypassCSPForLocalAxe: true, humanQualification: false, screenReaderExecuted: false, snapshots, errors});
 let measuredFilesSha256 = {};
 const hash = data => crypto.createHash('sha256').update(data).digest('hex');
 const activate = async (page, selector) => { await page.locator(selector).focus(); await page.keyboard.press('Enter'); };
@@ -75,8 +77,9 @@ async function capture(page, id, state) {
     incomplete: axe.incomplete.map(v => ({id: v.id, count: v.nodes.length}))});
 }
 (async () => {
+  await beginCollection(output, 'browser.json', report);
   await fs.mkdir(path.join(output, 'exports'), {recursive: true});
-  const measuredFiles = ['app/distribution/portable.html','app/distribution/web/index.html','app/distribution/web/sw.js','app/distribution/snum.html','scripts/catalogue.py','scripts/mail_layout.py'];
+  const measuredFiles = ['app/distribution/portable.html','app/distribution/web/index.html','app/distribution/web/sw.js','app/distribution/snum.html','scripts/catalogue.py','scripts/mail_layout.py','scripts/audit_browser.cjs','scripts/collector_receipt.cjs'];
   for (const directory of ['app/source','app/snum']) for (const name of await fs.readdir(path.join(root,directory))) measuredFiles.push(directory+'/'+name);
   measuredFilesSha256 = Object.fromEntries(await Promise.all(measuredFiles.map(async name => [name,hash(await fs.readFile(path.join(root,name)))])));
   const browser = await chromium.launch({headless: true});
@@ -88,9 +91,9 @@ async function capture(page, id, state) {
     await capture(page, 'home', 'Bibliothèque initiale');
     await editor(page); await capture(page, 'editor', 'Éditeur initial');
     const qualification = JSON.parse(await fs.readFile(path.join(root, 'app/distribution/qualification.courriels.json'), 'utf8'));
-    const exports = await page.evaluate(lib => lib.documents.map(doc => ({name: doc.name, blocks: doc.blocks.map(b => b.component), html: MailBuilder.Render.html(doc)})), qualification);
+    const exports = await page.evaluate(lib => lib.documents.map(doc => ({name: doc.name, blocks: doc.blocks.map(b => b.component), html: MailBuilder.Render.exportHtml(doc)})), qualification);
     for (const [i, item] of exports.entries()) await fs.writeFile(path.join(output, 'exports', `${String(i + 1).padStart(2, '0')}.html`), item.html);
-    await fs.writeFile(path.join(output, 'exports/index.json'), JSON.stringify(exports.map((v, i) => ({id: String(i + 1).padStart(2, '0'), name: v.name, blocks: v.blocks, sha256: hash(v.html)})), null, 2));
+    await fs.writeFile(path.join(output, 'exports/index.json'), JSON.stringify(exports.map((v, i) => ({id: String(i + 1).padStart(2, '0'), name: v.name, blocks: v.blocks, sha256: hash(v.html), artifactKind: 'download-html', renderer: 'Render.exportHtml'})), null, 2));
     for (const text of ['Mes modèles', 'Identités de service', 'Ajouter un composant', 'Fichiers et récupération', 'Importer du JSON']) {
       const summary = page.locator('summary').filter({hasText: text}); await summary.focus(); await page.keyboard.press('Enter');
     }
@@ -124,7 +127,11 @@ async function capture(page, id, state) {
     await snum.locator('#snum-input').fill('{'); await activate(snum, '#convert'); await capture(snum, 'snum-invalid', 'Erreur de collecte SNUM');
     await snum.locator('#snum-input').fill(JSON.stringify(require('../tests/fixtures/snum.cjs')())); await activate(snum, '#convert');
     await capture(snum, 'snum-converted', 'Collecte SNUM synthétique convertie');
-    const rendered = await snum.evaluate(() => MailBuilder.Render.html(MailBuilder.doc())); await fs.writeFile(path.join(output, 'exports/10.html'), rendered);
+    const rendered = await snum.evaluate(() => MailBuilder.Render.exportHtml(MailBuilder.doc())); await fs.writeFile(path.join(output, 'exports/10.html'), rendered);
+    const snumDocument = await snum.evaluate(() => ({name: MailBuilder.doc().name, blocks: MailBuilder.doc().blocks.map(b => b.component)}));
+    const exportIndex = JSON.parse(await fs.readFile(path.join(output, 'exports/index.json'), 'utf8'));
+    exportIndex.push({id: '10', ...snumDocument, sha256: hash(rendered), artifactKind: 'download-html', renderer: 'Render.exportHtml', surface: 'snum'});
+    await fs.writeFile(path.join(output, 'exports/index.json'), JSON.stringify(exportIndex, null, 2));
     await fs.writeFile(path.join(output, 'interactions.json'), JSON.stringify(interactions, null, 2));
     // Contexte distinct : conserver la CSP réelle, sans injection d’axe.
     const native = await browser.newContext({colorScheme:'light',viewport:{width:1280,height:720}});
@@ -144,9 +151,11 @@ async function capture(page, id, state) {
     await fs.writeFile(path.join(output,'keyboard.json'),JSON.stringify({bypassCSP:false,screenReaderExecuted:false,keyboard},null,2));
     await fs.writeFile(path.join(output,'layout-protocols.json'),JSON.stringify({actualBrowserZoom:false,observations:protocols},null,2));
     await fs.writeFile(path.join(output,'interactions.json'),JSON.stringify(interactions,null,2));
-  } finally { await browser.close(); }
-})().catch(error => { errors.push(error.stack); process.exitCode = 1; }).finally(async () => {
-  for (const [name,digest] of Object.entries(measuredFilesSha256)) if (hash(await fs.readFile(path.join(root,name))) !== digest) { errors.push('Fichier modifié pendant la collecte : '+name); process.exitCode = 1; }
-  await fs.writeFile(path.join(output, 'browser.json'), JSON.stringify({measuredFilesSha256, bypassCSPForLocalAxe: true, humanQualification: false, screenReaderExecuted: false, snapshots, errors}, null, 2));
-  console.log(JSON.stringify({states: snapshots.length, violations: snapshots.map(s => ({state: s.id, rules: s.violations.map(v => v.id)})), errors}));
+    report.completed = true;
+  } finally { try { await browser.close(); } catch (error) { collectionFailure(report, 'cleanup', error); } }
+})().catch(error => { collectionFailure(report, 'collection', error); process.exitCode = 1; }).finally(async () => {
+  report.measuredFilesSha256 = measuredFilesSha256;
+  await finishCollection({root, output, filename: 'browser.json', report, sources: measuredFilesSha256});
+  if (!report.completed) process.exitCode = 1;
+  console.log(JSON.stringify({run_id: report.run_id, completed: report.completed, states: snapshots.length, violations: snapshots.map(s => ({state: s.id, rules: s.violations.map(v => v.id)})), errors}));
 });

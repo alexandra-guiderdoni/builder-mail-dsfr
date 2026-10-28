@@ -5,7 +5,9 @@ const path = require('node:path');
 const root = path.resolve(__dirname, '..');
 const directory = path.resolve(root, process.env.BUILDER_AUDIT_OUTPUT || 'evidence/accessibilite-20261022');
 const server = http.createServer(async (request, response) => {
-  const route = new URL(request.url, 'http://localhost').pathname;
+  let route;
+  try { route = new URL(request.url, 'http://localhost').pathname; }
+  catch { response.writeHead(400); response.end(); return; }
   const web = ['index.html', 'sw.js', 'manifest.webmanifest', 'icon.svg', 'icon-192.png', 'icon-512.png'];
   let file;
   if (route === '/') file = 'app/distribution/web/index.html';

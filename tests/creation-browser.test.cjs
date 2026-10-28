@@ -26,7 +26,7 @@ const focusOnName = page => page.evaluate(() => {
   return {focused: document.activeElement === field, selected: field.selectionStart === 0 && field.selectionEnd === field.value.length && field.value.length > 0};
 });
 
-for (const [engine, launcher] of [['Chromium', chromium], ['WebKit', webkit]]) {
+for (const [engine, launcher] of [[{chromium: 'Chromium', webkit: 'WebKit', firefox: 'Firefox'}[chromium.name], chromium], ['WebKit', webkit]]) {
   for (const {value, label} of starters) {
     test(`point de départ « ${label} » : nom et objet explicites, modifiables immédiatement (${engine})`, async () => {
       const browser = await launcher.launch();

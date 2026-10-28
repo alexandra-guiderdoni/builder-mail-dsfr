@@ -8,7 +8,7 @@ const engineName = process.env.MAIL_BUILDER_ENGINE || 'chromium';
 if (!engines.includes(engineName)) throw new Error(`Moteur inconnu : ${engineName} (attendu : ${engines.join(', ')}).`);
 const testFile = path.basename(process.argv[1] || 'inconnu');
 // Journal des preuves non natives (MAIL_BUILDER_NOTES, fixé par tests/run-engines.cjs) : une ligne JSON par constat.
-const note = entry => { if (process.env.MAIL_BUILDER_NOTES) require('node:fs').appendFileSync(process.env.MAIL_BUILDER_NOTES, JSON.stringify({engine: engineName, file: testFile, ...entry}) + '\n'); };
+const note = entry => { if (process.env.MAIL_BUILDER_NOTES) require('node:fs').appendFileSync(process.env.MAIL_BUILDER_NOTES, JSON.stringify({engine: engineName, file: testFile, executionId: process.env.MAIL_BUILDER_EXECUTION_ID, ...entry}) + '\n'); };
 // Seul Chromium accorde clipboard-read et clipboard-write à Playwright ; les autres moteurs refusent la permission elle-même.
 const nativePermissions = new Set(engineName === 'chromium' ? ['clipboard-read', 'clipboard-write'] : []);
 const portablePermissions = permissions => permissions?.filter(p => !/^clipboard-/.test(p) || nativePermissions.has(p));

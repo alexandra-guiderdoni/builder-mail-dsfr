@@ -13,9 +13,13 @@ function validate(...files) {
   assert.notEqual(run.status, 2, 'validateur indisponible ou schéma invalide : ' + run.stderr);
   return JSON.parse(run.stdout);
 }
-const tmp = async name => path.join(await fs.mkdtemp(path.join(require('node:os').tmpdir(), 'schema-')), name);
+const tmp = async (t, name) => {
+  const directory = await fs.mkdtemp(path.join(require('node:os').tmpdir(), 'schema-'));
+  t.after(() => fs.rm(directory, {recursive: true, force: true}));
+  return path.join(directory, name);
+};
 
-test('le validateur exerce bien le schéma 2020-12 et rejette un témoin invalide', async () => {
+test('le validateur exerce bien le schéma 2020-12 et rejette un témoin invalide', async t => {
   const example = JSON.parse(await fs.readFile(path.join(dist, 'exemple.courriel.json'), 'utf8'));
   const cases = {
     'catalogue-manquant': (() => { const d = structuredClone(example); delete d.catalogue; return d; })(),
@@ -24,7 +28,7 @@ test('le validateur exerce bien le schéma 2020-12 et rejette un témoin invalid
     'composant-inconnu': (() => { const d = structuredClone(example); d.blocks[0].component = 'mail-999'; return d; })()
   };
   const files = [];
-  for (const [name, doc] of Object.entries(cases)) { const file = await tmp(name + '.json'); await fs.writeFile(file, JSON.stringify(doc)); files.push(file); }
+  for (const [name, doc] of Object.entries(cases)) { const file = await tmp(t, name + '.json'); await fs.writeFile(file, JSON.stringify(doc)); files.push(file); }
   const results = validate(...files);
   assert.equal(results.length, files.length);
   for (const result of results) assert.equal(result.valid, false, result.file + ' aurait dû être rejeté');

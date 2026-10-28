@@ -59,7 +59,8 @@ async function launchApp(cdp) {
         const file = path.resolve(base, '.' + (pathname === '/' ? '/index.html' : pathname));
         if (!file.startsWith(base + path.sep)) { response.writeHead(403); response.end(); return; }
         const types = {'.html': 'text/html', '.js': 'text/javascript', '.webmanifest': 'application/manifest+json', '.svg': 'image/svg+xml', '.png': 'image/png'};
-        response.writeHead(200, {'Content-Type': types[path.extname(file)], 'Cache-Control': 'no-store'}); response.end(await fs.readFile(file));
+        const body = await fs.readFile(file);
+        response.writeHead(200, {'Content-Type': types[path.extname(file)], 'Cache-Control': 'no-store'}); response.end(body);
       } catch { response.writeHead(404); response.end(); }
     });
     await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));

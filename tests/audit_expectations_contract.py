@@ -102,6 +102,32 @@ with tempfile.TemporaryDirectory() as directory:
         "scène avec actions : attente déjà portée par --expect",
     )
 
+# Le garde statique n'accepte pas title-only ni les exclusions HTML/inline connues.
+for name, html in [
+    ("title-only", "<html><head><title>Mes newsletters</title></head><body></body></html>"),
+    ("hidden", "<div hidden><span>Mes newsletters</span></div>"),
+    ("hidden vide", "<div hidden=''>Mes newsletters</div>"),
+    ("hidden false reste un booléen HTML", "<div hidden='false'>Mes newsletters</div>"),
+    ("inline display", "<div style='display: none !important'>Mes newsletters</div>"),
+    ("inline visibility", "<p style='color:red;visibility:hidden;'>Mes newsletters</p>"),
+    ("inline content-visibility", "<p style='content-visibility:hidden'>Mes newsletters</p>"),
+]:
+    expect(not checks.expected_text_in_html(html, "Mes newsletters"), "exclusion connue : " + name)
+    with tempfile.TemporaryDirectory() as directory:
+        base = Path(directory)
+        rendered = base / "scene.html"
+        rendered.write_text(html)
+        collection = base / "capture.json"
+        collection.write_text(json.dumps({"rendered_html_path": str(rendered)}))
+        expect(checks.scene_expectation_error("P01", [], "Mes newsletters", collection),
+               "la scène ne doit pas accepter : " + name)
+expect(checks.expected_text_in_html("<div hidden>Non</div><h1>Mes newsletters</h1>", "Mes newsletters"),
+       "sortie du sous-arbre caché : le texte visible candidat reste lu")
+expect(checks.expected_text_in_html("<p aria-hidden=true>Mes newsletters</p>", "Mes newsletters"),
+       "aria-hidden n'est pas une preuve de masquage visuel")
+expect(checks.expected_text_in_html("<p class=externe>Mes newsletters</p>", "Mes newsletters"),
+       "une classe CSS inconnue reste seulement une présence candidate ; aucune visibilité calculée")
+
 # Sélection de scènes : erreurs explicites.
 scenes = [("editor", 1), ("dialog", 2), ("P01", 3)]
 expect(checks.select_scenes(scenes, None) == scenes, "sans sélection : toutes")

@@ -49,7 +49,7 @@ async function exportNames(browser, name) {
   } catch (error) { await context.close(); throw error; }
 }
 
-for (const [engine, launcher] of [['Chromium', chromium], ['WebKit', webkit]]) {
+for (const [engine, launcher] of [[{chromium: 'Chromium', webkit: 'WebKit', firefox: 'Firefox'}[chromium.name], chromium], ['WebKit', webkit]]) {
   test(`noms des fichiers exportés, trois types d’export (${engine})`, async () => {
     const browser = await launcher.launch();
     try {
@@ -73,7 +73,7 @@ for (const [engine, launcher] of [['Chromium', chromium], ['WebKit', webkit]]) {
   });
 }
 
-for (const [engine, launcher] of [['Chromium', chromium], ['WebKit', webkit]]) {
+for (const [engine, launcher] of [[{chromium: 'Chromium', webkit: 'WebKit', firefox: 'Firefox'}[chromium.name], chromium], ['WebKit', webkit]]) {
   test(`export d’une composition depuis l’accueil de la bibliothèque (${engine})`, async () => {
     const browser = await launcher.launch();
     try {

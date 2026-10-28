@@ -42,29 +42,58 @@ for (const [label, kind] of Object.entries(KINDS)) {
   });
 }
 
-test('export-stored : la copie brute du stockage n’écrase pas une annonce plus récente', async () => {
+for (const rejectRead of [false, true]) test(rejectRead
+  ? 'export-stored : le témoin de rejet après lecture ne devient pas un export réussi'
+  : 'export-stored : la copie brute du stockage n’écrase pas une annonce plus récente', async () => {
   const browser = await chromium.launch({headless: true});
   try {
     const {page} = await open(browser);
     await page.locator('#document-name').fill('État stocké'); await saved(page);
-    // Suspendre A.Storage.load pour fenêtrer l'annonce différée de export-stored.
-    await page.evaluate(() => {
+    const expected = await page.evaluate(async () => JSON.parse(JSON.stringify(await MailBuilder.Storage.load())));
+    const beforeBlocks = expected.library.documents.find(d => d.id === expected.library.activeId).blocks.length;
+    // Retenir aussi la sauvegarde du bloc ajouté : mémoire et enregistrement brut restent différents.
+    await hold(page);
+    await page.evaluate(rejectRead => {
       const real = MailBuilder.Storage.load.bind(MailBuilder.Storage);
-      window.__releaseLoad = null;
-      MailBuilder.Storage = {...MailBuilder.Storage, load: (which) => new Promise((res, rej) => { window.__releaseLoad = () => real(which).then(res, rej); })};
-    });
+      window.__releaseLoad = null; window.__loadedRecord = null;
+      MailBuilder.Storage = {...MailBuilder.Storage, load: which => new Promise((resolve, reject) => {
+        window.__releaseLoad = () => real(which).then(record => {
+          window.__loadedRecord = record;
+          if (rejectRead) reject(new Error('Rejet témoin après lecture du stockage'));
+          else resolve(record);
+        }, reject);
+      })};
+    }, rejectRead);
+    const downloads = []; page.on('download', download => downloads.push(download));
+    const event = rejectRead ? null : page.waitForEvent('download');
+    // Observer le rejet de l’attente navigateur sans masquer celui de l’action surveillée.
+    if (event) event.then(() => {}, () => {});
     const added = await page.evaluate(() => {
-      window.__pending = Promise.resolve(MailBuilder.Actions['export-stored']()).catch(() => {});
+      window.__pending = Promise.resolve(MailBuilder.Actions['export-stored']()).then(
+        () => ({ok: true}), cause => ({ok: false, error: cause.message})
+      );
       const select = document.getElementById('catalogue'); select.value = select.options[0].value;
       MailBuilder.Actions['add-block']();
       return document.getElementById('notice').textContent;
     });
     assert.match(added, /ajouté/, 'l’ajout de bloc est annoncé aussitôt');
+    assert.equal(await page.evaluate(() => MailBuilder.doc().blocks.length), beforeBlocks + 1, 'la mémoire diffère de l’enregistrement à exporter');
     await page.waitForFunction(() => typeof __releaseLoad === 'function');
     await page.evaluate(() => window.__releaseLoad());
-    await page.evaluate(() => window.__pending);
-    await saved(page);
-    assert.equal(await page.locator('#notice').innerText(), added, 'la copie brute ne remplace pas l’annonce de bloc ajouté');
+    const outcome = await page.evaluate(() => window.__pending);
+    assert.deepEqual(await page.evaluate(() => JSON.parse(JSON.stringify(window.__loadedRecord))), expected, 'lecture réelle du stockage antérieur au bloc ajouté');
+    if (rejectRead) {
+      assert.deepEqual(outcome, {ok: false, error: 'Rejet témoin après lecture du stockage'});
+    } else {
+      assert.deepEqual(outcome, {ok: true}, 'l’action export-stored doit réellement réussir');
+      const download = await event, chunks = [];
+      assert.equal(download.suggestedFilename(), 'recuperation.stockage.json');
+      for await (const chunk of await download.createReadStream()) chunks.push(chunk);
+      assert.deepEqual(JSON.parse(Buffer.concat(chunks).toString('utf8')), expected, 'le fichier contient le record brut stocké, pas le modèle courant');
+    }
+    await release(page);
+    assert.equal(downloads.length, rejectRead ? 0 : 1, 'le rejet témoin ne télécharge rien ; le succès télécharge une seule fois');
+    assert.equal(await notice(page), added, 'le résultat différé ne remplace pas l’annonce de bloc ajouté');
   } finally { await browser.close(); }
 });
 

@@ -30,7 +30,7 @@ test('le bilan sépare réussites, échecs produit, limitations d’automatisati
     {engine: 'webkit', file: 'a', name: '5', status: 'skip', reason: 'x'}
   ];
   const report = summarize(results, [{engine: 'firefox', reason: 'exécutable absent'}]);
-  assert.deepEqual(report.engines.webkit, {pass: 1, productUnknown: 1, productKnown: 1, automation: 1, skipped: 1, total: 5});
+  assert.deepEqual(report.engines.webkit, {pass: 1, productUnknown: 1, productKnown: 1, automation: 1, infrastructure: 0, budget: 0, skipped: 1, total: 5});
   assert.deepEqual(report.unavailable, [{engine: 'firefox', reason: 'exécutable absent'}]);
 });
 test('le code de sortie échoue sur un échec produit inconnu, signale un moteur absent, et accepte seulement le reste', () => {
@@ -54,4 +54,152 @@ test('chaque entrée du registre désigne un test existant, un moteur connu, une
     assert(fs.readFileSync(path.join(__dirname, e.file), 'utf8').includes(e.test), `test absent de ${e.file} : ${e.test}`);
   }
   assert.equal(new Set(entries.map(e => [e.engine, e.file, e.test].join('|'))).size, entries.length, 'entrée en double');
+});
+
+test('un enfant réel interrompu, expiré ou à TAP tronqué ne peut pas qualifier le fichier', () => {
+  const {spawnSync} = require('node:child_process');
+  const {processResults} = require('./run-engines.cjs');
+  const cases = [
+    ['complete', "process.stdout.write('TAP version 13\\nok 1 - témoin\\n1..1\\n')", null],
+    ['exit9', "process.stdout.write('TAP version 13\\nok 1 - témoin\\n1..1\\n');process.exitCode=9", 'infrastructure'],
+    ['truncated', "process.stdout.write('TAP version 13\\nok 1 - témoin\\n')", 'infrastructure'],
+    ['timeout', "process.stdout.write('TAP version 13\\nok 1 - témoin\\n');setInterval(()=>{},1000)", 'budget'],
+    ['signal', "process.stdout.write('TAP version 13\\nok 1 - témoin\\n');process.kill(process.pid,'SIGTERM')", 'infrastructure'],
+    ['assertion', "process.stdout.write('TAP version 13\\nnot ok 1 - témoin\\n1..1\\n');process.exitCode=1", 'product']
+  ];
+  for (const [name, code, expected] of cases) {
+    const run = spawnSync(process.execPath, ['-e', code], {encoding: 'utf8', timeout: name === 'timeout' ? 1000 : 5000});
+    const results = processResults(run).map(r => ({engine: 'not-observed', file: 'fixture', ...r, ...(r.status === 'fail' && !r.class ? classify({engine: 'not-observed', name: r.name, status: r.status}, []) : {})}));
+    const report = summarize(results);
+    assert.equal(exitCode(report) === 0, expected === null, name);
+    if (expected) assert(results.some(r => r.status === 'fail' && r.class === expected), name);
+    if (name === 'timeout') assert.equal(run.error.code, 'ETIMEDOUT');
+    if (name === 'signal') assert.equal(run.signal, 'SIGTERM');
+  }
+});
+
+test('le plan TAP doit être unique, terminal et cohérent, sans transformer les assertions en erreurs de budget', () => {
+  const {processResults, tapCompletion} = require('./run-engines.cjs');
+  for (const stdout of ['ok 1 - x\n1..2\n', 'ok 2 - x\n1..1\n', '1..1\nok 1 - x\n', 'ok 1 - x\n1..1\n1..1\n', 'Bail out!\n1..0\n']) {
+    assert(tapCompletion(stdout, parseTap(stdout)), stdout);
+    assert.notEqual(exitCode(summarize(processResults({stdout, status: 0, signal: null}).map(r => ({engine: 'x', ...r})))), 0);
+  }
+  assert.deepEqual(processResults({stdout: '1..0\n', status: 0, signal: null}), [{name: '(aucun test déclaré)', status: 'skip', reason: 'plan TAP 1..0'}]);
+  assert.deepEqual(processResults({stdout: tap, status: 1, signal: null}), parseTap(tap), 'une assertion échouée avec TAP complet garde son attribution produit');
+});
+
+test('les lancements mixtes sont observés par fichier sans gonfler la couverture de chaque moteur demandé', () => {
+  const fs = require('node:fs'), path = require('node:path'), os = require('node:os');
+  const {runEngine} = require('./run-engines.cjs');
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'builder-runner-owned-'));
+  const previous = process.env.PLAYWRIGHT_MODULE;
+  try {
+    fs.mkdirSync(path.join(root, 'tests')); const dir = path.join(root, 'results'); fs.mkdirSync(dir);
+    const stub = path.join(root, 'fake-playwright.cjs');
+    fs.writeFileSync(stub, "module.exports=Object.fromEntries(['chromium','webkit','firefox'].map(name=>[name,{async launch(){return {browserType(){return {name:()=>name}},async close(){}}}}]));");
+    fs.writeFileSync(path.join(root, 'tests', 'mixed.test.cjs'), "const test=require('node:test');const p=require(process.env.PLAYWRIGHT_MODULE);test('deux adaptateurs factices',async()=>{for(const name of ['chromium','webkit']){const b=await p[name].launch();await b.close();}});");
+    process.env.PLAYWRIGHT_MODULE = stub;
+    const run = runEngine('firefox', ['mixed.test.cjs'], dir, root, [], 10000);
+    assert.equal(exitCode(summarize(run.results)), 0, JSON.stringify(run));
+    assert.equal(run.results.length, 1);
+    assert.equal(run.results[0].engine, 'chromium+webkit');
+    assert.equal(run.results[0].requestedEngine, 'firefox');
+    assert.deepEqual(run.results[0].actualEngines, ['chromium', 'webkit']);
+    assert.equal(run.results[0].attributionScope, 'file');
+    assert.equal(summarize(run.results).engines.firefox, undefined, 'aucune réussite attribuée à Firefox');
+    assert.equal(summarize(run.results).engines.chromium, undefined, 'pas de duplication du résultat sur chacun des moteurs');
+    const receipt = JSON.parse(fs.readFileSync(path.join(dir, 'firefox-mixed.test.cjs.process.json'), 'utf8'));
+    assert.deepEqual(receipt.actualEngines, ['chromium', 'webkit']);
+    assert.equal(receipt.status, 0);
+    assert.match(receipt.attributionScope, /no per-test/);
+    assert(fs.readFileSync(receipt.stdout, 'utf8').includes('deux adaptateurs factices'));
+    // Le nom demandé au lanceur n’est pas la preuve du type retourné.
+    fs.writeFileSync(stub, "module.exports=Object.fromEntries(['chromium','webkit','firefox'].map(name=>[name,{async launch(){return {browserType(){return {name:()=>name==='chromium'?'firefox':name}},async close(){}}}}]));");
+    fs.writeFileSync(path.join(root, 'tests', 'alias.test.cjs'), "const test=require('node:test');test('type retourné',async()=>{const b=await require(process.env.PLAYWRIGHT_MODULE).chromium.launch();await b.close();});");
+    const alias = runEngine('chromium', ['alias.test.cjs'], dir, root, [], 10000);
+    assert.equal(exitCode(summarize(alias.results)), 0);
+    assert.equal(alias.results[0].requestedEngine, 'chromium');
+    assert.equal(alias.results[0].engine, 'firefox');
+    assert.deepEqual(alias.results[0].actualEngines, ['firefox']);
+    fs.writeFileSync(path.join(root, 'tests', 'crash.test.cjs'), "const test=require('node:test');test('avant arrêt worker',()=>{});setTimeout(()=>process.exit(9),50);");
+    const crash = runEngine('firefox', ['crash.test.cjs'], dir, root, [], 10000);
+    assert(crash.results.some(r => r.status === 'fail' && r.class === 'infrastructure' && r.processExitCode === 9), JSON.stringify(crash));
+    assert.equal(exitCode(summarize(crash.results)), 3);
+
+
+  } finally {
+    if (previous === undefined) delete process.env.PLAYWRIGHT_MODULE; else process.env.PLAYWRIGHT_MODULE = previous;
+    fs.rmSync(root, {recursive: true, force: true});
+  }
+});
+
+
+test('runEngine conserve un vrai budget dépassé après le premier test réussi, avec ses pièces brutes', t => {
+  const fs = require('node:fs'), path = require('node:path'), os = require('node:os');
+  const {runEngine} = require('./run-engines.cjs');
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'builder-runner-budget-owned-'));
+  const previous = process.env.PLAYWRIGHT_MODULE;
+  try {
+    fs.mkdirSync(path.join(root, 'tests')); const dir = path.join(root, 'results'); fs.mkdirSync(dir);
+    const stub = path.join(root, 'fake-playwright.cjs');
+    fs.writeFileSync(stub, "module.exports=Object.fromEntries(['chromium','webkit','firefox'].map(name=>[name,{async launch(){throw Error('aucun navigateur attendu')}}]));");
+    fs.writeFileSync(path.join(root, 'tests', 'budget.test.cjs'), "const test=require('node:test');test('premier témoin',()=>{});test('attente maintenue',()=>new Promise(()=>setInterval(()=>{},1000)));");
+    process.env.PLAYWRIGHT_MODULE = stub;
+    const run = runEngine('firefox', ['budget.test.cjs'], dir, root, [], 1000);
+    assert(run.results.some(r => r.status === 'pass' && r.name === 'premier témoin'));
+    assert(run.results.some(r => r.status === 'fail' && r.class === 'budget'));
+    assert(run.results.some(r => r.status === 'fail' && r.class === 'infrastructure' && /plan TAP/.test(r.message)));
+    assert.equal(exitCode(summarize(run.results)), 3);
+    assert.equal(run.executions[0].errorCode, 'ETIMEDOUT');
+    t.diagnostic(JSON.stringify({kind: 'owned-child-timeout', status: run.executions[0].status, signal: run.executions[0].signal, errorCode: run.executions[0].errorCode}));
+    assert.equal(run.results[0].engine, 'not-observed');
+    assert(fs.readFileSync(run.executions[0].stdout, 'utf8').includes('ok 1 - premier témoin'));
+  } finally {
+    if (previous === undefined) delete process.env.PLAYWRIGHT_MODULE; else process.env.PLAYWRIGHT_MODULE = previous;
+    fs.rmSync(root, {recursive: true, force: true});
+  }
+});
+
+
+test('le rendu conserve l’avertissement d’interception même quand la couverture observée est mixte', () => {
+  const {render} = require('./run-engines.cjs');
+  const result = {engine: 'firefox+webkit', requestedEngine: 'firefox', file: 'mixed.test.cjs', status: 'pass'};
+  const text = render(summarize([result]), [result], {firefox: {'mixed.test.cjs': 1}}, []);
+  assert.match(text, /groupe mixte ne prouve pas que chaque test/);
+  assert.match(text, /Passage demandé firefox.*interception, jamais un collage réel.*mixed.test.cjs/);
+});
+
+
+test('la CLI refuse toute sélection vide ou inconnue avant le prévol moteur', () => {
+  const fs = require('node:fs'), vm = require('node:vm'), path = require('node:path');
+  const source = fs.readFileSync(path.join(__dirname, 'run-engines.cjs'), 'utf8');
+  function invoke(args) {
+    let preflights = 0, directories = 0; const errors = [];
+    const sandbox = {module: {exports: {}}, exports: {}, __dirname, __filename: path.join(__dirname, 'run-engines.cjs'), process: {env: {}, execPath: process.execPath}, console: {log() {}, error(message) { errors.push(message); }}, require(name) {
+      if (name === 'node:child_process') return {spawnSync() { preflights++; return {status: 1, stderr: 'prévol factice indisponible'}; }};
+      if (name === 'node:fs') return {...fs, mkdtempSync() { directories++; return '/synthetic/no-allocation'; }};
+      return require(name);
+    }};
+    vm.runInNewContext(source + '\nmodule.exports.invokeMain = main;', sandbox);
+    const status = sandbox.module.exports.invokeMain(args);
+    return {status, preflights, directories, errors};
+  }
+  const sources = Object.fromEntries(fs.readdirSync(__dirname).filter(f => /\.test\.cjs$/.test(f)).map(f => [f, fs.readFileSync(path.join(__dirname, f), 'utf8')]));
+  const eligible = selectFiles(sources)[0], ineligible = Object.keys(sources).find(f => !selectFiles(sources).includes(f));
+  assert(ineligible);
+  for (const args of [
+    ['--engines=chromium', '--files=typo-nonexistent.test.cjs'],
+    ['--engines=chromium', `--files=${ineligible}`],
+    ['--engines=chromium', `--files=${eligible},typo-nonexistent.test.cjs`],
+    ['--engines=,'], ['--engines='], ['--files=,'], ['--files=']
+  ]) {
+    const result = invoke(args);
+    assert.equal(result.status, 64, JSON.stringify({args, ...result}));
+    assert.equal(result.preflights, 0); assert.equal(result.directories, 0);
+    assert(result.errors.length > 0);
+  }
+  const valid = invoke(['--engines=firefox', `--files=${eligible}`]);
+  assert.equal(valid.status, 2); assert.equal(valid.preflights, 1);
+  const defaults = invoke([]);
+  assert.equal(defaults.status, 2); assert.equal(defaults.preflights, 3);
 });

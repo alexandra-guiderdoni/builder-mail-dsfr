@@ -231,6 +231,17 @@ for scene, page, actions, expectation in scenes:
         continue
     collection = next(directory.glob("*browser-collection.json"))
     problem = scene_expectation_error(scene, actions, expectation, collection)
+    # Ce garde n'est pas une mesure CSS/AT : conserver cette limite avec la collecte.
+    expectation_check = {
+        "scene": scene,
+        "expectation": expectation,
+        "method": "journey-tool-expect" if actions else "static-html-candidate",
+        "computed_visibility_verified_by_static_guard": False,
+        "error": problem,
+    }
+    (directory / "expectation-check.json").write_text(
+        json.dumps(expectation_check, ensure_ascii=False, indent=2) + "\n"
+    )
     if problem:
         print(problem, file=sys.stderr, flush=True)
         inventory.append(

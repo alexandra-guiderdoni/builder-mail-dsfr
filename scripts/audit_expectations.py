@@ -16,21 +16,43 @@ class ScenarioError(Exception):
 
 
 class _Text(HTMLParser):
+    """Texte candidat dans le contenu HTML, sans calcul des styles de la page.
+
+    Écarte les exclusions directement lisibles (head, hidden, styles inline
+    masquants). Les classes CSS, le rendu et l'exposition AT ne sont pas évalués.
+    """
+
+    VOID = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"}
+
     def __init__(self):
         super().__init__(convert_charrefs=True)
         self.parts = []
-        self.hidden = 0
+        self.stack = []
 
     def handle_starttag(self, tag, attrs):
-        if tag in ("script", "style", "template"):
-            self.hidden += 1
+        attributes = dict(attrs)
+        inline = re.sub(r"/\*.*?\*/", "", attributes.get("style") or "", flags=re.DOTALL)
+        blocked = (
+            bool(self.stack and self.stack[-1][1])
+            or tag in ("head", "title", "script", "style", "template")
+            or "hidden" in attributes
+            or bool(re.search(r"(?:^|;)\s*(?:display\s*:\s*none|visibility\s*:\s*(?:hidden|collapse)|content-visibility\s*:\s*hidden)\s*(?:!important\s*)?(?:;|$)", inline, re.IGNORECASE))
+        )
+        if tag not in self.VOID:
+            self.stack.append((tag, blocked))
 
     def handle_endtag(self, tag):
-        if tag in ("script", "style", "template") and self.hidden:
-            self.hidden -= 1
+        for index in range(len(self.stack) - 1, -1, -1):
+            if self.stack[index][0] == tag:
+                del self.stack[index:]
+                break
+
+    def handle_startendtag(self, tag, attrs):
+        self.handle_starttag(tag, attrs)
+        self.handle_endtag(tag)
 
     def handle_data(self, data):
-        if not self.hidden:
+        if not self.stack or not self.stack[-1][1]:
             self.parts.append(data)
 
 
@@ -39,6 +61,7 @@ def normalize(text):
 
 
 def rendered_text(html):
+    """Nom historique : texte candidat statique, jamais preuve de visibilité CSS."""
     parser = _Text()
     parser.feed(html)
     parser.close()
@@ -46,16 +69,17 @@ def rendered_text(html):
 
 
 def expected_text_in_html(html, expected):
-    """Vrai si le texte attendu figure dans le texte rendu (hors script, style, commentaire)."""
+    """Présence statique hors exclusions HTML/inline connues, pas visibilité mesurée."""
     wanted = normalize(expected)
     return bool(wanted) and wanted in rendered_text(html)
 
 
 def scene_expectation_error(scene, actions, expectation, collection_path):
-    """Message d’erreur pour une page statique dont l’attente est absente du HTML rendu.
+    """Garde statique de contenu de scène, distinct d'une mesure de visibilité.
 
     Une scène avec parcours reçoit l’attente par `--expect` de l’outil de capture ;
-    une page statique n’a pas de parcours, l’attente doit donc être lue ici.
+    une page statique n’a pas de parcours, sa présence candidate est lue ici.
+    Une réussite ne vérifie ni les CSS externes, ni l'exposition accessible.
     """
     if actions:
         return None
@@ -65,7 +89,7 @@ def scene_expectation_error(scene, actions, expectation, collection_path):
     except (OSError, KeyError, ValueError) as error:
         return f"Scène {scene} : HTML rendu illisible ({error!r})"
     if not expected_text_in_html(html, expectation):
-        return f"Scène {scene} : texte attendu « {expectation} » absent du HTML rendu"
+        return f"Scène {scene} : texte attendu « {expectation} » absent du contenu HTML candidat (contrôle statique)"
     return None
 
 
