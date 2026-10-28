@@ -42,7 +42,7 @@ async function setBlocks(page, build) {
     doc.blocks = sets[build]();
   }), build);
 }
-const expectedWarnings = page => page.evaluate(() => MailBuilder.Checks.warnings(MailBuilder.doc(), MailBuilder.Render.weight(MailBuilder.Render.clipboardHtml(MailBuilder.doc()))));
+const expectedWarnings = page => page.evaluate(() => MailBuilder.Checks.warnings(MailBuilder.doc(), MailBuilder.Render.weightDetails(MailBuilder.Render.clipboardHtml(MailBuilder.doc()), MailBuilder.doc())));
 
 for (const engine of ['chromium', 'webkit']) {
   test(`${engine} : composition vide bloquée ; composition saine copiée et téléchargée sans étape`, async () => {
