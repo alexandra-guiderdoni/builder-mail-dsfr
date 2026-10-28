@@ -42,3 +42,26 @@ test('homonymes : valeur de sélection en attente conservée et distinction reca
   assert.doesNotMatch(h.get('documents').innerHTML, /n°/);
   assert.match(h.get('newsletter-list').innerHTML, /Ouvrir Nouveau nom/);
 });
+
+
+test('homonymes : les suffixes déjà présents et imbriqués ne créent aucune collision globale', () => {
+  for (const names of [
+    ['Édition', 'Édition', 'Édition (n° 1)'],
+    ['Édition', 'Édition', 'Édition (n° 1)', 'Édition (n° 1)', 'Édition (n° 1) (n° 1)'],
+    ['[1] Édition', '[1] Édition', '[1] Édition (n° 1)', '[2] [1] Édition (n° 1)']
+  ]) {
+    const documents = names.map((name, index) => doc(String(index), name));
+    const before = JSON.stringify(documents), h = ui(documents);
+    const labels = h.A.UI.documentLabels().map(([, label]) => label);
+    assert.equal(new Set(labels).size, names.length, JSON.stringify(names));
+    h.A.UI.selections();
+    for (const label of labels) assert(h.get('newsletter-list').innerHTML.includes(`aria-label="Ouvrir ${label}"`));
+    assert.equal(JSON.stringify(documents), before);
+  }
+});
+
+test('homonymes : les libellés ordinaires restent inchangés hors collision résiduelle', () => {
+  const documents = [doc('a', 'Édition'), doc('b', 'Édition'), doc('c', 'Autre (n° 1)')];
+  const labels = ui(documents).A.UI.documentLabels().map(([, label]) => label);
+  assert.equal(JSON.stringify(labels), JSON.stringify(['Édition (n° 1)', 'Édition (n° 2)', 'Autre (n° 1)']));
+});

@@ -30,7 +30,11 @@
   const blockLabel = (b, definition) => b.component === "mail-31" && !b.values.f0 ? "Article sans image" : definition.label;
   // Les homonymes importés restent distinguables dans les listes : le rang s’ajoute au nom.
   const labelled = list => list.map(x => { const same = list.filter(y => y.name === x.name); return [x.id, same.length > 1 ? `${x.name} (n° ${same.indexOf(x) + 1})` : x.name]; });
-  const documentLabels = () => labelled(A.library.documents);
+  const documentLabels = () => {
+    const labels = labelled(A.library.documents);
+    // Un nom peut déjà contenir le suffixe généré : le préfixe ordinal global reste alors unique.
+    return new Set(labels.map(([, label]) => label)).size === labels.length ? labels : labels.map(([id, label], i) => [id, `[${i + 1}] ${label}`]);
+  };
   const blockName = b => blockLabel(b, M.component(b.component));
   function removal() {
     // Un bloc déjà présent (par exemple relu par « Restaurer l’état précédent ») n’est pas proposé une seconde fois.

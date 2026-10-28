@@ -37,6 +37,6 @@ test('un reçu de nettoyage manquant/refusé interdit une réussite et préserve
     assert.ok(report.cleanup_errors.length); assert.equal(report.completed, false);
   }
   const report = newCollection(root, {errors: []});
-  assert.equal(consumeCleanupReceipt(report, {cleanup_error: null}), true);
+  assert.equal(consumeCleanupReceipt(report, {cleanup_error: null, status: 'closed', exit_observed: true}), true);
   assert.equal(report.cleanup_errors.length, 0);
 });

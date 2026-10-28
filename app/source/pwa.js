@@ -17,7 +17,7 @@
   let reloading = false, controlled = !!navigator.serviceWorker.controller;
   // Jeton optionnel : l’annonce différée se tait si une autre est passée pendant save/flush (#122).
   const reloadNeeded = since => { update.hidden = true; A.notice("Une nouvelle version est active dans un autre onglet. Rechargez cette page pour l’utiliser ; le rechargement reste soumis aux protections de sauvegarde.", since); };
-  navigator.serviceWorker.addEventListener("controllerchange", () => { if (reloading) location.reload(); else if (controlled) { reloadNeeded(); A.State.outdated(); } controlled = true; });
+  navigator.serviceWorker.addEventListener("controllerchange", () => { if (reloading) location.reload(); else if (controlled) { A.State.outdated(); reloadNeeded(); } controlled = true; });
   update.addEventListener("click", async () => {
     const ticket = A.State?.noticeTicket?.();
     try { await A.State.save(); await A.State.flush(); if (registration.waiting) { reloading = true; registration.waiting.postMessage({type: "ACTIVATE_UPDATE"}); } else reloadNeeded(ticket); } catch (cause) { A.error(cause.message); }

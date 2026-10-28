@@ -125,3 +125,18 @@ test('verrouillage : ancienne notice retirée et ancienne fin différée refusé
   assert.equal(h.element('notice').textContent, '');
   assert.equal(h.element('read-only').hidden, false);
 });
+
+for (const kind of ['takeover', 'version']) test(`pending-save : le verrou ${kind} reste prioritaire après résolution tardive`, async () => {
+  const h = await setup(), real = h.A.Storage.save; let release, started;
+  const beginning = new Promise(resolve => { started = resolve; });
+  h.A.Storage.save = (...args) => new Promise((resolve, reject) => { release = () => real(...args).then(resolve, reject); started(); });
+  const saving = h.A.State.change(lib => { lib.documents[0].name = 'Modification en cours'; });
+  await beginning;
+  if (kind === 'version') h.A.State.outdated(); else h.lock();
+  const locked = h.element('save-state').textContent, spoken = h.element('save-announce').textContent, error = h.element('error').textContent;
+  release(); await saving;
+  assert.equal(h.element('editing').disabled, true);
+  assert.equal(h.element('save-state').textContent, locked, 'la fin ancienne ne réintroduit aucun succès contradictoire');
+  assert.equal(h.element('save-announce').textContent, spoken);
+  assert.equal(h.element('error').textContent, error, 'la cause courante reste affichée');
+});

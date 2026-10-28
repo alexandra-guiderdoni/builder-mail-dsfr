@@ -91,7 +91,7 @@
           const task = latest; latest = undefined;
           try {
             const saved = await A.Storage.save(task.library, token); token = saved.token; base = task.library;
-            if (task.current === revision) { failing(false); if (!A.invalid.size && !A.drafts.size) A.error(""); const text = A.invalid.size || A.drafts.size ? "Bibliothèque sauvegardée ; les champs invalides restent non enregistrés." : "Bibliothèque sauvegardée dans ce navigateur."; show(text); announceSuccess(text); }
+            if (task.current === revision && !readOnly) { failing(false); if (!A.invalid.size && !A.drafts.size) A.error(""); const text = A.invalid.size || A.drafts.size ? "Bibliothèque sauvegardée ; les champs invalides restent non enregistrés." : "Bibliothèque sauvegardée dans ce navigateur."; show(text); announceSuccess(text); }
           } catch (cause) {
             failing(true); setPersistentError(`${cause.message} ${cause.storage === "conflit" ? "Exportez la bibliothèque en mémoire pour conserver ce travail, puis rechargez cette page." : "Exportez la bibliothèque en mémoire pour conserver ce travail."}`);
             show("Modifications non sauvegardées. Exportez votre bibliothèque.", true);
