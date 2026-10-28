@@ -411,6 +411,8 @@ if os.environ.get("RECEIPT_NODE"):
             reporter = [] if reporters else ["--test-reporter=tap"]
             run = subprocess.run([os.environ["RECEIPT_NODE"], "--test", *reporter, str(child)],
                                  capture_output=True, text=True, timeout=10, env=child_env)
+            expect(run.returncode == expected_failure,
+                   f"Node réel {label} : code attendu {expected_failure}, observé {run.returncode}\nstdout={run.stdout}\nstderr={run.stderr}")
             try:
                 counts = module.parse_suite(run.stdout)
             except module.AuditError as error:
