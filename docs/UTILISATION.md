@@ -116,6 +116,20 @@ Les images sont incorporées ; leur présence dans le fichier ne démontre pas l
 
 ## Erreurs et récupération
 
+### Bibliothèque ancienne avec une adresse HTTPS abrégée (#193)
+
+Une ancienne version acceptait des adresses comme `https:exemple.fr/page`, dont la destination peut dépendre du contexte de collage. Elles ne sont plus autorisées. Si une bibliothèque déjà enregistrée en contient, l’écran « Retrouver votre bibliothèque » présente ses compositions, modèles et identités avec leur contenu textuel, puis les champs concernés. Il ne remplace pas vos données par la composition de départ et ne devine pas la destination des liens.
+
+1. Choisir **« Exporter la copie brute d’origine »** pour conserver le relevé exact lu au démarrage. Ce téléchargement ne contient pas les corrections en cours ; il reste attaché à l’original même si une autre fenêtre modifie ensuite le stockage.
+2. Corriger chaque destination complète en `https://` après l’avoir vérifiée. Un lien source facultatif peut être retiré ; un lien requis doit être corrigé. Les règles existantes des liens `mailto` de pied de page restent applicables.
+3. Choisir **« Restaurer la bibliothèque corrigée »**. Avant ce clic, aucune correction n’est enregistrée et aucune copie/export de courriel n’est autorisée. L’atelier valide toute la bibliothèque et conserve l’original comme état précédent dans la même transaction. Cet état précédent sera remplacé par la sauvegarde suivante : garder le téléchargement brut pour une conservation durable.
+
+Si une autre fenêtre a enregistré la bibliothèque entre-temps, la récupération est refusée sans écraser son travail. Conserver la copie brute et les destinations choisies, puis recharger pour repartir des données courantes. Si une autre erreur que ces seules URL est présente, l’atelier conserve son refus habituel ; il ne tolère pas les formats inconnus, images invalides ou protocoles interdits.
+
+Pour un **ancien fichier JSON importé**, l’import reste non destructif : un message indique les adresses et emplacements à corriger. Conserver le fichier original, travailler sur une copie, vérifier les destinations et remplacer uniquement les valeurs signalées par des adresses complètes. Réimporter ensuite la copie : l’import normal ajoute les compositions sans remplacer la bibliothèque courante. Un export brut du stockage est une enveloppe de diagnostic : son champ `library` contient la bibliothèque, mais l’enveloppe n’est pas directement importable.
+
+### Autres erreurs
+
 Un champ invalide est signalé et sa nouvelle valeur n’est pas enregistrée. Corriger ce champ ou utiliser « Annuler les champs invalides » avant de changer de composition ou d’exporter. Un import refusé conserve les compositions existantes.
 
 Si la sauvegarde échoue, le travail reste en mémoire : exporter la bibliothèque avant de fermer. Le message nomme la cause (stockage indisponible, bibliothèque locale inaccessible, espace de stockage saturé ou autre fenêtre) et le bouton « Exporter la bibliothèque en mémoire » le suit directement. Si une autre fenêtre a enregistré des changements, voir « Plusieurs fenêtres » ci-dessous.

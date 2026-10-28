@@ -1,5 +1,11 @@
 # Historique des livraisons
 
+## Non publié — Récupération des anciennes URL HTTPS abrégées (#193)
+
+- Une bibliothèque enregistrée avant le refus des URL `https:` sans `//` dispose d’un écran de récupération : inventaire du contenu, export brut de l’original et correction explicite des destinations, sans écriture au démarrage ni normalisation automatique. La composition de départ ne masque plus les données retrouvées.
+- La restauration valide toute la bibliothèque, contrôle le jeton du stockage et conserve l’original comme état précédent dans la même transaction. Les nouvelles URL abrégées et la diffusion d’une bibliothèque non corrigée restent refusées. Le secours brut d’origine est indépendant des écritures d’une autre fenêtre.
+- Les anciens imports concernés restent refusés sans modifier la bibliothèque courante, avec emplacements à corriger et procédure documentée. Les autres erreurs de schéma, images, catalogue ou protocole ne bénéficient d’aucune tolérance supplémentaire.
+
 ## Non publié — Contrat de politesse des emplacements vocaux (#122)
 
 - `#error` sépare deux familles : alertes persistantes (échec de sauvegarde, lecture seule) stockées dans l’état et restaurées depuis `A.State.restoreErrorFromState` ; erreurs ponctuelles (champs invalides, actions refusées) qui n’éteignent plus la persistante. `failing(false)` n’efface la mémoire persistante que lorsque plus aucune cause ne la soutient (ni `failed`, ni `readOnly`), pour que `restoreErrorFromState` sache rétablir l’alerte après une sauvegarde qui réussit pendant une lecture seule. Correction du secours disparu après « Annuler les champs invalides » (#86).

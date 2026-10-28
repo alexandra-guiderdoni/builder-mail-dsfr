@@ -31,6 +31,7 @@ L’application livrée est statique et autonome. Python et Node.js sont des out
 | `app/source/preview.js`, `preview-measure.js` | Affichage de l’aperçu et mesure dans son origine opaque ; aucun ajout aux exports ou à SNUM. |
 | `app/snum/` | Page autonome et adaptation métier SNUM vers le contrat générique, sans stockage automatique. |
 | `app/source/storage.js`, `state.js` | Transaction locale, conflits, mémoire et sauvegardes. |
+| `app/source/legacy-recovery.js` | Récupération guidée des seules URL HTTPS abrégées des bibliothèques existantes ; copie de validation séparée, aucune normalisation persistée, écriture explicite avec sauvegarde précédente et contrôle du jeton. |
 | `app/source/library.js`, `library.css` | Accueil, navigation transitoire vers l’éditeur et actions ciblées sur une composition ; aucun stockage supplémentaire. |
 | `app/source/checks.js` | Contrôle avant copie ou téléchargement : six avertissements confirmables, sans réseau ; absent du convertisseur SNUM. |
 | Autres fichiers `app/source/` | Interface, fichiers, bibliothèque et cycle hors connexion. |

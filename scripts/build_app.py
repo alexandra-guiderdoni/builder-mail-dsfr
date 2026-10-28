@@ -51,6 +51,7 @@ def build():
                 "imports.js",
                 "storage.js",
                 "state.js",
+                "legacy-recovery.js",
                 "preview.js",
                 "catalogue-search.js",
                 "view.js",

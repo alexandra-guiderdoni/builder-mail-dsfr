@@ -29,7 +29,14 @@
   }
   function parse(input) {
     let value; try { value = JSON.parse(input); } catch { throw new Error("Le fichier JSON est invalide ou incomplet."); }
-    if (value?.schema === "dsfr-mail/library") return normalized("library", M.copy(M.library(value)));
+    if (value?.schema === "dsfr-mail/library") {
+      try { return normalized("library", M.copy(M.library(value))); }
+      catch (cause) {
+        const legacy = A.LegacyRecovery?.inspect(value);
+        if (legacy) throw new Error(`Ancienne bibliothèque contenant ${legacy.links.length} adresses HTTPS abrégées. Le fichier original et votre bibliothèque actuelle restent inchangés. Corrigez les destinations dans une copie du fichier JSON avant de l’importer : ${legacy.links.map(link => `${link.label} (${link.path.join(".")})`).join(" ; ")}. Aucune adresse ne sera complétée automatiquement.`);
+        throw cause;
+      }
+    }
     if (value?.schema === "builder-mail-prototype/1") return normalized("document", legacy(value));
     return normalized("document", M.copy(M.document(value)));
   }

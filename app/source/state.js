@@ -49,7 +49,7 @@
   }
   // Saisies d’URL en cours : conservées hors du modèle tant qu’elles sont invalides, jamais diffusées.
   const draftKey = (doc, block, input) => `${doc}|${block}|${input}`;
-  function guardEdit() { if (restoring) throw new Error("Attendez la fin de la récupération avant cette action."); if (A.pendingInputs) throw new Error("Attendez la fin du chargement du fichier avant cette action."); if (A.invalid.size) throw new Error("Corrigez les champs signalés ou annulez leur modification avant cette action."); }
+  function guardEdit() { if (A.LegacyRecovery?.pending()) throw new Error("Restaurez d’abord la bibliothèque ancienne après correction de ses adresses. Les données enregistrées restent intactes."); if (restoring) throw new Error("Attendez la fin de la récupération avant cette action."); if (A.pendingInputs) throw new Error("Attendez la fin du chargement du fichier avant cette action."); if (A.invalid.size) throw new Error("Corrigez les champs signalés ou annulez leur modification avant cette action."); }
   function guard() {
     guardEdit();
     const draft = [...A.drafts.values()].find(d => d.doc === A.library.activeId);
@@ -126,21 +126,41 @@
   // Une restauration n’est annoncée qu’après relecture et validation de l’état précédent.
   async function restorable() { try { const previous = await A.Storage.load("previous"); return !!previous && !!M.library(previous.library); } catch { return false; } }
   async function start() {
+    let record;
     try {
-      const record = await A.Storage.load();
+      record = await A.Storage.load();
       token = record?.token ?? null; opened = true;
       if (record) A.library = M.copy(M.library(record.library));
       A.selected = A.doc().blocks[0]?.id || null;
       show(record ? "Bibliothèque restaurée depuis ce navigateur." : "Aucune sauvegarde : créez ou personnalisez une composition.", true);
     } catch (cause) {
       failing(true); A.recoveryOnly = true; absent = cause.storage === "absent";
-      const advice = absent ? "Exportez la bibliothèque en mémoire pour conserver votre travail : la fermeture de cette page l’efface." : "Cette page n’écrit rien dans la bibliothèque locale : exportez la bibliothèque en mémoire pour conserver votre travail.";
-      const restore = !cause.storage && await restorable() ? " Une sauvegarde précédente lisible existe : « Restaurer l’état précédent », dans « Fichiers et récupération », permet de la relire." : "";
+      const legacy = record && A.LegacyRecovery?.offer(record);
+      const advice = legacy ? "Les données enregistrées sont conservées : utilisez la récupération guidée ci-dessous pour corriger les anciennes adresses." : record ? "Les données enregistrées restent intactes : utilisez « Exporter les données enregistrées brutes », dans « Fichiers et récupération », pour les conserver." : absent ? "Exportez la bibliothèque en mémoire pour conserver votre travail : la fermeture de cette page l’efface." : "Cette page n’écrit rien dans la bibliothèque locale : exportez la bibliothèque en mémoire pour conserver votre travail.";
+      const restore = !legacy && !cause.storage && await restorable() ? " Une sauvegarde précédente lisible existe : « Restaurer l’état précédent », dans « Fichiers et récupération », permet de la relire." : "";
       setPersistentError(`${cause.message} ${advice}${restore}`);
       show(absent ? "Stockage indisponible : travail en mémoire seulement." : "Bibliothèque non restaurée.", true);
       if (absent) get("storage-help").textContent = "Aucun stockage n’est disponible dans ce navigateur : exportez une copie pour conserver votre travail.";
     }
-    base = A.library; A.ready = true; get("workspace").disabled = false; A.UI.refresh();
+    base = A.library; A.ready = true; get("workspace").disabled = !!A.LegacyRecovery?.pending(); A.UI.refresh();
+    if (A.LegacyRecovery?.pending()) { get("save-rescue").hidden = true; get("library-count").textContent = A.LegacyRecovery.summary(); }
+  }
+  async function restoreLegacy(library, expectedToken) {
+    if (!A.LegacyRecovery?.pending() || restoring || running || A.pendingInputs) throw new Error("Aucune récupération ancienne disponible ou une opération est déjà en cours.");
+    const restored = M.copy(M.library(library));
+    const ticket = noticeTicket;
+    restoring = true; pending++;
+    try {
+      if (readOnly) throw readOnlyError();
+      const saved = await A.Storage.save(restored, expectedToken);
+      token = saved.token; base = A.library = restored; A.recoveryOnly = false; failing(false); revision++;
+      A.selected = A.doc().blocks[0]?.id || null; A.LegacyRecovery.close(); A.UI.refresh();
+      if (readOnly) show("Bibliothèque corrigée enregistrée ; cette fenêtre reste en lecture seule.", true);
+      else { A.error(""); show("Bibliothèque corrigée restaurée et sauvegardée dans ce navigateur.", true); A.notice("Vos compositions sont retrouvées. L’original est conservé comme état précédent.", ticket); get("home-title").focus(); }
+    } catch (cause) {
+      if (!A.recoveryOnly) throw cause;
+      throw new Error(`${cause.message} La récupération n’a rien enregistré ; conservez les données brutes et rechargez l’atelier avant de réessayer.`);
+    } finally { restoring = false; pending--; get("workspace").disabled = !!A.LegacyRecovery?.pending(); }
   }
   async function recover() {
     guard(); const ticket = noticeTicket; if (A.recoveryOnly && !opened) { offerReopen(ticket); return; }
@@ -260,5 +280,5 @@
   async function flush() { await settle(); if (failed || pending || A.recoveryOnly) throw new Error("La sauvegarde doit réussir avant de recharger l’application."); }
   const saved = () => !failed && !pending && !A.recoveryOnly;
   const restoreErrorFromState = () => { if ((failed || readOnly) && persistentError) A.error(persistentError); };
-  A.State = Object.freeze({guard, guardEdit, setDraft, dropDraft, dropFooterDraft, change, save, start, recover, settle, flush, saved, takeOver, outdated, reload, exported, noticeTicket: () => noticeTicket, restoreErrorFromState});
+  A.State = Object.freeze({guard, guardEdit, setDraft, dropDraft, dropFooterDraft, change, save, start, restoreLegacy, recover, settle, flush, saved, takeOver, outdated, reload, exported, noticeTicket: () => noticeTicket, restoreErrorFromState});
 })();
