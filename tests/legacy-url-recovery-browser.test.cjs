@@ -50,6 +50,7 @@ test('#193 : bibliothèque issue de l’ancien modèle, récupération guidée p
   await input.fill('https://exemple.invalid/ adresse invalide');
   assert.equal(await panel.locator('[data-legacy-restore]').isDisabled(), true);
   await input.fill(FIXED);
+  assert.equal(await panel.locator('#legacy-url-0-error').isVisible(), false, 'aucun encadré d’erreur vide après correction');
   assert.deepEqual(await page.evaluate(() => MailBuilder.Storage.load()), original, 'corriger un champ ne doit pas écrire');
   await panel.locator('[data-legacy-restore]').click();
   await page.waitForFunction(() => !document.getElementById('legacy-url-recovery'));

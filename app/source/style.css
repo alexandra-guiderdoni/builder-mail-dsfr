@@ -19,6 +19,7 @@ input[type=file] { width:100%; }
 .save-panel { padding:16px 24px; margin-bottom:24px; background:var(--background-contrast-info); border-left:4px solid var(--border-plain-info); }
 .save-panel p:last-child { margin-bottom:0; }
 .error { background:var(--background-contrast-error); border-left:4px solid var(--border-plain-error); padding:16px; overflow-wrap:anywhere; }
+#legacy-url-recovery .error:empty { display:none; }
 .read-only { margin-bottom:24px; padding:16px 24px; background:var(--background-contrast-warning); border-left:4px solid var(--border-plain-warning); overflow-wrap:anywhere; }
 .read-only h2 { margin-bottom:8px; } .read-only .actions { margin-bottom:0; }
 .save-rescue { margin-bottom:24px; padding:16px; background:var(--background-contrast-error); border-left:4px solid var(--border-plain-error); }
