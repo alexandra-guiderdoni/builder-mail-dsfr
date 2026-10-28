@@ -178,6 +178,7 @@ Trois emplacements vocaux portent les retours à l’utilisateur : `#notice` (`r
 - Chargement d’une image dans `editor.js` — jeton relevé après l’annonce de progrès « Chargement de l’image locale… » (#122).
 - Copie du courriel dans `files.js` — jeton relevé après `A.notice("")` initial ; `A.State.noticeTicket?.()` tolère le convertisseur SNUM qui n’expose pas ce jeton (#122).
 - Récupération (`recover`) et offre de ré-ouverture (`offerReopen`) dans `state.js` — jeton relevé après `guard()` et partagé par la branche synchrone (#122).
+- Récupération guidée des anciennes URL (`restoreLegacy`) dans `state.js` — jeton relevé avant l’écriture ; une annonce plus récente (notamment un export brut demandé pendant cette écriture) reste prioritaire (#193).
 - Reprise de la main (`takeOver`) dans `state.js` — jeton relevé après `A.notice("")` initial (#122).
 - Invite d’installation PWA (`pwa.js`) — jeton relevé au départ du clic sur `#install`. Aucun test navigateur ne l’exerce : `beforeinstallprompt` n’est pas déclenchable en Playwright headless et la variante portable (`file://`) sort du module avant d’enregistrer son listener ; le jeton est posé par analogie avec les autres écrivains différés.
 
