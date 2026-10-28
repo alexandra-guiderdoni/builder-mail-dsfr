@@ -71,6 +71,10 @@ test('#191 : partition UTF-8 exacte, répétitions et conseil conditionnel, sans
   assert.equal(measured.parts.images, Buffer.byteLength(small) + 2 * Buffer.byteLength(large));
   assert.equal(Object.values(measured.parts).reduce((a,b) => a+b), Buffer.byteLength(html));
   assert.equal(measured.occurrences, 3); assert.equal(measured.distinct, 2);
+  const repeated = R.weightDetails(`<img src="${large}"><img src="${large}">`, doc);
+  assert.match(F.weightText(repeated), /2 occurrences, 1 fichier distinct,/);
+  const single = R.weightDetails(`<img src="${large}">`, doc);
+  assert.match(F.weightText(single), /1 occurrence, 1 fichier distinct,/);
   assert.equal(measured.target.block, doc.blocks[1].id, 'image réellement la plus lourde, pas la première');
   assert.equal(measured.target.field, 'field-' + field.key);
   assert.match(F.weightAdvice(measured), /images incorporées dominent.*conservant les logos/);
