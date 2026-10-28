@@ -31,7 +31,7 @@ async function documents(page, generation, previous) {
   if (seen.clicks.length !== 1) {
     try {
       missingClick = {generation, seen, child: await frames.preview.evaluate(() => ({href: location.href, ready: document.readyState, focus: document.hasFocus(), body: document.body?.getBoundingClientRect().toJSON()})),
-        parent: await page.evaluate(() => ({scroll: scrollY, focus: document.hasFocus(), active: document.activeElement?.id || document.activeElement?.tagName, modal: !!document.querySelector(':modal'), frames: [...document.querySelectorAll('iframe')].map(el => ({id: el.id, src: el.src, rect: el.getBoundingClientRect().toJSON(), pointer: getComputedStyle(el).pointerEvents}))}))};
+        parent: await page.evaluate(() => ({inputTrace: window.__backgroundTrace || null, scroll: scrollY, focus: document.hasFocus(), active: document.activeElement?.id || document.activeElement?.tagName, modal: !!document.querySelector(':modal'), frames: [...document.querySelectorAll('iframe')].map(el => ({id: el.id, src: el.src, rect: el.getBoundingClientRect().toJSON(), pointer: getComputedStyle(el).pointerEvents}))}))};
     } catch (cause) { missingClick = {generation, seen, diagnosticError: cause.message}; }
     missingClick.request = {frame: 'preview', locator: 'body', localPosition: {x: 20, y: 20}};
     try {
