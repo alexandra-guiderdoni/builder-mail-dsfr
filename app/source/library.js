@@ -12,8 +12,9 @@
     get(editor ? "composition-title" : "home-title").focus();
   }
   function refresh() {
-    get("newsletter-list").innerHTML = A.library.documents.map(doc => `<li class="fr-col-12 fr-col-md-6" data-document="${esc(doc.id)}"><div class="app-panel"><h3><button class="fr-btn fr-btn--tertiary-no-outline" data-library-action="open" aria-label="Ouvrir ${esc(doc.name)}">${esc(doc.name)}</button></h3><p>${esc(doc.subject || "Sans objet")} · ${doc.blocks.length} blocs${doc.id === A.library.activeId ? " · Composition active" : ""}</p><div class="actions">${[["rename", "Renommer"], ["duplicate", "Dupliquer"], ["export", "Exporter"], ["remove", "Supprimer"]].map(([action, label]) => `<button class="fr-btn fr-btn--secondary" data-library-action="${action}" aria-label="${label} la composition ${esc(doc.name)}">${label}</button>`).join("")}</div></div></li>`).join("");
-    get("resume-document").textContent = `Reprendre « ${A.doc().name} »`;
+    const labels = new Map(A.UI.documentLabels());
+    get("newsletter-list").innerHTML = A.library.documents.map(doc => `<li class="fr-col-12 fr-col-md-6" data-document="${esc(doc.id)}"><div class="app-panel"><h3><button class="fr-btn fr-btn--tertiary-no-outline" data-library-action="open" aria-label="Ouvrir ${esc(labels.get(doc.id))}">${esc(labels.get(doc.id))}</button></h3><p>${esc(doc.subject || "Sans objet")} · ${doc.blocks.length} blocs${doc.id === A.library.activeId ? " · Composition active" : ""}</p><div class="actions">${[["rename", "Renommer"], ["duplicate", "Dupliquer"], ["export", "Exporter"], ["remove", "Supprimer"]].map(([action, label]) => `<button class="fr-btn fr-btn--secondary" data-library-action="${action}" aria-label="${label} la composition ${esc(labels.get(doc.id))}">${label}</button>`).join("")}</div></div></li>`).join("");
+    get("resume-document").textContent = `Reprendre « ${labels.get(A.doc().id)} »`;
   }
   function focusRow(id, action = "open") {
     const item = [...get("newsletter-list").children].find(e => e.dataset.document === id);
@@ -52,7 +53,7 @@
   function ask(kind, id) {
     A.State.guard(); const doc = find(id), removing = kind === "remove";
     currentDialog = {kind, id, index: A.library.documents.findIndex(d => d.id === id)};
-    get("library-dialog-title").textContent = removing ? `Supprimer « ${doc.name} » ?` : "Renommer la composition";
+    get("library-dialog-title").textContent = removing ? `Supprimer « ${new Map(A.UI.documentLabels()).get(doc.id)} » ?` : "Renommer la composition";
     get("library-dialog-description").textContent = removing ? "Cette composition sera retirée de ce navigateur. Les fichiers déjà exportés restent conservés." : "Le nom change dans la bibliothèque ; l’objet du courriel reste conservé.";
     get("library-name-field").hidden = removing; get("library-name").disabled = removing;
     get("library-name").value = doc.name; get("library-name").removeAttribute("aria-invalid"); get("library-dialog-error").textContent = "";

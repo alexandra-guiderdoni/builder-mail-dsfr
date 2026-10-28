@@ -22,6 +22,8 @@
     let parsed; try { parsed = new URL(value); } catch { return "incomplete"; }
     if (parsed.protocol !== "https:") return "protocol";
     if (parsed.username || parsed.password) return "credentials";
+    // Une autorité explicite conserve la destination lorsque le HTML rejoint un webmail HTTPS.
+    if (!/^https:\/\//i.test(value)) return "incomplete";
     return null;
   }
   function url(value, empty = false) {

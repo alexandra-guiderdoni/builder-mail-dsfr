@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- PDG-LARGE-FILE-JUSTIFICATION: page autonome générée ; parseur, moteur et ressources incorporés depuis les sources séparées. -->
-<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none';script-src 'sha256-BPmYAIMgeBxyr5Lox8qn4mB0+jyurtM8VA9781A+V3o=';style-src 'unsafe-inline';img-src data: blob:;frame-src blob:;base-uri 'none';form-action 'none';connect-src 'none';worker-src 'none'"><title>Collecte SNUM · Convertisseur de courriels</title><style>:root { color-scheme:light; font:100%/1.5 Arial,Helvetica,sans-serif; color:#161616; background:#f6f6f6; }
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none';script-src 'sha256-dNEivMSPFAGN2dQI4e6i6QLkZnBufKFTGrvBxzIgQgQ=';style-src 'unsafe-inline';img-src data: blob:;frame-src blob:;base-uri 'none';form-action 'none';connect-src 'none';worker-src 'none'"><title>Collecte SNUM · Convertisseur de courriels</title><style>:root { color-scheme:light; font:100%/1.5 Arial,Helvetica,sans-serif; color:#161616; background:#f6f6f6; }
 * { box-sizing:border-box; } body { margin:0; } button,input,select,textarea { font:inherit; }
 header { display:flex; justify-content:space-between; gap:24px; background:#fff; border-top:6px solid #000091; border-bottom:1px solid #ddd; padding:24px 3vw; }
 h1 { margin:0 0 8px; color:#000091; font-size:1.9rem; line-height:1.25; } h2 { font-size:1.25rem; margin:0 0 18px; } h3 { font-size:1.15rem; margin:0 0 8px; }
@@ -91,6 +91,8 @@ window.MailBuilder.catalog = {"id":"6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278
     let parsed; try { parsed = new URL(value); } catch { return "incomplete"; }
     if (parsed.protocol !== "https:") return "protocol";
     if (parsed.username || parsed.password) return "credentials";
+    // Une autorité explicite conserve la destination lorsque le HTML rejoint un webmail HTTPS.
+    if (!/^https:\/\//i.test(value)) return "incomplete";
     return null;
   }
   function url(value, empty = false) {
@@ -742,8 +744,7 @@ window.MailBuilder.catalog = {"id":"6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278
     if (!navigator.clipboard?.write || !window.ClipboardItem) throw new Error("La copie enrichie est indisponible ici. Téléchargez le mail HTML pour sa reprise sur votre poste.");
     // Le poids affiché est celui du HTML remis au presse-papiers ; une annonce de copie précédente ne survit pas à un échec.
     const html = A.Render.clipboardHtml(A.doc()), result = A.Render.weight(html);
-    // Le convertisseur SNUM utilise un A.State réduit sans jeton d’annonce : le ticket vaut undefined, ce qui laisse
-     // A.notice écrire sans contrôle (comportement d’avant #122, suffisant pour ce flux à un seul écrivain).
+    // Le builder et SNUM exposent un jeton pour préserver un retour plus récent pendant la copie.
     clearTimeout(weightTimer); showWeight(result); A.notice(""); const ticket = A.State.noticeTicket?.();
     // Avertissements confirmables du contrôle avant copie (#36), absents du convertisseur SNUM.
     const warnings = A.Checks?.warnings(A.doc(), result);
@@ -760,13 +761,14 @@ window.MailBuilder.catalog = {"id":"6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278
 (() => {
   "use strict";
   const A = window.MailBuilder, get = id => document.getElementById(id);
-  let current, dirty = true, previewURL;
+  let current, dirty = true, previewURL, noticeTicket = 0;
   A.doc = () => current;
   const input = get("snum-input");
-  A.error = (message, detail) => {
+  const showError = (message, detail) => {
     get("error-text").textContent = message || ""; get("error-detail-text").textContent = detail || "";
     get("error-detail").hidden = !detail; get("error-detail").open = false; get("error").hidden = !message;
   };
+  A.error = (message, detail) => { showError(message, detail); noticeTicket++; };
   const clearFieldError = () => { input.removeAttribute("aria-invalid"); input.removeAttribute("aria-describedby"); };
   const whole = "Le texte collé n’est pas un paquet de Collecte complet. Copiez le bloc entier depuis la Collecte, puis collez-le ici.";
   const plainRules = [
@@ -778,10 +780,22 @@ window.MailBuilder.catalog = {"id":"6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278
   ];
   const explain = message => { for (const [pattern, say] of plainRules) { const m = message.match(pattern); if (m) return {text: say(m), detail: message}; } return {text: message}; };
   const fieldError = cause => { const {text, detail} = explain(cause.message); A.error(text, detail); input.setAttribute("aria-invalid", "true"); input.setAttribute("aria-describedby", "error"); input.focus(); };
-  A.notice = message => { get("notice").textContent = message; };
-  A.State = Object.freeze({guard() { if (!current || dirty) throw new Error("Convertissez la collecte actuelle avant d’exporter."); }});
+  A.notice = (message, since) => {
+    if (since !== undefined && since !== noticeTicket) return;
+    // Seule une fin de copie encore courante retire l’erreur de sa tentative précédente.
+    if (since !== undefined && message) showError("");
+    get("notice").textContent = message; noticeTicket++;
+  };
+  A.State = Object.freeze({guard() { if (!current || dirty) throw new Error("Convertissez la collecte actuelle avant d’exporter."); }, noticeTicket: () => noticeTicket});
   const buttons = () => { for (const id of ["export-json", "export-html", "copy"]) get(id).disabled = !current || dirty; };
-  const attempt = async action => { try { await action(); } catch (cause) { A.error(cause.linkIssue ? `${cause.message} Exportez le JSON puis corrigez cet intitulé dans le builder.` : cause.message); } };
+  const reportError = cause => A.error(cause.linkIssue ? `${cause.message} Exportez le JSON puis corrigez cet intitulé dans le builder.` : cause.message);
+  const attempt = async action => {
+    let pending;
+    try { pending = action(); } catch (cause) { reportError(cause); return; }
+    // Files.copy ouvre son ticket avant son premier await ; une saisie ou erreur suivante l’invalide.
+    const ticket = noticeTicket;
+    try { await pending; } catch (cause) { if (ticket === noticeTicket) reportError(cause); }
+  };
   input.addEventListener("input", () => { dirty = true; buttons(); A.error(""); clearFieldError(); A.notice(current ? "Collecte modifiée : reconvertissez avant d’exporter. L’aperçu précédent est conservé." : ""); A.Files.staleWeight("Poids du courriel à copier : calculé après la conversion."); });
   get("convert").addEventListener("click", () => attempt(() => {
     clearFieldError(); let result;

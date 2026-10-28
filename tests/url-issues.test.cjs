@@ -24,3 +24,22 @@ test('le lien source est facultatif et les pieds de page acceptent mailto', () =
   assert.notEqual(M.checkUrl('mailto:service@example.invalid?bcc=x@example.invalid', {footer: true}), '');
   assert.equal(M.checkUrl('mailto:service@example.invalid'), m.protocol);
 });
+
+// #163 : les formes sans autorité explicite changent de destination selon la base.
+test('les URL HTTPS abrégées sont refusées à toutes les entrées du modèle', () => {
+  for (const value of ['https:exemple.invalid/page', 'https:/exemple.invalid/page', 'HTTPS:exemple.invalid/page']) {
+    assert.equal(M.checkUrl(value), m.incomplete, value);
+    assert.equal(M.checkUrl(value, {optional: true}), m.incomplete, value);
+    assert.equal(M.checkUrl(value, {footer: true}), m.incomplete, value);
+    const doc = M.create('Lien abrégé', [40]);
+    const field = M.component(doc.blocks[0].component).fields.find(f => f.type === 'url');
+    doc.blocks[0].values[field.key] = value;
+    assert.throws(() => M.document(doc), /commençant par https:\/\//);
+    doc.blocks[0] = M.createBlock(19); doc.blocks[0].source = value;
+    assert.throws(() => M.document(doc), /commençant par https:\/\//);
+  }
+  for (const value of ['https://exemple.invalid/page', 'HTTPS://exemple.invalid/page', 'https://exemple.invalid/é?q=a&b=c#partie']) {
+    assert.equal(M.checkUrl(value), '');
+    assert.equal(new URL(value).href, new URL(value, 'https://webmail.invalid/mail/message').href);
+  }
+});

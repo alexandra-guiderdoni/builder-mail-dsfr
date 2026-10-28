@@ -4,7 +4,7 @@
   const A = window.MailBuilder; let opening;
   // Chaque enregistrement nomme la version de l’application qui l’a écrit.
   const version = document.querySelector('meta[name="application-version"]')?.content || "";
-  // Chaque refus nomme son cas : stockage absent, inaccessible, saturé ou en conflit.
+  // Chaque refus nomme son cas, dont une disparition distincte d’un jeton concurrent.
   const failure = (storage, message) => Object.assign(new Error(message), {storage});
   function database() {
     if (!opening) {
@@ -41,9 +41,9 @@
     const snapshot = A.Model.copy(A.Model.library(value)), db = await database();
     return new Promise((resolve, reject) => {
       const tx = db.transaction("library", "readwrite"), store = tx.objectStore("library"), previous = store.get("current");
-      const record = {token: crypto.randomUUID(), library: snapshot, app: version}; let conflict = false, refusal;
+      const record = {token: crypto.randomUUID(), library: snapshot, app: version}; let conflict, refusal;
       previous.onsuccess = () => {
-        if ((previous.result?.token ?? null) !== expectedToken) { conflict = true; tx.abort(); return; }
+        if ((previous.result?.token ?? null) !== expectedToken) { conflict = previous.result ? "conflit" : "réinitialisé"; tx.abort(); return; }
         try { if (previous.result) store.put(previous.result, "previous"); store.put(record, "current"); }
         catch (cause) { refusal = cause; tx.abort(); }
       };
@@ -51,7 +51,7 @@
       // Le quota peut être refusé par l’écriture, par la requête ou à la validation de la transaction.
       tx.onerror = tx.onabort = event => {
         const name = (refusal || tx.error || event?.target?.error)?.name;
-        reject(conflict ? failure("conflit", "Une autre fenêtre a modifié la bibliothèque : vos dernières modifications ne sont pas enregistrées ici.")
+        reject(conflict ? failure(conflict, conflict === "conflit" ? "Une autre fenêtre a modifié la bibliothèque : vos dernières modifications ne sont pas enregistrées ici." : "La bibliothèque enregistrée a disparu du stockage : vos dernières modifications restent en mémoire seulement.")
           : name === "QuotaExceededError" ? failure("saturé", "Espace de stockage saturé : vos dernières modifications ne sont pas enregistrées.")
           : failure("inaccessible", "Bibliothèque locale inaccessible : vos dernières modifications ne sont pas enregistrées."));
       };

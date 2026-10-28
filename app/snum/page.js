@@ -1,13 +1,14 @@
 (() => {
   "use strict";
   const A = window.MailBuilder, get = id => document.getElementById(id);
-  let current, dirty = true, previewURL;
+  let current, dirty = true, previewURL, noticeTicket = 0;
   A.doc = () => current;
   const input = get("snum-input");
-  A.error = (message, detail) => {
+  const showError = (message, detail) => {
     get("error-text").textContent = message || ""; get("error-detail-text").textContent = detail || "";
     get("error-detail").hidden = !detail; get("error-detail").open = false; get("error").hidden = !message;
   };
+  A.error = (message, detail) => { showError(message, detail); noticeTicket++; };
   const clearFieldError = () => { input.removeAttribute("aria-invalid"); input.removeAttribute("aria-describedby"); };
   const whole = "Le texte collé n’est pas un paquet de Collecte complet. Copiez le bloc entier depuis la Collecte, puis collez-le ici.";
   const plainRules = [
@@ -19,10 +20,22 @@
   ];
   const explain = message => { for (const [pattern, say] of plainRules) { const m = message.match(pattern); if (m) return {text: say(m), detail: message}; } return {text: message}; };
   const fieldError = cause => { const {text, detail} = explain(cause.message); A.error(text, detail); input.setAttribute("aria-invalid", "true"); input.setAttribute("aria-describedby", "error"); input.focus(); };
-  A.notice = message => { get("notice").textContent = message; };
-  A.State = Object.freeze({guard() { if (!current || dirty) throw new Error("Convertissez la collecte actuelle avant d’exporter."); }});
+  A.notice = (message, since) => {
+    if (since !== undefined && since !== noticeTicket) return;
+    // Seule une fin de copie encore courante retire l’erreur de sa tentative précédente.
+    if (since !== undefined && message) showError("");
+    get("notice").textContent = message; noticeTicket++;
+  };
+  A.State = Object.freeze({guard() { if (!current || dirty) throw new Error("Convertissez la collecte actuelle avant d’exporter."); }, noticeTicket: () => noticeTicket});
   const buttons = () => { for (const id of ["export-json", "export-html", "copy"]) get(id).disabled = !current || dirty; };
-  const attempt = async action => { try { await action(); } catch (cause) { A.error(cause.linkIssue ? `${cause.message} Exportez le JSON puis corrigez cet intitulé dans le builder.` : cause.message); } };
+  const reportError = cause => A.error(cause.linkIssue ? `${cause.message} Exportez le JSON puis corrigez cet intitulé dans le builder.` : cause.message);
+  const attempt = async action => {
+    let pending;
+    try { pending = action(); } catch (cause) { reportError(cause); return; }
+    // Files.copy ouvre son ticket avant son premier await ; une saisie ou erreur suivante l’invalide.
+    const ticket = noticeTicket;
+    try { await pending; } catch (cause) { if (ticket === noticeTicket) reportError(cause); }
+  };
   input.addEventListener("input", () => { dirty = true; buttons(); A.error(""); clearFieldError(); A.notice(current ? "Collecte modifiée : reconvertissez avant d’exporter. L’aperçu précédent est conservé." : ""); A.Files.staleWeight("Poids du courriel à copier : calculé après la conversion."); });
   get("convert").addEventListener("click", () => attempt(() => {
     clearFieldError(); let result;

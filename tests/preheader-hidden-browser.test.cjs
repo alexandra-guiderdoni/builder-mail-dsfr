@@ -60,5 +60,18 @@ test('plusieurs pré-en-têtes : avertissement visible dans l’éditeur, un seu
     const copied = await page.evaluate(async () => { const [item] = await navigator.clipboard.read({unsanitized: ['text/html']}); return {html: await (await item.getType('text/html')).text(), plain: await (await item.getType('text/plain')).text()}; });
     assert(copied.html.includes('Premier pré-en-tête') && !copied.html.includes('Second pré-en-tête'));
     assert(copied.html.includes('mso-hide:all') && copied.plain.includes('Premier pré-en-tête') && !copied.plain.includes('Second pré-en-tête'));
+    assert.equal(await page.locator('#clipboard-help').isVisible(), true);
+    assert.match(await page.locator('#clipboard-help').textContent(), /Chromium.*pré-en-tête.*images masquées/);
+    const ordinary = await page.evaluate(async () => { const [item] = await navigator.clipboard.read(); return {html: await (await item.getType('text/html')).text(), plain: await (await item.getType('text/plain')).text()}; });
+    assert.equal(ordinary.plain, copied.plain, 'le texte brut et le HTML assaini sont des sorties distinctes');
+    assert.equal(ordinary.html.includes('Premier pré-en-tête'), false, 'relecture Chromium assainie : pré-en-tête retiré');
+    assert.equal(ordinary.html.includes('mso-hide:all'), false, 'ne pas confondre la relecture assainie avec unsanitized');
+    await page.evaluate(() => { const probe = document.createElement('div'); probe.id = 'clipboard-paste-probe'; probe.contentEditable = 'true'; document.body.append(probe); });
+    await page.locator('#clipboard-paste-probe').focus(); await page.keyboard.press('ControlOrMeta+V');
+    await page.waitForFunction(() => document.getElementById('clipboard-paste-probe').textContent.trim().length > 0);
+    const pasted = await page.locator('#clipboard-paste-probe').innerHTML();
+    assert.equal(pasted.includes('Premier pré-en-tête'), false, 'le vrai collage ne réintroduit pas le pré-en-tête supprimé');
+    assert.match(pasted, /<table/);
+
   } finally { await browser.close(); }
 });

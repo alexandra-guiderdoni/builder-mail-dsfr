@@ -76,8 +76,7 @@
     if (!navigator.clipboard?.write || !window.ClipboardItem) throw new Error("La copie enrichie est indisponible ici. Téléchargez le mail HTML pour sa reprise sur votre poste.");
     // Le poids affiché est celui du HTML remis au presse-papiers ; une annonce de copie précédente ne survit pas à un échec.
     const html = A.Render.clipboardHtml(A.doc()), result = A.Render.weight(html);
-    // Le convertisseur SNUM utilise un A.State réduit sans jeton d’annonce : le ticket vaut undefined, ce qui laisse
-     // A.notice écrire sans contrôle (comportement d’avant #122, suffisant pour ce flux à un seul écrivain).
+    // Le builder et SNUM exposent un jeton pour préserver un retour plus récent pendant la copie.
     clearTimeout(weightTimer); showWeight(result); A.notice(""); const ticket = A.State.noticeTicket?.();
     // Avertissements confirmables du contrôle avant copie (#36), absents du convertisseur SNUM.
     const warnings = A.Checks?.warnings(A.doc(), result);
