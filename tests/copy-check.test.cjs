@@ -8,7 +8,7 @@ const {execFileSync} = require('node:child_process');
 // #36 : contrôle avant copie. Blocages : composition vide et refus existants. Avertissements : liste fermée de six règles.
 global.window = global;
 global.MailBuilder = {catalog: JSON.parse(execFileSync('python3', ['-c', 'import json;from scripts.catalogue import compile_catalogue;print(json.dumps(compile_catalogue()))'], {encoding: 'utf8'}))};
-for (const name of ['model.js', 'render.js', 'checks.js']) vm.runInThisContext(fs.readFileSync('app/source/' + name, 'utf8'), {filename: name});
+for (const name of ['model.js', 'render.js', 'files.js', 'checks.js']) vm.runInThisContext(fs.readFileSync('app/source/' + name, 'utf8'), {filename: name});
 const {Model: M, Render: R, Checks: C} = MailBuilder;
 const RULES = ['demo-domain', 'demo-text', 'weight', 'label-domain', 'bidi', 'mixed-script'];
 const index = id => MailBuilder.catalog.components.findIndex(c => c.id === id);
@@ -30,7 +30,7 @@ test('la liste des règles est fermée et chaque avertissement désigne un bloc 
     assert.ok(RULES.includes(warning.rule), warning.rule);
     assert.ok(doc.blocks.some(b => b.id === warning.block), 'bloc existant');
     assert.match(warning.field, /^(field-[\w-]+|article-source(-label)?)$/);
-    assert.match(warning.message, /^Bloc \d+ « .+ » : |^Courriel de /);
+    assert.match(warning.message, /^Bloc \d+ « .+ » : |^HTML préparé pour /);
   }
 });
 
@@ -94,15 +94,17 @@ test('(2 bis) adresse de lien du catalogue restée inchangée', () => {
   assert.deepEqual(C.warnings(subscription, ok).map(w => [w.rule, w.field]), [['demo-domain', 'field-f1']]);
 });
 
-test('(3) poids au-delà de 90 Kio, vers le bloc le plus lourd', () => {
+test('(3) poids au-delà de 90 Kio, sans accuser une image par défaut', () => {
   const doc = footer('https://www.exemple-info.gouv.fr/');
   const heavy = M.create('Lourd', [index('mail-31')]).blocks[0];
   Object.assign(heavy.values, {f2: 'Avant-titre rédigé', f3: 'https://www.exemple-info.gouv.fr/a', f4: 'Titre rédigé', f5: 'Détail rédigé', f6: 'Fin rédigée', f1: 'Alternative rédigée'});
   doc.blocks.push(heavy);
   assert.deepEqual(rules(doc, {bytes: 92159, level: 'ok'}), []);
   const warnings = C.warnings(doc, {bytes: 92160, level: 'notice'});
-  assert.deepEqual(warnings.map(w => [w.rule, w.block]), [['weight', heavy.id]]);
-  assert.match(warnings[0].message, /^Courriel de 90,0 Kio.*repère prudent de 90 Kio.*bloc 2/);
+  assert.deepEqual(warnings.map(w => w.rule), ['weight']);
+  assert.ok(doc.blocks.some(b => b.id === warnings[0].block));
+  assert.notEqual(M.component(doc.blocks.find(b => b.id === warnings[0].block).component).fields.find(f => 'field-' + f.key === warnings[0].field).type, 'image');
+  assert.match(warnings[0].message, /^HTML préparé pour la copie : .*90,0 Kio.*repère local 90 Kio/);
   assert.deepEqual(rules(doc, {bytes: 104448, level: 'alert'}), ['weight']);
 });
 

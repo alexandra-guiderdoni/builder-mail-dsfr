@@ -228,5 +228,30 @@
     const bytes = new TextEncoder().encode(markup).byteLength;
     return {bytes, level: bytes >= WEIGHT_ALERT ? "alert" : bytes >= WEIGHT_NOTICE ? "notice" : "ok"};
   }
-  A.Render = Object.freeze({escape, block, body, html, plain, exportHtml, clipboardHtml, weight, linkIssues, assertOutput, warnings});
+  // Une seule chaîne rendue : catégories disjointes, sans analyser ni rendre une seconde fois le document.
+  // Les données comptent l’URL data: complète ; la catégorie restante est obtenue par différence exacte.
+  function weightDetails(markup, value) {
+    const result = weight(markup), bytes = text => new TextEncoder().encode(text).byteLength;
+    const styles = [...markup.matchAll(/<style\b[^>]*>([\s\S]*?)<\/style>/gi)].reduce((sum, match) => sum + bytes(match[1]), 0);
+    const images = [];
+    for (const match of markup.matchAll(/<img\b[^>]*>/gi)) {
+      const src = /\bsrc="(data:image\/[^"\s]+)"/i.exec(match[0]);
+      if (src) images.push(src[1]);
+    }
+    const imageBytes = images.reduce((sum, src) => sum + bytes(src), 0);
+    const parts = {styles, images: imageBytes, other: result.bytes - styles - imageBytes};
+    const dominant = imageBytes > Math.max(parts.other, styles) ? "images" : styles > parts.other ? "styles" : "other";
+    // Le renvoi nomme ce qu’il mesure : image incorporée la plus lourde ou champ texte le plus long,
+    // jamais « bloc le plus lourd » déduit d’un autre rendu. Les logos ne sont jamais proposés au retrait.
+    let target = null;
+    for (const block of value ? used(value) : []) for (const field of A.Model.component(block.component).fields) {
+      const text = block.values[field.key];
+      if (dominant === "images" ? field.type !== "image" || !images.includes(text) : dominant !== "other" || field.type !== "text") continue;
+      const size = bytes(text);
+      if (!target || size > target.bytes) target = {block: block.id, field: `field-${field.key}`, label: field.label, bytes: size};
+    }
+    return {...result, parts, dominant, occurrences: images.length, distinct: new Set(images).size,
+      variants: /class="[^"]*\bhide-(?:black|white)\b/.test(markup), target};
+  }
+  A.Render = Object.freeze({escape, block, body, html, plain, exportHtml, clipboardHtml, weight, weightDetails, linkIssues, assertOutput, warnings});
 })();

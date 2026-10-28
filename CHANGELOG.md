@@ -1,5 +1,10 @@
 # Historique des livraisons
 
+## Non publié — Comprendre le poids du courriel (#191)
+
+- La synthèse et le détail nomment le HTML préparé pour la copie ; la confirmation de téléchargement nomme sa propre sortie. Répartition exacte entre styles de tête, données d’images et reste du HTML, avec occurrences, fichiers distincts et variantes de logos.
+- Le conseil dépend de la catégorie dominante et conserve les logos de charte ; le renvoi n’accuse plus le premier champ image par défaut. Les repères locaux restent 90 et 102 Kio, sans blocage ni changement des copies, exports, images ou données. Le poids local est distingué du HTML réellement reçu, qui reste non mesuré.
+
 ## Non publié — Récupération des anciennes URL HTTPS abrégées (#193)
 
 - Une bibliothèque enregistrée avant le refus des URL `https:` sans `//` dispose d’un écran de récupération : inventaire du contenu, export brut de l’original et correction explicite des destinations, sans écriture au démarrage ni normalisation automatique. La composition de départ ne masque plus les données retrouvées.

@@ -121,7 +121,7 @@
     "export-stored": async () => { const ticket = A.State.noticeTicket(); const record = await A.Storage.load(); if (!record) throw new Error("Aucune donnée enregistrée."); A.Files.json(record, "recuperation.stockage.json"); A.notice("Copie brute du stockage proposée au téléchargement pour récupération.", ticket); },
     "export-mail": async () => {
       A.State.guard(); const html = A.Render.exportHtml(A.doc());
-      if (!(await A.Checks.confirm("export", A.Checks.warnings(A.doc(), A.Render.weight(html))))) return;
+      if (!(await A.Checks.confirm("export", A.Checks.warnings(A.doc(), {...A.Render.weightDetails(html, A.doc()), action: "export"})))) return;
       A.Files.download(html, "text/html;charset=utf-8", A.Files.exportName(A.doc().name, "html")); A.notice(["Courriel proposé au téléchargement.", ...A.Render.warnings(A.doc())].join(" "));
     },
     "copy": A.Files.copy,

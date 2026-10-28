@@ -34,12 +34,12 @@ test('le texte affiché donne les octets, des Kio jamais arrondis vers le seuil,
   const group = value => value.toLocaleString('fr-FR');
   const below = text(NOTICE - 1), notice = text(NOTICE), high = text(ALERT - 1), alert = text(ALERT);
   assert.ok(below.includes('89,9 Kio') && below.includes(group(NOTICE - 1) + ' octets'), below);
-  assert.doesNotMatch(below, /Attention|Alerte|Gmail/);
+  assert.doesNotMatch(below, /Attention|Alerte/);
   assert.ok(notice.includes('90,0 Kio') && notice.includes(group(NOTICE) + ' octets'), notice);
-  assert.match(notice, /^Poids du courriel à copier : .*images comprises\. Attention : .*102 Kio.*Gmail/);
+  assert.match(notice, /^HTML préparé pour la copie : .*images comprises\. Attention : .*90 Kio.*Gmail/);
   assert.ok(high.includes('101,9 Kio') && /Attention/.test(high) && !/Alerte/.test(high), high);
   assert.ok(alert.includes('102,0 Kio') && /Alerte/.test(alert) && !/Attention/.test(alert), alert);
-  for (const warning of [notice, high, alert]) assert.match(warning, /Repères prudents, sans garantie sur la taille reçue ni sur la troncature\.$/);
+  for (const warning of [notice, high, alert]) assert.match(warning, /Repères prudents, sans garantie sur la taille reçue ni sur la troncature\./);
   assert.doesNotMatch(below + notice + alert, /bloqu|impossible|refus/i, 'aucun repère ne bloque la copie');
 });
 

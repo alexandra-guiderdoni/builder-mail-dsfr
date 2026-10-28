@@ -56,7 +56,6 @@
   }
   const bare = host => host.replace(/^www\./, "");
   const sameSite = (real, shown) => bare(real) === bare(shown) || bare(real).endsWith("." + bare(shown));
-  const kio = bytes => (Math.floor(bytes * 10 / 1024) / 10).toLocaleString("fr-FR", {minimumFractionDigits: 1, maximumFractionDigits: 1});
   // Liens d’un bloc, avec les champs de l’éditeur à atteindre pour l’adresse et l’intitulé.
   function links(block) {
     const definition = M.component(block.component);
@@ -88,10 +87,10 @@
       for (const link of items) { const host = hostOf(link.url); if (host && mixedScripts(host)) add("mixed-script", link.urlField, `le domaine ${decodeHost(host)} mélange plusieurs alphabets.`); }
     });
     if (weight && weight.level !== "ok" && value.blocks.length) {
-      // Le bloc le plus lourd est celui dont le rendu pèse le plus, images comprises.
-      const sizes = value.blocks.map(block => new TextEncoder().encode(A.Render.block(block)).byteLength), heaviest = sizes.indexOf(Math.max(...sizes)), block = value.blocks[heaviest];
-      const first = M.component(block.component).fields.find(f => f.type === "image") || M.component(block.component).fields[0];
-      found.push({rule: "weight", block: block.id, field: first ? `field-${first.key}` : "", message: `Courriel de ${kio(weight.bytes)} Kio, au-delà du repère prudent de 90 Kio ; Gmail peut tronquer un message vers 102 Kio, sans garantie. Le bloc ${heaviest + 1} « ${M.component(block.component).label} » est le plus lourd.`});
+      const target = weight.target, block = value.blocks.find(b => b.id === target?.block) || value.blocks[0];
+      const first = M.component(block.component).fields.find(f => f.type === "text") || M.component(block.component).fields[0];
+      const destination = target ? ` ${weight.dominant === "images" ? "Image incorporée la plus lourde" : "Champ texte le plus long"} : « ${target.label} », bloc ${value.blocks.indexOf(block) + 1} « ${M.component(block.component).label} ».` : "";
+      found.push({rule: "weight", block: block.id, field: target?.field || (first ? `field-${first.key}` : ""), message: `${A.Files.weightText(weight, weight.action)}${destination}`});
     }
     return found.sort((a, b) => value.blocks.findIndex(x => x.id === a.block) - value.blocks.findIndex(x => x.id === b.block) || RULES.indexOf(a.rule) - RULES.indexOf(b.rule));
   }

@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- PDG-LARGE-FILE-JUSTIFICATION: page autonome générée ; parseur, moteur et ressources incorporés depuis les sources séparées. -->
-<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none';script-src 'sha256-dNEivMSPFAGN2dQI4e6i6QLkZnBufKFTGrvBxzIgQgQ=';style-src 'unsafe-inline';img-src data: blob:;frame-src blob:;base-uri 'none';form-action 'none';connect-src 'none';worker-src 'none'"><title>Collecte SNUM · Convertisseur de courriels</title><style>:root { color-scheme:light; font:100%/1.5 Arial,Helvetica,sans-serif; color:#161616; background:#f6f6f6; }
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none';script-src 'sha256-eAMcrSVxXGtRAY/m9LW65o35edvAunpYON5dWgmd6KI=';style-src 'unsafe-inline';img-src data: blob:;frame-src blob:;base-uri 'none';form-action 'none';connect-src 'none';worker-src 'none'"><title>Collecte SNUM · Convertisseur de courriels</title><style>:root { color-scheme:light; font:100%/1.5 Arial,Helvetica,sans-serif; color:#161616; background:#f6f6f6; }
 * { box-sizing:border-box; } body { margin:0; } button,input,select,textarea { font:inherit; }
 header { display:flex; justify-content:space-between; gap:24px; background:#fff; border-top:6px solid #000091; border-bottom:1px solid #ddd; padding:24px 3vw; }
 h1 { margin:0 0 8px; color:#000091; font-size:1.9rem; line-height:1.25; } h2 { font-size:1.25rem; margin:0 0 18px; } h3 { font-size:1.15rem; margin:0 0 8px; }
@@ -474,7 +474,32 @@ window.MailBuilder.catalog = {"id":"6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278
     const bytes = new TextEncoder().encode(markup).byteLength;
     return {bytes, level: bytes >= WEIGHT_ALERT ? "alert" : bytes >= WEIGHT_NOTICE ? "notice" : "ok"};
   }
-  A.Render = Object.freeze({escape, block, body, html, plain, exportHtml, clipboardHtml, weight, linkIssues, assertOutput, warnings});
+  // Une seule chaîne rendue : catégories disjointes, sans analyser ni rendre une seconde fois le document.
+  // Les données comptent l’URL data: complète ; la catégorie restante est obtenue par différence exacte.
+  function weightDetails(markup, value) {
+    const result = weight(markup), bytes = text => new TextEncoder().encode(text).byteLength;
+    const styles = [...markup.matchAll(/<style\b[^>]*>([\s\S]*?)<\/style>/gi)].reduce((sum, match) => sum + bytes(match[1]), 0);
+    const images = [];
+    for (const match of markup.matchAll(/<img\b[^>]*>/gi)) {
+      const src = /\bsrc="(data:image\/[^"\s]+)"/i.exec(match[0]);
+      if (src) images.push(src[1]);
+    }
+    const imageBytes = images.reduce((sum, src) => sum + bytes(src), 0);
+    const parts = {styles, images: imageBytes, other: result.bytes - styles - imageBytes};
+    const dominant = imageBytes > Math.max(parts.other, styles) ? "images" : styles > parts.other ? "styles" : "other";
+    // Le renvoi nomme ce qu’il mesure : image incorporée la plus lourde ou champ texte le plus long,
+    // jamais « bloc le plus lourd » déduit d’un autre rendu. Les logos ne sont jamais proposés au retrait.
+    let target = null;
+    for (const block of value ? used(value) : []) for (const field of A.Model.component(block.component).fields) {
+      const text = block.values[field.key];
+      if (dominant === "images" ? field.type !== "image" || !images.includes(text) : dominant !== "other" || field.type !== "text") continue;
+      const size = bytes(text);
+      if (!target || size > target.bytes) target = {block: block.id, field: `field-${field.key}`, label: field.label, bytes: size};
+    }
+    return {...result, parts, dominant, occurrences: images.length, distinct: new Set(images).size,
+      variants: /class="[^"]*\bhide-(?:black|white)\b/.test(markup), target};
+  }
+  A.Render = Object.freeze({escape, block, body, html, plain, exportHtml, clipboardHtml, weight, weightDetails, linkIssues, assertOutput, warnings});
 })();
 
 /* Copie locale V519 : contrôle du jour ajouté pour #24 ; projet SNUM source intact. */
@@ -698,16 +723,27 @@ window.MailBuilder.catalog = {"id":"6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278
     await MailImages.validate(entries);
   }
   // Poids du courriel à copier (#35) : jamais un blocage, seulement des repères prudents.
-  const WARNINGS = Object.freeze({
-    notice: "Attention : ce courriel approche du repère de 102 Kio au-delà duquel Gmail peut tronquer un message.",
-    alert: "Alerte : ce courriel atteint le repère de 102 Kio ; Gmail risque de le tronquer. Allégez les images ou retirez des blocs."
-  });
   const CAUTION = "Repères prudents, sans garantie sur la taille reçue ni sur la troncature.";
-  // Les Kio sont tronqués au dixième : 92 159 octets s’affichent 89,9 Kio, jamais 90,0 Kio sans avertissement.
+  // Les Kio sont tronqués au dixième : les seuils historiques restent 92 160 et 104 448 octets.
   const kio = bytes => (Math.floor(bytes * 10 / 1024) / 10).toLocaleString("fr-FR", {minimumFractionDigits: 1, maximumFractionDigits: 1});
-  function weightText(result) {
-    const base = `Poids du courriel à copier : ${kio(result.bytes)} Kio (${result.bytes.toLocaleString("fr-FR")} octets), images comprises.`;
-    return result.level === "ok" ? base : `${base} ${WARNINGS[result.level]} ${CAUTION}`;
+  const count = bytes => bytes.toLocaleString("fr-FR");
+  function weightAdvice(result) {
+    if (result.dominant === "images") return "Les images incorporées dominent : allégez les illustrations si possible, en conservant les logos de charte.";
+    if (result.dominant === "styles") return "Les styles de tête dominent ; retirer un logo n’est pas le conseil adapté.";
+    return "Les textes, le balisage et les styles inline dominent : revoyez la longueur des textes ou le nombre de blocs.";
+  }
+  function weightRisk(result) {
+    return result.level === "ok" ? "" : `${result.level === "alert" ? "Alerte" : "Attention"} : repère local ${result.level === "alert" ? "102" : "90"} Kio atteint. Gmail peut n’afficher qu’une partie d’un message volumineux ; l’envoi reste possible. ${CAUTION}`;
+  }
+  function weightSummary(result, action = "copy") {
+    const base = `HTML préparé pour ${action === "export" ? "le téléchargement" : "la copie"} : ${kio(result.bytes)} Kio, images comprises.`;
+    return result.level === "ok" ? base : `${base} ${weightRisk(result)}`;
+  }
+  function weightText(result, action = "copy") {
+    const base = `HTML préparé pour ${action === "export" ? "le téléchargement" : "la copie"} : ${count(result.bytes)} octets (${kio(result.bytes)} Kio), images comprises.`;
+    const p = result.parts, share = bytes => `${(100 * bytes / (result.bytes || 1)).toLocaleString("fr-FR", {maximumFractionDigits: 1})} %`;
+    const detail = p ? ` Répartition : styles de tête ${count(p.styles)} octets (${share(p.styles)}) ; données d’images incorporées ${count(p.images)} octets (${share(p.images)}, ${result.occurrences} occurrences, ${result.distinct} fichiers distincts, URL data: et Base64 compris) ; textes, balisage et styles inline ${count(p.other)} octets (${share(p.other)}).${result.variants ? " Les variantes de logos clair et sombre sont prévues par le gabarit." : ""}` : "";
+    return `${base}${detail}${result.level === "ok" ? "" : ` ${weightRisk(result)} ${weightAdvice(result)}`} Les prestataires situent la troncature Gmail vers 102 000 octets de HTML reçu ; Gmail ne publie pas de limite. La messagerie peut extraire les images et retirer les styles : le poids reçu n’est pas mesuré ici. Faites un envoi de test avant diffusion.`;
   }
   let weightTimer, weightCost = 0;
   function showWeight(result, text = weightText(result)) {
@@ -722,15 +758,14 @@ window.MailBuilder.catalog = {"id":"6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278
       summary.dataset.level = result.level;
       if (Number.isSafeInteger(result.bytes)) {
         summary.dataset.bytes = String(result.bytes);
-        const base = `Poids à copier : ${kio(result.bytes)} Kio, images comprises.`;
-        summary.textContent = result.level === "ok" ? base : `${base} ${result.level === "alert" ? "Alerte" : "Attention"} : risque de troncature dans Gmail. Repères sans garantie.`;
+        summary.textContent = weightSummary(result);
       } else { delete summary.dataset.bytes; summary.textContent = text; }
     }
   }
   function measureWeight() {
     clearTimeout(weightTimer);
     const started = performance.now();
-    try { showWeight(A.Render.weight(A.Render.clipboardHtml(A.doc()))); }
+    try { showWeight(A.Render.weightDetails(A.Render.clipboardHtml(A.doc()), A.doc())); }
     catch (cause) { showWeight({level: "unavailable"}, `Poids du courriel à copier : indisponible tant que la copie est refusée${cause.linkIssue ? " (intitulé de lien à renseigner)" : ""}.`); }
     weightCost = performance.now() - started;
   }
@@ -743,7 +778,7 @@ window.MailBuilder.catalog = {"id":"6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278
     A.Render.assertOutput(A.doc());
     if (!navigator.clipboard?.write || !window.ClipboardItem) throw new Error("La copie enrichie est indisponible ici. Téléchargez le mail HTML pour sa reprise sur votre poste.");
     // Le poids affiché est celui du HTML remis au presse-papiers ; une annonce de copie précédente ne survit pas à un échec.
-    const html = A.Render.clipboardHtml(A.doc()), result = A.Render.weight(html);
+    const html = A.Render.clipboardHtml(A.doc()), result = A.Render.weightDetails(html, A.doc());
     // Le builder et SNUM exposent un jeton pour préserver un retour plus récent pendant la copie.
     clearTimeout(weightTimer); showWeight(result); A.notice(""); const ticket = A.State.noticeTicket?.();
     // Avertissements confirmables du contrôle avant copie (#36), absents du convertisseur SNUM.
@@ -753,9 +788,9 @@ window.MailBuilder.catalog = {"id":"6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278
     // Après une modale, le document redevient accessible de façon asynchrone : laisser la région live se réexposer.
     // Le jeton d’origine reste contrôlé par A.notice ; une annonce plus récente garde la priorité pendant ce délai.
     if (warnings?.length) await new Promise(resolve => setTimeout(resolve, 250));
-    A.notice([`Courriel copié en HTML et texte. ${result.level === "ok" ? "" : `${WARNINGS[result.level]} ${CAUTION} `}Contrôlez le collage et les images dans votre messagerie.`, ...A.Render.warnings(A.doc())].join(" "), ticket);
+    A.notice([`Courriel copié en HTML et texte. ${result.level === "ok" ? "" : `${weightRisk(result)} ${weightAdvice(result)} `}Contrôlez le collage et les images dans votre messagerie.`, ...A.Render.warnings(A.doc())].join(" "), ticket);
   }
-  A.Files = Object.freeze({download, json, safeName, exportDate, exportName, image, validate, copy, weightText, measureWeight, scheduleWeight, staleWeight});
+  A.Files = Object.freeze({download, json, safeName, exportDate, exportName, image, validate, copy, weightText, weightSummary, weightAdvice, measureWeight, scheduleWeight, staleWeight});
 })();
 
 (() => {
