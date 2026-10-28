@@ -25,6 +25,13 @@ export function receiptMatches(current, attributed) {
     current?.change_count === attributed.change_count && current?.digest === attributed.digest;
 }
 
+export function attributeOwnedCapture(ownership, capture, measured) {
+  assert.equal(ownership?.qualified, true, 'Private capture is not attributed to the synthetic fixture');
+  assert.equal(capture?.captured, true, 'No private capture available');
+  assert(receiptMatches(capture, measured), 'Clipboard changed during private attribution');
+  return capture;
+}
+
 export function runCompleted(variants, signal) {
   return !signal && variants.length === 2 && variants.every(v => !v.interrupted && !v.collection_errors.length && !v.cleanup_errors.length && v.restoreVerified);
 }
@@ -126,13 +133,27 @@ async function swift(helper, args) {
   }
 }
 
+async function qualifyOwned(directory, privatePrefix) {
+  const config = {expected_html_path:path.join(directory,'expected-api.html'), expected_plain_path:path.join(directory,'expected-api.txt'),
+    observed_html_path:privatePrefix+'.html', observed_plain_path:privatePrefix+'.txt'};
+  return new Promise((resolve,reject) => {
+    const child = execFile('python3', ['-B',path.join(root,'scripts/clipboard_owned_payload.py')],
+      {encoding:'utf8',timeout:20000,maxBuffer:1024*1024}, (error,stdout) => {
+        if (error) { reject(new Error('Private synthetic ownership helper failed')); return; }
+        try { resolve(JSON.parse(stdout)); } catch { reject(new Error('Private synthetic ownership receipt invalid')); }
+      });
+    child.stdin.on('error',()=>{});
+    child.stdin.end(JSON.stringify(config)); // No captured contents in argv, stdout or error output.
+  });
+}
+
 async function frozenSources(expectedSHA, helper) {
   const head = execFileSync('git', ['rev-parse', 'HEAD'], {cwd: root, encoding: 'utf8'}).trim();
   assert.equal(head, expectedSHA, 'SHA différent de la référence autorisée');
   assert.equal(execFileSync('git', ['status', '--porcelain'], {cwd: root, encoding: 'utf8'}).trim(), '', 'Un candidat propre et commité est requis');
   const files = execFileSync('git', ['ls-files', 'app/source', 'app/snum', 'shared', 'app/distribution', 'scripts/build_app.py',
-    'scripts/recipe_firefox_clipboard.mjs', 'scripts/clipboard_recipe.swift', 'scripts/collector_receipt.cjs', 'tests/firefox-support.mjs'], {cwd: root, encoding: 'utf8'}).trim().split('\n').filter(Boolean);
-  for (const required of ['scripts/recipe_firefox_clipboard.mjs', 'scripts/clipboard_recipe.swift', 'tests/firefox-support.mjs', 'app/distribution/portable.html']) assert(files.includes(required), 'Source de recette non versionnée');
+    'scripts/recipe_firefox_clipboard.mjs', 'scripts/clipboard_recipe.swift', 'scripts/clipboard_owned_payload.py', 'scripts/collector_receipt.cjs', 'tests/firefox-support.mjs'], {cwd: root, encoding: 'utf8'}).trim().split('\n').filter(Boolean);
+  for (const required of ['scripts/recipe_firefox_clipboard.mjs', 'scripts/clipboard_recipe.swift', 'scripts/clipboard_owned_payload.py', 'tests/firefox-support.mjs', 'app/distribution/portable.html']) assert(files.includes(required), 'Source de recette non versionnée');
   const stat = await fs.lstat(helper); assert(stat.isFile() && !stat.isSymbolicLink(), 'Helper compilé explicite requis');
   const sources = Object.fromEntries(await Promise.all(files.map(async file => [file, hash(await fs.readFile(path.join(root, file)))])));
   sources[helper] = hash(await fs.readFile(helper));
@@ -227,12 +248,11 @@ async function variant(config, mode, interrupted) {
     report.systemCapture = {captured: false, reason: capture.reason || 'PRIVATE_STAGING_ONLY'};
     if (capture.captured) {
       const html = await fs.readFile(privatePrefix + '.html', 'utf8'), plain = await fs.readFile(privatePrefix + '.txt', 'utf8');
-      const publishable = publicationGuard(expected, {html, plain});
-      report.publicationGuard = {matches: publishable, method: 'Complete decoded payload equality, initial BOM/CRLF normalization only', semanticEquivalenceNotInferred: true};
-      assert(publishable, 'Private capture differs from the complete expected synthetic payload; no content published');
-      assert.equal(capture.digest, after.digest, 'Clipboard changed during observation');
-      assert.equal(capture.change_count, after.change_count, 'Clipboard changed during observation');
-      lastOwned = capture;
+      const ownership = await qualifyOwned(directory, privatePrefix);
+      report.publicationGuard = {...ownership, exactPayloadEquality:publicationGuard(expected,{html,plain}), fidelityNotInferred:true};
+      assert.equal(ownership.qualified, true, 'Private capture contains unrecognized content; no content published');
+      // Attribution permits cleanup/publication, even if the later fidelity comparison fails.
+      lastOwned = attributeOwnedCapture(ownership, capture, after);
       await fs.writeFile(path.join(directory, 'system-copy.html'), html, {flag:'wx',mode:0o600});
       await fs.writeFile(path.join(directory, 'system-copy.txt'), plain, {flag:'wx',mode:0o600});
       report.systemCapture = capture;
