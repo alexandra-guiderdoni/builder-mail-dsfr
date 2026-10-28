@@ -1,12 +1,12 @@
 # Qualification des issues #192, #190, #188, #179 et #173
 
-Candidat issu de f635da90b56d8ccaedf423f5ec7783b0d616be16. Le SHA exact de livraison et les résultats de suite finale sont consignés séparément après commit. Aucun résultat de réception Outlook/Mélissa n’est apporté.
+Candidat issu de f635da90b56d8ccaedf423f5ec7783b0d616be16. Le SHA exact de livraison et les résultats de suite finale sont consignés séparément après commit. La première suite Linux sur c75901a a terminé avec 593/600 réussites et sept échecs, conservés : montage inutile des commandes distantes inactives, cinq stubs PWA non adaptés à Model.versions et classification réseau du test de ressource non-image. Le montage a été corrigé sans changer les assertions existantes ; les doubles de test et la fixture de réseau sont explicitement adaptés. Une suite finale doit qualifier ce delta. Aucun résultat de réception Outlook/Mélissa n’est apporté.
 
 ## #192 — images HTTPS
 
 Source distante explicite sur les 24 champs de 17 composants ; données locales de repli conservées, v2 pour les références, v1 pour le tout-local. La vraie distribution 09eff89 refuse le fichier v2 sans remplacer la bibliothèque. Les tests du modèle, du schéma distribué et du navigateur vérifient ces frontières. Le contrôle réseau est limité au chargement/dimensions ; il ne prouve ni poids distant, ni MIME, ni réception. La CSP ne change que pour les images du builder ; les autres directives et les sandbox restent figés. Voir FORMAT-JSON.md et UTILISATION.md.
 
-La revue indépendante statique a relevé deux écarts UI (nom « sans image » incorrect avec URL, sélecteur incohérent après garde refusée) et l’absence d’un test de politique distribuée. Les corrections et tests dédiés ont été ajoutés. La sélection via selectOption ne prouve pas le clavier natif ; les touches n’ont pas changé le select Chromium macOS sans fenêtre. Aucun test existant n’est supprimé ou affaibli pour ce résultat.
+La revue indépendante statique a relevé deux écarts UI (nom « sans image » incorrect avec URL, sélecteur incohérent après garde refusée) et l’absence d’un test de politique distribuée. Les corrections et tests dédiés ont été ajoutés. La sélection via selectOption ne prouve pas le clavier natif ; les touches n’ont pas changé le select Chromium macOS sans fenêtre. Un contrôle représentatif du renderer commun a ensuite changé de source dans Firefox natif avec Espace/Bas/Entrée, puis est revenu au local par Espace/Début/Entrée. Les états finaux ont été relus après les événements, car la première lecture AX était trop précoce. Il ne s’agit pas d’une recette native répétée sur les 24 champs. Aucun test existant n’est supprimé ou affaibli pour ce résultat.
 
 ## #190 — garde partagé activé, qualification bornée
 
@@ -14,26 +14,32 @@ Après accord utilisateur, trois documents seulement ont été installés dans l
 
 Un témoin et trois processus Chromium jetables ont exercé succès, erreur et abandon contrôlé. Seuls les handles possédés sont fermés, les identités sont revérifiées, le témoin reste utilisable. Sans allocation, zéro fermeture. Ces essais vérifient le workflow, pas un verrou universel ni une garantie après interruption brutale. Une vraie fenêtre Safari de recette a ensuite été fermée via CloseWindow ; sa fenêtre préexistante témoin est restée intacte.
 
-## #179 — NOT_EXECUTED pour le zoom 200 %
+## #179 — 200 % natif observé ; recette complète distincte
 
-Firefox visible a été créé via le helper possédé, profil neuf et identité BiDi/processus concordante. Mesure initiale : viewport 1280×769, fenêtre 1280×854, DPR2, écran1512×982, visualViewport.scale1. Aucune de ces mesures ne prouve un pourcentage absolu.
+La première voie CUA restait NOT_EXECUTED car elle ciblait un Firefox préexistant. Après autorisation explicite de la voie AppleScript/System Events, une nouvelle instance possédée a fourni l’URL native portant son marqueur, un PID égal à celui de BiDi et une identité de naissance revérifiée. Les actions UI ont été limitées à ce processus. La référence AS mémorisée par nom était ambiguë : cette voie a été abandonnée au profit des requêtes JXA différées par PID et indices validés. Aucune saisie, commande de zoom ou fermeture n’a été envoyée par la voie AS ambiguë.
 
-L’outil UI a sélectionné un Firefox préexistant (extensions et marque-pages étrangers), même après activation du contexte possédé. Aucune commande de zoom n’y a été envoyée. L’instance créée a été fermée par son handle, session.end acquitté et sortie observée, cleanup_error nul. Pas de simulation CSS ou viewport ; pas de nouveau droit. Une voie capable de lier l’UI au processus possédé reste nécessaire. L’issue reste ouverte.
+Firefox a affiché successivement 170, 180, 190 puis **200 %** dans le libellé natif « Réinitialiser le niveau de zoom ». Le plafond initial de huit augmentations s’était révélé insuffisant ; les trois dernières ont reçu un accord utilisateur distinct. La fenêtre physique mesurée via System Events est restée 1280×854. Les métriques BiDi sont passées de viewport 1280×769 / DPR2 à 640×385 / DPR4, deux mesures identiques à 200 %. L’éditeur, le catalogue et le dialogue ont été utilisés dans cet état. Le menu Taille réelle a restauré les métriques initiales ; le zoom a été restauré avant fermeture.
 
-## #188 — qualification native partielle, INCONCLUSIVE
+Le témoin revenu à 100 % refuse l’étiquette200 %. L’oracle relatif existant reste inchangé : à 200 %, Firefox réduit aussi les dimensions JavaScript outer/screen. L’oracle exigeait leurs valeurs fixes et rejette donc cette mesure. Le reçu conserve **ce résultat non concluant**, à côté de la lecture native200 %, sans réécrire qualified/absoluteZoomVerified de l’oracle. Les assertions de reflow, absence de débordement et navigation de la recette originale sont préservées ; leur exécution complète native n’est pas revendiquée. Voir [NATIF.json](NATIF.json).
 
-VoiceOver a été réellement lancé ; une lecture native a annoncé le dialogue Renommer et le nom du champ, puis « données non valides » après soumission vide. Cela prouve le canal et l’état invalide, pas l’annonce intégrale du message d’erreur.
+## #188 — trois régions exercées, réserves de collecte explicites
 
-| Cas | Résultat |
+Le premier essai Safari a été exclu pour contamination de la collecte globale par une phrase hors cible. La voie suivante collecte dans une même opération native, avec vérification PID/naissance, fenêtre/URL, processus au premier plan **avant chaque lecture**. La collecte s’arrête dès perte de cible. Les sorties partielles et les premiers essais ne sont pas remplacés par les succès ultérieurs.
+
+| Cas | Résultat natif |
 | --- | --- |
-| Dialogue positif | Phrase native capturée, cible Safari possédée confirmée |
-| Première erreur library-dialog-error | État invalide capturé ; texte de l’erreur non confirmé |
-| Disparition/réapparition et répétition du message | Non vérifiées : pas de fenêtre de collecte valide complète |
-| Première erreur globale #error, remplacement et réapparition | Non exécutées après arrêt de la collecte |
-| Catalogue zéro résultat | Effet visuel confirmé, collecte exclue : une phrase hors cible observée |
-| Catalogue un et plusieurs résultats | Non exécutés après arrêt de la collecte |
+| Dialogue positif | Nom du champ et contenu sélectionné capturés |
+| Première erreur library-dialog-error | « Renseignez un nom pour la composition. » |
+| Répétition et réapparition du dialogue | Même phrase capturée après soumission puis réouverture ; une collecte intermédiaire interrompue reste consignée |
+| Première erreur globale #error | « Renseignez un nom pour cet élément. » |
+| Remplacement de l’erreur globale | « Choisissez un élément enregistré. » capturé avant l’arrêt de cette fenêtre pour perte de focus |
+| Effacement puis réapparition globale | Commande réelle Annuler les champs invalides exécutée ; message de nom manquant capturé à la nouvelle soumission ; la collecte lors de l’effacement avait été interrompue |
+| Répétition globale strictement identique | Non confirmée : nom du champ puis bouton capturés, texte répété non capturé dans la fenêtre bornée ; le polling ne prouve pas son absence globale |
+| Catalogue 0 / 1 / 2 résultats | « Aucun composant trouvé sur 52. », « 1 composant trouvé sur 52. », « 2 composants trouvés sur 52. » capturés après pause ; textes exacts et horodatages dans le reçu |
 
-La lecture de last phrase est globale, non exhaustive et dédupliquée. Vérifier Safari avant/après une collecte ne suffit pas à garantir le focus pendant celle-ci : une phrase d’une autre surface a été observée. La collecte est arrêtée, les données hors cible ne sont pas publiées. Aucune absence d’annonce ni non-conformité n’est déduite de cet essai. Aucun changement de politesse/live-region sans défaut reproduit. Fenêtre possédée fermée, témoin préservé, serveur fermé ; VoiceOver revenu à l’état initial arrêté. Autorisations laissées inchangées. L’issue reste ouverte.
+Le canal positif est attesté par plusieurs commandes et messages frais. Les phrases natives ne prouvent pas une écoute humaine. Le flux last phrase reste non exhaustif ; aucune conformité RGAA globale ou absence absolue n’en est déduite. La répétition identique ne permet pas à elle seule d’établir une nouvelle non-conformité ; aucun correctif spéculatif de politesse ou de live-region n’est appliqué.
+
+La session native chargeait 404b817. Les correctifs suivants concernent le montage des commandes image inactives et des harnais ; les producteurs de messages testés et les emplacements vocaux n’ont pas changé. Cette portée est conservée dans le reçu, sans déclarer qu’un parcours natif complet a tourné sur le SHA final. VoiceOver est revenu à son état initial arrêté ; autorisations inchangées, fermeture du seul navigateur créé observée.
 
 ## #173 — cause historique toujours inconnue
 

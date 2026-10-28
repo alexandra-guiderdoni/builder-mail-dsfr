@@ -27,7 +27,7 @@ async function scenario({pwa = read('pwa.js'), storage = {}, loadFails = false, 
   };
   scope.window = scope;
   scope.MailBuilder = {
-    Model: {initial: () => ({activeId: 'd', documents: [{id: 'd', blocks: [{id: 'b'}]}]}), copy: value => structuredClone(value), library: value => value},
+    Model: {initial: () => ({activeId: 'd', documents: [{id: 'd', blocks: [{id: 'b'}]}]}), copy: value => structuredClone(value), library: value => value, versions: value => value},
     UI: {refresh() {}, preview() {}},
     Storage: {load: async () => { if (loadFails) throw new Error('Lecture impossible.'); return null; }, save: async () => ({token: 't'}), ...storage}
   };

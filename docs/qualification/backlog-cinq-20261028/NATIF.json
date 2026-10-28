@@ -1,0 +1,307 @@
+{
+  "scope": "Portable Firefox native only, synthetic composition; no human listening claim",
+  "loadedBuilderCommit": "404b817051e5ec2bbccc74a9e1de036b753af040",
+  "nativeZoom": {
+    "requestedPercent": 200,
+    "nativeUiObservation": [
+      "Afficher les informations du site",
+      "200 %, Réinitialiser le niveau de zoom",
+      "bouton"
+    ],
+    "absoluteBrowserUiPercentObserved": 200,
+    "physicalWindowSize": [
+      1280,
+      854
+    ],
+    "reference": {
+      "width": 1280,
+      "height": 769,
+      "outerWidth": 1280,
+      "outerHeight": 854,
+      "dpr": 2,
+      "screenWidth": 1512,
+      "screenHeight": 982,
+      "visualScale": 1
+    },
+    "measured200": {
+      "width": 640,
+      "height": 385,
+      "outerWidth": 640,
+      "outerHeight": 427,
+      "dpr": 4,
+      "screenWidth": 756,
+      "screenHeight": 491,
+      "visualScale": 1
+    },
+    "restored100": {
+      "width": 1280,
+      "height": 769,
+      "outerWidth": 1280,
+      "outerHeight": 854,
+      "dpr": 2,
+      "screenWidth": 1512,
+      "screenHeight": 982,
+      "visualScale": 1
+    },
+    "nativeResetDisabledAfterRestore": true,
+    "legacyRelativeOracle": "INCONCLUSIVE: Firefox reports outer/screen dimensions in zoomed CSS coordinates; unchanged oracle rejects these signals",
+    "reflowAssertions": "Unchanged in existing recipe; full recipe not executed in this native session",
+    "nativeNavigation": "Editor, catalogue search and rename dialogue exercised at native200",
+    "unchangedNegativeControl": {
+      "requestedFactor": 2,
+      "reference": {
+        "width": 1280,
+        "height": 769,
+        "outerWidth": 1280,
+        "outerHeight": 854,
+        "dpr": 2,
+        "screenWidth": 1512,
+        "screenHeight": 982,
+        "visualScale": 1
+      },
+      "measured": {
+        "width": 1280,
+        "height": 769,
+        "outerWidth": 1280,
+        "outerHeight": 854,
+        "dpr": 2,
+        "screenWidth": 1512,
+        "screenHeight": 982,
+        "visualScale": 1
+      },
+      "method": "Relative DPR and CSS viewport contraction at stable outer-window and screen dimensions",
+      "limits": "Reference is the measured profile configured at 100%; this is not a browser-UI zoom reading, physical display attestation or accessibility qualification.",
+      "qualified": false,
+      "absoluteZoomVerified": false,
+      "ratios": {
+        "dpr": 1,
+        "width": 1,
+        "height": 1
+      },
+      "stableWindow": true,
+      "noPinch": true,
+      "reason": "Observed scale does not match requested factor"
+    },
+    "relativeAt200": {
+      "requestedFactor": 2,
+      "reference": {
+        "width": 1280,
+        "height": 769,
+        "outerWidth": 1280,
+        "outerHeight": 854,
+        "dpr": 2,
+        "screenWidth": 1512,
+        "screenHeight": 982,
+        "visualScale": 1
+      },
+      "measured": {
+        "width": 640,
+        "height": 385,
+        "outerWidth": 640,
+        "outerHeight": 427,
+        "dpr": 4,
+        "screenWidth": 756,
+        "screenHeight": 491,
+        "visualScale": 1
+      },
+      "method": "Relative DPR and CSS viewport contraction at stable outer-window and screen dimensions",
+      "limits": "Reference is the measured profile configured at 100%; this is not a browser-UI zoom reading, physical display attestation or accessibility qualification.",
+      "qualified": false,
+      "absoluteZoomVerified": false,
+      "ratios": {
+        "dpr": 2,
+        "width": 2,
+        "height": 1.9974025974025975
+      },
+      "stableWindow": false,
+      "noPinch": true,
+      "reason": "Outer window or display changed"
+    },
+    "returnAt100": {
+      "requestedFactor": 1,
+      "reference": {
+        "width": 1280,
+        "height": 769,
+        "outerWidth": 1280,
+        "outerHeight": 854,
+        "dpr": 2,
+        "screenWidth": 1512,
+        "screenHeight": 982,
+        "visualScale": 1
+      },
+      "measured": {
+        "width": 1280,
+        "height": 769,
+        "outerWidth": 1280,
+        "outerHeight": 854,
+        "dpr": 2,
+        "screenWidth": 1512,
+        "screenHeight": 982,
+        "visualScale": 1
+      },
+      "method": "Relative DPR and CSS viewport contraction at stable outer-window and screen dimensions",
+      "limits": "Reference is the measured profile configured at 100%; this is not a browser-UI zoom reading, physical display attestation or accessibility qualification.",
+      "qualified": true,
+      "absoluteZoomVerified": false,
+      "ratios": {
+        "dpr": 1,
+        "width": 1,
+        "height": 1
+      },
+      "stableWindow": true,
+      "noPinch": true,
+      "reason": "Relative scale supported by the measured signals"
+    }
+  },
+  "speechCases": [
+    {
+      "case": "dialogue-positive",
+      "status": "NATIVE_PHRASE_OBSERVED",
+      "phrase": "Mon premier courriel contenu sélectionné Nom dans la bibliothèque modifier le texte",
+      "observedAt": "2026-10-28T22:55:33.031Z",
+      "guardBeforeEachRead": true,
+      "guardAfterWindow": true,
+      "windowInterrupted": false,
+      "privateRawEvidence": "31-dialogue-positive.json",
+      "rawSha256": "9ad7640d268de7c7f1aefe4fd520a76df11c237e0c082a4205c3d9d1d03dc0ce"
+    },
+    {
+      "case": "dialogue-first",
+      "status": "NATIVE_PHRASE_OBSERVED",
+      "phrase": "Renseignez un nom pour la composition.",
+      "observedAt": "2026-10-28T22:55:49.579Z",
+      "guardBeforeEachRead": true,
+      "guardAfterWindow": true,
+      "windowInterrupted": false,
+      "privateRawEvidence": "32-dialogue-first-error.json",
+      "rawSha256": "0ca1d93b47b957dd730aec221d74eee7b7781551b4fd9005cfb8f6255e64400e"
+    },
+    {
+      "case": "dialogue-repeat",
+      "status": "NATIVE_PHRASE_OBSERVED",
+      "phrase": "Renseignez un nom pour la composition.",
+      "observedAt": "2026-10-28T22:56:06.456Z",
+      "guardBeforeEachRead": true,
+      "guardAfterWindow": true,
+      "windowInterrupted": false,
+      "privateRawEvidence": "33-dialogue-repeat.json",
+      "rawSha256": "209036e34f6c4a98fc5c15ef52c71fadf0948ecb73c0b31deb1ae4aa6b7b737e"
+    },
+    {
+      "case": "dialogue-reappear",
+      "status": "NATIVE_PHRASE_OBSERVED",
+      "phrase": "Renseignez un nom pour la composition.",
+      "observedAt": "2026-10-28T22:57:03.864Z",
+      "guardBeforeEachRead": true,
+      "guardAfterWindow": true,
+      "windowInterrupted": false,
+      "privateRawEvidence": "35-dialogue-reappearance-error.json",
+      "rawSha256": "dd1180d141ec4454847e532eb7804f5866582a20085cef5789c8f987c776182d"
+    },
+    {
+      "case": "catalogue-zero",
+      "status": "NATIVE_PHRASE_OBSERVED",
+      "phrase": "Aucun composant trouvé sur 52.",
+      "observedAt": "2026-10-28T22:58:29.145Z",
+      "guardBeforeEachRead": true,
+      "guardAfterWindow": true,
+      "windowInterrupted": false,
+      "privateRawEvidence": "40-catalogue-zero.json",
+      "rawSha256": "f95f08c702b3980d5063de384f43810e0fd537d8ce0d97da4f6df529d2ac237b"
+    },
+    {
+      "case": "catalogue-one",
+      "status": "NATIVE_PHRASE_OBSERVED",
+      "phrase": "1 composant trouvé sur 52.",
+      "observedAt": "2026-10-28T22:58:36.113Z",
+      "guardBeforeEachRead": true,
+      "guardAfterWindow": true,
+      "windowInterrupted": false,
+      "privateRawEvidence": "41-catalogue-one.json",
+      "rawSha256": "e4d78a1e6f84a1e38f1d50c455f946435efabc059a3b3db2c3c96d7c4578a2e8"
+    },
+    {
+      "case": "catalogue-many",
+      "status": "NATIVE_PHRASE_OBSERVED",
+      "phrase": "2 composants trouvés sur 52.",
+      "observedAt": "2026-10-28T22:58:42.957Z",
+      "guardBeforeEachRead": true,
+      "guardAfterWindow": true,
+      "windowInterrupted": false,
+      "privateRawEvidence": "42-catalogue-many.json",
+      "rawSha256": "889bf3bd670e9c393d3d981840960a5e7b0a1974b91cc61cad0b21a213227ecf"
+    },
+    {
+      "case": "global-first",
+      "status": "NATIVE_PHRASE_OBSERVED",
+      "phrase": "Renseignez un nom pour cet élément.",
+      "observedAt": "2026-10-28T22:59:48.355Z",
+      "guardBeforeEachRead": true,
+      "guardAfterWindow": true,
+      "windowInterrupted": false,
+      "privateRawEvidence": "44-global-first-error.json",
+      "rawSha256": "e7a3697ff74707c62e674f24abeb9439109554740703c9e9446178a6058be329"
+    },
+    {
+      "case": "global-replacement",
+      "status": "NATIVE_PHRASE_OBSERVED",
+      "phrase": "Choisissez un élément enregistré.",
+      "observedAt": "2026-10-28T23:01:08.717Z",
+      "guardBeforeEachRead": true,
+      "guardAfterWindow": false,
+      "windowInterrupted": true,
+      "privateRawEvidence": "47-global-replacement.json",
+      "rawSha256": "b178b5845305d0420b25d0823e62158c38f4435dbd0300338a20e5d81afcc329"
+    },
+    {
+      "case": "global-reappear",
+      "status": "NATIVE_PHRASE_OBSERVED",
+      "phrase": "Renseignez un nom pour cet élément.",
+      "observedAt": "2026-10-28T23:01:30.509Z",
+      "guardBeforeEachRead": true,
+      "guardAfterWindow": true,
+      "windowInterrupted": false,
+      "privateRawEvidence": "49-global-reappear.json",
+      "rawSha256": "3c3d74c952cf2e337fd0694e7bb5559306e953f70fbc64e8d2a7472877134fd3"
+    },
+    {
+      "case": "global-repeat-identical",
+      "status": "NOT_CONFIRMED",
+      "privateRawEvidence": "46-global-repeat.json",
+      "reason": "Fresh native field focus and button phrase observed, expected repeated alert not captured in bounded non-exhaustive polling. No inference of a global absence or RGAA failure."
+    }
+  ],
+  "keyboardImages": {
+    "scope": "one source control representative of common renderer;24 fields separately covered by browser tests",
+    "nativeActions": "Space/Down/Enter selects remote; Space/Home/Enter returns local",
+    "sourceChangeObserved": "57-source-candidates.json",
+    "returnObserved": "59-keyboard-return-late-state.json",
+    "limit": "Early AX read was stale and focus-window losses retained; final states inspected separately. No remote URL applied natively."
+  },
+  "cleanup": {
+    "cleanup": {
+      "status": "closed",
+      "cleanup_error": null,
+      "child_pid": 57659,
+      "session_end": "acknowledged",
+      "signalled": true,
+      "exit_observed": true
+    },
+    "cleanup_error": null
+  },
+  "restoration": {
+    "at": "2026-10-28T23:08:02.460842+00:00",
+    "voiceoverInitially": false,
+    "voiceoverActiveNow": false,
+    "zoomRestoration": "60-native-zoom-restored.json",
+    "sourceRestoration": "59-keyboard-return-late-state.json",
+    "rightsChanged": false,
+    "clipboardUsed": false
+  },
+  "remainingLimitations": [
+    "Native web-origin surface not exercised",
+    "Identical global-error repetition not confirmed",
+    "No complete native reflow/original browser recipe execution",
+    "No mail reception or NVDA/JAWS qualification"
+  ]
+}

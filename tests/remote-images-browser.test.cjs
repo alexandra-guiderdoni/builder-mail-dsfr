@@ -63,7 +63,9 @@ test('#192 : URL interdite et ressource non-image conservent la source, annulati
   await input.fill('https://person:password@images.example/x.png');await input.press('Enter');
   await page.locator('#error').filter({hasText:'Identifiants interdits'}).waitFor();assert.equal(requested,0);assert.equal(await page.evaluate(()=>JSON.stringify(MailBuilder.doc())),original);
   await input.fill('https://not-image.example/failed.png');await input.press('Enter');
-  await page.locator('#error').filter({hasText:'n’a pas pu être chargée'}).waitFor();assert.equal(requested,1);assert.equal(await page.evaluate(()=>JSON.stringify(MailBuilder.doc())),original);
+  // Le conteneur sans réseau peut exposer navigator.onLine=false, même avec une route de test servie.
+  const online=await page.evaluate(()=>navigator.onLine);
+  await page.locator('#error').filter({hasText:online?'n’a pas pu être chargée':'hors connexion'}).waitFor();assert.equal(requested,1);assert.equal(await page.evaluate(()=>JSON.stringify(MailBuilder.doc())),original);
   assert.equal(await page.evaluate(()=>MailBuilder.pendingInputs),0);
   assert.equal(await page.locator('#notice').textContent(),'');
   await page.locator('[data-image-source="f0"]').selectOption('local');assert.equal(await page.evaluate(()=>MailBuilder.drafts.size),0);assert.equal(await page.locator('#error').textContent(),'');
@@ -131,5 +133,15 @@ test('#192 : article avec URL et sans repli local porte un nom avec image, retra
   assert.doesNotMatch(await page.locator('#block-list').textContent(),/Article sans image/);assert.match(await page.locator('[data-action=export-document]').first().getAttribute('data-action'),/export-document/);
   const selected=await page.evaluate(()=>{const A=MailBuilder;return{html:A.Render.exportHtml(A.doc()),label:A.UI.blockName(A.doc().blocks[0]),imageContents:A.Files.imageContents(A.doc())};});assert.ok(selected.html.includes('https://images.example/charte.png'));assert.doesNotMatch(selected.label,/sans image/);assert.match(selected.imageContents,/références/);
   await click(page,'[data-block-action=remove-image]');assert.equal(await page.evaluate(()=>MailBuilder.doc().blocks[0].remoteImages??null),null);assert.equal(await page.evaluate(()=>MailBuilder.doc().blocks[0].values.f0),'');assert.match(await page.locator('#block-list').textContent(),/Article sans image/);
+ }finally{await browser.close();}
+});
+
+test('#192 : la confirmation avant sortie renvoie au vrai champ d’adresse distante',async()=>{
+ const browser=await pw.chromium.launch();try{const {page}=await setup(browser);
+  await page.evaluate(address=>MailBuilder.State.change(lib=>{const A=MailBuilder,d=lib.documents.find(d=>d.id===lib.activeId),b=A.Model.createBlock('mail-31');for(const f of A.Model.component('mail-31').fields){if(f.type==='text')b.values[f.key]='Contenu rédigé';if(f.type==='url')b.values[f.key]='https://www.exemple-info.gouv.fr/article';}b.remoteImages={f0:address};d.blocks=[b];A.selected=b.id;}),ADDRESS);
+  await click(page,'[data-action=export-mail]');await page.locator('#check-dialog').waitFor({state:'visible'});
+  await page.locator('#check-list li').filter({hasText:'image hébergée de démonstration'}).getByRole('button').click();
+  await page.locator('#check-dialog').waitFor({state:'hidden'});
+  assert.equal(await page.evaluate(()=>document.activeElement.id),'remote-image-url-f0');assert.equal(await page.locator('#remote-image-url-f0').inputValue(),ADDRESS);
  }finally{await browser.close();}
 });
