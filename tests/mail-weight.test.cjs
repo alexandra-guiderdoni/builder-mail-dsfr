@@ -56,3 +56,27 @@ test('une image incorporée pèse exactement sa donnée, et seule une chaîne se
   assert.equal(R.weight(before).bytes - R.weight(after).bytes, occurrences * (image.length - lighter.length));
   for (const value of [undefined, null, 42, {}]) assert.throws(() => R.weight(value), TypeError);
 });
+
+
+test('#191 : partition UTF-8 exacte, répétitions et conseil conditionnel, sans changer les seuils', () => {
+  const M = MailBuilder.Model, index = MailBuilder.catalog.components.findIndex(c => c.id === 'mail-26');
+  const doc = M.create('Deux illustrations', [index, index]);
+  const small = 'data:image/png;base64,' + fs.readFileSync('app/assets/icon-192.png').toString('base64');
+  const large = 'data:image/png;base64,' + fs.readFileSync('app/assets/icon-512.png').toString('base64');
+  const field = M.component('mail-26').fields.find(f => f.type === 'image');
+  doc.blocks[0].values[field.key] = small; doc.blocks[1].values[field.key] = large;
+  const html = `<style>é😀</style><img src="${small}"><img src="${large}"><img src="${large}">`;
+  const measured = R.weightDetails(html, doc);
+  assert.equal(measured.parts.styles, Buffer.byteLength('é😀'));
+  assert.equal(measured.parts.images, Buffer.byteLength(small) + 2 * Buffer.byteLength(large));
+  assert.equal(Object.values(measured.parts).reduce((a,b) => a+b), Buffer.byteLength(html));
+  assert.equal(measured.occurrences, 3); assert.equal(measured.distinct, 2);
+  assert.equal(measured.target.block, doc.blocks[1].id, 'image réellement la plus lourde, pas la première');
+  assert.equal(measured.target.field, 'field-' + field.key);
+  assert.match(F.weightAdvice(measured), /images incorporées dominent.*conservant les logos/);
+  const text = R.weightDetails('<p>' + 'Texte 😀'.repeat(20000) + '</p>', doc);
+  assert.equal(text.dominant, 'other'); assert.doesNotMatch(F.weightAdvice(text), /allége.*image/i);
+  for (const summary of [F.weightSummary({...measured, level:'alert'}), F.weightText({...measured, level:'alert'})]) {
+    assert.ok(summary.includes(field.label)); assert.match(summary, /bloc 2/);
+  }
+});

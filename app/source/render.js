@@ -248,7 +248,7 @@
       const text = block.values[field.key];
       if (dominant === "images" ? field.type !== "image" || !images.includes(text) : dominant !== "other" || field.type !== "text") continue;
       const size = bytes(text);
-      if (!target || size > target.bytes) target = {block: block.id, field: `field-${field.key}`, label: field.label, bytes: size};
+      if (!target || size > target.bytes) target = {block: block.id, field: `field-${field.key}`, label: field.label, index: value.blocks.indexOf(block) + 1, component: A.Model.component(block.component).label, bytes: size};
     }
     return {...result, parts, dominant, occurrences: images.length, distinct: new Set(images).size,
       variants: /class="[^"]*\bhide-(?:black|white)\b/.test(markup), target};

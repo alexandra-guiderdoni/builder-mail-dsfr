@@ -37,7 +37,10 @@ test('#191 : trois compositions, deux sorties, sommes exactes et champs pertinen
           const fieldType = await page.evaluate(({block, field}) => MailBuilder.Model.component(block.component).fields.find(f => 'field-' + f.key === field).type, {block, field: w.target.field});
           assert.equal(fieldType, name === 'text' ? 'text' : 'image');
           if (name === 'text') assert.doesNotMatch(item.summary + item.detail + item.warning.message, /allége.*image/i);
-          else assert.match(item.warning.message, /Image incorporée la plus lourde/);
+          else for (const text of [item.summary, item.detail, item.warning.message]) {
+            assert.match(text, /Image incorporée la plus lourde/);
+            assert.ok(text.includes(w.target.label)); assert.ok(text.includes(`bloc ${w.target.index}`));
+          }
           assert.match(item.warning.message, item.action === 'copy' ? /pour la copie/ : /pour le téléchargement/);
         }
       }

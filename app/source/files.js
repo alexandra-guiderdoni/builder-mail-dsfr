@@ -34,6 +34,10 @@
   // Les Kio sont tronqués au dixième : les seuils historiques restent 92 160 et 104 448 octets.
   const kio = bytes => (Math.floor(bytes * 10 / 1024) / 10).toLocaleString("fr-FR", {minimumFractionDigits: 1, maximumFractionDigits: 1});
   const count = bytes => bytes.toLocaleString("fr-FR");
+  function weightTargetText(result) {
+    const target = result.target;
+    return target ? `${result.dominant === "images" ? "Image incorporée la plus lourde" : "Champ texte le plus long"} : « ${target.label} », bloc ${target.index} « ${target.component} ».` : "";
+  }
   function weightAdvice(result) {
     if (result.dominant === "images") return "Les images incorporées dominent : allégez les illustrations si possible, en conservant les logos de charte.";
     if (result.dominant === "styles") return "Les styles de tête dominent ; retirer un logo n’est pas le conseil adapté.";
@@ -44,13 +48,13 @@
   }
   function weightSummary(result, action = "copy") {
     const base = `HTML préparé pour ${action === "export" ? "le téléchargement" : "la copie"} : ${kio(result.bytes)} Kio, images comprises.`;
-    return result.level === "ok" ? base : `${base} ${weightRisk(result)}`;
+    return result.level === "ok" ? base : `${base} ${result.level === "alert" ? "Alerte" : "Attention"} : risque de troncature Gmail, envoi possible, sans garantie. ${weightTargetText(result)}`;
   }
   function weightText(result, action = "copy") {
     const base = `HTML préparé pour ${action === "export" ? "le téléchargement" : "la copie"} : ${count(result.bytes)} octets (${kio(result.bytes)} Kio), images comprises.`;
     const p = result.parts, share = bytes => `${(100 * bytes / (result.bytes || 1)).toLocaleString("fr-FR", {maximumFractionDigits: 1})} %`;
     const detail = p ? ` Répartition : styles de tête ${count(p.styles)} octets (${share(p.styles)}) ; données d’images incorporées ${count(p.images)} octets (${share(p.images)}, ${result.occurrences} occurrences, ${result.distinct} fichiers distincts, URL data: et Base64 compris) ; textes, balisage et styles inline ${count(p.other)} octets (${share(p.other)}).${result.variants ? " Les variantes de logos clair et sombre sont prévues par le gabarit." : ""}` : "";
-    return `${base}${detail}${result.level === "ok" ? "" : ` ${weightRisk(result)} ${weightAdvice(result)}`} Les prestataires situent la troncature Gmail vers 102 000 octets de HTML reçu ; Gmail ne publie pas de limite. La messagerie peut extraire les images et retirer les styles : le poids reçu n’est pas mesuré ici. Faites un envoi de test avant diffusion.`;
+    return `${base}${detail}${result.level === "ok" ? "" : ` ${weightRisk(result)} ${weightAdvice(result)} ${weightTargetText(result)}`} Les prestataires situent la troncature Gmail vers 102 000 octets de HTML reçu ; Gmail ne publie pas de limite. La messagerie peut extraire les images et retirer les styles : le poids reçu n’est pas mesuré ici. Faites un envoi de test avant diffusion.`;
   }
   let weightTimer, weightCost = 0;
   function showWeight(result, text = weightText(result)) {
@@ -97,5 +101,5 @@
     if (warnings?.length) await new Promise(resolve => setTimeout(resolve, 250));
     A.notice([`Courriel copié en HTML et texte. ${result.level === "ok" ? "" : `${weightRisk(result)} ${weightAdvice(result)} `}Contrôlez le collage et les images dans votre messagerie.`, ...A.Render.warnings(A.doc())].join(" "), ticket);
   }
-  A.Files = Object.freeze({download, json, safeName, exportDate, exportName, image, validate, copy, weightText, weightSummary, weightAdvice, measureWeight, scheduleWeight, staleWeight});
+  A.Files = Object.freeze({download, json, safeName, exportDate, exportName, image, validate, copy, weightText, weightSummary, weightAdvice, weightTargetText, measureWeight, scheduleWeight, staleWeight});
 })();
