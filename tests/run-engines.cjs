@@ -96,15 +96,49 @@ function recordLaunches() {
 if (process.env.MAIL_BUILDER_RECORD_LAUNCHES === '1') recordLaunches();
 function selectFiles(sources) { return Object.keys(sources).filter(file => /\.launch\(/.test(sources[file])).sort(); }
 
+// NODE_OPTIONS est conservé intégralement. Node cumule ses reporters avec ceux de la CLI.
+// Transcription de ParseNodeOptionsEnvVar, Node v24.22.1 src/node_options.cc (ParseNodeOptionsEnvVar).
+function nodeOptionsTokens(nodeOptions) {
+  const tokens = []; let quoted = false, newArgument = true;
+  for (let i = 0; i < nodeOptions.length; i++) {
+    let c = nodeOptions[i];
+    if (c === '\\' && quoted) {
+      if (i + 1 === nodeOptions.length) throw new Error('NODE_OPTIONS : échappement non terminé');
+      c = nodeOptions[++i];
+    } else if (c === ' ' && !quoted) { newArgument = true; continue; }
+    else if (c === '"') { quoted = !quoted; continue; }
+    if (newArgument) { tokens.push(c); newArgument = false; }
+    else tokens[tokens.length - 1] += c;
+  }
+  if (quoted) throw new Error('NODE_OPTIONS : citation double non terminée');
+  return tokens;
+}
+function tapReporterArgs(nodeOptions = process.env.NODE_OPTIONS || '') {
+  const tokens = nodeOptionsTokens(nodeOptions);
+  const reporters = [], destinations = [];
+  for (let i = 0; i < tokens.length; i++) {
+    const equals = tokens[i].indexOf('='), name = (equals < 0 ? tokens[i] : tokens[i].slice(0, equals)).replaceAll('_', '-');
+    for (const [flag, values] of [['--test-reporter', reporters], ['--test-reporter-destination', destinations]]) {
+      if (name !== flag) continue;
+      values.push(equals < 0 ? tokens[++i] || '' : tokens[i].slice(equals + 1)); break;
+    }
+  }
+  if (reporters.length > 1 || (reporters.length && reporters[0] !== 'tap') || destinations.length > 1 || (destinations.length && (destinations[0] !== 'stdout' || reporters.length !== 1))) {
+    throw new Error('NODE_OPTIONS : reporter/destination incompatible avec un unique TAP sur stdout ; aucun sous-processus lancé');
+  }
+  return reporters.length ? [] : ['--test-reporter=tap'];
+}
+
 function preflight(engine, root) {
   const run = spawnSync(process.execPath, ['-e', `const p=require(process.env.PLAYWRIGHT_MODULE||'playwright');p[${JSON.stringify(engine)}].launch().then(b=>b.close()).then(()=>process.exit(0),e=>{console.error(String(e.message).split('\\n')[0]);process.exit(1)})`], {cwd: root, encoding: 'utf8', timeout: 60000});
   return run.status === 0 ? null : (run.stderr.trim() || 'lancement impossible');
 }
 function runEngine(engine, files, dir, root, registry, timeoutMs) {
+  const reporterArgs = tapReporterArgs();
   const notes = path.join(dir, `${engine}-notes.jsonl`), results = [], executions = [], interceptions = {};
   for (const file of files) {
     const executionId = randomUUID();
-    const run = spawnSync(process.execPath, ['--require', __filename, '--test', '--test-concurrency=1', '--test-reporter=tap', path.join(root, 'tests', file)], {cwd: root, encoding: 'utf8', timeout: timeoutMs, maxBuffer: 64 * 1024 * 1024, env: {...process.env, NODE_TEST_CONTEXT: undefined, MAIL_BUILDER_ENGINE: engine, MAIL_BUILDER_NOTES: notes, MAIL_BUILDER_RECORD_LAUNCHES: '1', MAIL_BUILDER_TEST_FILE: file, MAIL_BUILDER_EXECUTION_ID: executionId}});
+    const run = spawnSync(process.execPath, ['--require', __filename, '--test', '--test-concurrency=1', ...reporterArgs, path.join(root, 'tests', file)], {cwd: root, encoding: 'utf8', timeout: timeoutMs, maxBuffer: 64 * 1024 * 1024, env: {...process.env, NODE_TEST_CONTEXT: undefined, MAIL_BUILDER_ENGINE: engine, MAIL_BUILDER_NOTES: notes, MAIL_BUILDER_RECORD_LAUNCHES: '1', MAIL_BUILDER_TEST_FILE: file, MAIL_BUILDER_EXECUTION_ID: executionId}});
     const entries = fs.existsSync(notes) ? fs.readFileSync(notes, 'utf8').split('\n').filter(Boolean).map(line => JSON.parse(line)).filter(n => n.executionId === executionId) : [];
     const actualEngines = [...new Set(entries.filter(n => n.kind === 'browser-launch' && n.phase === 'succeeded').map(n => n.engine))].sort();
     const attributed = actualEngines.join('+') || 'not-observed';
@@ -139,6 +173,7 @@ function render(report, results, interceptions, unavailable) {
   return out.join('\n');
 }
 function main(argv) {
+  try { tapReporterArgs(); } catch (error) { console.error(error.message); return 64; }
   const root = path.resolve(__dirname, '..'), option = name => (argv.find(a => a.startsWith(`--${name}=`)) || '').split('=').slice(1).join('=');
   const explicit = name => argv.some(a => a.startsWith(`--${name}=`));
   const wanted = (explicit('engines') ? option('engines') : ENGINES.join(',')).split(',').filter(Boolean);
@@ -164,5 +199,5 @@ function main(argv) {
   if (option('json')) fs.writeFileSync(option('json'), JSON.stringify({...report, results, interceptions, executions, evidenceDirectory: dir, attributionScope: 'file; mixed groups are not per-test coverage'}, null, 2));
   return exitCode(report);
 }
-module.exports = {parseTap, tapCompletion, processResults, classify, summarize, exitCode, selectFiles, runEngine, recordLaunches, render, ENGINES};
+module.exports = {parseTap, tapCompletion, processResults, classify, summarize, exitCode, selectFiles, runEngine, recordLaunches, render, tapReporterArgs, nodeOptionsTokens, ENGINES};
 if (require.main === module) process.exit(main(process.argv.slice(2)));

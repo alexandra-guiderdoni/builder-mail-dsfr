@@ -5,13 +5,21 @@ const path = require('node:path');
 const os = require('node:os');
 const vm = require('node:vm');
 const {createHash} = require('node:crypto');
+const {execFileSync} = require('node:child_process');
 const {newCollection, beginCollection, finishCollection, collectionFailure} = require('../scripts/collector_receipt.cjs');
 const root = path.resolve(__dirname, '..');
 const hash = value => createHash('sha256').update(value).digest('hex');
-async function fixture(t) {
+async function fixture(t, {git = true} = {}) {
   const directory = await fs.mkdtemp(path.join(os.tmpdir(), 'collector-receipt-'));
   t.after(() => fs.rm(directory, {recursive: true, force: true}));
   const source = path.join(directory, 'source.js'); await fs.writeFile(source, 'source measured');
+  // Un vrai HEAD dans un dépôt possédé par ce test, indépendant des droits du checkout CI.
+  if (git) {
+    execFileSync('git', ['init', '--quiet', directory]);
+    execFileSync('git', ['add', '--', 'source.js'], {cwd: directory});
+    execFileSync('git', ['-c', 'user.name=Collector fixture', '-c', 'user.email=collector@example.invalid',
+      '-c', 'core.hooksPath=/dev/null', '-c', 'commit.gpgsign=false', 'commit', '--quiet', '-m', 'fixture'], {cwd: directory});
+  }
   return {directory, source, sources: {[source]: hash(await fs.readFile(source))}};
 }
 const initial = () => ({completed: false, errors: []});
@@ -19,11 +27,11 @@ const initial = () => ({completed: false, errors: []});
 test('le reçu courant incomplet remplace le canonique après archivage exact de l’ancien', async t => {
   const {directory, sources} = await fixture(t), old = '{"completed":true,"run_id":"old"}\n';
   await fs.writeFile(path.join(directory, 'browser.json'), old);
-  const report = newCollection(root, initial());
+  const report = newCollection(directory, initial());
   await beginCollection(directory, 'browser.json', report);
   const started = JSON.parse(await fs.readFile(path.join(directory, 'browser.json'), 'utf8'));
   assert.notEqual(started.run_id, 'old'); assert.equal(started.completed, false);
-  assert.equal(started.collection_status, 'running'); assert.match(started.git_parent, /^[0-9a-f]{40}$/);
+  assert.equal(started.collection_status, 'running'); assert.match(started.git_parent, /^[0-9a-f]{40}$/, JSON.stringify(started.proof_errors));
   assert.equal(await fs.readFile(report.previous_receipt.file, 'utf8'), old);
   assert.equal(report.previous_receipt.sha256, hash(old));
   report.completed = true;
@@ -35,7 +43,7 @@ test('le reçu courant incomplet remplace le canonique après archivage exact de
 });
 
 for (const code of ['ENOENT', 'EACCES']) test(`source ${code} : nouveau reçu d’échec écrit, erreurs primaire/preuve/nettoyage distinctes`, async t => {
-  const {directory, source, sources} = await fixture(t), report = newCollection(root, initial());
+  const {directory, source, sources} = await fixture(t), report = newCollection(directory, initial());
   await beginCollection(directory, 'receipt.json', report);
   collectionFailure(report, 'collection', new Error('primary failure'));
   collectionFailure(report, 'cleanup', new Error('owned cleanup refused'));
@@ -48,13 +56,31 @@ for (const code of ['ENOENT', 'EACCES']) test(`source ${code} : nouveau reçu d�
   assert.equal(saved.completed, false); assert.equal(saved.collection_status, 'incomplete');
   assert.equal(saved.collection_errors[0].message, 'primary failure');
   assert.equal(saved.cleanup_errors[0].message, 'owned cleanup refused');
-  assert.equal(saved.proof_errors[0].code, code); assert.equal(saved.proof_errors[0].file, source);
+  const sourceError = saved.proof_errors.find(error => error.phase === 'proof' && error.operation === 'source-read' && error.file === source);
+  assert.ok(sourceError, JSON.stringify(saved.proof_errors)); assert.equal(sourceError.code, code);
+});
+
+test('Git non-repo et source ENOENT restent deux preuves distinctes, sans fin favorable', async t => {
+  const {directory, source, sources} = await fixture(t, {git: false});
+  const report = newCollection(directory, initial());
+  await beginCollection(directory, 'receipt.json', report);
+  await fs.unlink(source); report.completed = true;
+  await finishCollection({root: directory, output: directory, filename: 'receipt.json', report, sources});
+  const saved = JSON.parse(await fs.readFile(path.join(directory, 'receipt.json'), 'utf8'));
+  assert.equal(saved.git_parent, null); assert.equal(saved.completed, false);
+  assert.equal(saved.proof_errors.length, 2);
+  const gitError = saved.proof_errors.find(error => error.phase === 'proof' && error.operation === 'git-parent');
+  const sourceError = saved.proof_errors.find(error => error.phase === 'proof' && error.operation === 'source-read' && error.file === source);
+  assert.ok(gitError); assert.equal(gitError.exit_status, 128); assert.equal(gitError.signal, null);
+  assert.deepEqual(gitError.command, ['git', 'rev-parse', 'HEAD']); assert.equal(gitError.cwd, directory);
+  assert.match(gitError.stderr, /not a git repository/i);
+  assert.ok(sourceError); assert.equal(sourceError.code, 'ENOENT');
 });
 
 test('une source modifiée ou aucune source mesurée ne donne jamais une fin favorable', async t => {
   const {directory, source, sources} = await fixture(t);
   for (const expected of [sources, {}]) {
-    const report = newCollection(root, initial()); await beginCollection(directory, 'receipt.json', report);
+    const report = newCollection(directory, initial()); await beginCollection(directory, 'receipt.json', report);
     await fs.writeFile(source, 'modified'); report.completed = true;
     await finishCollection({root, output: directory, filename: 'receipt.json', report, sources: expected});
     assert.equal(report.completed, false); assert.ok(report.proof_errors.length);
@@ -64,7 +90,7 @@ test('une source modifiée ou aucune source mesurée ne donne jamais une fin fav
 test('un ancien canonique illisible reste intact, et le reçu courant est écrit seulement dans son run', async t => {
   const {directory, sources} = await fixture(t), target = path.join(directory, 'receipt.json'), old = '{"completed":true,"run_id":"witness"}';
   await fs.writeFile(target, old);
-  const report = newCollection(root, initial()), io = {...fs, readFile: async filename => {
+  const report = newCollection(directory, initial()), io = {...fs, readFile: async filename => {
     if (filename === target) throw Object.assign(new Error('previous unreadable'), {code: 'EACCES'});
     return fs.readFile(filename);
   }};
@@ -82,7 +108,7 @@ for (const [file, marker, end] of [
   ['scripts/audit_contrasts.cjs', '.finally(async()=>{', '});'],
   ['scripts/recipe_page_flow_firefox.mjs', 'finally{', '\n}\n}\n\nif('],
 ]) test(`${file} conserve son reçu même si la source disparaît à la finalisation`, async t => {
-  const {directory, source, sources} = await fixture(t), report = newCollection(root, {errors: [], observations: [], negativeControls: []});
+  const {directory, source, sources} = await fixture(t), report = newCollection(directory, {errors: [], observations: [], negativeControls: []});
   const filename = file.includes('audit_browser') ? 'browser.json' : file.endsWith('.mjs') ? 'recu.json' : 'receipt.json';
   await beginCollection(directory, filename, report);
   report.sourceSha256 = sources; report.completed = true;
@@ -106,7 +132,8 @@ for (const [file, marker, end] of [
   }
   await vm.runInNewContext('(async()=>{' + body + '})()', context);
   const saved = JSON.parse(await fs.readFile(path.join(directory, filename), 'utf8'));
-  assert.equal(saved.completed, false); assert.equal(saved.proof_errors[0].code, 'ENOENT');
+  const sourceError = saved.proof_errors.find(error => error.phase === 'proof' && error.operation === 'source-read' && error.file === source);
+  assert.equal(saved.completed, false); assert.ok(sourceError, JSON.stringify(saved.proof_errors)); assert.equal(sourceError.code, 'ENOENT');
   assert.equal(context.process.exitCode, 1);
   if (file.endsWith('.mjs')) {
     assert.equal(saved.collection_errors[0].message, 'primary recipe failure');

@@ -19,7 +19,12 @@ function newCollection(root, initial) {
     collection_errors: [], proof_errors: [], cleanup_errors: []};
   report.errors ||= [];
   try { report.git_parent = execFileSync('git', ['rev-parse', 'HEAD'], {cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe']}).trim(); }
-  catch (error) { collectionFailure(report, 'proof', error, {operation: 'git-parent'}); }
+  catch (error) {
+    collectionFailure(report, 'proof', error, {operation: 'git-parent',
+      command: ['git', 'rev-parse', 'HEAD'], cwd: root,
+      exit_status: error.status ?? null, signal: error.signal ?? null,
+      stderr: error.stderr == null ? null : String(error.stderr)});
+  }
   return report;
 }
 

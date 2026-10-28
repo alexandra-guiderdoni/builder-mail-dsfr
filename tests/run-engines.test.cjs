@@ -220,3 +220,54 @@ test('la CLI refuse toute sélection vide ou inconnue avant le prévol moteur', 
   const defaults = invoke([]);
   assert.equal(defaults.status, 2); assert.equal(defaults.preflights, 3);
 });
+
+test('NODE_OPTIONS : un seul reporter TAP effectif sans perdre les options étrangères', () => {
+  const fs = require('node:fs'), os = require('node:os'), path = require('node:path');
+  const {spawnSync} = require('node:child_process'), {tapReporterArgs} = require('./run-engines.cjs');
+  const owned = fs.mkdtempSync(path.join(os.tmpdir(), 'builder-reporter-owned-'));
+  try {
+    const file = path.join(owned, 'finite.test.cjs'), observed = path.join(owned, 'node-options.txt');
+    fs.writeFileSync(file, `require('node:test')('option conservée',()=>{require('node:fs').writeFileSync(${JSON.stringify(observed)},process.env.NODE_OPTIONS);});`);
+    for (const options of ['', '--test-reporter=tap', '--test-reporter tap', '--no-warnings --test-reporter=tap --stack-trace-limit=21', '--test-reporter="tap" --no-warnings', '"--test-reporter=tap" --test-reporter-destination stdout', '--test_reporter=tap', '--test_reporter tap --no-warnings', '--test_reporter=tap --test-reporter_destination=stdout', '--test-reporter="t\\ap" --test_reporter_destination="std\\out"']) {
+      const args = tapReporterArgs(options);
+      assert.deepEqual(args, options ? [] : ['--test-reporter=tap']);
+      const run = spawnSync(process.execPath, ['--test', ...args, file], {env: {...process.env, NODE_TEST_CONTEXT: undefined, NODE_OPTIONS: options}, encoding:'utf8', timeout:5000});
+      assert.equal(run.error, undefined); assert.equal(run.status, 0, JSON.stringify(run));
+      assert.match(run.stdout, /ok 1 - option conservée/);
+      assert.equal((run.stdout.match(/^1\.\.1$/gm) || []).length, 1, 'un seul flux TAP');
+      assert.equal(fs.readFileSync(observed,'utf8'), options, 'NODE_OPTIONS intégralement conservé');
+    }
+  } finally { fs.rmSync(owned, {recursive:true,force:true}); }
+});
+
+test('NODE_OPTIONS : reporter ou destination incompatible refusé avant toute écriture ou allocation', () => {
+  const fs = require('node:fs'), os = require('node:os'), path = require('node:path');
+  const {tapReporterArgs, runEngine} = require('./run-engines.cjs');
+  const owned = fs.mkdtempSync(path.join(os.tmpdir(), 'builder-reporter-refusal-owned-')), previous = process.env.NODE_OPTIONS;
+  try {
+    for (const options of ['--test-reporter=spec', '--test-reporter tap --test-reporter=tap', '--test-reporter=tap --test-reporter-destination=stderr', '--test-reporter=tap --test-reporter-destination="' + path.join(owned, 'foreign.log') + '"', '--test-reporter-destination=stdout', '--test_reporter=spec', '--test-reporter=tap --test_reporter_destination=foreign.log', "--test-reporter=tap --test_reporter_destination='stdout'", '--test_reporter=tap --test-reporter-destination=std\\out', '--test_reporter=tap --test_reporter_destination=std_out', '--test-reporter=tap\t--no-warnings', '--test-reporter=tap --test-reporter-destination=stdout=extra', '--test-reporter=tap --test-reporter-destination=STDOUT', '--test-reporter=tap --test-reporter-destination="stdout "', '--test-reporter=tap --test-reporter-destination="stdout\n"']) {
+      assert.throws(() => tapReporterArgs(options), /incompatible/);
+      process.env.NODE_OPTIONS = options;
+      assert.throws(() => runEngine('firefox', ['never.test.cjs'], owned, owned, [], 1000), /incompatible/);
+      assert.deepEqual(fs.readdirSync(owned), [], 'aucun fichier ou enfant créé par le refus');
+    }
+  } finally {
+    if(previous === undefined) delete process.env.NODE_OPTIONS; else process.env.NODE_OPTIONS = previous;
+    fs.rmSync(owned, {recursive:true,force:true});
+  }
+});
+
+test('NODE_OPTIONS : scanners JS et Python suivent les espaces ASCII et échappements Node, pas ceux du shell', () => {
+  const path = require('node:path'), {spawnSync} = require('node:child_process');
+  const {nodeOptionsTokens} = require('./run-engines.cjs');
+  const inputs = ['', '  --test_reporter=tap  --no-warnings ', '--test-reporter="t\\ap"', '--test-reporter-destination=\'stdout\'', '--test-reporter-destination=std\\out', '--test-reporter-destination="std\\out"', '--test-reporter=tap\t--no-warnings', '--test-reporter=tap\n--no-warnings', '--require="chemin avec espace" --test_reporter tap', '"" --test-reporter=tap', '--test-reporter="tap', '--test-reporter="tap\\'];
+  const expected = inputs.map(value => { try { return {ok:true,tokens:nodeOptionsTokens(value)}; } catch { return {ok:false}; } });
+  assert.deepEqual(expected[3].tokens, ["--test-reporter-destination='stdout'"]);
+  assert.deepEqual(expected[4].tokens, ['--test-reporter-destination=std\\out']);
+  assert.deepEqual(expected[5].tokens, ['--test-reporter-destination=stdout']);
+  assert.deepEqual(expected[6].tokens, ['--test-reporter=tap\t--no-warnings']);
+  const script = "import ast,json,sys;tree=ast.parse(open(sys.argv[1]).read());fn=next(n for n in tree.body if isinstance(n,ast.FunctionDef) and n.name=='node_options_tokens');ns={};exec(compile(ast.Module(body=[fn],type_ignores=[]),sys.argv[1],'exec'),ns);out=[]\nfor value in json.loads(sys.argv[2]):\n try: out.append({'ok':True,'tokens':ns['node_options_tokens'](value)})\n except SystemExit: out.append({'ok':False})\nprint(json.dumps(out))";
+  const run = spawnSync('python3', ['-B','-c',script,path.join(__dirname,'audit_receipt_contract.py'),JSON.stringify(inputs)], {encoding:'utf8',timeout:5000});
+  assert.equal(run.error,undefined); assert.equal(run.status,0,run.stderr);
+  assert.deepEqual(JSON.parse(run.stdout),expected);
+});

@@ -33,6 +33,11 @@ async function documents(page, generation, previous) {
       missingClick = {generation, seen, child: await frames.preview.evaluate(() => ({href: location.href, ready: document.readyState, focus: document.hasFocus(), body: document.body?.getBoundingClientRect().toJSON()})),
         parent: await page.evaluate(() => ({scroll: scrollY, focus: document.hasFocus(), active: document.activeElement?.id || document.activeElement?.tagName, modal: !!document.querySelector(':modal'), frames: [...document.querySelectorAll('iframe')].map(el => ({id: el.id, src: el.src, rect: el.getBoundingClientRect().toJSON(), pointer: getComputedStyle(el).pointerEvents}))}))};
     } catch (cause) { missingClick = {generation, seen, diagnosticError: cause.message}; }
+    missingClick.request = {frame: 'preview', locator: 'body', localPosition: {x: 20, y: 20}};
+    try {
+      missingClick.afterDiagnostics = await frames.preview.evaluate(() => ({observedAt: performance.now(), documentOrigin: performance.timeOrigin,
+        url: location.href, focus: document.hasFocus(), probe: window.__backgroundControl || null}));
+    } catch (cause) { missingClick.lateReadError = cause.message; }
   }
   assert.equal(seen.clicks.length, 1, 'un clic par nouveau document' + (missingClick ? ' — ' + JSON.stringify(missingClick) : ''));
   assert.equal(seen.clicks[0].trusted, true);

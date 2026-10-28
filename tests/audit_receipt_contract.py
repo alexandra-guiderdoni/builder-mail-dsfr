@@ -20,6 +20,35 @@ SCRIPT = ROOT / "scripts/audit_receipt.py"
 CHECKED = 0
 
 
+def node_options_tokens(value):
+    """ParseNodeOptionsEnvVar, Node v24.22.1 src/node_options.cc (ParseNodeOptionsEnvVar) (pas un shell)."""
+    tokens, quoted, new_argument, index = [], False, True, 0
+    while index < len(value):
+        char = value[index]
+        if char == "\\" and quoted:
+            index += 1
+            if index == len(value):
+                raise SystemExit("NODE_OPTIONS : échappement non terminé")
+            char = value[index]
+        elif char == " " and not quoted:
+            new_argument = True
+            index += 1
+            continue
+        elif char == '"':
+            quoted = not quoted
+            index += 1
+            continue
+        if new_argument:
+            tokens.append(char)
+            new_argument = False
+        else:
+            tokens[-1] += char
+        index += 1
+    if quoted:
+        raise SystemExit("NODE_OPTIONS : citation double non terminée")
+    return tokens
+
+
 def expect(condition, message):
     global CHECKED
     CHECKED += 1
@@ -361,9 +390,31 @@ if os.environ.get("RECEIPT_NODE"):
             # Le Node parent du wrapper est lui-même un test : ne pas faire
             # passer l'enfant autonome pour son worker de test hérité.
             child_env = {key: value for key, value in os.environ.items() if key != "NODE_TEST_CONTEXT"}
-            run = subprocess.run([os.environ["RECEIPT_NODE"], "--test", "--test-reporter=tap", str(child)],
+            # NODE_OPTIONS est préservé : un reporter TAP hérité ne doit pas être ajouté une deuxième fois.
+            options = node_options_tokens(child_env.get("NODE_OPTIONS", ""))
+            reporters, destinations = [], []
+            index = 0
+            while index < len(options):
+                name, equals, value = options[index].partition("=")
+                name = name.replace("_", "-")  # Nom uniquement : les valeurs restent littérales.
+                for flag, values in [("--test-reporter", reporters), ("--test-reporter-destination", destinations)]:
+                    if name == flag:
+                        if not equals:
+                            index += 1
+                            value = options[index] if index < len(options) else ""
+                        values.append(value)
+                        break
+                index += 1
+            if (reporters not in ([], ["tap"]) or destinations not in ([], ["stdout"]) or
+                    (destinations and reporters != ["tap"])):
+                raise SystemExit("NODE_OPTIONS : reporter/destination incompatible avec un unique TAP sur stdout ; aucun enfant Node lancé")
+            reporter = [] if reporters else ["--test-reporter=tap"]
+            run = subprocess.run([os.environ["RECEIPT_NODE"], "--test", *reporter, str(child)],
                                  capture_output=True, text=True, timeout=10, env=child_env)
-            counts = module.parse_suite(run.stdout)
+            try:
+                counts = module.parse_suite(run.stdout)
+            except module.AuditError as error:
+                raise SystemExit(f"Node réel {label}, status={run.returncode}: {error}\nstdout={run.stdout}\nstderr={run.stderr}") from error
             # Suivant le producteur Node, abort peut être compté fail plutôt
             # que cancelled : ne pas inventer une annulation seule native.
             expect(bool(counts["failed"] or counts["cancelled"]) is bool(expected_failure),
