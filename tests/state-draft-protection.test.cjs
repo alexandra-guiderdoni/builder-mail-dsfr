@@ -140,3 +140,30 @@ for (const kind of ['takeover', 'version']) test(`pending-save : le verrou ${kin
   assert.equal(h.element('save-announce').textContent, spoken);
   assert.equal(h.element('error').textContent, error, 'la cause courante reste affichée');
 });
+
+
+for (const [kind, removed, positions] of [['first', 0, [0, 1]], ['middle', 1, [0, 1, 2]], ['last', 1, [0, 1]]]) {
+  test(`footer drafts : retrait ${kind}, précédents conservés et suivants recalés sans contaminer le modèle`, async () => {
+    const h = await setup(), A = h.A, doc = A.doc().id, block = A.doc().blocks[0].id;
+    // Le cas middle teste le contrat d'indexation avec trois positions synthétiques ; l'UI en autorise deux.
+    for (const i of positions) A.State.setDraft(doc, block, 'field-footer-url-' + i, DRAFT + '/' + i, 'URL invalide ' + i);
+    A.State.setDraft(doc, block, 'article-source', DRAFT + '/source', 'Autre champ');
+    A.State.setDraft(doc, block + '-autre', 'field-footer-url-0', DRAFT + '/bloc', 'Autre bloc');
+    A.State.setDraft(doc + '-autre', block, 'field-footer-url-0', DRAFT + '/composition', 'Autre composition');
+    const before = [...A.drafts.values()].map(d => ({...d}));
+    const model = JSON.stringify(A.library), stored = JSON.stringify(h.record().library);
+    A.State.dropFooterDraft(doc, block, removed);
+    const expected = before.filter(d => !(d.doc === doc && d.block === block && d.input === 'field-footer-url-' + removed)).map(d => {
+      if (d.doc !== doc || d.block !== block || !d.input.startsWith('field-footer-url-')) return d;
+      const index = Number(d.input.slice('field-footer-url-'.length));
+      return index > removed ? {...d, input: 'field-footer-url-' + (index - 1)} : d;
+    });
+    const normalize = values => values.map(d => JSON.stringify(d)).sort();
+    assert.equal(JSON.stringify(normalize([...A.drafts.values()])), JSON.stringify(normalize(expected)));
+    for (const d of A.drafts.values()) assert(A.drafts.has(`${d.doc}|${d.block}|${d.input}`), 'clé cohérente après remappage');
+    assert.equal(JSON.stringify(A.library), model); assert.equal(JSON.stringify(h.record().library), stored);
+    assert(!JSON.stringify(A.Model.library(A.library)).includes(DRAFT), 'la sérialisation JSON du modèle valide ne contient aucun brouillon');
+    assert.throws(() => A.State.guard(), /Corrigez ce lien/);
+    assert.equal(h.unload(), true, 'les survivants restent protégés contre un abandon');
+  });
+}

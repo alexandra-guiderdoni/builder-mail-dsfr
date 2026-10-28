@@ -6,7 +6,6 @@ Aucune de ces vérifications ne repose sur `assert` : elles restent actives sous
 import json
 import re
 import unicodedata
-from html import unescape
 from html.parser import HTMLParser
 from pathlib import Path
 
@@ -23,6 +22,14 @@ class _Text(HTMLParser):
     """
 
     VOID = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"}
+    # Séparateurs sémantiques HTML seulement : aucune inférence depuis les CSS.
+    BOUNDARIES = {
+        "address", "article", "aside", "blockquote", "br", "caption", "dd", "details",
+        "dialog", "div", "dl", "dt", "fieldset", "figcaption", "figure", "footer",
+        "form", "h1", "h2", "h3", "h4", "h5", "h6", "header", "hgroup", "hr",
+        "li", "main", "nav", "ol", "p", "pre", "section", "summary", "table",
+        "tbody", "td", "tfoot", "th", "thead", "tr", "ul",
+    }
 
     def __init__(self):
         super().__init__(convert_charrefs=True)
@@ -38,12 +45,16 @@ class _Text(HTMLParser):
             or "hidden" in attributes
             or bool(re.search(r"(?:^|;)\s*(?:display\s*:\s*none|visibility\s*:\s*(?:hidden|collapse)|content-visibility\s*:\s*hidden)\s*(?:!important\s*)?(?:;|$)", inline, re.IGNORECASE))
         )
+        if not blocked and tag in self.BOUNDARIES:
+            self.parts.append(" ")
         if tag not in self.VOID:
             self.stack.append((tag, blocked))
 
     def handle_endtag(self, tag):
         for index in range(len(self.stack) - 1, -1, -1):
             if self.stack[index][0] == tag:
+                if not self.stack[index][1] and tag in self.BOUNDARIES:
+                    self.parts.append(" ")
                 del self.stack[index:]
                 break
 
@@ -57,7 +68,8 @@ class _Text(HTMLParser):
 
 
 def normalize(text):
-    return re.sub(r"\s+", " ", unicodedata.normalize("NFC", unescape(text))).strip()
+    """Normalise du texte brut, sans parsing HTML ni décodage d'entités."""
+    return re.sub(r"\s+", " ", unicodedata.normalize("NFC", text)).strip()
 
 
 def rendered_text(html):
@@ -65,7 +77,9 @@ def rendered_text(html):
     parser = _Text()
     parser.feed(html)
     parser.close()
-    return normalize(" ".join(parser.parts))
+    # HTMLParser décode les références une seule fois. Les fragments inline
+    # contigus restent contigus ; seuls les séparateurs structurels sont ajoutés.
+    return normalize("".join(parser.parts))
 
 
 def expected_text_in_html(html, expected):

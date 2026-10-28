@@ -128,6 +128,44 @@ expect(checks.expected_text_in_html("<p aria-hidden=true>Mes newsletters</p>", "
 expect(checks.expected_text_in_html("<p class=externe>Mes newsletters</p>", "Mes newsletters"),
        "une classe CSS inconnue reste seulement une présence candidate ; aucune visibilité calculée")
 
+# Contrat statique : concaténation inline, séparateurs de blocs et décodage unique.
+# Les attentes sont du texte brut ; elles ne sont ni parsées en HTML ni décodées.
+text_cases = [('inline contiguous', '<p>News<strong>letter</strong></p>', 'Newsletter', True),
+ ('hidden inline contiguous',
+  '<p>News<span hidden>REMOVE</span><strong>letter</strong></p>',
+  'Newsletter',
+  True),
+ ('inline original whitespace', '<p>News <strong>letter</strong></p>', 'News letter', True),
+ ('visible blocks separate', '<p>News</p><p>letter</p>', 'News letter', True),
+ ('visible blocks never concatenate', '<p>News</p><p>letter</p>', 'Newsletter', False),
+ ('line break boundary', 'News<br>letter', 'News letter', True),
+ ('ordinary entity once', '<p>&lt; &amp; &#60;</p>', '< & <', True),
+ ('literal entity not decoded twice', '<p>&amp;lt;</p>', '<', False),
+ ('literal entity spelling retained', '<p>&amp;lt;</p>', '&lt;', True),
+ ('plaintext expectation not HTML', '<p>&lt;strong&gt;</p>', '<strong>', True),
+ ('expectation literal not decoded', '<p>&lt;</p>', '&lt;', False),
+ ('literal amp entity not decoded', '<p>&amp;amp;</p>', '&amp;', True),
+ ('double numeric entity not decoded', '<p>&amp;#60;</p>', '<', False),
+ ('less-than literal', '<p>1 &lt; 2</p>', '1 < 2', True),
+ ('scripts excluded', '<script>Newsletter</script>', 'Newsletter', False),
+ ('title excluded', '<head><title>Newsletter</title></head>', 'Newsletter', False),
+ ('hidden block excluded', '<p>News<div hidden>REMOVE</div>letter</p>', 'Newsletter', True)]
+for name, markup, wanted, accepted in text_cases:
+    expect(checks.expected_text_in_html(markup, wanted) is accepted,
+           "présence statique : " + name)
+    with tempfile.TemporaryDirectory() as directory:
+        base = Path(directory)
+        rendered = base / "scene.html"
+        rendered.write_text(markup)
+        collection = base / "capture.json"
+        collection.write_text(json.dumps({"rendered_html_path": str(rendered)}))
+        actual_error = checks.scene_expectation_error("text-contract", [], wanted, collection)
+        expect((actual_error is None) is accepted, "garde de scène réel : " + name)
+expect(checks.normalize("&lt;") == "&lt;", "normalize conserve une attente littérale")
+expect(checks.rendered_text("<p>&amp;lt;</p>") == "&lt;", "HTML décodé une fois par le parseur")
+expect(checks.rendered_text("<p>News<strong>letter</strong></p>") == "Newsletter",
+       "aucun espace inventé entre fragments inline")
+
 # Sélection de scènes : erreurs explicites.
 scenes = [("editor", 1), ("dialog", 2), ("P01", 3)]
 expect(checks.select_scenes(scenes, None) == scenes, "sans sélection : toutes")

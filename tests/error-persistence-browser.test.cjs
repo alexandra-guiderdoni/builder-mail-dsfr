@@ -48,7 +48,7 @@ test('cancel-fields n’éteint pas l’alerte persistante de lecture seule', as
   } finally { await browser.close(); }
 });
 
-test('failing(false) préserve l’alerte persistante tant que la lecture seule reste active', async () => {
+test('la fin d’une sauvegarde préserve le statut et l’alerte de lecture seule', async () => {
   const browser = await chromium.launch({headless: true});
   try {
     const {page} = await open(browser);
@@ -65,11 +65,14 @@ test('failing(false) préserve l’alerte persistante tant que la lecture seule 
     await page.evaluate(() => MailBuilder.State.outdated());
     const persistent = await page.locator('#error').innerText();
     assert.match(persistent, /nouvelle version/, 'outdated pose l’alerte persistante');
-    // Fin de la sauvegarde : succès → failing(false) ne doit pas effacer la persistante tant que readOnly reste actif.
-    await page.evaluate(() => window.__release());
-    await saved(page);
-    // Vérification directe de restoreErrorFromState : l'alerte doit se replacer dans #error.
-    await page.evaluate(() => { MailBuilder.State.restoreErrorFromState?.() ?? null; });
+    // La fin réelle de l’écriture ne doit pas annoncer « sauvegardée » à la place du verrou.
+    await page.evaluate(async () => { await window.__release(); await MailBuilder.State.settle(); });
+    assert.match(await page.locator('#save-state').innerText(), /Lecture seule/);
+    assert.match(await page.locator('#save-announce').innerText(), /Lecture seule/);
+    const stored = await page.evaluate(() => MailBuilder.Storage.load());
+    assert.equal(stored.library.documents[0].name, 'Pendant outdated', 'l’écriture retenue a réellement terminé');
+    // Après effacement ponctuel, la mémoire de l’alerte doit encore la rétablir.
+    await page.evaluate(() => { MailBuilder.error(''); MailBuilder.State.restoreErrorFromState(); });
     const restored = await page.locator('#error').innerText();
     assert.equal(restored, persistent, 'la persistante de lecture seule survit à la fin de la sauvegarde');
   } finally { await browser.close(); }

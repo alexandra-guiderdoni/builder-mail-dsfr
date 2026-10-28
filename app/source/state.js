@@ -69,7 +69,9 @@
     const prefix = "field-footer-url-", moved = [];
     for (const [key, d] of [...A.drafts]) {
       if (d.doc !== doc || d.block !== block || !d.input.startsWith(prefix)) continue;
-      A.drafts.delete(key); const i = Number(d.input.slice(prefix.length));
+      const i = Number(d.input.slice(prefix.length));
+      if (i < index) continue;
+      A.drafts.delete(key);
       if (i > index) moved.push({...d, input: prefix + (i - 1)});
     }
     for (const d of moved) A.drafts.set(draftKey(d.doc, d.block, d.input), d);

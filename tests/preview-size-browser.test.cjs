@@ -119,7 +119,8 @@ test('aperçu isolé : 52 blocs jusqu’au pied de page, redimensionnement et r�
       const before = await page.evaluate(() => JSON.stringify(MailBuilder.doc()));
       for (const width of [1280, 1024, 390, 320]) {
         await page.setViewportSize({width, height: 900});
-        await frame.waitForFunction(() => document.documentElement.scrollHeight <= document.documentElement.clientHeight, null, {timeout: 10000});
+        // Le polling rAF peut s’arrêter quand l’iframe est hors écran, même si la mesure produit a terminé.
+        await frame.waitForFunction(() => document.documentElement.scrollHeight <= document.documentElement.clientHeight, null, {timeout: 10000, polling: 50});
         const geometry = await frame.evaluate(() => ({scroll: document.documentElement.scrollHeight, client: document.documentElement.clientHeight, last: [...document.body.children].filter(e => e.tagName !== 'SCRIPT').at(-1).getBoundingClientRect().bottom}));
         assert(geometry.scroll <= geometry.client && geometry.last <= geometry.client, JSON.stringify(geometry));
       }
