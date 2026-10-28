@@ -60,6 +60,7 @@
   function links(block) {
     const definition = M.component(block.component);
     return [
+      ...Object.entries(block.remoteImages || {}).map(([field, url]) => ({url, image: true, label: "", urlField: `remote-image-url-${field}`, labelField: `remote-image-url-${field}`})),
       ...definition.links.map(link => ({url: block.values[link.url], label: block.values[link.label], urlField: `field-${link.url}`, labelField: `field-${link.label}`})),
       ...(block.additionalLinks || []).map((link, i) => ({url: link.url, label: link.label, urlField: `field-footer-url-${i}`, labelField: `field-footer-label-${i}`})),
       ...(block.source ? [{url: block.source, label: block.sourceLabel?.trim() || "Consulter la source", urlField: "article-source", labelField: "article-source-label"}] : [])
@@ -71,7 +72,7 @@
       const definition = M.component(block.component), name = `Bloc ${index + 1} « ${definition.label} »`;
       const add = (rule, field, detail) => { if (!found.some(w => w.rule === rule && w.block === block.id)) found.push({rule, block: block.id, field, message: `${name} : ${detail}`}); };
       const items = links(block);
-      for (const link of items) { const host = hostOf(link.url); if (host && demoHost(host)) add("demo-domain", link.urlField, `lien de démonstration vers ${host}.`); }
+      for (const link of items) { const host = hostOf(link.url); if (host && demoHost(host)) add("demo-domain", link.urlField, `${link.image ? "image hébergée de démonstration" : "lien de démonstration"} vers ${host}.`); }
       const unchanged = definition.fields.filter(f => {
         if (!f.default.trim() || block.values[f.key] !== f.default) return false;
         if (f.type === "text") return true;

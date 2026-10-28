@@ -251,3 +251,12 @@ Après publication, contrôler l’URL HTTPS renvoyée par le déploiement, l’
 ## Limites à conserver visibles
 
 La comparaison des 52 structures et du CSS n’exerce pas l’affichage de tous les clients mail, la réécriture du presse-papiers par la messagerie, les images reçues, les restrictions du parc ni un audit RGAA complet. Les versions de recette et l’état de qualification figurent dans [RECETTE-APPLICATION.md](RECETTE-APPLICATION.md).
+
+
+## Images HTTPS et format v2 (#192)
+
+Le modèle conserve les données locales dans `values` et sélectionne les références dans `remoteImages`. Seules les clés image sont admises. `Model.versions` s’applique aux mutations internes et aux fusions d’objets déjà validés ; ne jamais l’appeler avant la validation d’un import pour « réparer » un fichier v1 illégal. Les exports locaux restent v1, les références nécessitent v2. Le validateur des images incorporées et leurs limites restent inchangés.
+
+La CSP du builder ajoute seulement `https:` à `img-src` (et à celle de son aperçu). Aucun `connect-src`, script externe, wildcard ou privilège de sandbox n’est ajouté ; la CSP extérieure SNUM reste restrictive. L’application d’URL utilise le chargeur d’image du navigateur sans fetch, proxy ni archive ; `no-referrer` est demandé aux images distantes. Les dimensions attestent un décodage, pas le MIME, le poids ou la réception. Les URL et données locales sont préservées sans réencodage à la copie/export.
+
+Tests ciblés : `remote-images.test.cjs`, `remote-images-browser.test.cjs`, `image-import-browser.test.cjs`, `image-limits-browser.test.cjs`, `schema-validation.test.cjs`, `preview-contract.test.cjs`. La fixture gzip de 09eff89 vérifie le refus par la vraie distribution ancienne ; son hash est conservé. La sélection par `selectOption` est une preuve de gestion du changement, pas une preuve clavier natif. Les recettes natives et la réception restent des preuves distinctes.

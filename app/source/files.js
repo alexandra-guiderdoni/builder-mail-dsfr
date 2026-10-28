@@ -18,6 +18,10 @@
   // Date d'export locale au format AAAA-MM-JJ (celle du poste, pas l'UTC).
   const exportDate = (now = new Date()) => `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
   const exportName = (base, extension, now) => `${safeName(base)}-${exportDate(now)}.${extension}`;
+  const imageContents = value => {
+    const items = value.schema === "dsfr-mail/library" ? [...value.documents, ...value.templates, ...value.identities] : [value];
+    return items.some(item => item.blocks.some(block => Object.keys(block.remoteImages || {}).length)) ? "avec ses images locales et ses références d’images en ligne (connexion nécessaire pour les afficher)" : "avec ses images";
+  };
   const json = (value, filename) => download(JSON.stringify(value, null, 2), "application/json", filename);
   // Nouvelle image locale seulement : réduite et recompressée selon le contrat de A.Images.
   async function image(file, displayWidth) {
@@ -46,15 +50,16 @@
   function weightRisk(result) {
     return result.level === "ok" ? "" : `${result.level === "alert" ? "Alerte" : "Attention"} : repère local ${result.level === "alert" ? "102" : "90"} Kio atteint. Gmail peut n’afficher qu’une partie d’un message volumineux ; l’envoi reste possible. ${CAUTION}`;
   }
+  const remoteWeight = result => result.hosted ? ` ${result.hosted} image${result.hosted === 1 ? " hébergée" : "s hébergées"}, poids distant non mesuré et non compté ici ; seules les URL sérialisées sont incluses dans le balisage.` : "";
   function weightSummary(result, action = "copy") {
-    const base = `HTML préparé pour ${action === "export" ? "le téléchargement" : "la copie"} : ${kio(result.bytes)} Kio, images comprises.`;
+    const base = `HTML préparé pour ${action === "export" ? "le téléchargement" : "la copie"} : ${kio(result.bytes)} Kio, images ${result.hosted ? "incorporées " : ""}comprises.${remoteWeight(result)}`;
     return result.level === "ok" ? base : `${base} ${result.level === "alert" ? "Alerte" : "Attention"} : risque de troncature Gmail, envoi possible, sans garantie. ${weightTargetText(result)}`;
   }
   function weightText(result, action = "copy") {
-    const base = `HTML préparé pour ${action === "export" ? "le téléchargement" : "la copie"} : ${count(result.bytes)} octets (${kio(result.bytes)} Kio), images comprises.`;
+    const base = `HTML préparé pour ${action === "export" ? "le téléchargement" : "la copie"} : ${count(result.bytes)} octets (${kio(result.bytes)} Kio), images ${result.hosted ? "incorporées " : ""}comprises.`;
     const p = result.parts, share = bytes => `${(100 * bytes / (result.bytes || 1)).toLocaleString("fr-FR", {maximumFractionDigits: 1})} %`;
     const detail = p ? ` Répartition : styles de tête ${count(p.styles)} octets (${share(p.styles)}) ; données d’images incorporées ${count(p.images)} octets (${share(p.images)}, ${result.occurrences} occurrence${result.occurrences === 1 ? "" : "s"}, ${result.distinct} fichier${result.distinct === 1 ? " distinct" : "s distincts"}, URL data: et Base64 compris) ; textes, balisage et styles inline ${count(p.other)} octets (${share(p.other)}).${result.variants ? " Les variantes de logos clair et sombre sont prévues par le gabarit." : ""}` : "";
-    return `${base}${detail}${result.level === "ok" ? "" : ` ${weightRisk(result)} ${weightAdvice(result)} ${weightTargetText(result)}`} Les prestataires situent la troncature Gmail vers 102 000 octets de HTML reçu ; Gmail ne publie pas de limite. La messagerie peut extraire les images et retirer les styles : le poids reçu n’est pas mesuré ici. Faites un envoi de test avant diffusion.`;
+    return `${base}${remoteWeight(result)}${detail}${result.level === "ok" ? "" : ` ${weightRisk(result)} ${weightAdvice(result)} ${weightTargetText(result)}`} Les prestataires situent la troncature Gmail vers 102 000 octets de HTML reçu ; Gmail ne publie pas de limite. La messagerie peut extraire les images et retirer les styles : le poids reçu n’est pas mesuré ici. Faites un envoi de test avant diffusion.`;
   }
   let weightTimer, weightCost = 0;
   function showWeight(result, text = weightText(result)) {
@@ -101,5 +106,5 @@
     if (warnings?.length) await new Promise(resolve => setTimeout(resolve, 250));
     A.notice([`Courriel copié en HTML et texte. ${result.level === "ok" ? "" : `${weightRisk(result)} ${weightAdvice(result)} `}Contrôlez le collage et les images dans votre messagerie.`, ...A.Render.warnings(A.doc())].join(" "), ticket);
   }
-  A.Files = Object.freeze({download, json, safeName, exportDate, exportName, image, validate, copy, weightText, weightSummary, weightAdvice, weightTargetText, measureWeight, scheduleWeight, staleWeight});
+  A.Files = Object.freeze({download, json, imageContents, safeName, exportDate, exportName, image, validate, copy, weightText, weightSummary, weightAdvice, weightTargetText, measureWeight, scheduleWeight, staleWeight});
 })();

@@ -75,7 +75,7 @@
   }
   function component(id) { const result = components.get(id); if (!result) fail("Composant de courriel inconnu."); return result; }
   function block(value) {
-    object(value, ["id", "component", "values", "source"], "Bloc", ["sourceLabel", ...(value?.component === "mail-50" ? ["additionalLinks"] : [])]);
+    object(value, ["id", "component", "values", "source"], "Bloc", ["sourceLabel", "remoteImages", ...(value?.component === "mail-50" ? ["additionalLinks"] : [])]);
     text(value.id, "Identifiant"); if (!value.id) fail("Identifiant de bloc vide.");
     const definition = component(value.component);
     object(value.values, definition.fields.map(f => f.key), definition.label);
@@ -83,6 +83,12 @@
       const v = value.values[field.key]; text(v, field.label);
       if (field.type === "image" && !(definition.id === "mail-31" && field.key === "f0" && v === "")) { try { image(v); } catch (cause) { fail(`${definition.label}, ${field.label} : ${cause.message}`); } }
       if (field.type === "url") (definition.family === "Pieds de page" ? footerUrl : url)(v);
+    }
+    if (Object.hasOwn(value, "remoteImages")) {
+      const imageKeys = definition.fields.filter(f => f.type === "image").map(f => f.key);
+      object(value.remoteImages, [], "Images distantes", imageKeys);
+      if (!Object.keys(value.remoteImages).length) fail("Une source distante vide doit être retirée.");
+      for (const address of Object.values(value.remoteImages)) { text(address, "Adresse de l’image distante"); url(address); }
     }
     if (Object.hasOwn(value, "additionalLinks")) {
       if (!Array.isArray(value.additionalLinks) || value.additionalLinks.length > 2) fail("Le pied de page accepte au plus deux liens supplémentaires.");
@@ -104,11 +110,14 @@
   }
   function document(value) {
     object(value, ["schema", "version", "catalogue", "id", "name", "subject", "blocks"], "Composition");
-    if (value.schema !== "dsfr-mail/document" || value.version !== 1) fail("Version de composition non prise en charge.");
+    if (value.schema !== "dsfr-mail/document" || ![1, 2].includes(value.version)) fail("Version de composition non prise en charge.");
     if (value.catalogue !== A.catalog.id) fail("Cette composition utilise un autre catalogue. Conservez son fichier original pour une migration.");
     for (const key of ["id", "name", "subject"]) text(value[key], key);
     if (!value.id || !value.name.trim()) fail("Identifiant et nom de composition requis.");
-    blocks(value.blocks); return value;
+    blocks(value.blocks);
+    if (value.version === 2 && !remoteBlocks(value.blocks)) fail("Version de composition non prise en charge : la version 2 est réservée aux images distantes.");
+    if (value.version === 1 && remoteBlocks(value.blocks)) fail("Les images distantes nécessitent une composition de version 2. Le fichier original reste inchangé.");
+    return value;
   }
   function library(value) {
     collected = new Set();
@@ -116,7 +125,7 @@
   }
   function libraryFields(value) {
     object(value, ["schema", "version", "catalogue", "activeId", "documents", "templates", "identities"], "Bibliothèque");
-    if (value.schema !== "dsfr-mail/library" || value.version !== 1) fail("Version de bibliothèque non prise en charge ; les données sont conservées.");
+    if (value.schema !== "dsfr-mail/library" || ![1, 2].includes(value.version)) fail("Version de bibliothèque non prise en charge ; les données sont conservées.");
     if (value.catalogue !== A.catalog.id) fail("Cette bibliothèque utilise un autre catalogue ; les données restent intactes pour une migration.");
     if (!Array.isArray(value.documents) || !Array.isArray(value.templates) || !Array.isArray(value.identities)) fail("Bibliothèque incomplète.");
     for (const list of [value.documents, value.templates, value.identities]) {
@@ -132,7 +141,24 @@
         if (ids.has(item.id)) fail("Identifiant de bibliothèque dupliqué."); ids.add(item.id);
       }
     }
+    if (value.version === 2 && ![...value.documents, ...value.templates, ...value.identities].some(i => remoteBlocks(i.blocks))) fail("Version de bibliothèque non prise en charge ; la version 2 est réservée aux images distantes.");
+    if (value.version === 1 && ([...value.documents, ...value.templates].some(d => d.version === 2) || value.identities.some(i => remoteBlocks(i.blocks)))) fail("Les images distantes nécessitent une bibliothèque de version 2. Le fichier original reste inchangé.");
     if (!value.documents.some(d => d.id === value.activeId)) fail("Composition active absente.");
+    return value;
+  }
+  const remoteBlocks = values => values.some(b => b.remoteImages && Object.keys(b.remoteImages).length);
+  const imageSource = (block, key) => block.remoteImages?.[key] ?? block.values[key];
+  function localImage(block, key, value) {
+    block.values[key] = value;
+    if (block.remoteImages) { delete block.remoteImages[key]; if (!Object.keys(block.remoteImages).length) delete block.remoteImages; }
+  }
+  // Seulement après une mutation de l’éditeur ou une fusion d’objets déjà validés ; jamais réparer un import v1 illégal.
+  function versions(value) {
+    if (value.schema === "dsfr-mail/document") value.version = remoteBlocks(value.blocks) ? 2 : 1;
+    else {
+      for (const doc of [...value.documents, ...value.templates]) versions(doc);
+      value.version = [...value.documents, ...value.templates].some(d => d.version === 2) || value.identities.some(i => remoteBlocks(i.blocks)) ? 2 : 1;
+    }
     return value;
   }
   const id = () => crypto.randomUUID();
@@ -172,5 +198,5 @@
     component(value.component).fields.filter(f => f.type === "text").forEach((f, i) => { if (strings[i] !== undefined) value.values[f.key] = strings[i]; });
     return value;
   }
-  A.Model = Object.freeze({copy, document, library, block, blocks, component, image, url, checkUrl, urlMessages: URL_MESSAGES, id, createBlock, create, clone, hasDate, uniqueName, derive, initial, setTexts});
+  A.Model = Object.freeze({copy, document, library, block, blocks, component, image, imageSource, localImage, versions, url, checkUrl, urlMessages: URL_MESSAGES, id, createBlock, create, clone, hasDate, uniqueName, derive, initial, setTexts});
 })();

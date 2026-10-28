@@ -118,7 +118,7 @@
   }
   function change(mutator, redraw = true, input = false) {
     if (readOnly) throw readOnlyError();
-    if (input === "edit") guardEdit(); else if (restoring || !input) guard(); const next = M.copy(A.library); mutator(next); M.library(next); A.library = next; revision++; lastChange = Date.now(); pruneDrafts();
+    if (input === "edit") guardEdit(); else if (restoring || !input) guard(); const next = M.copy(A.library); mutator(next); M.versions(next); M.library(next); A.library = next; revision++; lastChange = Date.now(); pruneDrafts();
     if (!A.doc().blocks.some(b => b.id === A.selected)) A.selected = A.doc().blocks[0]?.id || null;
     if (redraw) { clearTimeout(previewTimer); A.UI.refresh(); } else { A.UI.summary(); previewAfterInput(); }
     return save();
@@ -231,7 +231,7 @@
         }
       }
     }
-    next.activeId = active; return {library: M.library(next), copies, drafts, selected};
+    next.activeId = active; return {library: M.library(M.versions(next)), copies, drafts, selected};
   }
   async function takeOver() {
     if (!readOnly) throw new Error("Cette fenêtre détient déjà la bibliothèque.");

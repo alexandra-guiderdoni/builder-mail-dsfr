@@ -19,3 +19,17 @@ test('le bundle reste un script HTML complet et la CSP autorise les deux emprein
   assert(snum.includes('sandbox=""')); assert(!snum.includes('sha256-' + hash(measure)));
   assert(!snum.includes('window.MailBuilder.previewMeasure'));
 });
+
+
+test('#192 : seule la politique image du builder autorise HTTPS, SNUM et les sandbox restent restreints', () => {
+  for (const file of ['portable.html', 'web/index.html', 'snum.html']) {
+    const html = fs.readFileSync('app/distribution/' + file, 'utf8');
+    const csp = /http-equiv="Content-Security-Policy" content="([^"]+)"/.exec(html)[1];
+    const directives = Object.fromEntries(csp.split(';').filter(Boolean).map(s => {const [key, ...values] = s.trim().split(/\s+/); return [key, values];}));
+    assert.deepEqual(directives['default-src'], ["'none'"]);
+    assert.deepEqual(directives['connect-src'], file === 'web/index.html' ? ["'self'"] : ["'none'"]);
+    assert.deepEqual(directives['img-src'], file === 'snum.html' ? ['data:', 'blob:'] : file === 'portable.html' ? ['data:', 'blob:', 'https:'] : ["'self'", 'data:', 'blob:', 'https:']);
+    assert.ok(directives['script-src'].every(value => /^'sha256-[^']+'$/.test(value)));
+    assert.equal(html.includes('allow-same-origin'), false);
+  }
+});

@@ -79,7 +79,7 @@
       levels.set(heading.field, level);
       if (rank && level) context.push({rank, level});
     }
-    const sourceTemplate = value.component === "mail-31" && value.values.f0 === "" ? articleTextTemplate(value.values) : value.component === PREHEADER ? preheaderTemplate : definition.semanticTemplate;
+    const sourceTemplate = value.component === "mail-31" && M.imageSource(value, "f0") === "" ? articleTextTemplate(value.values) : value.component === PREHEADER ? preheaderTemplate : definition.semanticTemplate;
     let template = sourceTemplate.replace(/\{\{heading_(open|close)_(f\d+)\}\}/g, (_, edge, key) => {
       const level = levels.get(key);
       return !level ? "" : edge === "close" ? `</h${level}>` : `<h${level} style="display:inline;margin:0;font-size:inherit;line-height:inherit;font-weight:inherit;">`;
@@ -90,7 +90,7 @@
       template = template.replace(new RegExp(`(<a\\b[^>]*?)\\s+href="\\{\\{${link.url}\\}\\}"`, "g"), "$1");
     }
     const fill = part => part.replace(/\{\{(f\d+)\}\}/g, (_, key) => {
-      const encoded = escape(incompleteLabels.has(key) ? "Intitulé du lien à renseigner" : value.values[key]);
+      const encoded = escape(incompleteLabels.has(key) ? "Intitulé du lien à renseigner" : fields.get(key).type === "image" ? M.imageSource(value, key) : value.values[key]);
       return fields.get(key).type === "text" ? encoded.replace(/\n/g, "<br>") : encoded;
     });
     let result;
@@ -99,6 +99,7 @@
       const extras = footerLinks(definition.semanticTemplate, value, preview), end = template.indexOf("</a>", template.indexOf("{{f2}}")) + "</a>".length;
       result = fill(template.slice(0, end)) + extras + fill(template.slice(end));
     } else result = fill(template);
+    result = result.replace(/<img\b(?=[^>]*\bsrc="https:\/\/)/gi, '<img referrerpolicy="no-referrer"');
     if (value.source) result = injectSourceLink(result, value.source, value.sourceLabel);
     return result;
   }
@@ -121,7 +122,7 @@
   function html(value, preview = false) {
     if (!preview) assertOutput(value);
     const title = value.subject.trim() ? value.subject : value.name;
-    return `<!doctype html><html lang="fr" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escape(title)}</title>${preview ? '<meta http-equiv="Content-Security-Policy" content="default-src &#39;none&#39;;style-src &#39;unsafe-inline&#39;;img-src data:;base-uri &#39;none&#39;;form-action &#39;none&#39;">' : ""}<style>${A.catalog.renderCss}\n${A.catalog.layoutCss}</style></head><body style="font-family:Tahoma,Geneva,sans-serif;">${body(value, preview)}</body></html>`;
+    return `<!doctype html><html lang="fr" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escape(title)}</title>${preview ? '<meta http-equiv="Content-Security-Policy" content="default-src &#39;none&#39;;style-src &#39;unsafe-inline&#39;;img-src data: https:;base-uri &#39;none&#39;;form-action &#39;none&#39;">' : ""}<style>${A.catalog.renderCss}\n${A.catalog.layoutCss}</style></head><body style="font-family:Tahoma,Geneva,sans-serif;">${body(value, preview)}</body></html>`;
   }
   function plain(value) {
     M.document(value);
@@ -233,10 +234,11 @@
   function weightDetails(markup, value) {
     const result = weight(markup), bytes = text => new TextEncoder().encode(text).byteLength;
     const styles = [...markup.matchAll(/<style\b[^>]*>([\s\S]*?)<\/style>/gi)].reduce((sum, match) => sum + bytes(match[1]), 0);
-    const images = [];
+    const images = []; let hosted = 0;
     for (const match of markup.matchAll(/<img\b[^>]*>/gi)) {
       const src = /\bsrc="(data:image\/[^"\s]+)"/i.exec(match[0]);
       if (src) images.push(src[1]);
+      else if (/\bsrc="https:\/\//i.test(match[0])) hosted++;
     }
     const imageBytes = images.reduce((sum, src) => sum + bytes(src), 0);
     const parts = {styles, images: imageBytes, other: result.bytes - styles - imageBytes};
@@ -245,12 +247,12 @@
     // jamais « bloc le plus lourd » déduit d’un autre rendu. Les logos ne sont jamais proposés au retrait.
     let target = null;
     for (const block of value ? used(value) : []) for (const field of A.Model.component(block.component).fields) {
-      const text = block.values[field.key];
+      const text = field.type === "image" ? M.imageSource(block, field.key) : block.values[field.key];
       if (dominant === "images" ? field.type !== "image" || !images.includes(text) : dominant !== "other" || field.type !== "text") continue;
       const size = bytes(text);
       if (!target || size > target.bytes) target = {block: block.id, field: `field-${field.key}`, label: field.label, index: value.blocks.indexOf(block) + 1, component: A.Model.component(block.component).label, bytes: size};
     }
-    return {...result, parts, dominant, occurrences: images.length, distinct: new Set(images).size,
+    return {...result, parts, dominant, hosted, occurrences: images.length, distinct: new Set(images).size,
       variants: /class="[^"]*\bhide-(?:black|white)\b/.test(markup), target};
   }
   A.Render = Object.freeze({escape, block, body, html, plain, exportHtml, clipboardHtml, weight, weightDetails, linkIssues, assertOutput, warnings});

@@ -15,7 +15,7 @@
   // Un intitulé de source vide et une liste de liens vide valent leur absence, comme dans l’éditeur et le rendu.
   function intact(b) {
     const initial = M.createBlock(b.component);
-    return Object.keys(initial.values).every(key => b.values[key] === initial.values[key]) && b.source === initial.source &&
+    return !Object.keys(b.remoteImages || {}).length && Object.keys(initial.values).every(key => b.values[key] === initial.values[key]) && b.source === initial.source &&
       (b.sourceLabel ?? "") === (initial.sourceLabel ?? "") && JSON.stringify(b.additionalLinks ?? []) === JSON.stringify(initial.additionalLinks ?? []);
   }
   function applyIdentity(identityId, docId, label) {
@@ -110,7 +110,7 @@
     },
     "save-now": A.State.save,
     "recover": A.State.recover,
-    "export-document": () => { A.State.guard(); A.Files.json(M.document(A.doc()), A.Files.exportName(A.doc().name, "courriel.json")); A.notice("Composition proposée au téléchargement avec ses images."); },
+    "export-document": () => { A.State.guard(); A.Files.json(M.document(A.doc()), A.Files.exportName(A.doc().name, "courriel.json")); A.notice(`Composition proposée au téléchargement ${A.Files.imageContents(A.doc())}.`); },
     "export-library": () => { A.State.guard(); A.Files.json(M.library(A.library), A.Files.exportName("bibliotheque-courriels", "json")); A.State.exported(); A.notice("Bibliothèque proposée au téléchargement, avec modèles et identités."); },
     "read-only-export": () => { A.Files.json(M.library(A.library), "bibliotheque.courriels.json"); A.State.exported(); A.notice("Bibliothèque en mémoire proposée au téléchargement : elle contient le travail de cette fenêtre, avec modèles et identités."); },
     "take-over": A.State.takeOver,

@@ -197,3 +197,8 @@ Fournis les deux sorties : copie du mail mis en forme pour collage dans la messa
 
 Livre les sources, les distributions générées, les commandes de génération et de contrôle réellement vérifiées, les notices d’usage et de maintenance, ainsi qu’une fiche de recette avec commandes, résultats, erreurs, limites et éléments non éprouvés. Distingue faits, hypothèses et décisions encore requises ; si un obstacle empêche une exigence, mesure l’écart et les moyens de le lever avant de proposer un changement de périmètre. N’invente aucune preuve et ne déclare jamais « installable sur n’importe quel poste » à partir d’un seul environnement testé.
 ```
+
+
+## Décision complémentaire du 28 octobre 2026 — #192
+
+L’utilisatrice a autorisé toute adresse HTTPS directe en complément du chargement local. Cette décision remplace, pour le mode distant explicite, l’exclusion d’URL de Q8 ; elle ne retire ni ne convertit les images locales. Le format v2 distingue les bibliothèques avec références en ligne, et les anciennes versions les refusent. Le contrôle de chargement dans le navigateur ne vaut pas qualification de réception. Hébergement, politiques réseau du parc et rendu Outlook/Mélissa restent non démontrés.

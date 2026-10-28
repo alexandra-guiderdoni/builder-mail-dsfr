@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- PDG-LARGE-FILE-JUSTIFICATION: page autonome générée ; parseur, moteur et ressources incorporés depuis les sources séparées. -->
-<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none';script-src 'sha256-zqtJ52/rh4UiPtD3lajd65RUXX07UU5BD7K+zNIX6Y4=';style-src 'unsafe-inline';img-src data: blob:;frame-src blob:;base-uri 'none';form-action 'none';connect-src 'none';worker-src 'none'"><title>Collecte SNUM · Convertisseur de courriels</title><style>:root { color-scheme:light; font:100%/1.5 Arial,Helvetica,sans-serif; color:#161616; background:#f6f6f6; }
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none';script-src 'sha256-vesMxFx0huoaNgNNGG5rVZrUB7a6EgNrMkKvXf2CYys=';style-src 'unsafe-inline';img-src data: blob:;frame-src blob:;base-uri 'none';form-action 'none';connect-src 'none';worker-src 'none'"><title>Collecte SNUM · Convertisseur de courriels</title><style>:root { color-scheme:light; font:100%/1.5 Arial,Helvetica,sans-serif; color:#161616; background:#f6f6f6; }
 * { box-sizing:border-box; } body { margin:0; } button,input,select,textarea { font:inherit; }
 header { display:flex; justify-content:space-between; gap:24px; background:#fff; border-top:6px solid #000091; border-bottom:1px solid #ddd; padding:24px 3vw; }
 h1 { margin:0 0 8px; color:#000091; font-size:1.9rem; line-height:1.25; } h2 { font-size:1.25rem; margin:0 0 18px; } h3 { font-size:1.15rem; margin:0 0 8px; }
@@ -144,7 +144,7 @@ window.MailBuilder.catalog = {"id":"6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278
   }
   function component(id) { const result = components.get(id); if (!result) fail("Composant de courriel inconnu."); return result; }
   function block(value) {
-    object(value, ["id", "component", "values", "source"], "Bloc", ["sourceLabel", ...(value?.component === "mail-50" ? ["additionalLinks"] : [])]);
+    object(value, ["id", "component", "values", "source"], "Bloc", ["sourceLabel", "remoteImages", ...(value?.component === "mail-50" ? ["additionalLinks"] : [])]);
     text(value.id, "Identifiant"); if (!value.id) fail("Identifiant de bloc vide.");
     const definition = component(value.component);
     object(value.values, definition.fields.map(f => f.key), definition.label);
@@ -152,6 +152,12 @@ window.MailBuilder.catalog = {"id":"6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278
       const v = value.values[field.key]; text(v, field.label);
       if (field.type === "image" && !(definition.id === "mail-31" && field.key === "f0" && v === "")) { try { image(v); } catch (cause) { fail(`${definition.label}, ${field.label} : ${cause.message}`); } }
       if (field.type === "url") (definition.family === "Pieds de page" ? footerUrl : url)(v);
+    }
+    if (Object.hasOwn(value, "remoteImages")) {
+      const imageKeys = definition.fields.filter(f => f.type === "image").map(f => f.key);
+      object(value.remoteImages, [], "Images distantes", imageKeys);
+      if (!Object.keys(value.remoteImages).length) fail("Une source distante vide doit être retirée.");
+      for (const address of Object.values(value.remoteImages)) { text(address, "Adresse de l’image distante"); url(address); }
     }
     if (Object.hasOwn(value, "additionalLinks")) {
       if (!Array.isArray(value.additionalLinks) || value.additionalLinks.length > 2) fail("Le pied de page accepte au plus deux liens supplémentaires.");
@@ -173,11 +179,14 @@ window.MailBuilder.catalog = {"id":"6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278
   }
   function document(value) {
     object(value, ["schema", "version", "catalogue", "id", "name", "subject", "blocks"], "Composition");
-    if (value.schema !== "dsfr-mail/document" || value.version !== 1) fail("Version de composition non prise en charge.");
+    if (value.schema !== "dsfr-mail/document" || ![1, 2].includes(value.version)) fail("Version de composition non prise en charge.");
     if (value.catalogue !== A.catalog.id) fail("Cette composition utilise un autre catalogue. Conservez son fichier original pour une migration.");
     for (const key of ["id", "name", "subject"]) text(value[key], key);
     if (!value.id || !value.name.trim()) fail("Identifiant et nom de composition requis.");
-    blocks(value.blocks); return value;
+    blocks(value.blocks);
+    if (value.version === 2 && !remoteBlocks(value.blocks)) fail("Version de composition non prise en charge : la version 2 est réservée aux images distantes.");
+    if (value.version === 1 && remoteBlocks(value.blocks)) fail("Les images distantes nécessitent une composition de version 2. Le fichier original reste inchangé.");
+    return value;
   }
   function library(value) {
     collected = new Set();
@@ -185,7 +194,7 @@ window.MailBuilder.catalog = {"id":"6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278
   }
   function libraryFields(value) {
     object(value, ["schema", "version", "catalogue", "activeId", "documents", "templates", "identities"], "Bibliothèque");
-    if (value.schema !== "dsfr-mail/library" || value.version !== 1) fail("Version de bibliothèque non prise en charge ; les données sont conservées.");
+    if (value.schema !== "dsfr-mail/library" || ![1, 2].includes(value.version)) fail("Version de bibliothèque non prise en charge ; les données sont conservées.");
     if (value.catalogue !== A.catalog.id) fail("Cette bibliothèque utilise un autre catalogue ; les données restent intactes pour une migration.");
     if (!Array.isArray(value.documents) || !Array.isArray(value.templates) || !Array.isArray(value.identities)) fail("Bibliothèque incomplète.");
     for (const list of [value.documents, value.templates, value.identities]) {
@@ -201,7 +210,24 @@ window.MailBuilder.catalog = {"id":"6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278
         if (ids.has(item.id)) fail("Identifiant de bibliothèque dupliqué."); ids.add(item.id);
       }
     }
+    if (value.version === 2 && ![...value.documents, ...value.templates, ...value.identities].some(i => remoteBlocks(i.blocks))) fail("Version de bibliothèque non prise en charge ; la version 2 est réservée aux images distantes.");
+    if (value.version === 1 && ([...value.documents, ...value.templates].some(d => d.version === 2) || value.identities.some(i => remoteBlocks(i.blocks)))) fail("Les images distantes nécessitent une bibliothèque de version 2. Le fichier original reste inchangé.");
     if (!value.documents.some(d => d.id === value.activeId)) fail("Composition active absente.");
+    return value;
+  }
+  const remoteBlocks = values => values.some(b => b.remoteImages && Object.keys(b.remoteImages).length);
+  const imageSource = (block, key) => block.remoteImages?.[key] ?? block.values[key];
+  function localImage(block, key, value) {
+    block.values[key] = value;
+    if (block.remoteImages) { delete block.remoteImages[key]; if (!Object.keys(block.remoteImages).length) delete block.remoteImages; }
+  }
+  // Seulement après une mutation de l’éditeur ou une fusion d’objets déjà validés ; jamais réparer un import v1 illégal.
+  function versions(value) {
+    if (value.schema === "dsfr-mail/document") value.version = remoteBlocks(value.blocks) ? 2 : 1;
+    else {
+      for (const doc of [...value.documents, ...value.templates]) versions(doc);
+      value.version = [...value.documents, ...value.templates].some(d => d.version === 2) || value.identities.some(i => remoteBlocks(i.blocks)) ? 2 : 1;
+    }
     return value;
   }
   const id = () => crypto.randomUUID();
@@ -241,7 +267,7 @@ window.MailBuilder.catalog = {"id":"6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278
     component(value.component).fields.filter(f => f.type === "text").forEach((f, i) => { if (strings[i] !== undefined) value.values[f.key] = strings[i]; });
     return value;
   }
-  A.Model = Object.freeze({copy, document, library, block, blocks, component, image, url, checkUrl, urlMessages: URL_MESSAGES, id, createBlock, create, clone, hasDate, uniqueName, derive, initial, setTexts});
+  A.Model = Object.freeze({copy, document, library, block, blocks, component, image, imageSource, localImage, versions, url, checkUrl, urlMessages: URL_MESSAGES, id, createBlock, create, clone, hasDate, uniqueName, derive, initial, setTexts});
 })();
 
 /* Le catalogue et ses variantes contrôlées fournissent le HTML ; les données ne fournissent aucun balisage. */
@@ -325,7 +351,7 @@ window.MailBuilder.catalog = {"id":"6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278
       levels.set(heading.field, level);
       if (rank && level) context.push({rank, level});
     }
-    const sourceTemplate = value.component === "mail-31" && value.values.f0 === "" ? articleTextTemplate(value.values) : value.component === PREHEADER ? preheaderTemplate : definition.semanticTemplate;
+    const sourceTemplate = value.component === "mail-31" && M.imageSource(value, "f0") === "" ? articleTextTemplate(value.values) : value.component === PREHEADER ? preheaderTemplate : definition.semanticTemplate;
     let template = sourceTemplate.replace(/\{\{heading_(open|close)_(f\d+)\}\}/g, (_, edge, key) => {
       const level = levels.get(key);
       return !level ? "" : edge === "close" ? `</h${level}>` : `<h${level} style="display:inline;margin:0;font-size:inherit;line-height:inherit;font-weight:inherit;">`;
@@ -336,7 +362,7 @@ window.MailBuilder.catalog = {"id":"6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278
       template = template.replace(new RegExp(`(<a\\b[^>]*?)\\s+href="\\{\\{${link.url}\\}\\}"`, "g"), "$1");
     }
     const fill = part => part.replace(/\{\{(f\d+)\}\}/g, (_, key) => {
-      const encoded = escape(incompleteLabels.has(key) ? "Intitulé du lien à renseigner" : value.values[key]);
+      const encoded = escape(incompleteLabels.has(key) ? "Intitulé du lien à renseigner" : fields.get(key).type === "image" ? M.imageSource(value, key) : value.values[key]);
       return fields.get(key).type === "text" ? encoded.replace(/\n/g, "<br>") : encoded;
     });
     let result;
@@ -345,6 +371,7 @@ window.MailBuilder.catalog = {"id":"6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278
       const extras = footerLinks(definition.semanticTemplate, value, preview), end = template.indexOf("</a>", template.indexOf("{{f2}}")) + "</a>".length;
       result = fill(template.slice(0, end)) + extras + fill(template.slice(end));
     } else result = fill(template);
+    result = result.replace(/<img\b(?=[^>]*\bsrc="https:\/\/)/gi, '<img referrerpolicy="no-referrer"');
     if (value.source) result = injectSourceLink(result, value.source, value.sourceLabel);
     return result;
   }
@@ -367,7 +394,7 @@ window.MailBuilder.catalog = {"id":"6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278
   function html(value, preview = false) {
     if (!preview) assertOutput(value);
     const title = value.subject.trim() ? value.subject : value.name;
-    return `<!doctype html><html lang="fr" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escape(title)}</title>${preview ? '<meta http-equiv="Content-Security-Policy" content="default-src &#39;none&#39;;style-src &#39;unsafe-inline&#39;;img-src data:;base-uri &#39;none&#39;;form-action &#39;none&#39;">' : ""}<style>${A.catalog.renderCss}\n${A.catalog.layoutCss}</style></head><body style="font-family:Tahoma,Geneva,sans-serif;">${body(value, preview)}</body></html>`;
+    return `<!doctype html><html lang="fr" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escape(title)}</title>${preview ? '<meta http-equiv="Content-Security-Policy" content="default-src &#39;none&#39;;style-src &#39;unsafe-inline&#39;;img-src data: https:;base-uri &#39;none&#39;;form-action &#39;none&#39;">' : ""}<style>${A.catalog.renderCss}\n${A.catalog.layoutCss}</style></head><body style="font-family:Tahoma,Geneva,sans-serif;">${body(value, preview)}</body></html>`;
   }
   function plain(value) {
     M.document(value);
@@ -479,10 +506,11 @@ window.MailBuilder.catalog = {"id":"6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278
   function weightDetails(markup, value) {
     const result = weight(markup), bytes = text => new TextEncoder().encode(text).byteLength;
     const styles = [...markup.matchAll(/<style\b[^>]*>([\s\S]*?)<\/style>/gi)].reduce((sum, match) => sum + bytes(match[1]), 0);
-    const images = [];
+    const images = []; let hosted = 0;
     for (const match of markup.matchAll(/<img\b[^>]*>/gi)) {
       const src = /\bsrc="(data:image\/[^"\s]+)"/i.exec(match[0]);
       if (src) images.push(src[1]);
+      else if (/\bsrc="https:\/\//i.test(match[0])) hosted++;
     }
     const imageBytes = images.reduce((sum, src) => sum + bytes(src), 0);
     const parts = {styles, images: imageBytes, other: result.bytes - styles - imageBytes};
@@ -491,12 +519,12 @@ window.MailBuilder.catalog = {"id":"6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278
     // jamais « bloc le plus lourd » déduit d’un autre rendu. Les logos ne sont jamais proposés au retrait.
     let target = null;
     for (const block of value ? used(value) : []) for (const field of A.Model.component(block.component).fields) {
-      const text = block.values[field.key];
+      const text = field.type === "image" ? M.imageSource(block, field.key) : block.values[field.key];
       if (dominant === "images" ? field.type !== "image" || !images.includes(text) : dominant !== "other" || field.type !== "text") continue;
       const size = bytes(text);
       if (!target || size > target.bytes) target = {block: block.id, field: `field-${field.key}`, label: field.label, index: value.blocks.indexOf(block) + 1, component: A.Model.component(block.component).label, bytes: size};
     }
-    return {...result, parts, dominant, occurrences: images.length, distinct: new Set(images).size,
+    return {...result, parts, dominant, hosted, occurrences: images.length, distinct: new Set(images).size,
       variants: /class="[^"]*\bhide-(?:black|white)\b/.test(markup), target};
   }
   A.Render = Object.freeze({escape, block, body, html, plain, exportHtml, clipboardHtml, weight, weightDetails, linkIssues, assertOutput, warnings});
@@ -711,6 +739,10 @@ window.MailBuilder.catalog = {"id":"6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278
   // Date d'export locale au format AAAA-MM-JJ (celle du poste, pas l'UTC).
   const exportDate = (now = new Date()) => `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
   const exportName = (base, extension, now) => `${safeName(base)}-${exportDate(now)}.${extension}`;
+  const imageContents = value => {
+    const items = value.schema === "dsfr-mail/library" ? [...value.documents, ...value.templates, ...value.identities] : [value];
+    return items.some(item => item.blocks.some(block => Object.keys(block.remoteImages || {}).length)) ? "avec ses images locales et ses références d’images en ligne (connexion nécessaire pour les afficher)" : "avec ses images";
+  };
   const json = (value, filename) => download(JSON.stringify(value, null, 2), "application/json", filename);
   // Nouvelle image locale seulement : réduite et recompressée selon le contrat de A.Images.
   async function image(file, displayWidth) {
@@ -739,15 +771,16 @@ window.MailBuilder.catalog = {"id":"6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278
   function weightRisk(result) {
     return result.level === "ok" ? "" : `${result.level === "alert" ? "Alerte" : "Attention"} : repère local ${result.level === "alert" ? "102" : "90"} Kio atteint. Gmail peut n’afficher qu’une partie d’un message volumineux ; l’envoi reste possible. ${CAUTION}`;
   }
+  const remoteWeight = result => result.hosted ? ` ${result.hosted} image${result.hosted === 1 ? " hébergée" : "s hébergées"}, poids distant non mesuré et non compté ici ; seules les URL sérialisées sont incluses dans le balisage.` : "";
   function weightSummary(result, action = "copy") {
-    const base = `HTML préparé pour ${action === "export" ? "le téléchargement" : "la copie"} : ${kio(result.bytes)} Kio, images comprises.`;
+    const base = `HTML préparé pour ${action === "export" ? "le téléchargement" : "la copie"} : ${kio(result.bytes)} Kio, images ${result.hosted ? "incorporées " : ""}comprises.${remoteWeight(result)}`;
     return result.level === "ok" ? base : `${base} ${result.level === "alert" ? "Alerte" : "Attention"} : risque de troncature Gmail, envoi possible, sans garantie. ${weightTargetText(result)}`;
   }
   function weightText(result, action = "copy") {
-    const base = `HTML préparé pour ${action === "export" ? "le téléchargement" : "la copie"} : ${count(result.bytes)} octets (${kio(result.bytes)} Kio), images comprises.`;
+    const base = `HTML préparé pour ${action === "export" ? "le téléchargement" : "la copie"} : ${count(result.bytes)} octets (${kio(result.bytes)} Kio), images ${result.hosted ? "incorporées " : ""}comprises.`;
     const p = result.parts, share = bytes => `${(100 * bytes / (result.bytes || 1)).toLocaleString("fr-FR", {maximumFractionDigits: 1})} %`;
     const detail = p ? ` Répartition : styles de tête ${count(p.styles)} octets (${share(p.styles)}) ; données d’images incorporées ${count(p.images)} octets (${share(p.images)}, ${result.occurrences} occurrence${result.occurrences === 1 ? "" : "s"}, ${result.distinct} fichier${result.distinct === 1 ? " distinct" : "s distincts"}, URL data: et Base64 compris) ; textes, balisage et styles inline ${count(p.other)} octets (${share(p.other)}).${result.variants ? " Les variantes de logos clair et sombre sont prévues par le gabarit." : ""}` : "";
-    return `${base}${detail}${result.level === "ok" ? "" : ` ${weightRisk(result)} ${weightAdvice(result)} ${weightTargetText(result)}`} Les prestataires situent la troncature Gmail vers 102 000 octets de HTML reçu ; Gmail ne publie pas de limite. La messagerie peut extraire les images et retirer les styles : le poids reçu n’est pas mesuré ici. Faites un envoi de test avant diffusion.`;
+    return `${base}${remoteWeight(result)}${detail}${result.level === "ok" ? "" : ` ${weightRisk(result)} ${weightAdvice(result)} ${weightTargetText(result)}`} Les prestataires situent la troncature Gmail vers 102 000 octets de HTML reçu ; Gmail ne publie pas de limite. La messagerie peut extraire les images et retirer les styles : le poids reçu n’est pas mesuré ici. Faites un envoi de test avant diffusion.`;
   }
   let weightTimer, weightCost = 0;
   function showWeight(result, text = weightText(result)) {
@@ -794,7 +827,7 @@ window.MailBuilder.catalog = {"id":"6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278
     if (warnings?.length) await new Promise(resolve => setTimeout(resolve, 250));
     A.notice([`Courriel copié en HTML et texte. ${result.level === "ok" ? "" : `${weightRisk(result)} ${weightAdvice(result)} `}Contrôlez le collage et les images dans votre messagerie.`, ...A.Render.warnings(A.doc())].join(" "), ticket);
   }
-  A.Files = Object.freeze({download, json, safeName, exportDate, exportName, image, validate, copy, weightText, weightSummary, weightAdvice, weightTargetText, measureWeight, scheduleWeight, staleWeight});
+  A.Files = Object.freeze({download, json, imageContents, safeName, exportDate, exportName, image, validate, copy, weightText, weightSummary, weightAdvice, weightTargetText, measureWeight, scheduleWeight, staleWeight});
 })();
 
 (() => {

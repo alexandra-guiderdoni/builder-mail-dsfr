@@ -60,6 +60,7 @@ def build():
                 "checks.js",
                 "library-actions.js",
                 "library.js",
+                "remote-images.js",
                 "editor.js",
                 "pwa.js",
             ]
@@ -83,7 +84,7 @@ def build():
         .replace("@@SCRIPT@@", script)
     )
     csp = f"default-src 'none';script-src 'sha256-{digest}';style-src 'unsafe-inline';img-src data: blob:;frame-src blob:;base-uri 'none';form-action 'none';"
-    app_csp = csp.replace("script-src ", f"script-src 'sha256-{measure_hash}' ")
+    app_csp = csp.replace("img-src data: blob:", "img-src data: blob: https:").replace("script-src ", f"script-src 'sha256-{measure_hash}' ")
     portable = shell.replace("@@MANIFEST@@", "").replace(
         "@@CSP@@", app_csp + "font-src data:;connect-src 'none';worker-src 'none'"
     )
@@ -91,7 +92,7 @@ def build():
         "@@MANIFEST@@", '<link rel="manifest" href="./manifest.webmanifest">'
     ).replace(
         "@@CSP@@",
-        app_csp.replace("img-src data: blob:", "img-src 'self' data: blob:")
+        app_csp.replace("img-src data: blob: https:", "img-src 'self' data: blob: https:")
         + "font-src data:;connect-src 'self';worker-src 'self';manifest-src 'self'",
     )
     snum_script = "\n".join(

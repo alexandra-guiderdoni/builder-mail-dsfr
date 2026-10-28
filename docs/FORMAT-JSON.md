@@ -53,7 +53,7 @@ Construire la composition avec plusieurs blocs adaptés : en-tête, titre, rubri
 
 Pour produire un JSON avec un autre outil, partir d’un modèle exporté du builder et remplir ses champs. Le schéma contient les 52 définitions de composants, avec leurs libellés et champs ; les exemples par famille permettent de choisir une variante. Les clés `f0`, `f1`, etc. appartiennent au composant indiqué, et ne sont pas interchangeables entre composants.
 
-Les textes restent du texte : aucun HTML ni script fourni par le JSON n’est exécuté. Pour plusieurs paragraphes réorganisables, créer plusieurs blocs. Les images sont incorporées en données PNG, JPEG, GIF ou WebP ; un chemin de fichier ou une URL d’image distante ne convient pas. Pour ajouter un visuel manuellement, utiliser le chargement local dans le builder puis exporter la composition.
+Les textes restent du texte : aucun HTML ni script fourni par le JSON n’est exécuté. Pour plusieurs paragraphes réorganisables, créer plusieurs blocs. Les images sont incorporées en données PNG, JPEG, GIF ou WebP ; un chemin de fichier ou une URL distante ne convient pas dans `values`. Pour ajouter un visuel manuellement, utiliser le chargement local dans le builder puis exporter la composition.
 
 ## Variantes éditoriales
 
@@ -99,3 +99,12 @@ Ces contrôles ne redimensionnent aucune image et ne migrent aucun document : un
 Ouvrir [snum.html](../app/distribution/snum.html), coller le paquet V519 ou le bloc complet de Collecte, puis convertir. La page crée une composition de ce même contrat : rubriques, titres d’articles, faits, enseignements, intérêt SNUM et mots-clés sont répartis en blocs. Les remarques de collecte restent hors du courriel.
 
 Exporter la composition JSON puis l’importer dans le builder pour modifier l’identité, le contenu ou les blocs. Le rendu HTML utilise le même moteur dans les deux pages. Le paquet métier SNUM est analysé seulement par cette page dédiée ; le builder reçoit la composition générique.
+
+
+## Références d’images HTTPS — version 2 (#192)
+
+Les fichiers v1 ne changent pas. Un bloc peut sélectionner une source distante via `remoteImages`, objet non vide dont les clés sont exclusivement celles de ses champs image : par exemple `"remoteImages": {"f0": "https://images.example.org/logo.png"}`. La valeur `values.f0` garde l’image locale de repli, soumise aux limites et contrôles habituels. Ne pas mettre l’URL dans `values`. Seul le champ facultatif image de mail-31 peut avoir un repli vide.
+
+Toute composition portant un tel bloc est en version 2. Une bibliothèque contenant une composition, un modèle ou une identité distante est en version 2 ; ses compositions locales restent en version 1. Les identités n’ont pas de champ version autonome. Une version 2 sans aucune référence distante est refusée, comme une version 1 contenant `remoteImages`. Les écrivains de l’application reviennent à v1 lorsque toutes les références ont été retirées. Le schéma livré décrit ces alternatives fermées.
+
+Les URL doivent être HTTPS, avec hôte et sans identifiants, contrôles ou syntaxe ambiguë ; les règles des autres URL du modèle restent appliquées. L’import valide la structure et les images locales, sans imposer la disponibilité du serveur distant : une panne ne doit pas rendre une bibliothèque entière irrécupérable. L’ouverture peut en revanche demander ces images pour l’aperçu. Ni copie ni export ne téléchargent ou ne réincorporent la référence. Les anciennes distributions refusent v2 avant tout remplacement ; test de compatibilité avec la vraie distribution 09eff89 conservé dans les fixtures.

@@ -19,7 +19,7 @@
         const blocks = lib.documents.find(d => d.id === lib.activeId).blocks, index = blocks.findIndex(b => b.id === id);
         if (index < 0) throw new Error("Le bloc sélectionné a changé.");
         const block = blocks[index]; name = `«\u00a0${A.UI.blockName(block)}\u00a0»`;
-        if (actionName === "remove-image" && block.component === "mail-31") { block.values.f0 = ""; block.values.f1 = ""; }
+        if (actionName === "remove-image" && block.component === "mail-31") { M.localImage(block, "f0", ""); block.values.f1 = ""; }
         if (actionName === "add-footer-link" && block.component === "mail-50") {
           if ((block.additionalLinks?.length || 0) >= 2) throw new Error("Le pied de page accepte deux liens supplémentaires au maximum.");
           (block.additionalLinks ||= []).push({url: "https://exemple.invalid/", label: ""});
@@ -107,7 +107,7 @@
       A.State.guard(); const display = component && A.Images.displayWidth(component, key);
       A.pendingInputs++; A.notice("Chargement de l’image locale…"); const ticket = A.State.noticeTicket();
       const image = await A.Files.image(file, display).finally(() => { A.pendingInputs--; });
-      await A.State.change(lib => { const b = lib.documents.find(d => d.id === docId)?.blocks.find(b => b.id === blockId); if (!b) throw new Error("La composition a changé pendant le chargement de l’image."); b.values[key] = image.value; });
+      await A.State.change(lib => { const b = lib.documents.find(d => d.id === docId)?.blocks.find(b => b.id === blockId); if (!b) throw new Error("La composition a changé pendant le chargement de l’image."); M.localImage(b, key, image.value); });
       A.notice(A.Images.describe(image), ticket);
     });
   });
@@ -131,7 +131,7 @@
       if (first) { A.notice(reading); readingTicket = A.State.noticeTicket(); }
       try {
         const incoming = await A.Imports.prepare(file), merged = A.Imports.merge(A.library, incoming);
-        await A.State.change(lib => { Object.assign(lib, merged); }); await A.Library.open(A.library.activeId); A.notice("Import ajouté à la bibliothèque, avec ses images. Les compositions existantes sont conservées.", readingTicket);
+        await A.State.change(lib => { Object.assign(lib, merged); }); await A.Library.open(A.library.activeId); A.notice(`Import ajouté à la bibliothèque, ${A.Files.imageContents(merged)}. Les compositions existantes sont conservées.`, readingTicket);
       } finally { if (!--readings && get("notice").textContent === reading) A.notice(""); }
     });
     event.target.value = "";

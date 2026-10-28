@@ -142,12 +142,47 @@ def schema(catalogue):
         },
         "Bibliothèque générique",
     )
+    # V1 reste fermée : seules les définitions V2 admettent une source distante explicite.
+    v2_blocks, v2_frames = [], []
+    clone = lambda value: json.loads(json.dumps(value))
+    for component in catalogue["components"]:
+        key = component["id"]
+        v2 = clone(definitions[key])
+        image_fields = [f["key"] for f in component["fields"] if f["type"] == "image"]
+        if image_fields:
+            v2["properties"]["remoteImages"] = {
+                "type": "object", "minProperties": 1, "additionalProperties": False,
+                "properties": {field: {"type": "string", "pattern": r"^[hH][tT][tT][pP][sS]://[^\s/@?#]+(?:[/?#][^\x00-\x20\x7f]*)?$"} for field in image_fields},
+            }
+        definitions[key + "-v2"] = v2
+        reference = {"$ref": f"#/$defs/{key}-v2"}
+        v2_blocks.append(reference)
+        if component["family"] in ["En-têtes", "Pieds de page"]:
+            v2_frames.append(reference)
+    remote_block = {"type": "object", "required": ["remoteImages"], "properties": {"remoteImages": {"type": "object"}}}
+    definitions["document-v2"] = clone(definitions["document"])
+    definitions["document-v2"]["properties"]["version"] = {"const": 2}
+    definitions["document-v2"]["properties"]["blocks"] = {"type": "array", "items": {"oneOf": v2_blocks}, "contains": remote_block}
+    definitions["document-any"] = {"oneOf": [{"$ref": "#/$defs/document"}, {"$ref": "#/$defs/document-v2"}]}
+    definitions["identity-v2"] = clone(definitions["identity"])
+    definitions["identity-v2"]["properties"]["blocks"] = {"type": "array", "items": {"oneOf": v2_frames}}
+    definitions["library-v2"] = clone(definitions["library"])
+    properties = definitions["library-v2"]["properties"]
+    properties["version"] = {"const": 2}
+    properties["documents"] = {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/document-any"}}
+    properties["templates"] = {"type": "array", "items": {"$ref": "#/$defs/document-any"}}
+    properties["identities"] = {"type": "array", "items": {"$ref": "#/$defs/identity-v2"}}
+    # Une bibliothèque V2 contient au moins une adresse distante (document ou identité).
+    definitions["library-v2"]["anyOf"] = [
+        {"properties": {field: {"type": "array", "contains": {"type": "object", "required": ["version"], "properties": {"version": {"const": 2}}}}}}
+        for field in ["documents", "templates"]
+    ] + [{"properties": {"identities": {"type": "array", "contains": {"type": "object", "required": ["blocks"], "properties": {"blocks": {"type": "array", "contains": remote_block}}}}}}]
     return {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": f"urn:dsfr-mail:composition:1:{catalogue['id']}",
+        "$id": f"urn:dsfr-mail:composition:2:{catalogue['id']}",
         "title": "Compositions et bibliothèques de courriels DSFR",
         "description": "L’import complète ces contraintes par la validation des URL, des identifiants uniques et de la composition active.",
-        "oneOf": [{"$ref": "#/$defs/document"}, {"$ref": "#/$defs/library"}],
+        "oneOf": [{"$ref": "#/$defs/" + name} for name in ["document", "library", "document-v2", "library-v2"]],
         "$defs": definitions,
     }
 
