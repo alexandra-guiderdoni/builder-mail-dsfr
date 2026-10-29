@@ -72,9 +72,10 @@
       A.State.setDraft(A.doc().id, A.selected, field.id, field.value, message);
       A.UI.fieldError(field, "");
     });
-    const request = key => { const doc = A.doc().id, block = A.selected; return apply(key).catch(cause => {
-      const field = document.getElementById(inputId(key));
-      if (field && A.doc().id === doc && A.selected === block) { A.State.setDraft(A.doc().id, A.selected, field.id, field.value, cause.message); A.UI.fieldError(field, cause.message); }
+    const request = key => { const doc = A.doc().id, block = A.selected, field = document.getElementById(inputId(key)); return apply(key).catch(cause => {
+      // Une annulation remonte le champ : le résultat de l'ancien chargement ne lui appartient plus.
+      if (!field || document.getElementById(inputId(key)) !== field || A.doc().id !== doc || A.selected !== block) return;
+      A.State.setDraft(doc, block, field.id, field.value, cause.message); A.UI.fieldError(field, cause.message);
       A.error(cause.message);
     }); };
     editor.addEventListener("click", event => {
