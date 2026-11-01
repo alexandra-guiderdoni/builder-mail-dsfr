@@ -2,8 +2,21 @@ const test = require('node:test');
 const {open, saved, expand, click, chromium, assert} = require('./browser-support.cjs');
 const INPUTS = ['pointerdown', 'mousedown', 'pointerup', 'mouseup', 'click'];
 
-// Observation intrusive de DOM/événements, sans EFP, capture, délai ni acquittement inter-frame.
+// Observation intrusive de DOM/événements, sans EFP ni capture. Seul acquittement inter-frame : la garde d'atteinte (#173).
 // Chaque contrôle enfant appartient à un nouveau Frame/document : aucun compteur réinitialisé.
+// #173 : un document neuf peut ne pas encore être atteint par le test hit ; le geste va alors à l'iframe hôte dans le parent
+// (récidive 41322924838 : clic trusted ciblant #preview, enfant de moins de 112 ms). Le survol attend qu'un mousemove trusted
+// atteigne ce document, dans une limite de 2 s qui échoue avec diagnostic : un aperçu jamais atteignable reste un échec.
+async function reachable(page, frame, generation) {
+  await frame.evaluate(() => { window.__backgroundReach = {moves: 0}; document.addEventListener('mousemove', event => { if (event.isTrusted) window.__backgroundReach.moves++; }); });
+  await page.locator('#preview').scrollIntoViewIfNeeded();
+  const box = await page.locator('#preview').boundingBox(), started = Date.now();
+  for (let step = 0; !(await frame.evaluate(() => window.__backgroundReach.moves > 0)); step++) {
+    if (Date.now() - started > 2000) throw new Error(`aperçu de génération ${generation} jamais atteint par le pointeur en 2 s`);
+    await page.mouse.move(box.x + 20 + step % 2, box.y + 20);
+  }
+  return Date.now() - started;
+}
 async function documents(page, generation, previous) {
   const frames = {};
   for (const id of ['preview', 'catalogue-preview']) {
@@ -23,14 +36,15 @@ async function documents(page, generation, previous) {
     });
     document.addEventListener('click', event => window.__backgroundControl.clicks.push({trusted: event.isTrusted, x: event.clientX, y: event.clientY}));
   }, generation);
+  const reachedAfter = await reachable(page, frames.preview, generation);
   await frames.preview.locator('body').click({position: {x: 20, y: 20}});
   const seen = await frames.preview.evaluate(() => window.__backgroundControl);
   assert.equal(seen.generation, generation);
-  // Mesures seulement après le geste : aucun délai/attente additionnel avant le contrôle positif.
+  // Mesures seulement après le geste : aucune attente avant le contrôle positif hors garde d'atteinte.
   let missingClick;
   if (seen.clicks.length !== 1) {
     try {
-      missingClick = {generation, seen, child: await frames.preview.evaluate(() => ({href: location.href, ready: document.readyState, focus: document.hasFocus(), body: document.body?.getBoundingClientRect().toJSON()})),
+      missingClick = {generation, reachedAfter, seen, child: await frames.preview.evaluate(() => ({href: location.href, ready: document.readyState, focus: document.hasFocus(), body: document.body?.getBoundingClientRect().toJSON()})),
         parent: await page.evaluate(() => ({inputTrace: window.__backgroundTrace || null, scroll: scrollY, focus: document.hasFocus(), active: document.activeElement?.id || document.activeElement?.tagName, modal: !!document.querySelector(':modal'), frames: [...document.querySelectorAll('iframe')].map(el => ({id: el.id, src: el.src, rect: el.getBoundingClientRect().toJSON(), pointer: getComputedStyle(el).pointerEvents}))}))};
     } catch (cause) { missingClick = {generation, seen, diagnosticError: cause.message}; }
     missingClick.request = {frame: 'preview', locator: 'body', localPosition: {x: 20, y: 20}};
@@ -204,5 +218,25 @@ test('le fond reçoit le geste parent sans sortie, Tab reste modal et chaque fer
     assert.equal(trace.rows.filter(row => row.type === 'submit' && row.trusted && row.target === 'check-form').length, 1);
     assert.equal(trace.rows.filter(row => row.type === 'close' && row.trusted && row.target === 'check-dialog').length, 2);
     assert.deepEqual(observations.errors, []);
+  } finally { await browser.close(); }
+});
+
+// #173 : la garde d'atteinte refuse un aperçu que le pointeur n'atteint jamais et attend celui qui le devient.
+test('garde d’atteinte : aperçu jamais atteint refusé, aperçu atteint tardivement attendu puis cliqué', async () => {
+  const browser = await chromium.launch();
+  try {
+    const {page} = await open(browser);
+    const frame = await (await page.locator('#preview').elementHandle()).contentFrame();
+    await frame.waitForFunction(() => document.readyState === 'complete');
+    // Témoin négatif : l'iframe ne reçoit plus le pointeur, le survol n'atteint jamais l'enfant.
+    await page.locator('#preview').evaluate(el => { el.style.pointerEvents = 'none'; });
+    await assert.rejects(reachable(page, frame, 'témoin'), /jamais atteint par le pointeur en 2 s/);
+    // Atteinte tardive : le pointeur est rendu à l'iframe après 300 ms ; la garde attend, puis le geste d'origine arrive.
+    await page.locator('#preview').evaluate(el => { setTimeout(() => { el.style.pointerEvents = ''; }, 300); });
+    await frame.evaluate(() => { window.__lateClicks = 0; document.addEventListener('click', event => { if (event.isTrusted) window.__lateClicks++; }); });
+    const waited = await reachable(page, frame, 'tardif');
+    assert.ok(waited >= 250, `attente réelle avant atteinte : ${waited} ms`);
+    await frame.locator('body').click({position: {x: 20, y: 20}});
+    assert.equal(await frame.evaluate(() => window.__lateClicks), 1);
   } finally { await browser.close(); }
 });

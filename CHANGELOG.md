@@ -1,5 +1,9 @@
 # Historique des livraisons
 
+## 1er novembre 2026 — Contrôle positif de l’aperçu après la modale (#173)
+
+- Tests seulement, sans changement de l’application. La récidive de la CI 41322924838 montre le clic de contrôle reçu par l’iframe hôte, dans le parent, alors que le nouveau document d’aperçu avait moins de 112 ms. Avant ce clic, une garde survole l’aperçu jusqu’à ce qu’un mouvement de pointeur de confiance atteigne ce document, dans une limite de 2 s qui échoue avec diagnostic ; le geste souris d’origine est conservé. Un témoin négatif (aperçu jamais atteint) et une atteinte tardive sont testés. Aucune reproduction locale de l’intermittence : l’effet sur la CI reste à observer.
+
 ## 1er novembre 2026 — Oracle de zoom Firefox (#196)
 
 - Recette de qualification seulement, sans changement de l’application. L’oracle de la recette Firefox à 200 % exigeait une fenêtre et un écran stables en pixels CSS ; la mesure native de #179 montre que Firefox les contracte aussi par le facteur, si bien que le vrai zoom était refusé. L’oracle exige désormais toutes les dimensions CSS divisées par le facteur et le DPR multiplié. Testé sur les mesures natives enregistrées : vrai 200 % accepté ; témoin inchangé, zooms à 170 et 240 %, fenêtre ou viewport redimensionnés sans zoom et changement d’écran refusés. L’exécution native complète de la recette reste à faire.
