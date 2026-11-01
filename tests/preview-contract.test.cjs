@@ -33,3 +33,16 @@ test('#192 : seule la politique image du builder autorise HTTPS, SNUM et les san
     assert.equal(html.includes('allow-same-origin'), false);
   }
 });
+
+// #195 : la politique de l'aperçu est incluse dans le bundle ; elle est figée comme celle de la page.
+test('#195 : chaque politique CSP distribuée, page et aperçu, est figée', () => {
+  const decode = value => value.replace(/&#39;/g, "'");
+  const parse = csp => Object.fromEntries(decode(csp).split(';').filter(Boolean).map(s => {const [key, ...values] = s.trim().split(/\s+/); return [key, values];}));
+  const preview = {'default-src': ["'none'"], 'style-src': ["'unsafe-inline'"], 'img-src': ['data:', 'https:'], 'base-uri': ["'none'"], 'form-action': ["'none'"]};
+  for (const file of ['portable.html', 'web/index.html', 'snum.html']) {
+    const html = fs.readFileSync('app/distribution/' + file, 'utf8');
+    const policies = [...html.matchAll(/http-equiv="Content-Security-Policy" content="([^"]+)"/g)].map(match => parse(match[1]));
+    assert.equal(policies.length, 2, `${file} : une politique de page et une politique d’aperçu`);
+    assert.deepEqual(policies[1], preview, `${file} : politique d’aperçu`);
+  }
+});

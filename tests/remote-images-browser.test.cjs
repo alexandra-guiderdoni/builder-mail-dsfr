@@ -119,6 +119,29 @@ test('#192 : hors connexion et CSP restrictive refusent une image sans modifier 
  }finally{await browser.close();}
 });
 
+test('#195 : dimensions nulles et délai dépassé gardent la source, le brouillon et le diagnostic',async()=>{
+ const browser=await pw.chromium.launch();try{
+  const {page}=await setup(browser);const original=await page.evaluate(()=>JSON.stringify(MailBuilder.doc()));
+  const state=()=>page.evaluate(()=>({pending:MailBuilder.pendingInputs,drafts:[...MailBuilder.drafts.values()].map(d=>[d.value,d.message])}));
+  await page.locator('[data-image-source="f0"]').selectOption('remote');const input=page.locator('[data-remote-image-url="f0"]');
+  // Ressource réelle chargée sans dimensions exploitables : un SVG déclaré 0 × 0 émet load avec naturalWidth = 0 dans les trois moteurs.
+  const ZERO='https://dimensions.example/zero.svg';
+  await page.route('https://dimensions.example/**',route=>route.fulfill({status:200,contentType:'image/svg+xml',body:'<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0"></svg>'}));
+  await input.fill(ZERO);await input.press('Enter');await page.locator('#error').filter({hasText:'dimensions d’image exploitables'}).waitFor();
+  let result=await state();assert.equal(result.pending,0);assert.equal(result.drafts.length,1);assert.equal(result.drafts[0][0],ZERO);assert.match(result.drafts[0][1],/dimensions d’image exploitables.*source enregistrée reste inchangée/);
+  assert.equal(await page.evaluate(()=>JSON.stringify(MailBuilder.doc())),original);
+  // Ressource qui ne répond jamais : l’horloge de la page est maîtrisée pour franchir le délai de 10 s sans l’attendre réellement.
+  const SLOW='https://lent.example/photo.png';await page.route('https://lent.example/**',()=>new Promise(()=>{}));
+  // Horloge arrêtée : seul runFor la fait avancer, l’attente réelle du test ne compte pas comme du temps de page.
+  const start=new Date('2026-11-01T12:00:00Z');await page.clock.install({time:start});await page.clock.pauseAt(new Date(start.getTime()+1000));
+  await input.fill(SLOW);await input.press('Enter');await page.waitForFunction(()=>MailBuilder.pendingInputs===1);
+  await page.clock.runFor(9900);assert.equal((await state()).pending,1,'le délai n’est pas atteint avant 10 s');
+  await page.clock.runFor(200);await page.locator('#error').filter({hasText:'délai prévu'}).waitFor({timeout:3000});
+  result=await state();assert.equal(result.pending,0);assert.equal(result.drafts.length,1);assert.equal(result.drafts[0][0],SLOW);assert.match(result.drafts[0][1],/délai prévu.*source enregistrée reste inchangée/);
+  assert.equal(await page.evaluate(()=>JSON.stringify(MailBuilder.doc())),original);
+ }finally{await browser.close();}
+});
+
 test('#192 : refus du changement de source garde le sélecteur et le panneau cohérents',async()=>{
  const browser=await pw.chromium.launch();try{const {page}=await setup(browser);
   await page.evaluate(()=>MailBuilder.invalid.add('field-f2'));const selector=page.locator('[data-image-source="f0"]');await selector.selectOption('remote');

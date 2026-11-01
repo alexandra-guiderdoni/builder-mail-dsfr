@@ -1,5 +1,9 @@
 # Historique des livraisons
 
+## 1er novembre 2026 — Contrôles des images distantes (#195)
+
+- Tests seulement, sans changement de comportement. La politique de sécurité de l’aperçu, incluse dans les trois distributions, est désormais figée comme celle de la page ; un élargissement vers `http:` ou `*` fait échouer le contrat. Les échecs « dimensions d’image exploitables » (SVG 0 × 0) et « délai prévu » (horloge de page maîtrisée) sont éprouvés : source enregistrée inchangée, adresse conservée en brouillon, diagnostic affiché.
+
 ## 1er novembre 2026 — Retrait d’image refusé (#194)
 
 - Un « Retirer l’image » refusé (champ invalide, chargement en cours) conserve l’adresse d’image saisie et non appliquée : copie et exports restent bloqués tant qu’elle n’est ni appliquée ni annulée. Un retrait accepté l’abandonne comme avant. Un test de régression ajouté ; distributions régénérées.
