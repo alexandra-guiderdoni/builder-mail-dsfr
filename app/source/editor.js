@@ -15,7 +15,11 @@
       // les liens de pied et l’image restent des éditions de champ, qui ignorent les brouillons.
       const mode = ["up", "down", "remove", "duplicate"].includes(actionName) ? false : "edit";
       let removed, name;
-      const saving = A.State.change(lib => {
+      // Retrait d’image : le brouillon d’URL disparaît avant le rendu du bloc sans image, et revient si la garde refuse (#194).
+      const imageDraft = actionName === "remove-image" ? `${A.doc().id}|${id}|remote-image-url-f0` : "", kept = A.drafts.get(imageDraft);
+      if (kept) A.drafts.delete(imageDraft);
+      let saving;
+      try { saving = A.State.change(lib => {
         const blocks = lib.documents.find(d => d.id === lib.activeId).blocks, index = blocks.findIndex(b => b.id === id);
         if (index < 0) throw new Error("Le bloc sélectionné a changé.");
         const block = blocks[index]; name = `«\u00a0${A.UI.blockName(block)}\u00a0»`;
@@ -31,7 +35,7 @@
         if (actionName === "duplicate") { const clone = {...M.copy(blocks[index]), id: M.id()}; blocks.splice(index + 1, 0, clone); A.selected = clone.id; }
         if (actionName === "remove") { removed = {block, index}; blocks.splice(index, 1); A.selected = blocks[Math.min(index, blocks.length - 1)]?.id || null; }
         if (["up", "down"].includes(actionName)) { const destination = index + (actionName === "up" ? -1 : 1); if (destination >= 0 && destination < blocks.length) [blocks[index], blocks[destination]] = [blocks[destination], blocks[index]]; }
-      }, !removingLink, mode);
+      }, !removingLink, mode); } catch (cause) { if (kept) A.drafts.set(imageDraft, kept); throw cause; }
       // Brouillons recalés avant de redessiner les champs : celui du lien retiré disparaît, ceux des liens suivants les suivent.
       if (removingLink) { A.State.dropFooterDraft(A.doc().id, id, Number(operation.dataset.footerLinkIndex)); A.UI.blockList(); A.UI.fields(); }
       if (removed) {

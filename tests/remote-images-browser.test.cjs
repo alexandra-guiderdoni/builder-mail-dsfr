@@ -136,6 +136,33 @@ test('#192 : article avec URL et sans repli local porte un nom avec image, retra
  }finally{await browser.close();}
 });
 
+test('#194 : un retrait d’image refusé conserve l’adresse saisie, un retrait accepté l’abandonne',async()=>{
+ const browser=await pw.chromium.launch();try{const {page}=await setup(browser);
+  await page.evaluate(address=>MailBuilder.State.change(lib=>{const d=lib.documents.find(d=>d.id===lib.activeId),b=MailBuilder.Model.createBlock('mail-31');b.remoteImages={f0:address};d.blocks=[b];MailBuilder.selected=b.id;}),ADDRESS);
+  const NEXT='https://images.example/suivante.png',SLOW='https://lent.example/photo.png',input=page.locator('[data-remote-image-url="f0"]');
+  const state=()=>page.evaluate(()=>({remote:MailBuilder.doc().blocks[0].remoteImages?.f0??null,drafts:[...MailBuilder.drafts.values()].map(d=>d.value)}));
+  const guard=()=>page.evaluate(()=>{try{MailBuilder.State.guard();return'';}catch(e){return e.message;}});
+  // Refus par un champ invalide réel : l’adresse saisie reste un brouillon et bloque toujours la sortie.
+  await input.fill(NEXT);await page.locator('#document-name').fill('');
+  await click(page,'[data-block-action=remove-image]');await page.locator('#error').filter({hasText:'Corrigez les champs signalés'}).waitFor();
+  assert.deepEqual(await state(),{remote:ADDRESS,drafts:[NEXT]});assert.equal(await input.inputValue(),NEXT);
+  await page.locator('#document-name').fill('Composition corrigée');assert.match(await guard(),/pas encore appliquée/);
+  // Refus pendant un chargement distant : le brouillon ne disparaît pas, même avant la réponse.
+  let release;const held=new Promise(resolve=>{release=resolve;});
+  await page.route('https://lent.example/**',async route=>{await held;return route.fulfill({status:404,contentType:'text/plain',body:'absent'});});
+  await input.fill(SLOW);await input.press('Enter');await page.waitForFunction(()=>MailBuilder.pendingInputs===1);
+  await click(page,'[data-block-action=remove-image]');await page.locator('#error').filter({hasText:'Attendez la fin du chargement'}).waitFor();
+  assert.deepEqual(await state(),{remote:ADDRESS,drafts:[SLOW]});
+  release();await page.waitForFunction(()=>MailBuilder.pendingInputs===0);await page.locator('#error').filter({hasText:'n’a pas pu être chargée'}).waitFor();
+  assert.deepEqual(await state(),{remote:ADDRESS,drafts:[SLOW]});
+  // Retrait accepté : image, brouillon et alternative disparaissent, le champ revient au fichier local.
+  await click(page,'[data-action=cancel-fields]');await input.fill(NEXT);
+  await click(page,'[data-block-action=remove-image]');await page.waitForFunction(()=>!MailBuilder.doc().blocks[0].remoteImages);
+  assert.deepEqual(await state(),{remote:null,drafts:[]});assert.equal(await guard(),'');
+  assert.equal(await page.locator('[data-image-source="f0"]').inputValue(),'local');assert.match(await page.locator('#block-list').textContent(),/Article sans image/);
+ }finally{await browser.close();}
+});
+
 test('#192 : la confirmation avant sortie renvoie au vrai champ d’adresse distante',async()=>{
  const browser=await pw.chromium.launch();try{const {page}=await setup(browser);
   await page.evaluate(address=>MailBuilder.State.change(lib=>{const A=MailBuilder,d=lib.documents.find(d=>d.id===lib.activeId),b=A.Model.createBlock('mail-31');for(const f of A.Model.component('mail-31').fields){if(f.type==='text')b.values[f.key]='Contenu rédigé';if(f.type==='url')b.values[f.key]='https://www.exemple-info.gouv.fr/article';}b.remoteImages={f0:address};d.blocks=[b];A.selected=b.id;}),ADDRESS);

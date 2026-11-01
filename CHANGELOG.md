@@ -1,5 +1,9 @@
 # Historique des livraisons
 
+## 1er novembre 2026 — Retrait d’image refusé (#194)
+
+- Un « Retirer l’image » refusé (champ invalide, chargement en cours) conserve l’adresse d’image saisie et non appliquée : copie et exports restent bloqués tant qu’elle n’est ni appliquée ni annulée. Un retrait accepté l’abandonne comme avant. Un test de régression ajouté ; distributions régénérées.
+
 ## 29 octobre 2026 — Annulation pendant le chargement d’une image distante
 
 - Un résultat tardif ne recrée plus un brouillon après annulation et remontage du champ. Les erreurs du champ courant restent signalées. Quatre tests de régression ajoutés ; distributions régénérées.

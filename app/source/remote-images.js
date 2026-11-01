@@ -78,9 +78,7 @@
       A.State.setDraft(doc, block, field.id, field.value, cause.message); A.UI.fieldError(field, cause.message);
       A.error(cause.message);
     }); };
-    editor.addEventListener("click", event => {
-      if (event.target.closest('[data-block-action="remove-image"]')) A.State.dropDraft(A.doc().id, A.selected, inputId("f0"));
-      const button = event.target.closest("[data-remote-image-apply]"); if (button) request(button.dataset.remoteImageApply); });
+    editor.addEventListener("click", event => { const button = event.target.closest("[data-remote-image-apply]"); if (button) request(button.dataset.remoteImageApply); });
     editor.addEventListener("keydown", event => { if (event.key === "Enter" && event.target.dataset.remoteImageUrl) { event.preventDefault(); request(event.target.dataset.remoteImageUrl); } });
   }
   A.RemoteImages = Object.freeze({control, probe});
