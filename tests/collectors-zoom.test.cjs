@@ -6,22 +6,25 @@ const {newCollection, collectionFailure} = require('../scripts/collector_receipt
 const root = path.resolve(__dirname, '..');
 const recipe = () => import(pathToFileURL(path.join(root, 'scripts/recipe_page_flow_firefox.mjs')).href);
 const reference = {width: 1200, height: 800, outerWidth: 1220, outerHeight: 900, dpr: 2, screenWidth: 1920, screenHeight: 1080, visualScale: 1};
+// #196 : à 200 % natif, Firefox contracte aussi fenêtre et écran en pixels CSS (mesure de #179).
+const zoomed = {width: 600, height: 400, outerWidth: 610, outerHeight: 450, dpr: 4, screenWidth: 960, screenHeight: 540, visualScale: 1};
 
 test('importer l’oracle pur n’alloue aucun Firefox ; références et facteur relatif cohérent sont reconnus avec leurs limites', async () => {
   const {qualifyZoom} = await recipe();
   const baseline = qualifyZoom(reference, reference, 1);
-  const twice = qualifyZoom(reference, {...reference, width: 600, height: 400, dpr: 4}, 2);
+  const twice = qualifyZoom(reference, zoomed, 2);
   assert.equal(baseline.qualified, true); assert.equal(twice.qualified, true);
-  assert.deepEqual(twice.ratios, {dpr: 2, width: 2, height: 2});
+  assert.deepEqual(twice.ratios, {dpr: 2, width: 2, height: 2, outerWidth: 2, screenWidth: 2});
   assert.equal(twice.absoluteZoomVerified, false); assert.match(twice.limits, /not a browser-UI zoom reading/);
 });
 
 for (const [name, measured] of [
   ['zoom inchangé', reference], ['DPR seul', {...reference, dpr: 4}],
   ['viewport seul', {...reference, width: 600, height: 400}],
-  ['fenêtre différente', {...reference, width: 600, height: 400, dpr: 4, outerWidth: 620}],
-  ['écran différent', {...reference, width: 600, height: 400, dpr: 4, screenWidth: 1280}],
-  ['pinch', {...reference, width: 600, height: 400, dpr: 4, visualScale: 2}],
+  ['fenêtre et écran stables (modèle non observé)', {...reference, width: 600, height: 400, dpr: 4}],
+  ['fenêtre différente', {...zoomed, outerWidth: 620}],
+  ['écran différent', {...zoomed, screenWidth: 1280}],
+  ['pinch', {...zoomed, visualScale: 2}],
   ['mesure incomplète', {width: 600, height: 400, dpr: 4}],
 ]) test(`facteur 200 % demandé mais ${name} : qualification refusée`, async () => {
   const {qualifyZoom} = await recipe();

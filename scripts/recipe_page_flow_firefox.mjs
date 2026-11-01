@@ -10,19 +10,22 @@ import collectorReceipts from './collector_receipt.cjs';
 const {newCollection, beginCollection, finishCollection, collectionFailure}=collectorReceipts;
 
 export function qualifyZoom(reference, measured, requestedFactor) {
- const method='Relative DPR and CSS viewport contraction at stable outer-window and screen dimensions';
+ // #196 : à 200 % natif (#179), Firefox exprime aussi fenêtre et écran en pixels CSS zoomés ; exiger leur stabilité refusait le vrai zoom.
+ const method='Relative DPR multiplied and CSS viewport, outer-window and screen dimensions all divided by the requested factor (Firefox full-zoom model observed natively)';
  const limits='Reference is the measured profile configured at 100%; this is not a browser-UI zoom reading, physical display attestation or accessibility qualification.';
  const fields=['width','height','outerWidth','outerHeight','dpr','screenWidth','screenHeight','visualScale'];
  const valid=value=>value&&fields.every(key=>typeof value[key]==='number'&&Number.isFinite(value[key])&&value[key]>0);
  const result={requestedFactor,reference,measured,method,limits,qualified:false,absoluteZoomVerified:false};
  if(!valid(reference)||!valid(measured)||![1,2].includes(requestedFactor))return{...result,reason:'Missing or invalid calibration/measurement'};
- const stableWindow=Math.abs(reference.outerWidth-measured.outerWidth)<=1&&Math.abs(reference.outerHeight-measured.outerHeight)<=1&&reference.screenWidth===measured.screenWidth&&reference.screenHeight===measured.screenHeight;
+ // Two CSS pixels cover integral rounding; a window or display change rescales these dimensions unevenly or leaves DPR unchanged.
+ const contracted=(full,zoomed)=>Math.abs(reference[full]-measured[zoomed??full]*requestedFactor)<=2;
+ const scaledWindow=contracted('outerWidth')&&contracted('outerHeight')&&contracted('screenWidth')&&contracted('screenHeight');
  const noPinch=reference.visualScale===1&&measured.visualScale===1;
- const ratios={dpr:measured.dpr/reference.dpr,width:reference.width/measured.width,height:reference.height/measured.height};
- // Two CSS pixels cover integral viewport rounding; DPR is a corroborating signal, never the sole oracle.
- const matches=Math.abs(measured.dpr-reference.dpr*requestedFactor)<=0.01&&Math.abs(reference.width-measured.width*requestedFactor)<=2&&Math.abs(reference.height-measured.height*requestedFactor)<=2;
- return{...result,ratios,stableWindow,noPinch,qualified:stableWindow&&noPinch&&matches,
-  reason:!stableWindow?'Outer window or display changed':!noPinch?'Pinch zoom not excluded':!matches?'Observed scale does not match requested factor':'Relative scale supported by the measured signals'};
+ const ratios={dpr:measured.dpr/reference.dpr,width:reference.width/measured.width,height:reference.height/measured.height,outerWidth:reference.outerWidth/measured.outerWidth,screenWidth:reference.screenWidth/measured.screenWidth};
+ // DPR is a corroborating signal, never the sole oracle.
+ const matches=Math.abs(measured.dpr-reference.dpr*requestedFactor)<=0.01&&contracted('width')&&contracted('height');
+ return{...result,ratios,scaledWindow,noPinch,qualified:scaledWindow&&noPinch&&matches,
+  reason:!noPinch?'Pinch zoom not excluded':!matches?'Observed scale does not match requested factor':!scaledWindow?'Outer window or display not scaled by the requested factor':'Relative scale supported by the measured signals'};
 }
 
 export function consumeCleanupReceipt(receipt, cleanup, resource='owned-firefox', {neverAllocated=false}={}) {
