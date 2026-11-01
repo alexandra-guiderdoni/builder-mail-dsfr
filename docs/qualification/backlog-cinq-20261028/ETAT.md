@@ -1,5 +1,11 @@
 # Qualification des issues #192, #190, #188, #179 et #173
 
+## Complément de livraison — vérifié le 1er novembre 2026
+
+Les cinq tickets ont été clôturés après livraison de `2829a9b` et CI 602/602. Le correctif ultérieur `cbe93e3` traite le brouillon recréé après annulation d’un chargement distant ; sa [CI 40842375729](https://github.com/alexandra-guiderdoni/builder-mail-dsfr/actions/runs/40842375729) passe **606/606**, sans échec ni test ignoré, sous Node 24.22.1. Les phrases prospectives ci-dessous décrivent la préparation de la campagne, désormais suivie de ces validations. Elles ne constituent plus une attente de suite finale. Les limites natives et la cause inconnue de #173 restent inchangées. Voir le [bilan consolidé](../../ETAT-LIVRAISON.md).
+
+## Préparation et observations de la campagne du 28 octobre
+
 Candidat issu de f635da90b56d8ccaedf423f5ec7783b0d616be16. Le SHA exact de livraison et les résultats de suite finale sont consignés séparément après commit. La première suite Linux sur c75901a a terminé avec 593/600 réussites et sept échecs, conservés : montage inutile des commandes distantes inactives, cinq stubs PWA non adaptés à Model.versions et classification réseau du test de ressource non-image. Le montage a été corrigé sans changer les assertions existantes ; les doubles de test et la fixture de réseau sont explicitement adaptés. Une suite finale doit qualifier ce delta. Aucun résultat de réception Outlook/Mélissa n’est apporté.
 
 ## #192 — images HTTPS

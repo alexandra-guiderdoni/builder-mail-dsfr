@@ -1,6 +1,6 @@
 # Atelier autonome de courriels DSFR
 
-Statut : application et corrections implémentées ; qualification métier partielle. Les sections de faisabilité conservent le cadrage initial. Le [suivi courant](docs/SUIVI-CORRECTIONS.md) et la [recette](docs/RECETTE-APPLICATION.md) font foi pour la livraison et les limites.
+Statut : application et corrections implémentées ; qualification métier partielle. Les sections de faisabilité conservent le cadrage initial. Le [bilan de livraison au 1er novembre 2026](docs/ETAT-LIVRAISON.md) consolide l’état livré et les limites ; le [suivi des corrections](docs/SUIVI-CORRECTIONS.md) et la [recette](docs/RECETTE-APPLICATION.md) conservent leurs campagnes historiques.
 
 ## Résultat métier
 
@@ -12,13 +12,13 @@ Les deux parcours métier annoncés sont Windows avec Firefox vers Outlook insta
 
 | Domaine | Exigence retenue |
 | --- | --- |
-| Distribution | Fichier HTML portable dès sa première ouverture ; webapp installable et utilisable hors connexion après préparation. |
+| Distribution | Fichier HTML portable dès sa première ouverture ; webapp installable et utilisable hors connexion après préparation. Les images distantes optionnelles nécessitent le réseau pour être rechargées. |
 | Composition | Ajouter, déplacer, dupliquer et supprimer des blocs ; charte encadrée et variantes maîtrisées. |
 | Catalogue final | Tous les composants de courriel existants, sans nouveaux blocs métier spéculatifs. |
 | Personnalisation | En-tête, pied de page, identité du service et contenu. |
 | Démarrage | Modèles prêts à personnaliser. |
 | Entrées | Saisie manuelle et import structuré, dont le paquet SNUM V519. |
-| Images | Fichiers locaux, conservés avec la composition et le fichier de travail. |
+| Images | Fichiers locaux incorporés ; choix facultatif d’une adresse HTTPS directe sur chaque champ image, avec repli local conservé et format v2 explicite (#192, décision du 28 octobre). |
 | Conservation | Bibliothèque locale, sauvegarde automatique, modèles et identités réutilisables ; export/import de fichiers de travail. |
 | Sorties | Copier le mail mis en forme et télécharger le HTML autonome. |
 | Accessibilité | Atteindre et démontrer 100 % des critères RGAA applicables sur l’échantillon audité ; aucun taux favorable déduit des seules sondes. Le [dossier courant](docs/accessibilite/css-20261023/RAPPORT.md) conserve preuves et qualifications manquantes. |
@@ -37,7 +37,7 @@ Les deux parcours métier annoncés sont Windows avec Firefox vers Outlook insta
 
 Conserver un document de composition versionné, indépendant du DOM et du HTML de sortie. Un moteur pur valide et transforme ce document ; la page gère l’édition et les entrées/sorties. Les deux distributions incorporent exactement les mêmes sources métier.
 
-Le fichier de travail inclut les images. La sauvegarde automatique utilise IndexedDB dans une base explicitement réservée au prototype. Le fichier exporté reste indispensable pour transporter ou sauvegarder indépendamment d’un profil de navigateur. Un échec de stockage est affiché.
+Le fichier de travail inclut les images locales. Les images sélectionnées par adresse HTTPS restent des références en ligne : leur contenu n’est ni téléchargé dans le fichier, ni garanti hors connexion. Le mode local autonome est conservé. La sauvegarde automatique utilise IndexedDB dans une base réservée à l’atelier ; le prototype possède son contexte distinct. Le fichier exporté reste indispensable pour transporter ou sauvegarder indépendamment d’un profil de navigateur. Un échec de stockage est affiché.
 
 La variante web ajoute un manifeste et un Service Worker, sans backend métier. Le fichier portable ne tente aucun enregistrement de Service Worker. Aucun Web Worker de calcul n’est requis en l’absence de blocage mesuré.
 

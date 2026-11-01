@@ -1,5 +1,7 @@
 # Maintenir l’application
 
+État de livraison et backlog : consulter [ETAT-LIVRAISON.md](ETAT-LIVRAISON.md), actualisé le 1er novembre 2026 sur le code `cbe93e3` (CI 606/606). Les recettes natives et les campagnes datées gardent leurs propres SHA et limites ; leur réussite ne se déduit pas de la CI.
+
 Le [dossier d’accessibilité](accessibilite/css-20261023/RAPPORT.md) conserve la campagne courante, ses matrices, les scripts et leurs limites. Les fichiers sous `evidence/` sont locaux ; les reçus partageables et matrices figurent sous `docs/accessibilite/`. Aucun script d’audit ne produit une conformité humaine.
 
 Le [complément de zoom natif](accessibilite/zoom-20261023/RAPPORT.md) décrit les préférences Firefox des profils isolés, les collecteurs et leurs limites. Ses JSON sont des données exhaustives générées, avec empreintes et pointeurs par instance ; leur volume ne constitue pas une nouvelle couche applicative. Ne pas assimiler une capture HTML réexécutée par AY11 à un exercice du zoom natif.

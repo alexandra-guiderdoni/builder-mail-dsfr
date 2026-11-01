@@ -2,6 +2,8 @@
 
 Date : 2026-10-21 | Objectif : cadrer avec l’utilisateur une application HTML autonome, modulaire et portable de composition de courriels, à partir de l’existant.
 
+État d’implémentation : voir le [bilan de livraison](ETAT-LIVRAISON.md). Ce document conserve les réponses initiales ; la décision complémentaire du 28 octobre (#192), en fin de document, autorise les images HTTPS en complément du mode local.
+
 ## Résumé / décisions clés
 
 - Demande explicite : exploiter `git-hors-workflow/builder-mail-dsfr` et le mini-builder Newsletter SNUM pour personnaliser l’en-tête, le pied de page et le contenu à partir des composants disponibles.

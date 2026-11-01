@@ -1,5 +1,13 @@
 # Suivi des corrections
 
+## État consolidé au 1er novembre 2026
+
+Le [bilan de livraison](ETAT-LIVRAISON.md) est le point d’entrée courant : `cbe93e3`, CI **606/606**, zéro échec et zéro test ignoré. #191/#192/#193 sont livrées ; #173/#179/#188/#190/#192 sont clôturées avec leurs limites explicites. Seules **#13 et #52** restent ouvertes et reportées sur GitHub. La répétition vocale globale reste non confirmée, la cause historique du clic reste inconnue, et la réception de cette version dans Outlook/Mélissa reste non qualifiée.
+
+## Campagnes historiques conservées
+
+Les chiffres, états et preuves ci-dessous décrivent leurs campagnes datées, pas le backlog ni la qualification du dernier SHA. Les rapports d’origine restent inchangés.
+
 La [campagne RGAA précédant #28](accessibilite/css-20261023/RAPPORT.md) corrige quatre causes dans le rendu dérivé et renouvelle les preuves, avec 110 tests réussis et 1 248 cas de rendu et copie dans cette campagne. Le repli du titre HTML et la protection des 13 intitulés de liens sont conservés. Huit familles de signalements du validateur restent à instruire ; les recettes #2 et #13 restent ouvertes. Aucune conformité exhaustive n’est revendiquée. Le tableau conserve les 27 issues historiques et ajoute #28.
 
 Les [mesures complémentaires de contraste](accessibilite/contrastes-20261022/RAPPORT.md) couvrent les cibles auparavant indéterminées, avec leurs limites. Elles corrigent une faiblesse du collecteur éprouvée par masque sans interception du pointeur ; aucun nouveau défaut produit ni clôture de critère n’en découle.
@@ -12,7 +20,7 @@ Le chantier a démarré sur `feature/atelier-autonome` ; la livraison est désor
 
 Les tests portent sur les interfaces demandées par les tickets : contrôles navigateur du prototype et de l’application, imports validés, stockage public, compilation et cycle hors connexion. Les profils sont synthétiques ; les défauts temporels utilisent des lectures volontairement retardées. Les tests purs ne valent pas recette native.
 
-## Matrice courante
+## Matrice historique des corrections #2 à #28
 
 Les chemins ci-dessous sont relatifs au dépôt. Les suites citées sont dans `tests/`. « Vérifié localement » désigne les cas automatiques exécutés, sans qualification globale de messagerie ni de conformité RGAA.
 

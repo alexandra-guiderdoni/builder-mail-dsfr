@@ -1,6 +1,14 @@
 # Recette de l’application autonome
 
-La [recette du correctif #28](RECETTE-DEFILEMENT.md) porte la suite courante à **119 tests réussis sans échec ni saut**. Elle vérifie l’allongement des quatre zones sur portable et web, dans Chromium et Firefox, avec zoom Firefox natif à 200 %, frappe continue, réduction, image tardive et isolation. Les campagnes ci-dessous gardent leurs sources historiques ; aucune qualification RGAA humaine n’est ajoutée.
+## État consolidé au 1er novembre 2026
+
+Le [bilan de livraison](ETAT-LIVRAISON.md) est le point d’entrée courant : `cbe93e3`, CI **606/606**, zéro échec et zéro test ignoré. #191/#192/#193 sont livrées ; #173/#179/#188/#190/#192 sont clôturées avec leurs limites explicites. Seules **#13 et #52** restent ouvertes et reportées sur GitHub. La répétition vocale globale reste non confirmée, la cause historique du clic reste inconnue, et la réception de cette version dans Outlook/Mélissa reste non qualifiée.
+
+## Campagnes historiques conservées
+
+Les chiffres, états et preuves ci-dessous décrivent leurs campagnes datées, pas le backlog ni la qualification du dernier SHA. Les rapports d’origine restent inchangés.
+
+La [recette du correctif #28](RECETTE-DEFILEMENT.md) portait la suite de cette campagne à **119 tests réussis sans échec ni saut**. Elle vérifie l’allongement des quatre zones sur portable et web, dans Chromium et Firefox, avec zoom Firefox natif à 200 %, frappe continue, réduction, image tardive et isolation. Les campagnes ci-dessous gardent leurs sources historiques ; aucune qualification RGAA humaine n’est ajoutée.
 
 La [campagne d’accessibilité du 23 octobre](accessibilite/css-20261023/RAPPORT.md) complète cette recette : **110 tests applicatifs réussis sans saut**, titres natifs et présentation CSS, 1 248 cas de rendu et copie, contraintes obligatoires et transitions d’erreur, parcours complet Firefox rejoué, matrices 106/258 et limites explicites. Quatre causes sont corrigées dans le rendu dérivé ; 148 entrées du validateur local, 832 comparaisons historiques de rendu et 16 comparaisons de couleurs conservent leurs résultats et limites. Huit familles d’erreurs du validateur restent à instruire. Le retrait des quinze déclarations `font-color` conserve les couleurs calculées dans les moteurs disponibles, sans recette de messagerie déduite. Le titre HTML utilise le nom de composition quand l’objet est vide ; trois exports ouverts dans Firefox complètent les tests Chromium. La lecture filtrée du presse-papiers Chromium retire ce titre ; aucun collage en messagerie de cette version n’est qualifié. Les 13 liens intégrés sans intitulé empêchent copie et téléchargement HTML ; anciens imports, aperçu neutralisé et récupération JSON restent disponibles. La copie conserve les gouttières avec des colonnes égales ; l’export garde les proportions d’origine. Les campagnes antérieures ci-dessous restent historiques. Qualifications humaines et clients restent ouvertes ; aucun taux RGAA validé.
 
