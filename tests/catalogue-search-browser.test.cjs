@@ -72,8 +72,8 @@ test('les liens des aperçus restent au clavier, avec un accès rapide qui les c
   // WebKit (réglage par défaut de Safari) ne tabule pas vers les liens : l’ordre Tab ne se contrôle que sous Chromium.
   if (engine === playwright.chromium) {
     await page.locator('[data-action=export-mail]').focus();
-    await page.keyboard.press('Tab');
-    assert.equal(await page.evaluate(() => document.activeElement.parentElement.id), 'mail-weight-details', 'le détail du poids est accessible avant l’aperçu');
+    // #203 : sous le repère de poids, l’aide du poids est masquée ; le Tab suivant atteint directement l’accès rapide.
+    assert.equal(await page.locator('#mail-weight-details').isVisible(), false);
     await page.keyboard.press('Tab');
     assert.equal(await page.evaluate(() => document.activeElement.textContent), 'Passer l’aperçu du courriel');
   } else await skipMail.focus();

@@ -1,5 +1,15 @@
 # Historique des livraisons
 
+## 2 novembre 2026 - Poids du courriel et aide à la copie en langage courant (#203)
+
+- Builder seulement ; la page SNUM garde ses textes, protégés par ses tests.
+- Tant que le courriel reste sous 92 160 octets (90 Kio), l’aperçu n’affiche aucune information de poids. À partir de ce repère, un seul message, sans chiffres : « Courriel lourd : Gmail risque de n’en afficher qu’une partie », suivi d’un conseil pour alléger. Le message est le même pour les deux niveaux, et un calcul en cours n’affiche rien.
+- L’aide permanente sur la copie avec Chromium disparaît. Après une copie, le message conseille de faire un envoi de test.
+- Le détail technique (octets, répartition, repères, Chromium) reste dans l’aide dépliable, visible seulement au-delà du repère.
+- Le dialogue de vérification affiche une alerte courte, qui garde l’image ou le texte à alléger.
+- Seuils et calculs inchangés. Retour assumé sur le contrat de #160, qui affichait en permanence une synthèse du poids.
+- Nouveau test des frontières exactes et du langage. Huit fichiers de tests réalignés sur ce contrat ; guide mis à jour.
+
 ## 2 novembre 2026 - Tout effacer (#201)
 
 - En bas de « Mes newsletters », la zone « Repartir de zéro » propose « Tout effacer ». Une simple fenêtre indique ce qui sera supprimé, propose d’exporter d’abord la bibliothèque, puis demande confirmation.

@@ -60,8 +60,10 @@ test('plusieurs pré-en-têtes : avertissement visible dans l’éditeur, un seu
     const copied = await page.evaluate(async () => { const [item] = await navigator.clipboard.read({unsanitized: ['text/html']}); return {html: await (await item.getType('text/html')).text(), plain: await (await item.getType('text/plain')).text()}; });
     assert(copied.html.includes('Premier pré-en-tête') && !copied.html.includes('Second pré-en-tête'));
     assert(copied.html.includes('mso-hide:all') && copied.plain.includes('Premier pré-en-tête') && !copied.plain.includes('Second pré-en-tête'));
-    assert.equal(await page.locator('#clipboard-help').isVisible(), true);
-    assert.match(await page.locator('#clipboard-help').textContent(), /Chromium.*pré-en-tête.*images masquées/);
+    // #203 : l’aide permanente disparaît ; le conseil d’envoi de test suit la copie et le détail Chromium reste dans l’aide.
+    assert.equal(await page.locator('#clipboard-help').count(), 0);
+    assert.match(await page.locator('#notice').textContent(), /envoi de test/);
+    assert.match(await page.locator('#mail-weight-details').textContent(), /Chromium.*pré-en-tête.*images masquées/);
     const ordinary = await page.evaluate(async () => { const [item] = await navigator.clipboard.read(); return {html: await (await item.getType('text/html')).text(), plain: await (await item.getType('text/plain')).text()}; });
     assert.equal(ordinary.plain, copied.plain, 'le texte brut et le HTML assaini sont des sorties distinctes');
     assert.equal(ordinary.html.includes('Premier pré-en-tête'), false, 'relecture Chromium assainie : pré-en-tête retiré');

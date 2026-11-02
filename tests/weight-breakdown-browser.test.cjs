@@ -41,7 +41,8 @@ test('#191 : trois compositions, deux sorties, sommes exactes et champs pertinen
             assert.match(text, /Image incorporée la plus lourde/);
             assert.ok(text.includes(w.target.label)); assert.ok(text.includes(`bloc ${w.target.index}`));
           }
-          assert.match(item.warning.message, item.action === 'copy' ? /pour la copie/ : /pour le téléchargement/);
+          // #203 : l’alerte du dialogue est courte, sans chiffres techniques ; elle garde la cible à alléger.
+          assert.match(item.warning.message, /^Courriel lourd : Gmail risque/); assert.doesNotMatch(item.warning.message, /octets|Kio|%|Base64/);
         }
       }
       await page.evaluate(value => MailBuilder.State.change(lib => { const doc = lib.documents.find(d => d.id === lib.activeId); doc.blocks = value.blocks; }), value);

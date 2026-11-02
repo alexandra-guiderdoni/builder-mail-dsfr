@@ -31,7 +31,8 @@ for (const engine of ['chromium', 'webkit']) {
     try {
       const {page, observations} = await open(browser, {offline: true, ...permissions(engine)}, capture);
       assert.equal(await page.locator('[data-action=copy]').getAttribute('aria-describedby'), 'mail-weight-summary');
-      assert.equal(await page.locator('#mail-weight-summary').isVisible(), true);
+      // #203 : sous le repère, le builder n’affiche aucune information de poids.
+      assert.equal(await page.locator('#mail-weight-summary').isVisible(), false);
       const article = await index(page, 'mail-31');
       await compose(page, article => MailBuilder.State.change(lib => {
         const doc = lib.documents.find(d => d.id === lib.activeId);
@@ -86,10 +87,11 @@ for (const engine of ['chromium', 'webkit']) {
         const summary = page.locator('#mail-weight-summary');
         assert.equal(await summary.getAttribute('data-level'), level);
         assert.equal(await summary.getAttribute('data-bytes'), String(target));
+        // #203 : rien sous le repère ; au-delà, un seul message sans chiffres, identique aux deux niveaux.
         const short = await summary.textContent();
-        assert.match(short, /Kio.*images comprises/);
-        if (level === 'ok') assert.doesNotMatch(short, /Attention|Alerte/);
-        else assert.match(short, new RegExp((level === 'alert' ? 'Alerte' : 'Attention') + '.*Gmail.*sans garantie'));
+        assert.equal(await summary.isVisible(), level !== 'ok');
+        if (level === 'ok') assert.equal(short, '');
+        else { assert.match(short, /^Courriel lourd : Gmail risque/); assert.doesNotMatch(short, /octets|Kio|%/); }
 
         const label = await weight.textContent();
         assert.ok(label.includes(target.toLocaleString('fr-FR') + ' octets'), label);
@@ -104,8 +106,8 @@ for (const engine of ['chromium', 'webkit']) {
         assert.equal(result.count, before + 1, 'la copie a lieu');
         assert.equal(result.size, target);
         const message = await notice.textContent();
-        if (level === 'ok') assert.doesNotMatch(message, /Attention|Alerte/);
-        else assert.match(message, new RegExp((level === 'alert' ? 'Alerte' : 'Attention') + '.*Repères prudents, sans garantie'));
+        assert.match(message, /envoi de test/); assert.doesNotMatch(message, /octets|Kio|Repères prudents/);
+        if (level === 'ok') assert.doesNotMatch(message, /Courriel lourd/); else assert.match(message, /Courriel lourd : Gmail risque/);
         assert.equal(await page.locator('#error').isVisible(), false);
       }
     } finally { await browser.close(); }
@@ -179,7 +181,9 @@ for (const engine of ['chromium', 'webkit']) {
       assert.equal(await page.locator('#mail-weight').getAttribute('data-bytes'), null);
       assert.equal(await page.locator('#mail-weight-summary').getAttribute('data-level'), 'unavailable');
       assert.equal(await page.locator('#mail-weight-summary').getAttribute('data-bytes'), null);
-      assert.match(await page.locator('#mail-weight-summary').textContent(), /indisponible/);
+      // #203 : poids indisponible, aucun message trompeur dans l’aperçu du builder ; le détail le signale dans l’aide.
+      assert.equal(await page.locator('#mail-weight-summary').textContent(), '');
+      assert.equal(await page.locator('#mail-weight-summary').isVisible(), false);
       await click(page, '[data-action=copy]');
       await page.locator('#error').filter({hasText: 'intitulé'}).waitFor();
       assert.equal((await copied(page)).count, 0);

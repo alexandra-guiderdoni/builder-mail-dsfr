@@ -50,6 +50,10 @@
   function weightRisk(result) {
     return result.level === "ok" ? "" : `${result.level === "alert" ? "Alerte" : "Attention"} : repère local ${result.level === "alert" ? "102" : "90"} Kio atteint. Gmail peut n’afficher qu’une partie d’un message volumineux ; l’envoi reste possible. ${CAUTION}`;
   }
+  // Builder (#203) : rien sous le repère de 92 160 octets ; à partir de ce repère, un seul message en langage courant,
+  // sans chiffres. Le détail technique reste dans l’aide repliable ; SNUM garde ses textes.
+  const PLAIN_ADVICE = {images: "Allégez ou retirez des images, en gardant les logos de charte.", styles: "Retirez des blocs si possible.", text: "Raccourcissez les textes ou retirez des blocs."};
+  const weightNotice = result => ["notice", "alert"].includes(result?.level) ? `Courriel lourd : Gmail risque de n’en afficher qu’une partie. ${PLAIN_ADVICE[result.dominant] || PLAIN_ADVICE.text}` : "";
   const remoteWeight = result => result.hosted ? ` ${result.hosted} image${result.hosted === 1 ? " hébergée" : "s hébergées"}, poids distant non mesuré et non compté ici ; seules les URL sérialisées sont incluses dans le balisage.` : "";
   function weightSummary(result, action = "copy") {
     const base = `HTML préparé pour ${action === "export" ? "le téléchargement" : "la copie"} : ${kio(result.bytes)} Kio, images ${result.hosted ? "incorporées " : ""}comprises.${remoteWeight(result)}`;
@@ -72,10 +76,11 @@
     const summary = document.getElementById("mail-weight-summary");
     if (summary) {
       summary.dataset.level = result.level;
-      if (Number.isSafeInteger(result.bytes)) {
-        summary.dataset.bytes = String(result.bytes);
-        summary.textContent = weightSummary(result);
-      } else { delete summary.dataset.bytes; summary.textContent = text; }
+      if (Number.isSafeInteger(result.bytes)) summary.dataset.bytes = String(result.bytes); else delete summary.dataset.bytes;
+      // Builder (#203) : la ligne et l’aide n’apparaissent qu’à partir du repère ; un calcul en cours n’affiche rien.
+      const notice = weightNotice(result);
+      summary.textContent = notice; summary.hidden = !notice;
+      const details = document.getElementById("mail-weight-details"); if (details) details.hidden = !notice;
     }
   }
   function measureWeight() {
@@ -104,7 +109,9 @@
     // Après une modale, le document redevient accessible de façon asynchrone : laisser la région live se réexposer.
     // Le jeton d’origine reste contrôlé par A.notice ; une annonce plus récente garde la priorité pendant ce délai.
     if (warnings?.length) await new Promise(resolve => setTimeout(resolve, 250));
-    A.notice([`Courriel copié en HTML et texte. ${result.level === "ok" ? "" : `${weightRisk(result)} ${weightAdvice(result)} `}Contrôlez le collage et les images dans votre messagerie.`, ...A.Render.warnings(A.doc())].join(" "), ticket);
+    // Builder (#203) : conseil d’envoi de test, sans chiffres ; SNUM, sans contrôle avant copie, garde son message.
+    if (A.Checks) A.notice([`Courriel copié en HTML et texte. ${weightNotice(result) ? `${weightNotice(result)} ` : ""}Avant d’envoyer, faites-vous un envoi de test et vérifiez les liens et les images.`, ...A.Render.warnings(A.doc())].join(" "), ticket);
+    else A.notice([`Courriel copié en HTML et texte. ${result.level === "ok" ? "" : `${weightRisk(result)} ${weightAdvice(result)} `}Contrôlez le collage et les images dans votre messagerie.`, ...A.Render.warnings(A.doc())].join(" "), ticket);
   }
-  A.Files = Object.freeze({download, json, imageContents, safeName, exportDate, exportName, image, validate, copy, weightText, weightSummary, weightAdvice, weightTargetText, measureWeight, scheduleWeight, staleWeight});
+  A.Files = Object.freeze({download, json, imageContents, safeName, exportDate, exportName, image, validate, copy, weightText, weightSummary, weightNotice, weightAdvice, weightTargetText, measureWeight, scheduleWeight, staleWeight});
 })();

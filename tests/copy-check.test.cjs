@@ -30,7 +30,7 @@ test('la liste des règles est fermée et chaque avertissement désigne un bloc 
     assert.ok(RULES.includes(warning.rule), warning.rule);
     assert.ok(doc.blocks.some(b => b.id === warning.block), 'bloc existant');
     assert.match(warning.field, /^(field-[\w-]+|article-source(-label)?)$/);
-    assert.match(warning.message, /^Bloc \d+ « .+ » : |^HTML préparé pour /);
+    assert.match(warning.message, /^Bloc \d+ « .+ » : |^Courriel lourd : /);
   }
 });
 
@@ -104,7 +104,8 @@ test('(3) poids au-delà de 90 Kio, sans accuser une image par défaut', () => {
   assert.deepEqual(warnings.map(w => w.rule), ['weight']);
   assert.ok(doc.blocks.some(b => b.id === warnings[0].block));
   assert.notEqual(M.component(doc.blocks.find(b => b.id === warnings[0].block).component).fields.find(f => 'field-' + f.key === warnings[0].field).type, 'image');
-  assert.match(warnings[0].message, /^HTML préparé pour la copie : .*90,0 Kio.*repère local 90 Kio/);
+  // #203 : à partir de 92 160 octets, alerte courte sans chiffres techniques.
+  assert.match(warnings[0].message, /^Courriel lourd : Gmail risque/); assert.doesNotMatch(warnings[0].message, /octets|Kio|%/);
   assert.deepEqual(rules(doc, {bytes: 104448, level: 'alert'}), ['weight']);
 });
 

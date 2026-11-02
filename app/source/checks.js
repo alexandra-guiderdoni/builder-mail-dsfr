@@ -90,7 +90,7 @@
     if (weight && weight.level !== "ok" && value.blocks.length) {
       const target = weight.target, block = value.blocks.find(b => b.id === target?.block) || value.blocks[0];
       const first = M.component(block.component).fields.find(f => f.type === "text") || M.component(block.component).fields[0];
-      found.push({rule: "weight", block: block.id, field: target?.field || (first ? `field-${first.key}` : ""), message: A.Files.weightText(weight, weight.action)});
+      found.push({rule: "weight", block: block.id, field: target?.field || (first ? `field-${first.key}` : ""), message: `${A.Files.weightNotice(weight)} ${A.Files.weightTargetText(weight)}`.trim()});
     }
     return found.sort((a, b) => value.blocks.findIndex(x => x.id === a.block) - value.blocks.findIndex(x => x.id === b.block) || RULES.indexOf(a.rule) - RULES.indexOf(b.rule));
   }
