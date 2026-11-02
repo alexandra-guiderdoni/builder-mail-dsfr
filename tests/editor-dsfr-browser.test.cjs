@@ -84,3 +84,24 @@ test('ressources DSFR locales : Marianne, conteneurs communs, grille et repli à
     await fs.writeFile(path.join(evidence, 'editeur-dsfr.json'), JSON.stringify({checks, portableOffline: true, keyboardSummary: true, errors: observations.errors}, null, 2));
   } finally { await browser.close(); }
 });
+
+// Modèles et identités : chaque champ et chaque liste forment un groupe DSFR (1,5 rem dessous), le bouton
+// d'enregistrement ne touche ni le champ qui le précède ni le libellé qui le suit.
+test('modèles et identités : champ, bouton et liste espacés selon les groupes DSFR', async () => {
+  const browser = await chromium.launch({headless: true});
+  try {
+    const {page} = await open(browser);
+    for (const [summary, input, action, select] of [['Mes modèles', 'template-name', 'save-template', 'saved-templates'], ['Identités de service', 'identity-name', 'save-identity', 'identities']]) {
+      await expand(page, summary);
+      const gaps = await page.evaluate(([input, action, select]) => {
+        const box = element => element.getBoundingClientRect(), field = document.getElementById(input), button = document.querySelector(`[data-action=${action}]`);
+        const label = document.querySelector(`label[for=${select}]`), rem = parseFloat(getComputedStyle(document.documentElement).fontSize);
+        return {afterField: (box(button).top - box(field).bottom) / rem, beforeList: (box(label).top - box(button).bottom) / rem,
+          groups: [field.closest('.fr-input-group')?.contains(document.querySelector(`label[for=${input}]`)), document.getElementById(select).closest('.fr-select-group')?.contains(label)]};
+      }, [input, action, select]);
+      assert.deepEqual(gaps.groups, [true, true], summary);
+      assert.ok(gaps.afterField >= 1.5, `${summary} : ${gaps.afterField} rem sous le champ`);
+      assert.ok(gaps.beforeList >= 1, `${summary} : ${gaps.beforeList} rem avant la liste`);
+    }
+  } finally { await browser.close(); }
+});

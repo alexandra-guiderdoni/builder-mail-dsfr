@@ -1,5 +1,9 @@
 # Historique des livraisons
 
+## 2 novembre 2026 - Espacement des modèles et identités
+
+- Dans « Mes modèles » et « Identités de service », le bouton d’enregistrement touchait le champ de nom. Champs et listes forment désormais des groupes DSFR (`fr-input-group`, `fr-select-group`) et le bouton rejoint un groupe d’actions : 1,5 rem sous le champ, 1 rem avant la liste. Test de régression ajouté ; distributions régénérées.
+
 ## 2 novembre 2026 — Tirets de l’application
 
 - Les tirets quadratins de l’application deviennent des tirets simples : libellés des champs d’image (« Source - », « Adresse HTTPS directe - », « Appliquer l’adresse - »), intitulé de lien obligatoire, liste des blocs, objet « Revue de presse - date » de la version SNUM, descriptions du schéma JSON et prototype. Documentation et archives inchangées. Distributions régénérées ; tests SNUM et images distantes alignés.
