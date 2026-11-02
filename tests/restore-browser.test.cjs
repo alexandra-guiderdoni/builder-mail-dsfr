@@ -16,7 +16,7 @@ const backup = (page, names) => page.evaluate(names => {
   return JSON.stringify(A.Model.library(lib));
 }, names);
 async function choose(page, name, content) {
-  await expand(page, 'Fichiers et récupération');
+  await expand(page, 'Sauvegarde et import');
   await page.locator('#restore-input').setInputFiles({name, mimeType: 'application/json', buffer: Buffer.from(content)});
 }
 const names = async page => (await state(page)).documents.map(d => d.name);
@@ -28,7 +28,7 @@ test('#200 restaurer : remplace sans doublon après confirmation, l’ancienne b
     await choose(page, 'sauvegarde.json', await backup(page, ['Sauvegardée 1', 'Sauvegardée 2', 'Sauvegardée 3']));
     await page.locator(dialog).waitFor({state: 'visible'});
     const description = await page.locator('#restore-dialog-description').textContent();
-    assert.match(description, /3 compositions/); assert.match(description, /2 compositions/);
+    assert.match(description, /3 newsletters/); assert.match(description, /2 newsletters/);
     assert.deepEqual(await names(page), ['Actuelle A', 'Actuelle B'], 'rien ne change avant la confirmation');
     await page.locator('#restore-confirm').click();
     await page.locator(dialog).waitFor({state: 'hidden'});
@@ -62,7 +62,7 @@ test('#200 refus sans modification : composition seule, données brutes, JSON in
     const composition = await page.evaluate(() => JSON.stringify(MailBuilder.doc()));
     const raw = JSON.stringify(await store(page));
     const other = JSON.parse(await backup(page, ['Autre'])); other.catalogue = '0'.repeat(64);
-    for (const [file, content, message] of [['composition.json', composition, /seule composition.*Importer/], ['brut.json', raw, /données enregistrées brutes/],
+    for (const [file, content, message] of [['composition.json', composition, /seule newsletter.*Importer/], ['brut.json', raw, /données enregistrées brutes/],
       ['casse.json', '{"schema":', /JSON est invalide/], ['autre.json', JSON.stringify(other), /autre catalogue/]]) {
       await page.evaluate(() => MailBuilder.error(''));
       await choose(page, file, content);

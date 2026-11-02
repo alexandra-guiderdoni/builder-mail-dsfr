@@ -1,5 +1,12 @@
 # Historique des livraisons
 
+## 2 novembre 2026 - Un seul vocabulaire : « Mes newsletters » (#199, second lot)
+
+- **Parcours principal :** « Mes newsletters » remplace « bibliothèque » et « composition » dans les libellés, les intitulés accessibles, les dialogues et les notices. Par exemple, « Exporter Mes newsletters », « Dupliquer la newsletter … » et « Newsletters sauvegardées dans ce navigateur ». La rubrique « Fichiers et récupération » devient « Sauvegarde et import ». Pas d’onglets, conformément à la décision.
+- **Vocabulaire conservé :** les messages d’erreur, de lecture seule et de récupération gardent leurs termes, par exemple « Exporter la bibliothèque en mémoire » ou « Retrouver votre bibliothèque ». Les validations du format de fichier et les noms de fichiers exportés ne changent pas non plus.
+- **Guide :** réaligné, avec un paragraphe sur l’encart de sauvegarde, le rappel et la conservation durable. La page SNUM, la référence et les tests du skill `newsletter-contribution` sont alignés.
+- Tests réalignés sur les nouveaux libellés, sans changement de comportement.
+
 ## 2 novembre 2026 - L’export de secours n’écrit plus dans le stockage (#199, correctif du premier lot)
 
 - Quand le navigateur refuse d’ouvrir les données au démarrage, « Exporter le travail temporaire » enregistrait la date d’export dans le stockage, que cette fenêtre ne doit pas toucher. L’export de secours ne date plus rien et n’écrit plus rien.

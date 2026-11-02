@@ -39,7 +39,7 @@ test('exemples livrés et exports de l’application conformes au schéma JSON',
   const browser = await chromium.launch({headless: true});
   try {
     const {page} = await open(browser, {offline: true});
-    await expand(page, 'Fichiers et récupération');
+    await expand(page, 'Sauvegarde et import');
     const documentExport = await download(page, '[data-action=export-document]', 'schema-composition.json');
     const libraryExport = await download(page, '[data-action=export-library]', 'schema-bibliotheque.json');
     assert.equal(JSON.parse(await fs.readFile(documentExport, 'utf8')).schema, 'dsfr-mail/document');

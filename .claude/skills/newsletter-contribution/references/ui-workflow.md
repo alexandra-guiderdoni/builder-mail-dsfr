@@ -51,7 +51,7 @@ Fin : contenu, ordre et compte concordent avec l’inventaire, ou chaque écart 
 3. Télécharger le JSON de composition et le HTML ; relire les fichiers réellement
    obtenus, pas seulement la notification. Contrôler nom, objet, blocs, textes,
    liens et médias. Si modèle ou identité font partie du livrable, joindre
-   l’export de bibliothèque ; le JSON d’une composition ne les remplace pas.
+   l’export « Exporter Mes newsletters » ; le JSON d’une newsletter ne les remplace pas.
 4. Livrer les fichiers et un reçu court : version/origine, navigateur, opérations
    exercées, avertissements conservés, limites et ressources laissées ouvertes.
    Séparer une annonce de succès, le fichier reçu et sa conformité à l’inventaire.

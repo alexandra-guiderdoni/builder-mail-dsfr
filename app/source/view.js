@@ -57,7 +57,7 @@
   }
   function selections() {
     const doc = A.doc(), template = get("saved-templates").value, identity = get("identities").value;
-    // Depuis #57, la bascule passe par le bouton « Ouvrir cette composition » : on préserve la valeur en attente du
+    // Depuis #57, la bascule passe par le bouton « Ouvrir cette newsletter » : on préserve la valeur en attente du
     // sélecteur, mais seulement tant que la composition active n'a pas changé par une autre voie (duplication,
     // nouvelle composition, ouverture depuis l'accueil). Sinon le sélecteur affiche une composition périmée.
     const current = get("documents").value;
@@ -67,7 +67,7 @@
     get("open-document").hidden = (preservedDoc === doc.id);
     get("saved-templates").innerHTML = option("", "Choisir un modèle enregistré") + labelled(A.library.templates).map(([id, label]) => option(id, label, id === template)).join("");
     get("identities").innerHTML = option("", "Choisir une identité enregistrée") + labelled(A.library.identities).map(([id, label]) => option(id, label, id === identity)).join("");
-    get("library-count").textContent = `${A.library.documents.length} compositions · ${A.library.templates.length} modèles · ${A.library.identities.length} identités`;
+    get("library-count").textContent = `${A.library.documents.length} newsletters · ${A.library.templates.length} modèles · ${A.library.identities.length} identités`;
     A.Library?.refresh();
   }
   function blockList() {

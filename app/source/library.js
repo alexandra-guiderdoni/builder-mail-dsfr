@@ -4,7 +4,7 @@
   const A = window.MailBuilder, M = A.Model, get = id => document.getElementById(id), esc = A.Render.escape;
   let currentDialog, busy = false, navigation = Promise.resolve();
   get("library-name").setAttribute("aria-describedby", "library-dialog-error");
-  const find = id => { const doc = A.library.documents.find(d => d.id === id); if (!doc) throw new Error("Cette composition n’est plus disponible."); return doc; };
+  const find = id => { const doc = A.library.documents.find(d => d.id === id); if (!doc) throw new Error("Cette newsletter n’est plus disponible."); return doc; };
   const attempt = async action => { try { await action(); } catch (cause) { A.error(cause.message); } };
   function show(editor) {
     get("library-home").hidden = editor; get("editor-page").hidden = !editor;
@@ -13,7 +13,7 @@
   }
   function refresh() {
     const labels = new Map(A.UI.documentLabels());
-    get("newsletter-list").innerHTML = A.library.documents.map(doc => `<li class="fr-col-12 fr-col-md-6" data-document="${esc(doc.id)}"><div class="app-panel"><h3><button class="fr-btn fr-btn--tertiary-no-outline" data-library-action="open" aria-label="Ouvrir ${esc(labels.get(doc.id))}">${esc(labels.get(doc.id))}</button></h3><p>${esc(doc.subject || "Sans objet")} · ${doc.blocks.length} blocs${doc.id === A.library.activeId ? " · Composition active" : ""}</p><div class="actions">${[["rename", "Renommer"], ["duplicate", "Dupliquer"], ["export", "Exporter"], ["remove", "Supprimer"]].map(([action, label]) => `<button class="fr-btn fr-btn--secondary" data-library-action="${action}" aria-label="${label} la composition ${esc(labels.get(doc.id))}">${label}</button>`).join("")}</div></div></li>`).join("");
+    get("newsletter-list").innerHTML = A.library.documents.map(doc => `<li class="fr-col-12 fr-col-md-6" data-document="${esc(doc.id)}"><div class="app-panel"><h3><button class="fr-btn fr-btn--tertiary-no-outline" data-library-action="open" aria-label="Ouvrir ${esc(labels.get(doc.id))}">${esc(labels.get(doc.id))}</button></h3><p>${esc(doc.subject || "Sans objet")} · ${doc.blocks.length} blocs${doc.id === A.library.activeId ? " · Newsletter ouverte" : ""}</p><div class="actions">${[["rename", "Renommer"], ["duplicate", "Dupliquer"], ["export", "Exporter"], ["remove", "Supprimer"]].map(([action, label]) => `<button class="fr-btn fr-btn--secondary" data-library-action="${action}" aria-label="${label} la newsletter ${esc(labels.get(doc.id))}">${label}</button>`).join("")}</div></div></li>`).join("");
     get("resume-document").textContent = `Reprendre « ${labels.get(A.doc().id)} »`;
   }
   function focusRow(id, action = "open") {
@@ -43,21 +43,21 @@
     return navigate(async () => { await A.State.settle(); refresh(); show(false); });
   }
   // Message commun : signale un objet daté qui n'a pas été repris tel quel.
-  const subjectNotice = (done, replaced) => replaced === null ? `${done}.` : `${done}. L’objet d’origine contenait une date (« ${replaced} ») : il est remplacé par le nom de la composition. Mettez-le à jour avant l’envoi.`;
+  const subjectNotice = (done, replaced) => replaced === null ? `${done}.` : `${done}. L’objet d’origine contenait une date (« ${replaced} ») : il est remplacé par le nom de la newsletter. Mettez-le à jour avant l’envoi.`;
   async function duplicate(id) {
     A.State.guard(); const made = M.derive(find(id), M.uniqueName(`${find(id).name} · copie`, A.library.documents)), clone = made.doc;
     A.notice(""); const ticket = A.State.noticeTicket(); await A.State.change(lib => { lib.documents.push(clone); lib.activeId = clone.id; });
     await A.State.settle(); focusRow(clone.id);
-    A.notice(subjectNotice(A.State.saved() ? "Copie indépendante ajoutée et sauvegardée dans la bibliothèque" : "Copie indépendante ajoutée en mémoire, non sauvegardée : exportez la bibliothèque pour la conserver", made.replacedSubject), ticket);
+    A.notice(subjectNotice(A.State.saved() ? "Copie indépendante ajoutée et sauvegardée dans Mes newsletters" : "Copie indépendante ajoutée en mémoire, non sauvegardée : exportez vos newsletters pour la conserver", made.replacedSubject), ticket);
   }
   function ask(kind, id) {
     A.State.guard(); const doc = find(id), removing = kind === "remove";
     currentDialog = {kind, id, index: A.library.documents.findIndex(d => d.id === id)};
-    get("library-dialog-title").textContent = removing ? `Supprimer « ${new Map(A.UI.documentLabels()).get(doc.id)} » ?` : "Renommer la composition";
-    get("library-dialog-description").textContent = removing ? "Cette composition sera retirée de ce navigateur. Les fichiers déjà exportés restent conservés." : "Le nom change dans la bibliothèque ; l’objet du courriel reste conservé.";
+    get("library-dialog-title").textContent = removing ? `Supprimer « ${new Map(A.UI.documentLabels()).get(doc.id)} » ?` : "Renommer la newsletter";
+    get("library-dialog-description").textContent = removing ? "Cette newsletter sera retirée de ce navigateur. Les fichiers déjà exportés restent conservés." : "Le nom change dans Mes newsletters ; l’objet du courriel reste conservé.";
     get("library-name-field").hidden = removing; get("library-name").disabled = removing;
     get("library-name").value = doc.name; get("library-name").removeAttribute("aria-invalid"); get("library-dialog-error").textContent = "";
-    get("library-confirm").textContent = removing ? "Supprimer cette composition" : "Enregistrer le nom";
+    get("library-confirm").textContent = removing ? "Supprimer cette newsletter" : "Enregistrer le nom";
     get("library-dialog").showModal(); get(removing ? "library-cancel" : "library-name").focus();
     if (!removing) get("library-name").select();
   }
@@ -69,7 +69,7 @@
     const same = A.library[list].filter(x => x.name === item.name), rank = same.indexOf(item) + 1;
     currentDialog = {kind: "item", list, id, opener: document.activeElement};
     get("library-dialog-title").textContent = `Retirer ${kind.noun} « ${item.name} » ?${same.length > 1 ? ` (n° ${rank} sur ${same.length} du même nom)` : ""}`;
-    get("library-dialog-description").textContent = `${kind.the} sera retiré${list === "identities" ? "e" : ""} de ce navigateur. Les compositions déjà créées et les fichiers exportés ne changent pas.`;
+    get("library-dialog-description").textContent = `${kind.the} sera retiré${list === "identities" ? "e" : ""} de ce navigateur. Les newsletters déjà créées et les fichiers exportés ne changent pas.`;
     get("library-name-field").hidden = true; get("library-name").disabled = true; get("library-name").removeAttribute("aria-invalid"); get("library-dialog-error").textContent = "";
     get("library-confirm").textContent = kind.button; get("library-dialog").showModal(); get("library-cancel").focus();
   }
@@ -80,7 +80,7 @@
       A.State.guard();
       if (action === "open") return open(id);
       if (action === "duplicate") return duplicate(id);
-      if (action === "export") { A.Files.json(M.document(find(id)), A.Files.exportName(find(id).name, "courriel.json")); A.notice(`Composition choisie proposée au téléchargement ${A.Files.imageContents(find(id))}.`); return; }
+      if (action === "export") { A.Files.json(M.document(find(id)), A.Files.exportName(find(id).name, "courriel.json")); A.notice(`Newsletter choisie proposée au téléchargement ${A.Files.imageContents(find(id))}.`); return; }
       ask(action, id);
     });
   });
@@ -95,7 +95,7 @@
   get("library-form").addEventListener("submit", async event => {
     event.preventDefault(); if (busy || !currentDialog) return;
     const target = {...currentDialog}, label = get("library-name").value.trim();
-    if (target.kind === "rename" && !label) { get("library-dialog-error").textContent = "Renseignez un nom pour la composition."; get("library-name").setAttribute("aria-invalid", "true"); get("library-name").focus(); return; }
+    if (target.kind === "rename" && !label) { get("library-dialog-error").textContent = "Renseignez un nom pour la newsletter."; get("library-name").setAttribute("aria-invalid", "true"); get("library-name").focus(); return; }
     busy = true; get("library-confirm").disabled = get("library-cancel").disabled = true; A.notice("");
     try {
       A.State.guard();
@@ -120,23 +120,23 @@
       get("library-dialog").close(); await A.State.settle();
       const fallback = A.library.documents[Math.min(target.index, A.library.documents.length - 1)].id;
       focusRow(target.kind === "rename" ? target.id : fallback, target.kind === "rename" ? "rename" : "open");
-      if (A.State.saved()) A.notice(target.kind === "rename" ? "Nom enregistré dans la bibliothèque." : emptied ? "Dernière composition supprimée. Une composition de départ avec six blocs est prête pour la suite." : "Composition supprimée ; les autres éditions sont conservées.");
-      else A.notice(`${target.kind === "rename" ? "Nom modifié en mémoire, non sauvegardé" : emptied ? "Dernière composition retirée en mémoire, retrait non sauvegardé ; une composition de départ avec six blocs est prête" : "Composition retirée en mémoire, retrait non sauvegardé"} : exportez la bibliothèque pour conserver cet état.`);
+      if (A.State.saved()) A.notice(target.kind === "rename" ? "Nom enregistré." : emptied ? "Dernière newsletter supprimée. Une newsletter de départ avec six blocs est prête pour la suite." : "Newsletter supprimée ; les autres sont conservées.");
+      else A.notice(`${target.kind === "rename" ? "Nom modifié en mémoire, non sauvegardé" : emptied ? "Dernière newsletter retirée en mémoire, retrait non sauvegardé ; une newsletter de départ avec six blocs est prête" : "Newsletter retirée en mémoire, retrait non sauvegardé"} : exportez vos newsletters pour conserver cet état.`);
     } catch (cause) { if (get("library-dialog").open) get("library-dialog-error").textContent = cause.message; else A.error(cause.message); }
     finally { busy = false; get("library-confirm").disabled = get("library-cancel").disabled = false; }
   });
   // Restaurer une sauvegarde (#200) : un export de bibliothèque remplace toute la bibliothèque, après confirmation,
   // par le point d’entrée commun (#208). Tout autre fichier est refusé avant la fenêtre, sans rien changer.
-  const counted = lib => [[lib.documents.length, "composition"], [lib.templates.length, "modèle"], [lib.identities.length, "identité"]].map(([n, noun]) => `${n} ${noun}${n > 1 ? "s" : ""}`).join(", ");
+  const counted = lib => [[lib.documents.length, "newsletter"], [lib.templates.length, "modèle"], [lib.identities.length, "identité"]].map(([n, noun]) => `${n} ${noun}${n > 1 ? "s" : ""}`).join(", ");
   let restoring = null, restoringBusy = false;
   async function chooseRestore(file) {
-    let text; try { text = await file.text(); } catch { throw new Error(`Le fichier « ${file.name} » n’a pas pu être lu. Votre bibliothèque est inchangée.`); }
-    let raw; try { raw = JSON.parse(text); } catch { throw new Error("Le fichier JSON est invalide ou incomplet. Votre bibliothèque est inchangée."); }
-    if (raw && typeof raw === "object" && "token" in raw && "library" in raw) throw new Error("Ce fichier contient des données enregistrées brutes, réservées au diagnostic : il ne peut être ni restauré ni importé. Choisissez un export de bibliothèque.");
-    if (raw?.schema !== "dsfr-mail/library") throw new Error(["dsfr-mail/document", "builder-mail-prototype/1"].includes(raw?.schema) ? "Ce fichier contient une seule composition : utilisez « Importer une composition ou une bibliothèque JSON » pour l’ajouter. Votre bibliothèque est inchangée." : "Ce fichier n’est pas un export de bibliothèque de l’atelier. Votre bibliothèque est inchangée.");
+    let text; try { text = await file.text(); } catch { throw new Error(`Le fichier « ${file.name} » n’a pas pu être lu. Vos newsletters sont inchangées.`); }
+    let raw; try { raw = JSON.parse(text); } catch { throw new Error("Le fichier JSON est invalide ou incomplet. Vos newsletters sont inchangées."); }
+    if (raw && typeof raw === "object" && "token" in raw && "library" in raw) throw new Error("Ce fichier contient des données enregistrées brutes, réservées au diagnostic : il ne peut être ni restauré ni importé. Choisissez une sauvegarde exportée par l’atelier.");
+    if (raw?.schema !== "dsfr-mail/library") throw new Error(["dsfr-mail/document", "builder-mail-prototype/1"].includes(raw?.schema) ? "Ce fichier contient une seule newsletter : utilisez « Importer une newsletter ou une sauvegarde (JSON) » pour l’ajouter. Vos newsletters sont inchangées." : "Ce fichier n’est pas une sauvegarde de l’atelier. Vos newsletters sont inchangées.");
     const incoming = await A.Imports.prepare(text);
     restoring = {library: incoming.value, name: file.name};
-    get("restore-dialog-description").textContent = `Le fichier « ${file.name} » contient ${counted(incoming.value)}. Il remplacera le contenu actuel de ce navigateur : ${counted(A.library)}. La bibliothèque actuelle restera récupérable par « Restaurer l’état précédent ». Exportez-la d’abord pour en garder un fichier.`;
+    get("restore-dialog-description").textContent = `Le fichier « ${file.name} » contient ${counted(incoming.value)}. Il remplacera le contenu actuel de ce navigateur : ${counted(A.library)}. Vos newsletters actuelles resteront récupérables par « Restaurer l’état précédent ». Exportez-la d’abord pour en garder un fichier.`;
     get("restore-dialog-error").textContent = "";
     get("restore-dialog").showModal(); get("restore-cancel").focus();
   }
@@ -155,7 +155,7 @@
       await A.State.replaceLibrary(M.copy(target.library), {reason: "remplacement", keepPrevious: true});
       restoring = null; get("restore-dialog").close();
       refresh(); show(false); get("home-title").focus();
-      A.notice(`Sauvegarde « ${target.name} » restaurée : ${counted(A.library)}. La bibliothèque précédente reste récupérable par « Restaurer l’état précédent ».`);
+      A.notice(`Sauvegarde « ${target.name} » restaurée : ${counted(A.library)}. Les newsletters précédentes restent récupérables par « Restaurer l’état précédent ».`);
     } catch (cause) { get("restore-dialog-error").textContent = cause.message; }
     finally { restoringBusy = false; get("restore-confirm").disabled = get("restore-cancel").disabled = get("restore-export").disabled = false; }
   });

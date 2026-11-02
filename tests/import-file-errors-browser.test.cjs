@@ -12,7 +12,7 @@ test('application : un fichier illisible affiche un message français, retire la
     await page.locator('#document-name').fill('Bibliothèque à préserver'); await saved(page);
     const before = await state(page), persisted = await store(page);
     const incoming = JSON.stringify(await page.evaluate(() => MailBuilder.Model.create('Fichier synthétique')));
-    await expand(page, 'Fichiers et récupération');
+    await expand(page, 'Sauvegarde et import');
     await page.evaluate(() => {
       window.failRead = null;
       File.prototype.text = function() { return new Promise((resolve, reject) => { window.failRead = () => reject(new DOMException('The requested file could not be read, typically due to permission problems that have occurred after a reference to a file was acquired.', 'NotReadableError')); }); };
@@ -33,8 +33,8 @@ test('application : un fichier illisible affiche un message français, retire la
     assert.deepEqual(await state(page), before); assert.deepEqual(await store(page), persisted);
 
     await upload(page, 'synthetique.json', incoming);
-    await page.locator('#notice').filter({hasText: 'Import ajouté à la bibliothèque'}).waitFor(); await saved(page);
-    assert.deepEqual(await status(page), {error: null, notice: 'Import ajouté à la bibliothèque, avec ses images. Les compositions existantes sont conservées.'});
+    await page.locator('#notice').filter({hasText: 'Import ajouté à Mes newsletters'}).waitFor(); await saved(page);
+    assert.deepEqual(await status(page), {error: null, notice: 'Import ajouté à Mes newsletters, avec ses images. Les newsletters existantes sont conservées.'});
     const after = await state(page);
     assert.equal(after.documents.length, before.documents.length + 1);
     assert.deepEqual(after.documents.slice(0, before.documents.length), before.documents);
@@ -48,7 +48,7 @@ test('application : un second import refusé ne retire pas la notice de la lectu
   try {
     const {page} = await open(browser);
     const incoming = JSON.stringify(await page.evaluate(() => MailBuilder.Model.create('Lecture différée')));
-    await expand(page, 'Fichiers et récupération');
+    await expand(page, 'Sauvegarde et import');
     await page.evaluate(() => { const read = Blob.prototype.text; window.finishRead = null; File.prototype.text = function() { delete File.prototype.text; return new Promise(resolve => { window.finishRead = async () => resolve(await read.call(this)); }); }; });
     await upload(page, 'premier.json', incoming);
     await page.waitForFunction(() => typeof finishRead === 'function');
@@ -56,7 +56,7 @@ test('application : un second import refusé ne retire pas la notice de la lectu
     await page.locator('#error').filter({hasText: 'Attendez la fin du chargement du fichier'}).waitFor();
     assert.equal(await page.locator('#notice').textContent(), reading);
     await page.evaluate(() => finishRead());
-    await page.locator('#notice').filter({hasText: 'Import ajouté à la bibliothèque'}).waitFor(); await saved(page);
+    await page.locator('#notice').filter({hasText: 'Import ajouté à Mes newsletters'}).waitFor(); await saved(page);
     assert.equal((await state(page)).documents.filter(d => d.name === 'Lecture différée').length, 1);
   } finally { await browser.close(); }
 });

@@ -27,7 +27,7 @@ test('#201 tout effacer : fenêtre avec export préalable, puis état visible d�
   try {
     const {page} = await open(browser); await filled(page); await home(page);
     await page.locator('[data-action=reset-library]').click(); await page.locator(dialog).waitFor({state: 'visible'});
-    assert.match(await page.locator('#reset-dialog-description').textContent(), /2 compositions, 1 modèle, 1 identité/);
+    assert.match(await page.locator('#reset-dialog-description').textContent(), /2 newsletters, 1 modèle, 1 identité/);
     const download = page.waitForEvent('download'); await page.locator('#reset-export').click();
     assert.match((await download).suggestedFilename(), /bibliotheque-courriels/);
     assert.equal(await page.locator(dialog).isVisible(), true, 'exporter n’est pas confirmer');

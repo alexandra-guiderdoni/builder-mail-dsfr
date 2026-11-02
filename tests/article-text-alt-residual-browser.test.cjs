@@ -13,7 +13,7 @@ test('import d’un article sans image : aucune alternative résiduelle dans le 
       pictured.values.f1 = 'Alternative conservée synthétique';
       return doc;
     }, RESIDUE);
-    await expand(page, 'Fichiers et récupération');
+    await expand(page, 'Sauvegarde et import');
     await page.locator('#project-input').setInputFiles({name: 'synthetique.courriel.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(fixture))});
     await saved(page);
     const imported = await state(page), doc = imported.documents.find(d => d.id === imported.activeId);

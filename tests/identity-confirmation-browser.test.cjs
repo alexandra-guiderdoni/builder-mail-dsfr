@@ -13,7 +13,7 @@ async function importDocument(page, build) {
   // La notice précédente est effacée : elle ne réapparaît qu’après l’import, l’ouverture et la sauvegarde.
   await page.evaluate(() => MailBuilder.notice(''));
   await click(page, '[data-action=json-import]');
-  await page.locator('#notice').filter({hasText: 'Composition ou bibliothèque JSON ajoutée'}).waitFor();
+  await page.locator('#notice').filter({hasText: 'Newsletter ou sauvegarde JSON ajoutée'}).waitFor();
   await saved(page);
 }
 

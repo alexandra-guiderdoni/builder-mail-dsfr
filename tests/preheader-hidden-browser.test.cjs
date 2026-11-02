@@ -51,9 +51,9 @@ test('plusieurs pré-en-têtes : avertissement visible dans l’éditeur, un seu
   try {
     const {page} = await open(browser, {offline: true, permissions: ['clipboard-read', 'clipboard-write']});
     const packet = await page.evaluate(() => { const d = MailBuilder.Model.create('Plusieurs pré-en-têtes', [0, 5, 0]); d.blocks[0].values.f0 = 'Premier pré-en-tête'; d.blocks[2].values.f0 = 'Second pré-en-tête'; return d; });
-    await expand(page, 'Fichiers et récupération');
+    await expand(page, 'Sauvegarde et import');
     await page.locator('#project-input').setInputFiles({name: 'preentetes.courriel.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(packet))});
-    await page.locator('#notice').filter({hasText: 'Import ajouté à la bibliothèque'}).waitFor(); await saved(page);
+    await page.locator('#notice').filter({hasText: 'Import ajouté à Mes newsletters'}).waitFor(); await saved(page);
     await page.locator('#composition-summary').filter({hasText: 'seul le premier est utilisé'}).waitFor();
     await click(page, '[data-action=copy]'); await confirmChecks(page); await page.locator('#notice').filter({hasText: 'Courriel copié en HTML et texte.'}).waitFor();
     assert.match(await page.locator('#notice').textContent(), /seul le premier est utilisé/);

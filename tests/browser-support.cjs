@@ -75,7 +75,7 @@ async function open(browser, contextOptions = {}, beforeNavigate) {
 }
 async function enterEditor(page) { if (await page.locator('[data-action=resume-document]').isVisible()) await click(page, '[data-action=resume-document]'); await page.locator('#editor-page').waitFor({state: 'visible'}); await page.evaluate(() => document.fonts.ready); }
 async function saved(page) {
-  await page.waitForFunction(() => document.querySelector('#save-state').textContent === 'Bibliothèque sauvegardée dans ce navigateur.');
+  await page.waitForFunction(() => document.querySelector('#save-state').textContent === 'Newsletters sauvegardées dans ce navigateur.');
 }
 async function expand(page, text) {
   const summary = page.locator('summary').filter({hasText: text});

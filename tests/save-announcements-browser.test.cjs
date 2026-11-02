@@ -1,7 +1,7 @@
 const test = require('node:test');
 const {open, chromium, store, assert} = require('./browser-support.cjs');
 
-const SUCCESS = 'Bibliothèque sauvegardée dans ce navigateur.';
+const SUCCESS = 'Newsletters sauvegardées dans ce navigateur.';
 // Horloge contrôlée : aucune attente de durée réelle, y compris pour observer l’absence d’annonce.
 const until = async (page, read, expected) => {
   for (let i = 0; i < 400; i++) { if (JSON.stringify(await page.evaluate(read)) === JSON.stringify(expected)) return; await new Promise(r => setTimeout(r, 25)); }

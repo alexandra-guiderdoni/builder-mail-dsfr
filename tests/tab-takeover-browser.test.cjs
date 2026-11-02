@@ -19,7 +19,7 @@ async function expectWritable(page, label) {
 // Une sauvegarde explicite permet aussi de découvrir le jeton périmé sans changer le contenu.
 async function ownershipRefused(page, label) {
   if (await page.locator(banner).isHidden()) {
-    await expand(page, 'Fichiers et récupération'); await click(page, '[data-action=save-now]');
+    await expand(page, 'Sauvegarde et import'); await click(page, '[data-action=save-now]');
   }
   await expectReadOnly(page, label);
 }
@@ -71,7 +71,7 @@ test('reprendre la main ajoute les compositions divergentes en copies horodatée
     // Sans nouvelle tentative d’écriture, la notification peut arriver plus tard (#138).
     // La fermeture doit néanmoins préserver le nouveau propriétaire, avec ou sans bandeau.
     assert.deepEqual(await state(first), firstMemory, 'La mémoire de l’ancien onglet est inchangée.');
-    await expand(first, 'Fichiers et récupération');
+    await expand(first, 'Sauvegarde et import');
     const firstExport = JSON.parse(await fs.readFile(await download(first, '[data-action=export-library]', 'ancien-onglet.json'), 'utf8'));
     assert.deepEqual(firstExport, firstMemory);
 
@@ -121,7 +121,7 @@ test('sans notification interfenêtres, la première modification de l’ancien 
     await first.locator('#subject').fill(subject);
     await first.waitForFunction(() => {
       const status = document.querySelector('#save-state').textContent;
-      return status.startsWith('Lecture seule') || status === 'Bibliothèque sauvegardée dans ce navigateur.';
+      return status.startsWith('Lecture seule') || status === 'Newsletters sauvegardées dans ce navigateur.';
     });
     assert.equal((await store(other)).token, storedAfterTakeover.token, 'Une tentative refusée ne doit pas remplacer le jeton du nouveau propriétaire.');
     await expectReadOnly(first, 'ancien onglet à sa première modification');
@@ -319,7 +319,7 @@ test('une restauration refusée par le jeton passe la fenêtre en lecture seule 
     const other = await second(context);
     await first.locator('#document-name').fill('Version de la première fenêtre'); await saved(first);
     const storedBefore = await store(first), otherMemory = await state(other);
-    await expand(other, 'Fichiers et récupération'); await click(other, '[data-action=recover]');
+    await expand(other, 'Sauvegarde et import'); await click(other, '[data-action=recover]');
     await other.locator('#error').filter({hasText: 'Une autre fenêtre'}).waitFor();
     assert.deepEqual(await store(first), storedBefore); assert.deepEqual(await state(other), otherMemory);
     await expectReadOnly(other, 'restauration refusée');

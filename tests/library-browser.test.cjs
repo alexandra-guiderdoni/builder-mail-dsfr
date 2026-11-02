@@ -56,7 +56,7 @@ test('accueil et gestion ciblée : ancienne composition, images, renommage, copi
     const last = await state(page); assert.equal(last.documents.length, 1); assert(last.documents.some(d => d.id === last.activeId));
     assert(!last.documents.some(d => [a, b, clone.id].includes(d.id)));
     assert.equal(last.documents[0].blocks.length, 6);
-    assert.match(await page.locator('#notice').innerText(), /composition de départ/);
+    assert.match(await page.locator('#notice').innerText(), /newsletter de départ/);
     await fs.writeFile(path.join(evidence, 'bibliotheque-accueil.json'), JSON.stringify({offline: true, existingCompositionRestored: true, targetOtherThanActive: true, imageExported: true, independentClone: true, cancelledDeletionPreserved: true, focusRestored: true, mobile390: true, lastDeletionPreservesInvariant: true}, null, 2));
     await context.close();
   } finally { await browser.close(); }
@@ -89,7 +89,7 @@ test('panne de sauvegarde : retour à l’accueil sans perte, stockage intact et
     // #32 : après un échec, le changement de vue reste disponible ; le travail en mémoire est conservé.
     await click(page, '[data-action=library-home]'); assert(await page.locator('#library-home').isVisible());
     assert.match(await page.locator('#newsletter-list').innerText(), /Travail à exporter/);
-    await expand(page, 'Fichiers et récupération');
+    await expand(page, 'Sauvegarde et import');
     const exported = JSON.parse(await fs.readFile(await download(page, '[data-action=export-library]', 'bibliotheque-panne-accueil.json'), 'utf8'));
     assert.equal(exported.documents.find(d => d.id === exported.activeId).name, 'Travail à exporter');
     assert.deepEqual(await page.evaluate(() => MailBuilder.Storage.load()), persisted);

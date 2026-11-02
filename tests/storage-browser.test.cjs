@@ -17,7 +17,7 @@ test('quota simulé : aucune écriture partielle, export du travail puis récup�
     await page.locator('#document-name').fill('Travail en mémoire');
     await page.locator('#save-state').filter({hasText: 'Modifications non sauvegardées'}).waitFor();
     assert.deepEqual(await store(page), before);
-    await expand(page, 'Fichiers et récupération');
+    await expand(page, 'Sauvegarde et import');
     const output = await download(page, '[data-action=export-document]', 'quota-composition.json');
     assert.equal(JSON.parse(await fs.readFile(output, 'utf8')).name, 'Travail en mémoire');
     await click(page, '[data-action=recover]');
@@ -39,7 +39,7 @@ test('deux fenêtres ne peuvent pas écraser silencieusement leurs bibliothèque
     await page.locator('#document-name').fill('Sauvegarde première fenêtre'); await saved(page);
     await second.locator('#document-name').fill('Travail deuxième fenêtre'); await second.locator('#error').filter({hasText: 'Une autre fenêtre'}).waitFor();
     const stored = await store(page); assert.equal(stored.library.documents[0].name, 'Sauvegarde première fenêtre');
-    await expand(second, 'Fichiers et récupération'); const output = await download(second, '[data-action=export-document]', 'conflit-composition.json');
+    await expand(second, 'Sauvegarde et import'); const output = await download(second, '[data-action=export-document]', 'conflit-composition.json');
     assert.equal(JSON.parse(await fs.readFile(output, 'utf8')).name, 'Travail deuxième fenêtre');
   } finally { await browser.close(); }
 });
@@ -59,7 +59,7 @@ test('une version de bibliothèque inconnue reste intacte jusqu’à récupérat
     await enterEditor(page);
     await page.locator('#document-name').fill('Travail temporaire récupérable');
     assert.equal((await store(page)).library.version, 99);
-    await expand(page, 'Fichiers et récupération');
+    await expand(page, 'Sauvegarde et import');
     const raw = await download(page, '[data-action=export-stored]', 'stockage-version-inconnue.json');
     assert.equal(JSON.parse(await fs.readFile(raw, 'utf8')).library.version, 99);
     await click(page, '[data-action=recover]'); await saved(page);
@@ -78,7 +78,7 @@ test('une récupération obsolète conserve le stockage concurrent et le travail
     await page.locator('#document-name').fill('Nouvelle sauvegarde concurrente'); await saved(page);
     await second.locator('#document-name').fill('Travail local à conserver'); await second.locator('#error').filter({hasText: 'Une autre fenêtre'}).waitFor();
     const before = await store(page), memory = await state(second);
-    await expand(second, 'Fichiers et récupération'); await click(second, '[data-action=recover]');
+    await expand(second, 'Sauvegarde et import'); await click(second, '[data-action=recover]');
     await second.waitForFunction(() => document.querySelector('#save-state').textContent.includes('Récupération impossible') || document.querySelector('#notice').textContent.includes('État précédent relu'));
     assert.deepEqual(await store(page), before); assert.deepEqual(await state(second), memory);
     await second.locator('#error').filter({hasText: 'Une autre fenêtre'}).waitFor();
@@ -165,7 +165,7 @@ test('abandon de transaction après écriture : la transaction est abandonnée a
     assert.match(errorText, /inaccessible/);
     assert.doesNotMatch(errorText, /saturé/);
     assert.deepEqual(await both(page), before);
-    await expand(page, 'Fichiers et récupération');
+    await expand(page, 'Sauvegarde et import');
     const output = await download(page, '[data-action=export-document]', 'quota-asynchrone-composition.json');
     assert.equal(JSON.parse(await fs.readFile(output, 'utf8')).name, 'Travail en mémoire');
     assert.equal(await page.locator('#document-name').inputValue(), 'Travail en mémoire');
@@ -224,7 +224,7 @@ for (const carrier of quotaCarriers) {
       const output = await download(page, '[data-action=rescue-export]', `quota-${carrier}-secours.json`);
       assert.equal(JSON.parse(await fs.readFile(output, 'utf8')).documents[0].name, 'Travail en mémoire');
       assert.equal(await page.locator('#document-name').inputValue(), 'Travail en mémoire');
-      await expand(page, 'Fichiers et récupération');
+      await expand(page, 'Sauvegarde et import');
       await page.evaluate(() => { window.failWrites = false; }); await click(page, '[data-action=save-now]'); await saved(page);
       const after = await both(page);
       assert.equal(after.current.library.documents[0].name, 'Travail en mémoire');
@@ -247,7 +247,7 @@ test('un previous invalide ne remplace ni le stockage ni le travail courant lors
     }));
     const invalid = await both(page), memory = await state(page);
     assert.equal(invalid.previous.token, 'previous-invalide');
-    await expand(page, 'Fichiers et récupération'); await click(page, '[data-action=recover]');
+    await expand(page, 'Sauvegarde et import'); await click(page, '[data-action=recover]');
     await page.locator('#save-state').filter({hasText: 'Récupération impossible'}).waitFor();
     assert(!(await page.locator('#error').innerText()).includes('Aucun état précédent'), 'le previous existe mais est invalide');
     assert.deepEqual(await both(page), invalid);

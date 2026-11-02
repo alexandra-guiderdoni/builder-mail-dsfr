@@ -37,8 +37,8 @@ test('SNUM autonome hors connexion : rubriques, JSON transporté, rendu identiqu
     assert.equal(titleSize, 18); assert(!(await preview.locator('body').textContent()).includes(packet.watch[0].summary));
     const projectPath = await download(converter, '#export-json', 'snum-generique.json');
     const snumHTMLPath = await download(converter, '#export-html', 'snum-rendu.html');
-    await expand(builder, 'Fichiers et récupération'); await builder.locator('#project-input').setInputFiles(projectPath);
-    await builder.locator('#notice').filter({hasText: 'Import ajouté à la bibliothèque'}).waitFor(); await saved(builder);
+    await expand(builder, 'Sauvegarde et import'); await builder.locator('#project-input').setInputFiles(projectPath);
+    await builder.locator('#notice').filter({hasText: 'Import ajouté à Mes newsletters'}).waitFor(); await saved(builder);
     const library = await state(builder), imported = library.documents.find(d => d.id === library.activeId);
     assert.deepEqual(imported.blocks.map(b => [b.component, b.values, b.source]), converted.blocks.map(b => [b.component, b.values, b.source]));
     const builderHTMLPath = await download(builder, '[data-action=export-mail]', 'snum-apres-import.html');

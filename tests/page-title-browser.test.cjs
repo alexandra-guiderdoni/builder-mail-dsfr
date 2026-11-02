@@ -39,8 +39,8 @@ test('objet facultatif : aperçu et téléchargement titrés ; transformation du
     const name = 'Édition & <dossier> "suivi"';
     await page.locator('#document-name').fill(name); await saved(page);
     const help = await page.locator('#subject').evaluate(e => ({required: e.getAttribute('aria-required'), descriptions: (e.getAttribute('aria-describedby') || '').split(/\s+/).filter(Boolean).map(id => ({id, visible: document.getElementById(id)?.checkVisibility(), text: document.getElementById(id)?.textContent}))}));
-    assert.equal(help.required, null); assert(help.descriptions.some(d => d.visible && /nom.*composition.*titre/i.test(d.text)));
-    observations.push({step: 'help', ...help}); await expand(page, 'Fichiers et récupération');
+    assert.equal(help.required, null); assert(help.descriptions.some(d => d.visible && /nom.*newsletter.*titre/i.test(d.text)));
+    observations.push({step: 'help', ...help}); await expand(page, 'Sauvegarde et import');
     for (const [i, subject] of ['', '   ', 'Objet prioritaire & suivi'].entries()) {
       const expected = subject.trim() ? subject : name;
       const observedPreviewTitle = await previewTitle(page, expected, async () => { await page.locator('#subject').fill(subject); await saved(page); });

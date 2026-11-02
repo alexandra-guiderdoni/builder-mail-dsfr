@@ -41,7 +41,7 @@ async function exportNames(browser, name) {
   // Contexte neuf par nom : Chromium limite les téléchargements automatiques répétés d'une même page.
   const {page, context} = await open(browser, {timezoneId: 'Europe/Paris'}, async p => { await attachExportDiagnostics(p); await p.clock.setFixedTime(FIXED); });
   try {
-    await expand(page, 'Fichiers et récupération');
+    await expand(page, 'Sauvegarde et import');
     await page.locator('#document-name').fill(name); await saved(page);
     const downloads = [];
     for (const selector of selectors) downloads.push((await suggested(page, selector, `nom « ${name} »`)).normalize('NFC'));

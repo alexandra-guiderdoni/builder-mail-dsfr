@@ -79,7 +79,7 @@ test('un ancien JSON reste récupérable et corrigeable ; les sorties attendent 
     observations.push({step: 'legacy-preview', ...preview, ...(nodes ? {nativeAXLinks: 0, nativeAXPlaceholderObserved: true} : {ariaSnapshotLinks: 0, ariaSnapshotPlaceholderObserved: true}), sandbox: await page.locator('#preview').getAttribute('sandbox')});
     assert.equal(await page.evaluate(() => MailBuilder.invalid.size), 0);
     await page.reload(); await page.waitForFunction(() => MailBuilder.ready); await enterEditor(page); assert.deepEqual(await state(page), original);
-    await expand(page, 'Fichiers et récupération');
+    await expand(page, 'Sauvegarde et import');
     const json = JSON.parse(await fs.readFile(await download(page, '[data-action=export-library]', 'ancienne-bibliotheque.json'), 'utf8'));
     assert.deepEqual(json, original); observations.push({step: 'import-reload-json', libraryPreserved: true, pendingInvalid: 0});
     let downloads = 0; page.on('download', () => downloads++);

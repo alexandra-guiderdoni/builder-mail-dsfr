@@ -129,7 +129,7 @@
           try {
             const saved = await A.Storage.save(task.library, token); token = saved.token; base = task.library;
             if (task.editorial) modified();
-            if (task.current === revision && !readOnly) { failing(false); if (!A.invalid.size && !A.drafts.size) A.error(""); const text = A.invalid.size || A.drafts.size ? "Bibliothèque sauvegardée ; les champs invalides restent non enregistrés." : "Bibliothèque sauvegardée dans ce navigateur."; show(text); announceSuccess(text); }
+            if (task.current === revision && !readOnly) { failing(false); if (!A.invalid.size && !A.drafts.size) A.error(""); const text = A.invalid.size || A.drafts.size ? "Newsletters sauvegardées ; les champs invalides restent non enregistrés." : "Newsletters sauvegardées dans ce navigateur."; show(text); announceSuccess(text); }
           } catch (cause) {
             failing(true); setPersistentError(`${cause.message} ${cause.storage === "conflit" ? "Exportez la bibliothèque en mémoire pour conserver ce travail, puis rechargez cette page." : "Exportez la bibliothèque en mémoire pour conserver ce travail."}`);
             show("Modifications non sauvegardées. Exportez votre bibliothèque.", true);
@@ -170,13 +170,13 @@
       if (record) A.library = M.copy(M.library(record.library));
       A.selected = A.doc().blocks[0]?.id || null;
       // Après « Tout effacer » (#201), l’état visible est celui d’un navigateur neuf.
-      show(record && record.reason !== "effacement" ? "Bibliothèque restaurée depuis ce navigateur." : FRESH, true);
+      show(record && record.reason !== "effacement" ? "Newsletters retrouvées dans ce navigateur." : FRESH, true);
       try { meta = await A.Storage.loadMeta(); } catch { meta = {}; }
     } catch (cause) {
       failing(true); A.recoveryOnly = true; absent = cause.storage === "absent";
       const legacy = record && A.LegacyRecovery?.offer(record);
       const advice = legacy ? "Les données enregistrées sont conservées : utilisez la récupération guidée ci-dessous pour corriger les anciennes adresses." : absent ? "Exportez la bibliothèque en mémoire pour conserver votre travail : la fermeture de cette page l’efface." : "Cette page n’écrit rien dans la bibliothèque locale : exportez la bibliothèque en mémoire pour conserver votre travail.";
-      const restore = !legacy && !cause.storage && await restorable() ? " Une sauvegarde précédente lisible existe : « Restaurer l’état précédent », dans « Fichiers et récupération », permet de la relire." : "";
+      const restore = !legacy && !cause.storage && await restorable() ? " Une sauvegarde précédente lisible existe : « Restaurer l’état précédent », dans « Sauvegarde et import », permet de la relire." : "";
       setPersistentError(`${cause.message} ${advice}${restore}`);
       show(absent ? "Stockage indisponible : travail en mémoire seulement." : "Bibliothèque non restaurée.", true);
       if (absent) get("storage-help").textContent = "Aucun stockage n’est disponible dans ce navigateur : exportez une copie pour conserver votre travail.";
@@ -214,7 +214,7 @@
       const restored = M.copy(M.library(previous.library)), saved = await A.Storage.save(restored, token);
       token = saved.token; base = A.library = restored; A.recoveryOnly = false; failing(false); revision++;
       A.selected = A.doc().blocks[0]?.id || null; A.UI.refresh(); A.error("");
-      show("Bibliothèque sauvegardée dans ce navigateur."); announceSuccess("Bibliothèque sauvegardée dans ce navigateur.");
+      show("Newsletters sauvegardées dans ce navigateur."); announceSuccess("Newsletters sauvegardées dans ce navigateur.");
       A.notice("État précédent relu. Contrôlez les compositions avant de poursuivre.", ticket);
     } catch (cause) {
       show("Récupération impossible ; le travail actuel est conservé.", true);
@@ -231,7 +231,7 @@
     if (!WANTED[reason]) throw new Error("Motif de remplacement inconnu.");
     if (readOnly) throw readOnlyError();
     guardEdit();
-    if (A.recoveryOnly) throw new Error(absent ? "Aucun stockage n’est disponible dans ce navigateur : rien ne peut être remplacé ni effacé." : "La bibliothèque enregistrée ne peut pas être relue : exportez d’abord les données enregistrées brutes, dans « Fichiers et récupération », avant de la remplacer ou de l’effacer.");
+    if (A.recoveryOnly) throw new Error(absent ? "Aucun stockage n’est disponible dans ce navigateur : rien ne peut être remplacé ni effacé." : "La bibliothèque enregistrée ne peut pas être relue : exportez d’abord les données enregistrées brutes, dans « Sauvegarde et import », avant de la remplacer ou de l’effacer.");
     const next = M.copy(M.library(library));
     restoring = true; pending++; get("workspace").disabled = true;
     try {
@@ -246,7 +246,7 @@
       A.selected = A.doc().blocks[0]?.id || null;
       channel?.postMessage({type: reason, token: saved.token});
       A.UI.refresh(); A.error("");
-      show(reason === "effacement" ? FRESH : "Bibliothèque sauvegardée dans ce navigateur.", true);
+      show(reason === "effacement" ? FRESH : "Newsletters sauvegardées dans ce navigateur.", true);
       return saved;
     } catch (cause) { storageLock(cause); throw cause; }
     finally { restoring = false; pending--; get("workspace").disabled = false; }
@@ -323,7 +323,7 @@
       readOnly = null;
       get("editing").disabled = false; get("read-only").hidden = true; A.invalid.clear(); A.UI.clearFieldErrors();
       A.UI.refresh(); A.error("");
-      const savedText = A.drafts.size ? "Bibliothèque sauvegardée ; les champs invalides restent non enregistrés." : "Bibliothèque sauvegardée dans ce navigateur.";
+      const savedText = A.drafts.size ? "Newsletters sauvegardées ; les champs invalides restent non enregistrés." : "Newsletters sauvegardées dans ce navigateur.";
       show(savedText); announceSuccess(savedText); get(get("editor-page").hidden ? "home-title" : "composition-title").focus();
       A.notice(!record ? "Main reprise : la bibliothèque en mémoire est enregistrée de nouveau dans ce navigateur." : copies ? `Main reprise : ${copies > 1 ? `${copies} copies horodatées ajoutées` : "une copie horodatée ajoutée"} à la bibliothèque enregistrée, sans rien remplacer. L’autre fenêtre ne peut plus enregistrer ; elle passe en lecture seule au plus tard à sa prochaine modification.` : "Main reprise : rien n’avait changé dans cette fenêtre, la bibliothèque enregistrée est conservée telle quelle.", ticket);
     } catch (cause) {

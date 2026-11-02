@@ -102,9 +102,9 @@ test('la copie système des 52 composants conserve le HTML strict, les styles Of
   try {
     const {page, context} = await open(browser, {offline: true, permissions: ['clipboard-read', 'clipboard-write']});
     const packet = await page.evaluate(() => MailBuilder.Model.create('Recette de copie', Array.from({length:52}, (_, i) => i)));
-    await expand(page, 'Fichiers et récupération');
+    await expand(page, 'Sauvegarde et import');
     await page.locator('#project-input').setInputFiles({name:'presentation.courriel.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(packet))});
-    await page.locator('#notice').filter({hasText:'Import ajouté à la bibliothèque'}).waitFor(); await saved(page);
+    await page.locator('#notice').filter({hasText:'Import ajouté à Mes newsletters'}).waitFor(); await saved(page);
     /* Page au premier plan avant la copie (l’écriture du presse-papiers exige le focus) ; l’annonce et #error sont surveillés ensemble. */
     await focusPage(page); await click(page, '[data-action=copy]'); const copyDone = announced(page, 'Courriel copié en HTML et texte.'); await confirmChecks(page, copyDone); await copyDone;
     const copied = await page.evaluate(async () => {

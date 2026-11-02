@@ -26,7 +26,7 @@ test('homonymes : même distinction dans le sélecteur, les cartes et leurs acti
   assert.match(h.get('documents').innerHTML, /Sonde &lt;&amp;&gt; \(n° 1\)/);
   assert.match(h.get('documents').innerHTML, /Sonde &lt;&amp;&gt; \(n° 2\)/);
   assert.match(h.get('documents').innerHTML, /value="b" selected/);
-  for (const action of ['Ouvrir', 'Renommer la composition', 'Dupliquer la composition', 'Exporter la composition', 'Supprimer la composition']) {
+  for (const action of ['Ouvrir', 'Renommer la newsletter', 'Dupliquer la newsletter', 'Exporter la newsletter', 'Supprimer la newsletter']) {
     for (const rank of [1, 2]) assert(h.get('newsletter-list').innerHTML.includes(`aria-label="${action} Sonde &lt;&amp;&gt; (n° ${rank})"`), action);
   }
   assert.match(h.get('resume-document').textContent, /n° 2/);

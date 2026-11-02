@@ -19,7 +19,7 @@ test('Dupliquer et Retirer nomment le bloc ou la composition dans leur intitulé
     const {page} = await open(browser);
     await click(page, '[data-select] >> nth=1');
     const names = scoped(await buttons(page));
-    for (const expected of ['Dupliquer le bloc', 'Retirer le bloc', 'Dupliquer la composition', 'Retirer la composition'])
+    for (const expected of ['Dupliquer le bloc', 'Retirer le bloc', 'Dupliquer la newsletter', 'Retirer la newsletter'])
       assert.equal(names.filter(n => n === expected).length, 1, `${expected} attendu une fois dans ${JSON.stringify(names)}`);
     assert(!names.includes('Dupliquer') && !names.includes('Retirer'), `Intitulé sans objet dans ${JSON.stringify(names)}`);
     assert.equal(new Set(names).size, names.length, `Intitulés en double dans ${JSON.stringify(names)}`);
@@ -37,8 +37,8 @@ test('la liste des compositions précise la composition visée par Dupliquer et 
     const {page} = await open(browser);
     await click(page, '[data-action=library-home]');
     const names = scoped(await buttons(page)), item = await page.locator('#newsletter-list [data-library-action=duplicate]').first().evaluate(e => [e.textContent.trim(), e.getAttribute('aria-label')]);
-    assert(names.some(n => /^Dupliquer la composition /.test(n)), JSON.stringify(names));
-    assert(names.some(n => /^Supprimer la composition /.test(n)), JSON.stringify(names));
+    assert(names.some(n => /^Dupliquer la newsletter /.test(n)), JSON.stringify(names));
+    assert(names.some(n => /^Supprimer la newsletter /.test(n)), JSON.stringify(names));
     assert(item[1].includes(item[0]));
   } finally { await browser.close(); }
 });

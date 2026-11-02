@@ -130,7 +130,7 @@ test('Retirer met le focus sur le bloc voisin, ou sur le catalogue quand il n’
     await click(page, '[data-block-action=remove]'); await saved(page);
     focus = await active(page);
     assert.equal(focus.tag, 'SUMMARY'); assert.equal(focus.text, 'Ajouter un composant');
-    assert.equal(await notice(page), `Bloc ${g(only.label)} retiré. « Annuler le retrait » le rétablit à sa place. La composition ne contient plus de bloc\u00a0: ajoutez un composant depuis le catalogue.`);
+    assert.equal(await notice(page), `Bloc ${g(only.label)} retiré. « Annuler le retrait » le rétablit à sa place. La newsletter ne contient plus de bloc\u00a0: ajoutez un composant depuis le catalogue.`);
     assert.deepEqual(observations.errors, []);
   } finally { await browser.close(); }
 });

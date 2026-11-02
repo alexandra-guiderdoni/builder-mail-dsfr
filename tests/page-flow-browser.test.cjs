@@ -10,7 +10,7 @@ async function importAll(page) {
   }, longText);
   await expand(page, 'Importer du JSON'); await page.locator('#json-input').fill(packet);
   await click(page, '[data-action=json-import]');
-  await page.locator('#notice').filter({hasText: 'Composition ou bibliothèque JSON ajoutée.'}).waitFor(); await saved(page);
+  await page.locator('#notice').filter({hasText: 'Newsletter ou sauvegarde JSON ajoutée.'}).waitFor(); await saved(page);
   return page.evaluate(() => MailBuilder.doc().blocks.map(b => ({id: b.id, component: b.component})));
 }
 const box = locator => locator.evaluate(e => ({client: e.clientHeight, scroll: e.scrollHeight, height: e.getBoundingClientRect().height, overflow: getComputedStyle(e).overflowY, maxHeight: getComputedStyle(e).maxHeight}));

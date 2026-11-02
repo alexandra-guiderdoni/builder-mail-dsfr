@@ -10,13 +10,13 @@ test('dialogues : noms présents au repos, puis intitulés précis avant ouvertu
     }
     await page.evaluate(() => MailBuilder.Library.ask('rename', MailBuilder.library.activeId));
     assert.equal(await page.locator('#library-dialog').isVisible(), true);
-    assert.equal(await page.locator('#library-dialog-title').textContent(), 'Renommer la composition');
+    assert.equal(await page.locator('#library-dialog-title').textContent(), 'Renommer la newsletter');
     assert.equal(await page.locator('#library-confirm').textContent(), 'Enregistrer le nom');
     if (nativeAx) {
       const dialog = await nativeAxNode(page, '#library-dialog');
       const confirm = await nativeAxNode(page, '#library-confirm');
       assert.ok(dialog && confirm);
-      assert.equal(dialog.name.value, 'Renommer la composition');
+      assert.equal(dialog.name.value, 'Renommer la newsletter');
       assert.equal(confirm.name.value, 'Enregistrer le nom');
     }
     await click(page, '#library-cancel');
@@ -31,7 +31,7 @@ test('import JSON : nom explicite cohérent avec le libellé visible et descript
     const description = page.locator('meta[name=description]');
     assert.equal(await description.count(), 1);
     assert.match(await description.getAttribute('content'), /newsletters.*DSFR.*HTML.*JSON/);
-    await expand(page, 'Fichiers et récupération');
+    await expand(page, 'Sauvegarde et import');
     const input = page.locator('#project-input');
     const label = await page.locator('label[for=project-input]').textContent();
     assert.equal(await page.locator('label[for=project-input]').isVisible(), true);
@@ -52,7 +52,7 @@ test('les sections ouvertes restent dans la fenêtre avec les espacements de tex
   const browser = await chromium.launch();
   try {
     const {page} = await open(browser, {viewport: {width: 320, height: 1000}});
-    for (const title of ['Mes modèles', 'Identités de service', 'Ajouter un composant', 'Fichiers et récupération', 'Importer du JSON']) await expand(page, title);
+    for (const title of ['Mes modèles', 'Identités de service', 'Ajouter un composant', 'Sauvegarde et import', 'Importer du JSON']) await expand(page, title);
     await page.addStyleTag({content: '*{line-height:1.5!important;letter-spacing:.12em!important;word-spacing:.16em!important}p{margin-bottom:2em!important}'});
     for (const width of [320, 640, 1280]) {
       await page.setViewportSize({width, height: 1000});

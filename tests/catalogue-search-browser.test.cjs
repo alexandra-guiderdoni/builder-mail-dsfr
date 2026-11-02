@@ -78,7 +78,7 @@ test('les liens des aperçus restent au clavier, avec un accès rapide qui les c
     assert.equal(await page.evaluate(() => document.activeElement.textContent), 'Passer l’aperçu du courriel');
   } else await skipMail.focus();
   await page.keyboard.press('Enter');
-  assert.equal(await page.evaluate(() => document.activeElement.textContent), 'Fichiers et récupération');
+  assert.equal(await page.evaluate(() => document.activeElement.textContent), 'Sauvegarde et import');
 
   for (const selector of ['#preview', '#catalogue-preview']) {
     const links = await page.frameLocator(selector).locator('a[href]').evaluateAll(nodes => nodes.map(n => n.getAttribute('tabindex')));

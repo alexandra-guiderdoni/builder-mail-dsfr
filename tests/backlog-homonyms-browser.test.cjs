@@ -10,9 +10,9 @@ test('#168 : double import UI, noms conservés et choix accessibles distincts da
       const doc = MailBuilder.Model.create(name, [19]); doc.subject = subject;
       return JSON.stringify(MailBuilder.Model.document(doc));
     }, {name, subject});
-    await expand(page, 'Fichiers et récupération');
+    await expand(page, 'Sauvegarde et import');
     for (const expected of [1, 2]) {
-      await page.getByLabel('Importer une composition ou une bibliothèque JSON', {exact: true}).setInputFiles({name: 'homonyme.courriel.json', mimeType: 'application/json', buffer: Buffer.from(input)});
+      await page.getByLabel('Importer une newsletter ou une sauvegarde (JSON)', {exact: true}).setInputFiles({name: 'homonyme.courriel.json', mimeType: 'application/json', buffer: Buffer.from(input)});
       await page.waitForFunction(({name, expected}) => MailBuilder.library.documents.filter(d => d.name === name).length === expected, {name, expected});
       await saved(page);
     }
@@ -22,7 +22,7 @@ test('#168 : double import UI, noms conservés et choix accessibles distincts da
     assert.deepEqual(docs.map(d => d.subject), [subject, subject]);
     assert.deepEqual(docs[0].blocks.map(b => b.values), docs[1].blocks.map(b => b.values));
     const labels = [`${name} (n° 1)`, `${name} (n° 2)`];
-    const chooser = page.getByRole('combobox', {name: 'Composition active', exact: true});
+    const chooser = page.getByRole('combobox', {name: 'Newsletter ouverte', exact: true});
     for (const [index, label] of labels.entries()) {
       const option = chooser.getByRole('option', {name: label, exact: true});
       assert.equal(await option.count(), 1); assert.equal(await option.getAttribute('value'), docs[index].id);
@@ -41,7 +41,7 @@ test('#168 : double import UI, noms conservés et choix accessibles distincts da
       assert.equal(await card.locator('h3').innerText(), label);
       assert.equal(await card.getByRole('button', {name: `Ouvrir ${label}`, exact: true}).count(), 1);
       for (const verb of ['Renommer', 'Dupliquer', 'Exporter', 'Supprimer']) {
-        assert.equal(await card.getByRole('button', {name: `${verb} la composition ${label}`, exact: true}).count(), 1);
+        assert.equal(await card.getByRole('button', {name: `${verb} la newsletter ${label}`, exact: true}).count(), 1);
       }
     }
     // Ouvrir le second puis le premier par leur nom accessible prouve la bonne association des actions.

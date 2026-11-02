@@ -33,11 +33,11 @@ test('intitulé source : saisie, aperçu, presse-papiers, fichier, rechargement 
     assert.equal(await page.locator('#article-source-label').inputValue(), label);
     await page.locator('#preview').scrollIntoViewIfNeeded();
     await page.frameLocator('#preview').locator(`a[href="${url}"]`).waitFor({state: 'visible'});
-    await expand(page, 'Fichiers et récupération');
+    await expand(page, 'Sauvegarde et import');
     const file = await download(page, '[data-action=export-document]', 'intitule-composition.json');
     const project = JSON.parse(await fs.readFile(file, 'utf8'));
     assert.equal(project.blocks.find(b => b.id === id).sourceLabel, label);
-    const fresh = await open(browser, {offline: true}); await expand(fresh.page, 'Fichiers et récupération');
+    const fresh = await open(browser, {offline: true}); await expand(fresh.page, 'Sauvegarde et import');
     await fresh.page.locator('#project-input').setInputFiles(file); await saved(fresh.page);
     const restored = await state(fresh.page), block = restored.documents.find(d => d.id === restored.activeId).blocks.find(b => b.source === url);
     assert.equal(block.sourceLabel, label); await selectBlock(fresh.page, block.id);

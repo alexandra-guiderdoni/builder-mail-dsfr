@@ -36,7 +36,7 @@ test('pieds de page mailto : import natif, saisie, refus ciblé, sauvegarde, cop
     await click(page,'[data-action=copy]');await confirmChecks(page);await page.locator('#notice').filter({hasText:'Courriel copié en HTML et texte.'}).waitFor();
     const copied=await page.evaluate(async()=>{const [item]=await navigator.clipboard.read();return (await item.getType('text/html')).text();});
     for(const value of expected) assert.ok(copied.includes(value));
-    await expand(page,'Fichiers et récupération');
+    await expand(page,'Sauvegarde et import');
     const jsonFile=await download(page,'[data-action=export-document]','footer-mailto.json');
     const json=JSON.parse(await fs.readFile(jsonFile,'utf8'));assert.deepEqual(json.blocks.map(b=>b.values.f1),expected);
     const htmlFile=await download(page,'[data-action=export-mail]','footer-mailto.html');

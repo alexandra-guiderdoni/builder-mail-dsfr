@@ -143,7 +143,7 @@
     }
     if (value.version === 2 && ![...value.documents, ...value.templates, ...value.identities].some(i => remoteBlocks(i.blocks))) fail("Version de bibliothèque non prise en charge ; la version 2 est réservée aux images distantes.");
     if (value.version === 1 && ([...value.documents, ...value.templates].some(d => d.version === 2) || value.identities.some(i => remoteBlocks(i.blocks)))) fail("Les images distantes nécessitent une bibliothèque de version 2. Le fichier original reste inchangé.");
-    if (!value.documents.some(d => d.id === value.activeId)) fail("Composition active absente.");
+    if (!value.documents.some(d => d.id === value.activeId)) fail("Newsletter ouverte absente.");
     return value;
   }
   const remoteBlocks = values => values.some(b => b.remoteImages && Object.keys(b.remoteImages).length);

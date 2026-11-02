@@ -152,7 +152,7 @@ test('un lien en cours de saisie bloque l’export du courriel, jamais l’expor
     await page.locator('#article-source').fill('https://'); await page.locator('#article-source').blur();
     await page.locator('#error-article-source').waitFor();
     let downloads = 0; page.on('download', () => { downloads++; });
-    await expand(page, 'Fichiers et récupération');
+    await expand(page, 'Sauvegarde et import');
     await click(page, '[data-action=export-mail]'); await page.locator('#error').filter({hasText: 'Corrigez ce lien'}).waitFor();
     assert.equal(downloads, 0, 'Le courriel n’est pas exporté avec un lien invalide.');
     const event = page.waitForEvent('download', {timeout: 5000}); await click(page, rescue);

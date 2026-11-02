@@ -98,7 +98,7 @@ test('l’export téléchargé tient sans styles de tête et garde son rendu ave
       let bare = 0, styled = 0, identical = 0, degraded = 0;
       try {
         const {page, context} = await open(browser, {offline: true});
-        await expand(page, 'Fichiers et récupération');
+        await expand(page, 'Sauvegarde et import');
         const cases = await page.evaluate(() => {
           const M = MailBuilder.Model, entries = [];
           // Image synthétique non carrée : un gabarit qui la recadre ne doit pas changer de proportion.

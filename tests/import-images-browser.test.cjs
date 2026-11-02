@@ -36,7 +36,7 @@ test('une validation native devenue obsolète conserve les dernières saisies da
       if (family === 'prototype') { await tab.goto('file://' + path.join(root, 'prototype/distribution/portable.html')); await tab.waitForFunction(() => document.querySelector('#save-state').textContent !== ''); }
       const incoming = await tab.evaluate(family => family === 'app' ? MailBuilder.Model.create('Import différé') : {...MailDocument.initial(), subject: 'Import différé'}, family);
       await tab.evaluate(() => { const decode = Image.prototype.decode, gate = new Promise(resolve => { window.finishDecode = resolve; }); Image.prototype.decode = async function() { window.decoding = true; await gate; return decode.call(this); }; });
-      if (family === 'app') await expand(tab, 'Fichiers et récupération');
+      if (family === 'app') await expand(tab, 'Sauvegarde et import');
       await tab.locator('#project-input').setInputFiles({name: 'differe.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(incoming))});
       await tab.waitForFunction(() => window.decoding); await tab.locator('#subject').fill('Saisie pendant le décodage'); await tab.evaluate(() => finishDecode());
       await tab.waitForFunction(() => document.querySelector('#error').textContent.includes('obsolète') || document.querySelector('#notice')?.textContent.includes('obsolète') || document.querySelector('#subject').value === 'Import différé');
@@ -77,7 +77,7 @@ test('application : une saisie plus récente rend l’import différé obsolète
     }
     await page.locator('#document-name').fill('Travail en cours');
     const before = await state(page), incoming = await page.evaluate(() => MailBuilder.Model.create('Fichier différé'));
-    await expand(page, 'Fichiers et récupération');
+    await expand(page, 'Sauvegarde et import');
     await page.evaluate(() => { const read = File.prototype.text; window.finishFile = null; File.prototype.text = function() { return new Promise(resolve => { window.finishFile = async () => resolve(await read.call(this)); }); }; });
     await page.locator('#project-input').setInputFiles({name: 'differe.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(incoming))});
     await page.waitForFunction(() => typeof finishFile === 'function'); await page.locator('#document-name').fill('Saisie après lancement');

@@ -15,7 +15,7 @@ test('#199 encart : emplacement, aucun export puis dernier export complet daté 
     const {page} = await open(browser);
     assert.match(await help(page), /dans ce navigateur, sur ce poste/); assert.match(await help(page), /Aucun export proposé/);
     assert.equal(await page.locator('#save-reminder').isVisible(), false);
-    await expand(page, 'Fichiers et récupération');
+    await expand(page, 'Sauvegarde et import');
     await download(page, '[data-action=export-document]', 'composition-seule.json');
     assert.match(await help(page), /Aucun export proposé/, 'exporter une composition seule ne date pas la sauvegarde');
     assert.equal((await meta(page)).exportedAt, undefined);

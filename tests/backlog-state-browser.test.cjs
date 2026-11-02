@@ -35,7 +35,7 @@ test('#162 : reprise réelle entre onglets, brouillon remappé et corrigeable sa
     const other = await secondPage(context);
     const before = await other.evaluate(() => ({doc: MailBuilder.doc().id, block: MailBuilder.selected}));
     // Préparer le secours avant la saisie : sa première ouverture n’est pas l’objet de cette course.
-    await expand(other, 'Fichiers et récupération');
+    await expand(other, 'Sauvegarde et import');
     await enterDraft(other);
     await owner.locator('#subject').fill('Sujet propriétaire enregistré'); await saved(owner);
     const ownerRecord = await store(owner);

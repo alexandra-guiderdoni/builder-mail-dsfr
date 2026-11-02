@@ -1,18 +1,18 @@
 # Utiliser l’atelier de courriels
 
-Ouvrir `app/distribution/portable.html` dans Firefox ou un navigateur compatible. Conserver une copie du fichier et exporter la bibliothèque avant de changer de poste, de profil ou d’emplacement. La [recette](RECETTE-APPLICATION.md) indique les environnements effectivement éprouvés.
+Ouvrir `app/distribution/portable.html` dans Firefox ou un navigateur compatible. Conserver une copie du fichier et exporter vos newsletters avant de changer de poste, de profil ou d’emplacement. La [recette](RECETTE-APPLICATION.md) indique les environnements effectivement éprouvés.
 
 ## Composer
 
-1. L’accueil « Mes newsletters » présente les éditions déjà conservées. Ouvrir une entrée, ou choisir un point de départ puis « Créer une composition ». Plusieurs compositions peuvent coexister.
-2. Modifier le nom dans la bibliothèque et l’objet du courriel. L’objet est conservé dans le fichier de travail ; le reporter dans la messagerie lors de la reprise. Si l’objet reste vide, le nom de la composition devient le titre du HTML exporté et apparaît dans son onglet ; aucun objet de messagerie n’est rempli automatiquement.
+1. L’accueil « Mes newsletters » présente les éditions déjà conservées. Ouvrir une entrée, ou choisir un point de départ puis « Créer une newsletter ». Plusieurs compositions peuvent coexister.
+2. Modifier le nom de la newsletter et l’objet du courriel. L’objet est conservé dans le fichier de travail ; le reporter dans la messagerie lors de la reprise. Si l’objet reste vide, le nom de la newsletter devient le titre du HTML exporté et apparaît dans son onglet ; aucun objet de messagerie n’est rempli automatiquement.
 3. Sélectionner un bloc dans la liste, puis modifier ses textes, liens et alternatives. Les liens doivent être des URL HTTPS complètes ; les pieds de page acceptent aussi une adresse `mailto:` avec un objet facultatif.
 4. Dans « Ajouter un composant », rechercher une famille ou une variante puis l’ajouter. Les boutons du bloc permettent de le déplacer, de le dupliquer ou de le retirer au clavier. Après un retrait, « Annuler le retrait du bloc », sous le résumé de la composition, le rétablit à sa place avec ses textes, images et liens, sans effacer les saisies faites depuis. Seul le dernier retrait de chaque composition est conservé, en mémoire, jusqu’au retrait suivant dans cette composition ou à la fermeture de l’atelier.
-5. Contrôler l’aperçu et l’indication « Bibliothèque sauvegardée dans ce navigateur ».
+5. Contrôler l’aperçu et l’indication « Newsletters sauvegardées dans ce navigateur ».
 
 Le catalogue conserve les structures et les styles du modèle de courriel épinglé. Les variantes encadrent la présentation ; aucun HTML libre n’est interprété. Le texte ressemblant à une balise reste du texte. Le lien source facultatif d’un bloc est conservé après duplication et dans les sorties HTML et texte.
 
-La liste des blocs, le catalogue ouvert, les champs de texte et l’aperçu s’allongent dans la page. Utiliser le défilement normal de la page pour atteindre la fin du courriel. Depuis les champs, « Revenir au bloc sélectionné » rouvre sa liste et replace le focus sur le bloc, même lorsqu’un champ doit encore être corrigé. La zone technique d’import JSON reste compacte avec son défilement interne ; le dialogue de bibliothèque et la page SNUM gardent leur fonctionnement.
+La liste des blocs, le catalogue ouvert, les champs de texte et l’aperçu s’allongent dans la page. Utiliser le défilement normal de la page pour atteindre la fin du courriel. Depuis les champs, « Revenir au bloc sélectionné » rouvre sa liste et replace le focus sur le bloc, même lorsqu’un champ doit encore être corrigé. La zone technique d’import JSON reste compacte avec son défilement interne ; le dialogue de gestion des newsletters et la page SNUM gardent leur fonctionnement.
 
 Pour personnaliser « Consulter la source », sélectionner le bloc, renseigner « Lien source facultatif du bloc », puis **« Intitulé du lien source »**, par exemple « Lire le dossier complet ». Un intitulé vide garde le texte par défaut. Sans URL, le lien est absent du courriel et l’intitulé reste disponible pour la prochaine saisie d’URL. Les liens déjà intégrés aux composants possèdent leurs propres champs de texte et d’adresse.
 
@@ -38,7 +38,7 @@ refuser ces nouveaux cas à l’import.
 
 ## Gérer Mes newsletters
 
-Chaque entrée de l’accueil est une composition indépendante, par exemple « Lettre du service — octobre ». Son titre ouvre l’éditeur ; « Retour à Mes newsletters » revient à la liste après la fin de la sauvegarde en cours ; si elle a échoué, le travail reste en mémoire. « Reprendre » ouvre la composition active. Un rechargement du programme revient à l’accueil en conservant la bibliothèque.
+Chaque entrée de l’accueil est une newsletter indépendante, par exemple « Lettre du service — octobre ». Son titre ouvre l’éditeur ; « Retour à Mes newsletters » revient à la liste après la fin de la sauvegarde en cours ; si elle a échoué, le travail reste en mémoire. « Reprendre » ouvre la newsletter ouverte. Un rechargement du programme revient à l’accueil en conservant vos newsletters.
 
 Les actions d’une entrée visent cette entrée, même si une autre composition est active :
 
@@ -47,9 +47,9 @@ Les actions d’une entrée visent cette entrée, même si une autre composition
 - « Exporter » télécharge cette composition JSON avec ses images.
 - « Supprimer » demande confirmation ; annuler laisse la composition intacte. Si la dernière entrée est retirée, une nouvelle composition avec les six blocs de départ est créée pour poursuivre.
 
-« Tout effacer », en bas de l’accueil dans « Repartir de zéro », supprime toutes les compositions, modèles et identités de ce navigateur et ramène l’atelier à l’état d’une première ouverture. La fenêtre de confirmation propose d’exporter d’abord la bibliothèque. Rien n’est récupérable ensuite dans l’atelier, pas même par « Restaurer l’état précédent ». L’atelier installé et son fonctionnement hors connexion sont conservés.
+« Tout effacer », en bas de l’accueil dans « Repartir de zéro », supprime toutes les newsletters, modèles et identités de ce navigateur et ramène l’atelier à l’état d’une première ouverture. La fenêtre de confirmation propose d’exporter d’abord vos newsletters. Rien n’est récupérable ensuite dans l’atelier, pas même par « Restaurer l’état précédent ». L’atelier installé et son fonctionnement hors connexion sont conservés.
 
-Le cache web conserve le programme, tandis que la bibliothèque conserve les compositions. **Changer d’édition ne nécessite aucun nettoyage du cache.** Pour transporter ou sauvegarder les newsletters, utiliser l’export de bibliothèque dans « Fichiers et récupération », disponible depuis l’accueil et l’éditeur. La bibliothèque reste propre au navigateur et à son origine ; elle n’est pas synchronisée entre postes.
+Le cache web conserve le programme, tandis que le stockage du navigateur conserve vos newsletters. **Changer d’édition ne nécessite aucun nettoyage du cache.** Pour transporter ou sauvegarder les newsletters, utiliser « Exporter Mes newsletters » dans « Sauvegarde et import », disponible depuis l’accueil et l’éditeur. Vos newsletters restent propres au navigateur et à son origine ; elle n’est pas synchronisée entre postes.
 
 ## Images et identité du service
 
@@ -69,24 +69,26 @@ Certains en-têtes comportent deux images, pour les modes clair et sombre : pers
 
 « Identités de service » enregistre les en-têtes et pieds de page de la composition active, avec leurs images et textes. « Appliquer » remplace les en-têtes et pieds de la composition choisie et conserve son contenu central. Si l’un des blocs remplacés ne porte plus les valeurs initiales de son composant (textes, images, liens, source ou liens supplémentaires), une confirmation liste ces blocs avant tout remplacement ; « Annuler » laisse la composition inchangée. Chaque application est une copie : modifier une composition ne met pas à jour les autres.
 
-## Modèles et bibliothèque
+## Modèles et sauvegarde
 
 « Mes modèles » enregistre une copie réutilisable de la composition. Créer depuis un modèle ajoute une nouvelle composition indépendante. Retirer un modèle ou une identité laisse intactes les compositions déjà créées depuis cet élément.
 
-La sauvegarde est automatique dans le navigateur. « Sauvegarder maintenant » permet de réessayer après une erreur temporaire. La bibliothèque contient compositions, modèles et identités ; elle n’est pas synchronisée entre postes, navigateurs ou origines.
+La sauvegarde est automatique dans le navigateur. « Sauvegarder maintenant » permet de réessayer après une erreur temporaire. Mes newsletters regroupe les newsletters, modèles et identités ; rien n’est synchronisé entre postes, navigateurs ou origines.
 
-Dans « Fichiers et récupération » :
+Sous l’indicateur de sauvegarde, un encart rappelle où sont les données (« dans ce navigateur, sur ce poste »), la date du dernier export complet proposé et l’engagement du navigateur à les conserver. Seul « Exporter Mes newsletters » date l’export ; l’export d’une newsletter seule ou un export de secours ne le date pas. Le navigateur ne confirme pas qu’un téléchargement a abouti : l’encart parle d’export « proposé ». Après 7 jours de modifications sans export complet, un rappel propose d’exporter ; ouvrir une newsletter n’est pas une modification. À la première modification enregistrée, l’atelier demande au navigateur une conservation durable : selon sa réponse, l’encart indique qu’il s’engage à conserver les données, qu’il peut les effacer s’il manque d’espace (exporter alors régulièrement), que la demande n’est pas possible ou qu’elle a échoué. « Tout effacer » efface aussi la date ; « Restaurer une sauvegarde » la conserve et remet le rappel à zéro.
 
-- « Exporter la composition active » produit un fichier de travail JSON avec ses images.
-- « Exporter la bibliothèque » transporte l’ensemble, modèles et identités compris.
+Dans « Sauvegarde et import » :
+
+- « Exporter la newsletter ouverte » produit un fichier de travail JSON avec ses images.
+- « Exporter Mes newsletters » transporte l’ensemble, modèles et identités compris.
 - Importer un fichier ajoute ses éléments aux éléments existants, avec de nouveaux identifiants. Un fichier du prototype est converti en composition de l’atelier.
-- « Restaurer une sauvegarde de la bibliothèque » remplace toutes les compositions, modèles et identités par celles d’un export de bibliothèque, après confirmation. La fenêtre propose d’exporter d’abord la bibliothèque actuelle ; celle-ci reste aussi récupérable par « Restaurer l’état précédent ». Une composition seule, des données enregistrées brutes ou un fichier d’un autre catalogue sont refusés sans rien changer. En cas d’échec d’écriture, la bibliothèque actuelle reste affichée et enregistrée.
+- « Restaurer une sauvegarde » remplace toutes les newsletters, modèles et identités par ceux d’une sauvegarde exportée, après confirmation. La fenêtre propose d’exporter d’abord vos newsletters actuelles ; elles restent aussi récupérable par « Restaurer l’état précédent ». Une newsletter seule, des données enregistrées brutes ou un fichier d’un autre catalogue sont refusés sans rien changer. En cas d’échec d’écriture, vos newsletters actuelles restent affichées et enregistrées.
 
 Le HTML téléchargé est une sortie pour la messagerie ; conserver aussi le JSON pour reprendre l’édition. L’import ne reconstruit pas une composition à partir d’un HTML arbitraire.
 
 ## Importer du JSON générique
 
-Dans « Importer du JSON », coller une composition ou une bibliothèque, puis choisir « Ajouter à la bibliothèque ». Le téléchargement d’un exemple fournit une composition valide sans modifier le travail courant. Le même format est accepté par l’import de fichier.
+Dans « Importer du JSON », coller une newsletter ou une sauvegarde, puis choisir « Ajouter à Mes newsletters ». Le téléchargement d’un exemple fournit une newsletter valide sans modifier le travail courant. Le même format est accepté par l’import de fichier.
 
 Le [format générique](FORMAT-JSON.md) décrit les blocs et leurs champs ; son schéma et ses exemples servent à préparer du contenu depuis un autre outil. Un paquet métier brut n’est pas une composition et doit être converti auparavant.
 

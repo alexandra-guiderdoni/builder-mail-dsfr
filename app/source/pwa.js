@@ -23,11 +23,11 @@
     try { await A.State.save(); await A.State.flush(); if (registration.waiting) { reloading = true; registration.waiting.postMessage({type: "ACTIVATE_UPDATE"}); } else reloadNeeded(ticket); } catch (cause) { A.error(cause.message); }
   });
   const helpBox = document.getElementById("offline-help"), helpExport = document.getElementById("offline-export");
-  const PORTABLE = "Pour travailler sans connexion, utilisez le fichier portable : sa bibliothèque est séparée de celle de cette page. Exportez la bibliothèque ici, puis importez-la dans le fichier portable.";
+  const PORTABLE = "Pour travailler sans connexion, utilisez le fichier portable : ses newsletters sont séparées de celles de cette page. Exportez vos newsletters ici, puis importez-les dans le fichier portable.";
   // Ressources que sw.js précache ; un test de contrat vérifie que les deux listes restent identiques.
   const PRECACHED = ["./", "./index.html", "./manifest.webmanifest", "./icon.svg", "./icon-192.png", "./icon-512.png"];
   let failureShown = false;
-  // Même export que « Exporter la bibliothèque » : la garde des champs invalides s'applique.
+  // Même export que « Exporter Mes newsletters » : la garde des champs invalides s'applique.
   helpExport.addEventListener("click", () => { try { A.Actions["export-library"](); } catch (cause) { A.error(cause.message); } });
   const show = (status, message) => { environment.textContent = status; helpBox.textContent = message; helpBox.hidden = !message; helpExport.hidden = !message; };
   // Preuve du hors connexion : un cache de ce scope contient toutes les ressources précachées. Un cache vide laissé par une installation en échec ne compte pas.

@@ -44,8 +44,8 @@ test('parcours complet par les contrôles : bibliothèque, identités, modèles,
     const converter = await context.newPage(); await converter.goto('file://' + path.join(root, 'app/distribution/snum.html'));
     await converter.locator('#snum-input').fill(packetText); await click(converter, '#convert');
     const converted = await download(converter, '#export-json', 'snum.composition.courriel.json');
-    await expand(page, 'Fichiers et récupération'); await page.locator('#project-input').setInputFiles(converted);
-    await page.locator('#notice').filter({hasText: 'Import ajouté à la bibliothèque'}).waitFor(); await saved(page);
+    await expand(page, 'Sauvegarde et import'); await page.locator('#project-input').setInputFiles(converted);
+    await page.locator('#notice').filter({hasText: 'Import ajouté à Mes newsletters'}).waitFor(); await saved(page);
     const articleId = await page.evaluate(url => MailBuilder.doc().blocks.find(b => b.component === 'mail-31' && b.values.f3 === url).id, packet.articles[0].url);
     await focusPage(page); await selectBlockEffective(page, articleId); await page.locator('#field-f4').fill('Titre <script>window.injected=1</script>');
     const rendered = (p, id) => p.evaluate(blockId => { const b = MailBuilder.doc().blocks.find(x => x.id === blockId), raw = MailBuilder.Render.block(b), el = new DOMParser().parseFromString(raw, 'text/html'); return {f4: b.values.f4, h1: el.querySelector('h1 a')?.textContent.trim(), scripts: el.querySelectorAll('script').length, raw}; }, id);
@@ -74,7 +74,7 @@ test('parcours complet par les contrôles : bibliothèque, identités, modèles,
     const image = await page.locator('.image-field img').first().getAttribute('src');
     assert.match(image, /^data:image\/png;base64,/);
     assert.deepEqual(await page.evaluate(async src => { const image = new Image(); image.src = src; await image.decode(); return [image.naturalWidth, image.naturalHeight]; }, image), [192, 192], 'l’icône incorporée reste décodable aux dimensions attendues');
-    await expand(page, 'Fichiers et récupération');
+    await expand(page, 'Sauvegarde et import');
     const projectPath = await download(page, '[data-action=export-document]', 'composition.courriel.json');
     const libraryPath = await download(page, '[data-action=export-library]', 'bibliotheque.courriels.json');
     const mailPath = await download(page, '[data-action=export-mail]', 'courriel.html');
@@ -88,7 +88,7 @@ test('parcours complet par les contrôles : bibliothèque, identités, modèles,
     const badPath = path.join(evidence, 'invalid-application.json'); await fs.writeFile(badPath, JSON.stringify(bad)); await page.locator('#project-input').setInputFiles(badPath);
     await page.locator('#error').filter({hasText: 'Version de composition'}).waitFor(); assert.deepEqual(await state(page), before);
     await page.reload(); await page.waitForFunction(() => window.MailBuilder?.ready); assert.equal((await state(page)).documents.length, 4);
-    const fresh = await open(browser, {offline: true}); await expand(fresh.page, 'Fichiers et récupération'); await fresh.page.locator('#project-input').setInputFiles(libraryPath); await saved(fresh.page);
+    const fresh = await open(browser, {offline: true}); await expand(fresh.page, 'Sauvegarde et import'); await fresh.page.locator('#project-input').setInputFiles(libraryPath); await saved(fresh.page);
     const restored = await state(fresh.page); assert.equal(restored.documents.length, 5); assert.equal(restored.templates.length, 1); assert.equal(restored.identities.length, 1); assert(JSON.stringify(restored).includes(image));
     await focusPage(page); await enterEditor(page); await page.frameLocator('#preview').locator('img').first().waitFor({state: 'visible'});
     await page.screenshot({path: path.join(evidence, 'bibliotheque-verifiee.png'), fullPage: true});

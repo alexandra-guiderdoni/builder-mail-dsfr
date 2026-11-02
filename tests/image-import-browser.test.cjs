@@ -192,7 +192,7 @@ for (const engine of [chromium, webkit]) {
         originals.forEach((src, i) => { doc.blocks[i].values.f0 = src; });
         lib.documents.push(doc); lib.activeId = doc.id; lib.templates.push(M.clone(doc, 'Modèle existant')); return lib;
       }, originals);
-      await expand(page, 'Fichiers et récupération');
+      await expand(page, 'Sauvegarde et import');
       await page.locator('#project-input').setInputFiles({name: 'existant.courriels.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(incoming))});
       await page.waitForFunction(() => MailBuilder.doc().name === 'Fichier de travail existant' && MailBuilder.pendingInputs === 0, null, {timeout: 60000});
       await saved(page);

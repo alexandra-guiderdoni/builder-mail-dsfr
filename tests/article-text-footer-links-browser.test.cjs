@@ -15,7 +15,7 @@ test('article sans image et trois actions de pied de page : import, édition, re
       footer.additionalLinks = [{url: 'https://example.invalid/desabonnement', label: 'Se désabonner'}, {url: 'mailto:contact@example.invalid', label: 'Nous contacter'}];
       return {doc, image};
     });
-    await expand(page, 'Fichiers et récupération');
+    await expand(page, 'Sauvegarde et import');
     await page.locator('#project-input').setInputFiles({name: 'lettre-native.courriel.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(fixture.doc))});
     await saved(page);
     const imported = await state(page), doc = imported.documents.find(d => d.id === imported.activeId), [article, footer] = doc.blocks;

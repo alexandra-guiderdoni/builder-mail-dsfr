@@ -53,7 +53,7 @@
       const label = get("starter").selectedOptions[0].textContent.trim();
       const ticket = A.State.noticeTicket();
       return A.State.change(lib => { const doc = M.create(M.uniqueName(label, lib.documents), starters[get("starter").value]); lib.documents.push(doc); lib.activeId = doc.id; })
-        .then(() => A.notice("Composition créée : vérifiez son nom et l’objet du courriel, modifiables ci-dessous.", ticket));
+        .then(() => A.notice("Newsletter créée : vérifiez son nom et l’objet du courriel, modifiables ci-dessous.", ticket));
     },
     "duplicate-document": () => A.Library.duplicate(A.library.activeId),
     "remove-document": () => A.Library.ask("remove", A.library.activeId),
@@ -64,12 +64,12 @@
     "use-template": () => {
       const template = selected(A.library.templates, "saved-templates"), ticket = A.State.noticeTicket(); let replaced = null;
       return A.State.change(lib => { const made = M.derive(template, M.uniqueName(`${template.name} · composition`, lib.documents)); replaced = made.replacedSubject; lib.documents.push(made.doc); lib.activeId = made.doc.id; })
-        .then(() => A.notice(A.Library.subjectNotice("Composition créée depuis le modèle", replaced), ticket));
+        .then(() => A.notice(A.Library.subjectNotice("Newsletter créée depuis le modèle", replaced), ticket));
     },
     "remove-template": () => A.Library.askRemoval("templates", selected(A.library.templates, "saved-templates").id),
     "save-identity": async () => {
       const label = name("identity-name"), blocks = A.doc().blocks.filter(b => ["En-têtes", "Pieds de page"].includes(M.component(b.component).family));
-      if (!blocks.length) throw new Error("Ajoutez un en-tête ou un pied de page à cette composition.");
+      if (!blocks.length) throw new Error("Ajoutez un en-tête ou un pied de page à cette newsletter.");
       A.notice(""); const ticket = A.State.noticeTicket(); await A.State.change(lib => { unique(lib.identities, label, "Une identité"); lib.identities.push({id: M.id(), name: label, blocks: M.copy(blocks)}); });
       await announce(`Identité « ${label} » enregistrée dans ce navigateur.`, ticket);
     },
@@ -91,7 +91,7 @@
     },
     "undo-remove": () => {
       const docId = A.library.activeId, entry = A.removed.get(docId);
-      if (!entry) throw new Error("Aucun retrait de bloc à annuler dans cette composition.");
+      if (!entry) throw new Error("Aucun retrait de bloc à annuler dans cette newsletter.");
       // Le bloc revient dans l’état courant : les saisies faites depuis le retrait sont conservées.
       const saving = A.State.change(lib => { const blocks = lib.documents.find(d => d.id === docId).blocks; blocks.splice(Math.min(entry.index, blocks.length), 0, M.copy(entry.block)); A.selected = entry.block.id; });
       A.removed.delete(docId); A.UI.removal();
@@ -119,8 +119,8 @@
     },
     "save-now": A.State.save,
     "recover": A.State.recover,
-    "export-document": () => { A.State.guard(); A.Files.json(M.document(A.doc()), A.Files.exportName(A.doc().name, "courriel.json")); A.notice(`Composition proposée au téléchargement ${A.Files.imageContents(A.doc())}.`); },
-    "export-library": () => { A.State.guard(); A.Files.json(M.library(A.library), A.Files.exportName("bibliotheque-courriels", "json")); A.State.exported(); A.State.libraryExported(); A.notice("Bibliothèque proposée au téléchargement, avec modèles et identités."); },
+    "export-document": () => { A.State.guard(); A.Files.json(M.document(A.doc()), A.Files.exportName(A.doc().name, "courriel.json")); A.notice(`Newsletter proposée au téléchargement ${A.Files.imageContents(A.doc())}.`); },
+    "export-library": () => { A.State.guard(); A.Files.json(M.library(A.library), A.Files.exportName("bibliotheque-courriels", "json")); A.State.exported(); A.State.libraryExported(); A.notice("Newsletters proposées au téléchargement, avec modèles et identités."); },
     "export-library-reminder": () => A.Actions["export-library"](),
     "read-only-export": () => { A.Files.json(M.library(A.library), "bibliotheque.courriels.json"); A.State.exported(); A.notice("Bibliothèque en mémoire proposée au téléchargement : elle contient le travail de cette fenêtre, avec modèles et identités."); },
     "take-over": A.State.takeOver,
@@ -135,10 +135,10 @@
       A.Files.download(html, "text/html;charset=utf-8", A.Files.exportName(A.doc().name, "html")); A.notice(["Courriel proposé au téléchargement.", ...A.Render.warnings(A.doc())].join(" "));
     },
     "copy": A.Files.copy,
-    "example-json": () => { A.State.guard(); A.Files.json(M.create("Exemple de composition", [5, 19, 40]), "exemple.courriel.json"); A.notice("Exemple JSON proposé au téléchargement. Votre composition actuelle est conservée."); },
+    "example-json": () => { A.State.guard(); A.Files.json(M.create("Exemple de composition", [5, 19, 40]), "exemple.courriel.json"); A.notice("Exemple JSON proposé au téléchargement. Votre newsletter actuelle est conservée."); },
     "json-import": async () => {
       const incoming = await A.Imports.prepare(get("json-input").value), merged = A.Imports.merge(A.library, incoming), ticket = A.State.noticeTicket();
-      return A.State.change(lib => { Object.assign(lib, merged); }).then(async () => { await A.Library.open(A.library.activeId); A.notice("Composition ou bibliothèque JSON ajoutée. Les éléments existants sont conservés.", ticket); });
+      return A.State.change(lib => { Object.assign(lib, merged); }).then(async () => { await A.Library.open(A.library.activeId); A.notice("Newsletter ou sauvegarde JSON ajoutée. Les éléments existants sont conservés.", ticket); });
     }
   };
 })();

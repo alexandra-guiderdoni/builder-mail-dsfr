@@ -68,7 +68,7 @@
         if (selected) {
           if (!A.UI.focusBlock(selected.id)) editor.querySelector("textarea,input")?.focus();
           A.notice(`Bloc ${name} retiré. « Annuler le retrait » le rétablit à sa place. Bloc «\u00a0${A.UI.blockName(selected)}\u00a0» sélectionné, ${A.UI.blockPlace(selected.id)}.`);
-        } else { catalogue.focus(); A.notice(`Bloc ${name} retiré. « Annuler le retrait » le rétablit à sa place. La composition ne contient plus de bloc\u00a0: ajoutez un composant depuis le catalogue.`); }
+        } else { catalogue.focus(); A.notice(`Bloc ${name} retiré. « Annuler le retrait » le rétablit à sa place. La newsletter ne contient plus de bloc\u00a0: ajoutez un composant depuis le catalogue.`); }
       } else {
         const links = selected?.additionalLinks;
         const target = (actionName === "add-footer-link" && get(`field-footer-url-${links.length - 1}`)) || editor.querySelector("textarea,input") || catalogue;
@@ -131,7 +131,7 @@
       A.notice(A.Images.describe(image), ticket);
     });
   });
-  // Depuis #57, la bascule de composition active passe par une action explicite (bouton « Ouvrir cette composition »)
+  // Depuis #57, la bascule de composition active passe par une action explicite (bouton « Ouvrir cette newsletter »)
   // et jamais par un `change` du sélecteur, qui serait aussi déclenché par la recherche par frappe sous Firefox et WebKit.
   // Le `change` reste écouté uniquement pour afficher ou masquer le bouton selon la sélection en attente, sans muter l'état.
   get("documents").addEventListener("change", () => {
@@ -180,7 +180,7 @@
       if (first) { A.notice(reading); readingTicket = A.State.noticeTicket(); }
       try {
         const incoming = await A.Imports.prepare(file), merged = A.Imports.merge(A.library, incoming);
-        await A.State.change(lib => { Object.assign(lib, merged); }); await A.Library.open(A.library.activeId); A.notice(`Import ajouté à la bibliothèque, ${A.Files.imageContents(merged)}. Les compositions existantes sont conservées.`, readingTicket);
+        await A.State.change(lib => { Object.assign(lib, merged); }); await A.Library.open(A.library.activeId); A.notice(`Import ajouté à Mes newsletters, ${A.Files.imageContents(merged)}. Les newsletters existantes sont conservées.`, readingTicket);
       } finally { if (!--readings && get("notice").textContent === reading) A.notice(""); }
     });
     event.target.value = "";

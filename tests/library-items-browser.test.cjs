@@ -20,7 +20,7 @@ async function importHomonyms(page, kind) {
   await saved(page);
   const json = await page.evaluate(list => { const lib = JSON.parse(JSON.stringify(MailBuilder.library)); lib[list].push(JSON.parse(JSON.stringify(lib[list][0]))); lib[list][1].id = 'import-homonyme'; return JSON.stringify(lib); }, kind.list);
   await expand(page, 'Importer du JSON'); await page.locator('#json-input').fill(json); await click(page, '[data-action=json-import]');
-  await page.locator('#notice').filter({hasText: 'Composition ou bibliothèque JSON ajoutée'}).waitFor(); await saved(page);
+  await page.locator('#notice').filter({hasText: 'Newsletter ou sauvegarde JSON ajoutée'}).waitFor(); await saved(page);
   await click(page, '[data-action=library-home]'); await click(page, '[data-action=resume-document]'); await expand(page, kind.open);
 }
 

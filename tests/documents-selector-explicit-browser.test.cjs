@@ -1,8 +1,8 @@
 const test = require('node:test');
 const {open, click, saved, chromium, assert} = require('./browser-support.cjs');
 
-// Depuis #57, le sélecteur « Composition active » ne bascule plus sur `change` : la bascule passe par le bouton
-// « Ouvrir cette composition ». La frappe d'une lettre sur un sélecteur fermé déclenche `change` sous Firefox et
+// Depuis #57, le sélecteur « Newsletter ouverte » ne bascule plus sur `change` : la bascule passe par le bouton
+// « Ouvrir cette newsletter ». La frappe d'une lettre sur un sélecteur fermé déclenche `change` sous Firefox et
 // WebKit (reproduit en recette) ; sans action explicite, elle ne doit plus faire perdre la composition en cours.
 
 async function twoCompositions(page) {
@@ -32,7 +32,7 @@ test('frappe sur le sélecteur fermé : aucune bascule de composition active', a
   } finally { await browser.close(); }
 });
 
-test('bouton « Ouvrir cette composition » : bascule la composition sélectionnée', async () => {
+test('bouton « Ouvrir cette newsletter » : bascule la composition sélectionnée', async () => {
   const browser = await chromium.launch();
   try {
     const {page} = await open(browser);

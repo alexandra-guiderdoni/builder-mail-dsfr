@@ -14,7 +14,7 @@ async function importLetter(page) {
     footer.additionalLinks = [{url: 'https://example.invalid/desabonnement', label: 'Se désabonner'}, {url: 'mailto:contact@example.invalid', label: 'Nous contacter'}];
     return doc;
   });
-  await expand(page, 'Fichiers et récupération');
+  await expand(page, 'Sauvegarde et import');
   await page.locator('#project-input').setInputFiles({name: 'lettre-retrait.courriel.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(doc))});
   await saved(page);
   return page.evaluate(() => MailBuilder.doc());
@@ -108,7 +108,7 @@ test('dernier bloc et liens supplémentaires restaurés ; seul le retrait le plu
     assert.equal(await page.locator('#undo-remove').isVisible(), false);
 
     await remove(page, article.id);
-    await expand(page, 'Fichiers et récupération');
+    await expand(page, 'Sauvegarde et import');
     await click(page, '[data-action=recover]'); await page.locator('#notice').filter({hasText: 'État précédent relu'}).waitFor(); await saved(page);
     assert.deepEqual(await ids(page), [title.id, article.id, footer.id]);
     assert.equal(await page.locator('#undo-remove').isVisible(), false, 'Un bloc déjà présent ne doit pas être proposé à la restauration.');

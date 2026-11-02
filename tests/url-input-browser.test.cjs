@@ -41,7 +41,7 @@ test('non-régression de #1 : copie et exports restent bloqués sans réutiliser
   const browser = await chromium.launch();
   try {
     const {page} = await open(browser, {permissions: ['clipboard-read', 'clipboard-write']}); await setup(page);
-    await expand(page, 'Fichiers et récupération'); await page.evaluate(() => navigator.clipboard.writeText('presse-papiers inchangé'));
+    await expand(page, 'Sauvegarde et import'); await page.evaluate(() => navigator.clipboard.writeText('presse-papiers inchangé'));
     for (const invalid of ['https://', 'exemple']) {
       await page.locator('#article-source').fill(invalid);
       for (const action of ['copy', 'export-mail', 'export-document', 'export-library']) {
@@ -161,7 +161,7 @@ test('un brouillon d’URL n’est diffusé depuis aucune autre composition', as
   const browser = await chromium.launch();
   try {
     const {page} = await open(browser, {permissions: ['clipboard-read', 'clipboard-write']}); const {X, Y} = await twoCompositions(page);
-    await expand(page, 'Fichiers et récupération'); await page.evaluate(() => navigator.clipboard.writeText('presse-papiers inchangé'));
+    await expand(page, 'Sauvegarde et import'); await page.evaluate(() => navigator.clipboard.writeText('presse-papiers inchangé'));
     const leaks = () => page.evaluate(async () => {
       const [item] = await navigator.clipboard.read(), blobs = await Promise.all(item.types.map(type => item.getType(type)));
       const texts = await Promise.all(blobs.map(blob => blob.text()));
@@ -183,7 +183,7 @@ test('un brouillon d’URL n’est diffusé depuis aucune autre composition', as
 
 async function importFooter(page, links) {
   const doc = await page.evaluate(links => { const doc = MailBuilder.Model.create('Pied de recette', [50]); doc.blocks[0].additionalLinks = links; return doc; }, links);
-  await expand(page, 'Fichiers et récupération');
+  await expand(page, 'Sauvegarde et import');
   const count = (await state(page)).documents.length;
   await page.locator('#project-input').setInputFiles({name: 'pied.courriel.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(doc))});
   await page.waitForFunction(count => MailBuilder.library.documents.length === count + 1, count); await saved(page);

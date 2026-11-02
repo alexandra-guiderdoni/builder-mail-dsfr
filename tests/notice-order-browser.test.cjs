@@ -105,7 +105,7 @@ test('readingTicket : une annonce extérieure entre deux imports silencie la fin
   const {state} = require('./browser-support.cjs');
   try {
     const {page} = await open(browser);
-    await expand(page, 'Fichiers et récupération');
+    await expand(page, 'Sauvegarde et import');
     const docA = JSON.stringify(await page.evaluate(() => MailBuilder.Model.create('Import A concurrent')));
     const docB = JSON.stringify(await page.evaluate(() => MailBuilder.Model.create('Import B concurrent')));
     await hold(page);

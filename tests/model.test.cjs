@@ -56,10 +56,10 @@ test('le parseur refuse les formats inconnus, les JSON incomplets et les version
 });
 
 test('une bibliothèque importée conserve sa composition active après attribution des nouveaux identifiants', () => {
-  const incoming = M.initial(); incoming.documents.push(M.create('Composition active importée'));
+  const incoming = M.initial(); incoming.documents.push(M.create('Newsletter ouverte importée'));
   incoming.activeId = incoming.documents[1].id;
   const current = M.initial(), merged = I.merge(current, I.parse(JSON.stringify(incoming)));
-  assert.equal(merged.documents.find(d => d.id === merged.activeId).name, 'Composition active importée');
+  assert.equal(merged.documents.find(d => d.id === merged.activeId).name, 'Newsletter ouverte importée');
   assert.notEqual(merged.activeId, incoming.activeId); assert.deepEqual(merged.documents[0], current.documents[0]);
 });
 

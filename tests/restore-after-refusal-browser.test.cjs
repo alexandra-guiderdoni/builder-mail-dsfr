@@ -46,7 +46,7 @@ test('refus initial d’IndexedDB : « Restaurer l’état précédent » propos
     const {writer, context} = await seed(browser), before = await raw(writer);
     const {page, errors} = await refusedWindow(context); page.on('dialog', dialog => dialog.accept());
     await enterEditor(page); await page.locator('#document-name').fill('Travail temporaire');
-    await expand(page, 'Fichiers et récupération'); await click(page, '[data-action=recover]');
+    await expand(page, 'Sauvegarde et import'); await click(page, '[data-action=recover]');
     await page.locator('#reopen-offer').waitFor({state: 'visible'});
     assert.doesNotMatch(await page.locator('#error').innerText(), /Une autre fenêtre/, 'aucun conflit n’existe');
     assert.doesNotMatch(await page.locator('#save-state').innerText(), /Récupération impossible/);
@@ -66,7 +66,7 @@ test('refus initial d’IndexedDB : « Restaurer l’état précédent » propos
     assert.equal(await page.evaluate(() => window.fixtureRefusals), 0, 'aucun refus artificiel au rechargement');
     assert(await page.evaluate(() => window.nativeOpens > 0), 'le rechargement ouvre réellement IndexedDB');
     assert.equal(await page.evaluate(() => MailBuilder.recoveryOnly), false);
-    assert.match(await page.locator('#save-state').innerText(), /restaurée depuis ce navigateur/);
+    assert.match(await page.locator('#save-state').innerText(), /retrouvées dans ce navigateur/);
     await enterEditor(page); assert.equal(await page.locator('#document-name').inputValue(), 'Second état');
     assert.deepEqual(errors, []);
   } finally { await browser.close(); }
@@ -78,7 +78,7 @@ test('écriture concurrente pendant la récupération : rien n’est écrasé, l
     const {writer, context} = await seed(browser);
     const {page} = await refusedWindow(context); page.on('dialog', dialog => dialog.accept());
     await enterEditor(page); await page.locator('#document-name').fill('Travail temporaire');
-    await expand(page, 'Fichiers et récupération'); await click(page, '[data-action=recover]');
+    await expand(page, 'Sauvegarde et import'); await click(page, '[data-action=recover]');
     await page.locator('#reopen-offer').waitFor({state: 'visible'});
     await writer.locator('#document-name').fill('Écriture concurrente'); await saved(writer);
     const concurrent = await raw(writer);
@@ -112,7 +112,7 @@ test('sans IndexedDB : l’export du travail est proposé, sans rechargement tro
     await page.addInitScript(() => { Object.defineProperty(window, 'indexedDB', {value: undefined}); });
     await page.goto(portable); await page.waitForFunction(() => window.MailBuilder?.ready);
     await enterEditor(page); await page.locator('#document-name').fill('Travail sans stockage');
-    await expand(page, 'Fichiers et récupération'); await click(page, '[data-action=recover]');
+    await expand(page, 'Sauvegarde et import'); await click(page, '[data-action=recover]');
     await page.locator('#reopen-offer').waitFor({state: 'visible'});
     assert.equal(await page.locator('#reopen-reload').isVisible(), false);
     assert.match(await page.locator('#reopen-offer').innerText(), /Aucun stockage/);

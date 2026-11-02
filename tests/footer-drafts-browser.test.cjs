@@ -19,8 +19,8 @@ for (const [name, draftIndex, removedIndex] of [['précédent conservé', 0, 1],
         doc.blocks[0].additionalLinks = [{url: 'https://exemple.invalid/premier', label: 'Premier lien valide'}, {url: 'https://exemple.invalid/second', label: 'Second lien valide'}];
         return JSON.stringify(doc);
       });
-      await expand(page, 'Fichiers et récupération');
-      await page.getByLabel('Importer une composition ou une bibliothèque JSON', {exact: true}).setInputFiles({name:'pied-deux-liens.courriel.json',mimeType:'application/json',buffer:Buffer.from(json)});
+      await expand(page, 'Sauvegarde et import');
+      await page.getByLabel('Importer une newsletter ou une sauvegarde (JSON)', {exact: true}).setInputFiles({name:'pied-deux-liens.courriel.json',mimeType:'application/json',buffer:Buffer.from(json)});
       await page.locator('#document-name').waitFor({state:'visible'});
       await page.waitForFunction(() => MailBuilder.doc().name === 'Pied avec deux liens'); await saved(page);
       await page.locator(`#field-footer-url-${draftIndex}`).fill(DRAFT);
@@ -34,7 +34,7 @@ for (const [name, draftIndex, removedIndex] of [['précédent conservé', 0, 1],
       assert.deepEqual({doc:drafts[0].doc,block:drafts[0].block,input:drafts[0].input,value:drafts[0].value}, {...before,input:'field-footer-url-0',value:DRAFT});
       const downloads = []; page.on('download', item => downloads.push(item.suggestedFilename()));
       for (const selector of ['[data-action=export-mail]', '[data-action=export-document]']) {
-        if (selector.includes('export-document')) await expand(page, 'Fichiers et récupération');
+        if (selector.includes('export-document')) await expand(page, 'Sauvegarde et import');
         await click(page, selector);
         await page.locator('#error').filter({hasText:/Corrigez ce lien/}).waitFor();
         assert.equal(await page.locator('#field-footer-url-0').inputValue(), DRAFT);
@@ -44,7 +44,7 @@ for (const [name, draftIndex, removedIndex] of [['précédent conservé', 0, 1],
       }
       const memory = await state(page), record = await store(page);
       assert(!JSON.stringify(memory).includes(DRAFT)); assert(!JSON.stringify(record).includes(DRAFT));
-      await expand(page, 'Fichiers et récupération');
+      await expand(page, 'Sauvegarde et import');
       const raw = await downloadJson(page, '[data-action=export-stored]');
       assert.deepEqual(raw, record); assert(!JSON.stringify(raw).includes(DRAFT), 'le vrai téléchargement brut reste un modèle valide');
       await page.locator('#field-footer-url-0').fill(CORRECTED); await saved(page);

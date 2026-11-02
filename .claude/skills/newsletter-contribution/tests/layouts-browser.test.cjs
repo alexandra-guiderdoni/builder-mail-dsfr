@@ -14,7 +14,7 @@ const {chromium} = require(process.env.PLAYWRIGHT_MODULE || path.join(root, 'nod
 const evidence = process.env.NEWSLETTER_EVIDENCE || require('node:fs').mkdtempSync(path.join(require('node:os').tmpdir(), 'newsletter-evidence-'));
 const A = loadBuilder(root), coverage = audit(A);
 const click = async (page, selector) => { await page.locator(selector).focus(); await page.locator(selector).press('Enter'); };
-const saved = page => page.waitForFunction(() => document.querySelector('#save-state').textContent === 'Bibliothèque sauvegardée dans ce navigateur.');
+const saved = page => page.waitForFunction(() => document.querySelector('#save-state').textContent === 'Newsletters sauvegardées dans ce navigateur.');
 async function download(page, selector, name, action) {
   const event = page.waitForEvent('download');
   if (action) await throughChecks(page, action, () => click(page, selector)); else await click(page, selector);
@@ -39,7 +39,7 @@ test('catalogue complet : départs, import, neuf familles éditées, réagenceme
       presets.push({key, blocks: actual.length}); await click(page, '#library-back');
     }
     const before = await page.evaluate(() => MailBuilder.library.documents.map(d => d.id));
-    await page.locator('summary').filter({hasText: 'Fichiers et récupération'}).click();
+    await page.locator('summary').filter({hasText: 'Sauvegarde et import'}).click();
     const source = fixture(A);
     assert.equal(source.blocks.length, 54, 'Les deux variantes facultatives doivent aussi être exercées.');
     await page.locator('#project-input').setInputFiles({name: 'recette-catalogue.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(source))});
