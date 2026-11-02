@@ -163,11 +163,12 @@
   // Une restauration n’est annoncée qu’après relecture et validation de l’état précédent.
   async function restorable() { try { const previous = await A.Storage.load("previous"); return !!previous && !!M.library(previous.library); } catch { return false; } }
   async function start() {
-    let record;
+    let record, upgraded = false;
     try {
       record = await A.Storage.load();
       token = record?.token ?? null; opened = true;
       if (record) A.library = M.copy(M.library(record.library));
+      upgraded = !!record && record.library.catalogue !== A.catalog.id;
       A.selected = A.doc().blocks[0]?.id || null;
       // Après « Tout effacer » (#201), l’état visible est celui d’un navigateur neuf.
       show(record && record.reason !== "effacement" ? "Newsletters retrouvées dans ce navigateur." : FRESH, true);
@@ -186,6 +187,9 @@
     if (A.recoveryOnly) { if (!absent) get("storage-help").textContent = "La bibliothèque enregistrée n’a pas pu être relue : exportez une copie de votre travail."; }
     else { storageInfo(); readPersistence().then(storageInfo); }
     if (A.LegacyRecovery?.pending()) { get("save-rescue").hidden = true; get("library-count").textContent = A.LegacyRecovery.summary(); }
+    // #209 : relue sous une empreinte antérieure de même contrat de données, la bibliothèque est enregistrée ré-estampillée
+    // par le chemin d’écriture ordinaire ; l’état précédent garde l’original. Ce n’est pas une modification éditoriale.
+    if (upgraded) { A.notice("Vos newsletters venaient d’une version antérieure de l’atelier : elles ont été mises à jour vers le modèle courant."); change(() => {}, false, undefined, true); }
   }
   async function restoreLegacy(library, expectedToken) {
     if (!A.LegacyRecovery?.pending() || restoring || running || A.pendingInputs) throw new Error("Aucune récupération ancienne disponible ou une opération est déjà en cours.");

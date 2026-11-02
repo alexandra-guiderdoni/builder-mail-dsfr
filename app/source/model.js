@@ -108,7 +108,16 @@
     const ids = new Set();
     for (const [index, value] of values.entries()) { try { block(value); } catch (cause) { fail(`Bloc ${index + 1} : ${cause.message}`); } if (ids.has(value.id)) fail("Identifiant de bloc dupliqué."); ids.add(value.id); }
   }
+  // #209 : une donnée d’une empreinte antérieure de même contrat de données (composants, clés et types des champs) est relue
+  // sur une copie ré-estampillée au catalogue courant ; l’objet lu reste intact pour l’export brut. Un autre contrat est refusé.
+  function current(value) {
+    if (!value || typeof value !== "object" || !A.catalog.compatible?.includes(value.catalogue)) return value;
+    const next = copy(value), items = next.schema === "dsfr-mail/library" ? [next, ...[next.documents, next.templates].filter(Array.isArray).flat()] : [next];
+    for (const item of items) if (A.catalog.compatible.includes(item?.catalogue)) item.catalogue = A.catalog.id;
+    return next;
+  }
   function document(value) {
+    value = current(value);
     object(value, ["schema", "version", "catalogue", "id", "name", "subject", "blocks"], "Composition");
     if (value.schema !== "dsfr-mail/document" || ![1, 2].includes(value.version)) fail("Version de composition non prise en charge.");
     if (value.catalogue !== A.catalog.id) fail("Cette composition utilise un autre catalogue. Conservez son fichier original pour une migration.");
@@ -120,7 +129,7 @@
     return value;
   }
   function library(value) {
-    collected = new Set();
+    value = current(value); collected = new Set();
     try { libraryFields(value); accepted = collected; return value; } finally { collected = undefined; }
   }
   function libraryFields(value) {

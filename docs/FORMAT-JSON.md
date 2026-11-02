@@ -84,7 +84,7 @@ portable, pour ouvrir ces fichiers.
 
 Le [JSON Schema 2020-12](https://json-schema.org/understanding-json-schema/reference/object) décrit les propriétés requises et refuse les champs inconnus. Il sert aux éditeurs et validateurs ; ne pas ajouter `$schema` au fichier de composition. Le moteur complète ce schéma par les contrôles d’URL, d’identifiants uniques, de composition active et de catalogue.
 
-Un JSON refusé ne remplace pas le travail existant. Une autre version ou un autre catalogue exige une migration explicite ; changer seulement l’empreinte ne convertit pas les données.
+Un JSON refusé ne remplace pas le travail existant. Un fichier dont l’empreinte vient d’une livraison antérieure au même contrat de données (composants, clés et types des champs) est accepté et ré-estampillé à l’empreinte courante (#209) ; la liste de ces empreintes est tirée du registre `app/catalogue-history.json`. Une autre version ou un autre contrat de données exige une migration explicite ; changer seulement l’empreinte ne convertit pas les données.
 
 La validation des données et la préparation à la diffusion sont distinctes. Les anciens JSON contenant un texte vide restent acceptés et récupérables. Les 13 champs qui servent d’intitulé aux liens intégrés au catalogue doivent cependant être renseignés avant copie ou téléchargement HTML. L’aperçu les signale sans activer leur lien ; leur correction ne change ni le format, ni sa version, ni l’empreinte du catalogue. Cette obligation ne concerne pas `sourceLabel`, qui possède son texte par défaut.
 

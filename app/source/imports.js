@@ -27,8 +27,13 @@
     if (type === "library") [...value.documents, ...value.templates].forEach(d => normalize(d.blocks)); else normalize(value.blocks);
     return {type, value: M.copy(type === "library" ? M.library(value) : M.document(value))};
   }
+  // #209 : un fichier accepté sous une autre empreinte a été ré-estampillé au catalogue courant ; l’annonce le dit.
   function parse(input) {
     let value; try { value = JSON.parse(input); } catch { throw new Error("Le fichier JSON est invalide ou incomplet."); }
+    return {...accepted(value), upgraded: typeof value?.catalogue === "string" && value.catalogue !== A.catalog.id};
+  }
+  const upgradedNote = incoming => incoming.upgraded ? " Le fichier venait d’une version antérieure de l’atelier : il a été mis à jour vers le modèle courant." : "";
+  function accepted(value) {
     if (value?.schema === "dsfr-mail/library") {
       try { return normalized("library", M.copy(M.library(value))); }
       catch (cause) {
@@ -68,5 +73,5 @@
       return incoming;
     } finally { A.pendingInputs--; }
   }
-  A.Imports = Object.freeze({parse, merge, prepare});
+  A.Imports = Object.freeze({parse, merge, prepare, upgradedNote});
 })();

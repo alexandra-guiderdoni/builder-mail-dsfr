@@ -163,7 +163,7 @@ Si le navigateur avertit lors d’une fermeture pendant la sauvegarde, annuler l
 
 « Restaurer l’état précédent » relit la sauvegarde précédant la dernière écriture réussie ; ce n’est pas un historique illimité ni une annulation de chaque frappe. Exporter d’abord le travail à conserver. Si le navigateur a refusé l’ouverture de la bibliothèque au démarrage, « Restaurer l’état précédent » n’écrit rien : la page propose d’exporter le travail temporaire, puis de recharger l’atelier pour relire la bibliothèque enregistrée (aucun faux conflit de fenêtre, et le contrôle de conflit reste actif). « Exporter les données enregistrées brutes » produit une copie de secours pour le diagnostic ; ce format brut n’est pas un fichier de composition importable.
 
-Une version ou un catalogue inconnu n’est pas réinterprété : conserver le fichier d’origine et demander une migration. Si la bibliothèque stockée ne peut pas être relue, l’atelier préserve le stockage existant ; le travail temporaire doit être exporté. Le message ne propose « Restaurer l’état précédent » que si une sauvegarde précédente lisible a été trouvée.
+Après une mise à jour de l’atelier qui ne change que la présentation du courriel, les newsletters enregistrées, les exports et les sauvegardes d’une version antérieure s’ouvrent normalement ; un message indique qu’ils ont été mis à jour vers le modèle courant. Une version ou un catalogue inconnu n’est pas réinterprété : conserver le fichier d’origine et demander une migration. Si la bibliothèque stockée ne peut pas être relue, l’atelier préserve le stockage existant ; le travail temporaire doit être exporté. Le message ne propose « Restaurer l’état précédent » que si une sauvegarde précédente lisible a été trouvée.
 
 ## Plusieurs fenêtres
 

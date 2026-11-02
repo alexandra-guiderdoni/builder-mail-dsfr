@@ -1,5 +1,13 @@
 # Historique des livraisons
 
+## 2 novembre 2026 - Un changement de présentation ne coupe plus l’accès aux newsletters (#209)
+
+- **Avant :** l’empreinte du catalogue mêlait le contrat de données et la présentation (gabarits HTML, CSS du courriel). Une seule règle CSS ajoutée rendait illisibles les newsletters enregistrées, les exports et les sauvegardes, puisque la mise à jour atteint tous les postes en même temps.
+- **Après :** quand seule la présentation change, une bibliothèque, un export ou une sauvegarde d’une version antérieure est accepté, mis à jour vers le modèle courant et annoncé. Le contrat de données couvre les composants, les clés et les types des champs. Au démarrage, la bibliothèque mise à jour est enregistrée ; l’état précédent garde l’original, et ce n’est pas compté comme une modification.
+- **Contrat de données différent :** le refus actuel est conservé, avec l’export brut.
+- **Registre :** `app/catalogue-history.json` associe chaque empreinte publiée à son contrat. La construction l’alimente ; `npm run check` échoue si l’empreinte courante n’y figure pas.
+- L’essai du constat (bibliothèque enregistrée avec N, rouverte avec N+1) est rejoué en test, sur un atelier N+1 réellement construit. Il échouait avant le changement. Une mutation qui neutralise la mise à jour est détectée.
+
 ## 2 novembre 2026 - Un seul vocabulaire : « Mes newsletters » (#199, second lot)
 
 - **Parcours principal :** « Mes newsletters » remplace « bibliothèque » et « composition » dans les libellés, les intitulés accessibles, les dialogues et les notices. Par exemple, « Exporter Mes newsletters », « Dupliquer la newsletter … » et « Newsletters sauvegardées dans ce navigateur ». La rubrique « Fichiers et récupération » devient « Sauvegarde et import ». Pas d’onglets, conformément à la décision.

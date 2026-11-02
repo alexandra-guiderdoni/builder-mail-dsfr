@@ -6,7 +6,7 @@ import hashlib
 import json
 from pathlib import Path
 
-from catalogue import compile_catalogue
+from catalogue import check_history, compile_catalogue, record_history
 from dsfr_assets import styles as dsfr_styles
 from interchange import artifacts
 
@@ -101,7 +101,9 @@ def build():
         "@@MANIFEST@@", '<link rel="manifest" href="./manifest.webmanifest">'
     ).replace(
         "@@CSP@@",
-        app_csp.replace("img-src data: blob: https:", "img-src 'self' data: blob: https:")
+        app_csp.replace(
+            "img-src data: blob: https:", "img-src 'self' data: blob: https:"
+        )
         + "font-src data:;connect-src 'self';worker-src 'self';manifest-src 'self'",
     )
     snum_script = "\n".join(
@@ -184,6 +186,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--check", action="store_true")
     args = parser.parse_args()
+    (check_history if args.check else record_history)(compile_catalogue())
     for path, content in build().items():
         if args.check:
             if not path.exists() or path.read_bytes() != content:

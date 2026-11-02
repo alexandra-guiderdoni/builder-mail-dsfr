@@ -138,7 +138,7 @@
     "example-json": () => { A.State.guard(); A.Files.json(M.create("Exemple de composition", [5, 19, 40]), "exemple.courriel.json"); A.notice("Exemple JSON proposé au téléchargement. Votre newsletter actuelle est conservée."); },
     "json-import": async () => {
       const incoming = await A.Imports.prepare(get("json-input").value), merged = A.Imports.merge(A.library, incoming), ticket = A.State.noticeTicket();
-      return A.State.change(lib => { Object.assign(lib, merged); }).then(async () => { await A.Library.open(A.library.activeId); A.notice("Newsletter ou sauvegarde JSON ajoutée. Les éléments existants sont conservés.", ticket); });
+      return A.State.change(lib => { Object.assign(lib, merged); }).then(async () => { await A.Library.open(A.library.activeId); A.notice(`Newsletter ou sauvegarde JSON ajoutée. Les éléments existants sont conservés.${A.Imports.upgradedNote(incoming)}`, ticket); });
     }
   };
 })();

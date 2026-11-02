@@ -363,6 +363,42 @@ def link_fields(template, fields):
     return result
 
 
+HISTORY = ROOT / "app/catalogue-history.json"
+
+
+def data_contract(components):
+    """Contrat de données : composants, clés et types des champs, sans gabarit ni CSS (#209)."""
+    contract = [
+        (c["id"], [(f["key"], f["type"]) for f in c["fields"]]) for c in components
+    ]
+    return hashlib.sha256(
+        json.dumps(contract, ensure_ascii=False, separators=(",", ":")).encode()
+    ).hexdigest()
+
+
+def read_history():
+    return json.loads(HISTORY.read_text(encoding="utf-8"))
+
+
+def check_history(catalogue):
+    """Chaque empreinte publiée doit figurer au registre avec son contrat, sinon ses données ne seraient plus relues."""
+    entry = {"id": catalogue["id"], "contract": catalogue["contract"]}
+    if entry not in read_history():
+        raise SystemExit(
+            f"Empreinte {catalogue['id'][:12]} absente du registre {HISTORY.relative_to(ROOT)} : "
+            "lancer python3 scripts/build_app.py pour l’enregistrer, puis versionner le registre."
+        )
+
+
+def record_history(catalogue):
+    """Ajoute l’empreinte courante au registre ; une empreinte déjà enregistrée garde son contrat."""
+    history = read_history()
+    if any(entry["id"] == catalogue["id"] for entry in history):
+        return
+    history.append({"id": catalogue["id"], "contract": catalogue["contract"]})
+    HISTORY.write_text(json.dumps(history, indent=2) + "\n", encoding="utf-8")
+
+
 def compile_catalogue():
     path = REF / "template-generique.html"
     source = path.read_text(encoding="utf-8")
@@ -415,8 +451,16 @@ def compile_catalogue():
     fingerprint = hashlib.sha256(
         json.dumps([contract, css], ensure_ascii=False, separators=(",", ":")).encode()
     ).hexdigest()
+    data = data_contract(components)
     return {
         "id": fingerprint,
+        "contract": data,
+        # Empreintes antérieures de même contrat de données : leurs données sont relues et ré-estampillées (#209).
+        "compatible": [
+            entry["id"]
+            for entry in read_history()
+            if entry["contract"] == data and entry["id"] != fingerprint
+        ],
         "components": components,
         "css": css,
         "renderCss": render_css(css),

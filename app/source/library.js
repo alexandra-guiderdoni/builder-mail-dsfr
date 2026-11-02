@@ -135,8 +135,8 @@
     if (raw && typeof raw === "object" && "token" in raw && "library" in raw) throw new Error("Ce fichier contient des données enregistrées brutes, réservées au diagnostic : il ne peut être ni restauré ni importé. Choisissez une sauvegarde exportée par l’atelier.");
     if (raw?.schema !== "dsfr-mail/library") throw new Error(["dsfr-mail/document", "builder-mail-prototype/1"].includes(raw?.schema) ? "Ce fichier contient une seule newsletter : utilisez « Importer une newsletter ou une sauvegarde (JSON) » pour l’ajouter. Vos newsletters sont inchangées." : "Ce fichier n’est pas une sauvegarde de l’atelier. Vos newsletters sont inchangées.");
     const incoming = await A.Imports.prepare(text);
-    restoring = {library: incoming.value, name: file.name};
-    get("restore-dialog-description").textContent = `Le fichier « ${file.name} » contient ${counted(incoming.value)}. Il remplacera le contenu actuel de ce navigateur : ${counted(A.library)}. Vos newsletters actuelles resteront récupérables par « Restaurer l’état précédent ». Exportez-la d’abord pour en garder un fichier.`;
+    restoring = {library: incoming.value, name: file.name, note: A.Imports.upgradedNote(incoming)};
+    get("restore-dialog-description").textContent = `Le fichier « ${file.name} » contient ${counted(incoming.value)}. Il remplacera le contenu actuel de ce navigateur : ${counted(A.library)}. Vos newsletters actuelles resteront récupérables par « Restaurer l’état précédent ». Exportez-la d’abord pour en garder un fichier.${restoring.note}`;
     get("restore-dialog-error").textContent = "";
     get("restore-dialog").showModal(); get("restore-cancel").focus();
   }
@@ -155,7 +155,7 @@
       await A.State.replaceLibrary(M.copy(target.library), {reason: "remplacement", keepPrevious: true});
       restoring = null; get("restore-dialog").close();
       refresh(); show(false); get("home-title").focus();
-      A.notice(`Sauvegarde « ${target.name} » restaurée : ${counted(A.library)}. Les newsletters précédentes restent récupérables par « Restaurer l’état précédent ».`);
+      A.notice(`Sauvegarde « ${target.name} » restaurée : ${counted(A.library)}. Les newsletters précédentes restent récupérables par « Restaurer l’état précédent ».${target.note}`);
     } catch (cause) { get("restore-dialog-error").textContent = cause.message; }
     finally { restoringBusy = false; get("restore-confirm").disabled = get("restore-cancel").disabled = get("restore-export").disabled = false; }
   });
