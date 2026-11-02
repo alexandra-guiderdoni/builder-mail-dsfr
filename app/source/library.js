@@ -31,7 +31,7 @@
     A.State.guard(); find(id);
     return navigate(async () => {
       await A.State.settle();
-      if (id !== A.library.activeId) { await A.State.change(lib => { lib.activeId = id; }); await A.State.settle(); }
+      if (id !== A.library.activeId) { await A.State.change(lib => { lib.activeId = id; }, true, false, true); await A.State.settle(); }
       // Depuis l’accueil, le cadre doit être visible avant de charger son aperçu.
       // Dans l’éditeur, State.change a déjà rendu : une seconde navigation blob peut être perdue sous WebKit.
       const alreadyVisible = !get("editor-page").hidden;

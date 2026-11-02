@@ -50,7 +50,7 @@
       previous.onsuccess = () => {
         const found = previous.result;
         if ((found?.token ?? null) !== expectedToken) { conflict = !found ? "réinitialisé" : REASONS[found.reason] ? found.reason : "conflit"; tx.abort(); return; }
-        try { if (keepPrevious && found) store.put(found, "previous"); else if (!keepPrevious) store.delete("previous"); store.put(record, "current"); }
+        try { if (keepPrevious && found) store.put(found, "previous"); else if (!keepPrevious) store.delete("previous"); if (reason === "effacement") store.delete("meta"); store.put(record, "current"); }
         catch (cause) { refusal = cause; tx.abort(); }
       };
       tx.oncomplete = () => resolve(record);
@@ -64,6 +64,17 @@
     });
   }
   const save = (value, expectedToken) => write(value, expectedToken);
+  // Métadonnées de sauvegarde (#199), hors du modèle : dernier export complet proposé et première modification depuis.
+  // Indicatives : leur échec n’empêche aucune sauvegarde ; « Tout effacer » les supprime avec la bibliothèque.
+  async function loadMeta() { return (await load("meta")) || {}; }
+  async function saveMeta(meta) {
+    const db = await database();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction("library", "readwrite"); tx.objectStore("library").put(meta, "meta");
+      tx.oncomplete = () => resolve(meta);
+      tx.onerror = tx.onabort = () => reject(failure("inaccessible", "Bibliothèque locale inaccessible : la date du dernier export n’est pas enregistrée."));
+    });
+  }
   const replace = (value, expectedToken, {reason, keepPrevious}) => write(value, expectedToken, {reason, keepPrevious});
-  A.Storage = Object.freeze({load, save, replace, reasons: Object.keys(REASONS), version});
+  A.Storage = Object.freeze({load, save, replace, loadMeta, saveMeta, reasons: Object.keys(REASONS), version});
 })();

@@ -8,6 +8,36 @@
   // Une fenêtre sans la main reste en lecture seule ; base est la bibliothèque relue ou écrite sous son jeton.
   let readOnly = null, base, exportedRevision = -1, leaving = false;
   const channel = window.BroadcastChannel ? new BroadcastChannel("builder-mail-dsfr-library") : null;
+  // Encart de sauvegarde (#199) : dernier export complet proposé, modifications depuis, conservation durable du stockage.
+  let meta = {}, persistence = "inconnue", persistRequested = false, editorial = false;
+  const DAY = 864e5, REMINDER_DAYS = 7;
+  const PERSISTENCE = {accordée: "Le navigateur s’engage à les conserver.", "non accordée": "Le navigateur peut les effacer s’il manque d’espace : exportez-les régulièrement.",
+    indisponible: "Ce navigateur ne permet pas de demander leur conservation durable : exportez-les régulièrement.", erreur: "La demande de conservation durable a échoué : exportez-les régulièrement."};
+  function storageInfo() {
+    const help = get("storage-help"); if (!help || absent || A.recoveryOnly) return;
+    const date = meta.exportedAt ? new Date(meta.exportedAt).toLocaleDateString("fr-FR", {day: "numeric", month: "long", year: "numeric"}) : "";
+    help.textContent = [`Vos newsletters sont enregistrées dans ce navigateur, sur ce poste.`, date ? `Dernier export proposé le ${date}.` : "Aucun export proposé depuis ce navigateur.", PERSISTENCE[persistence] || ""].filter(Boolean).join(" ");
+    const reference = meta.exportedAt || meta.dirtySince;
+    get("save-reminder").hidden = !(meta.dirtySince && Date.now() - reference >= REMINDER_DAYS * DAY);
+  }
+  async function readPersistence() {
+    const storage = globalThis.navigator?.storage;
+    if (!storage?.persisted || !storage?.persist) { persistence = "indisponible"; return; }
+    try { persistence = await storage.persisted() ? "accordée" : "non accordée"; } catch { persistence = "erreur"; }
+  }
+  // La conservation durable est demandée une fois, à la première modification enregistrée : jamais à l’ouverture.
+  async function requestPersistence() {
+    if (persistRequested || persistence !== "non accordée") return;
+    persistRequested = true;
+    try { persistence = await globalThis.navigator.storage.persist() ? "accordée" : "non accordée"; } catch { persistence = "erreur"; }
+    storageInfo();
+  }
+  async function modified() {
+    if (!meta.dirtySince) { meta = {...meta, dirtySince: Date.now()}; try { await A.Storage.saveMeta(meta); } catch {} }
+    storageInfo(); requestPersistence();
+  }
+  // Seul l’export complet de la bibliothèque date la sauvegarde ; une composition seule ou un export de secours ne la date pas.
+  async function libraryExported() { meta = {exportedAt: Date.now(), dirtySince: null}; storageInfo(); try { await A.Storage.saveMeta(meta); } catch {} }
   const QUIET_MS = 1000, FRESH = "Aucune sauvegarde : créez ou personnalisez une composition.";
   const cancelSuccess = () => { clearTimeout(successTimer); successTimer = null; };
   const say = text => { cancelSuccess(); get("save-announce").textContent = text; };
@@ -88,7 +118,7 @@
     if (restoring) throw new Error("Attendez la fin de la récupération avant de sauvegarder.");
     if (readOnly) throw readOnlyError();
     if (A.recoveryOnly) { failing(true); show(absent ? "Modifications non sauvegardées : aucun stockage n’est disponible. Exportez votre bibliothèque." : "Modifications non sauvegardées : la bibliothèque enregistrée reste inchangée. Exportez votre bibliothèque.", true); return Promise.resolve(); }
-    latest = {current: revision, library: A.library};
+    latest = {current: revision, library: A.library, editorial: editorial || latest?.editorial}; editorial = false;
     cancelSuccess(); show("Sauvegarde en cours…");
     if (running) return queue;
     running = true; pending++;
@@ -98,6 +128,7 @@
           const task = latest; latest = undefined;
           try {
             const saved = await A.Storage.save(task.library, token); token = saved.token; base = task.library;
+            if (task.editorial) modified();
             if (task.current === revision && !readOnly) { failing(false); if (!A.invalid.size && !A.drafts.size) A.error(""); const text = A.invalid.size || A.drafts.size ? "Bibliothèque sauvegardée ; les champs invalides restent non enregistrés." : "Bibliothèque sauvegardée dans ce navigateur."; show(text); announceSuccess(text); }
           } catch (cause) {
             failing(true); setPersistentError(`${cause.message} ${cause.storage === "conflit" ? "Exportez la bibliothèque en mémoire pour conserver ce travail, puis rechargez cette page." : "Exportez la bibliothèque en mémoire pour conserver ce travail."}`);
@@ -121,9 +152,10 @@
       A.UI.preview(cost => { previewCost = cost; });
     })), previewCost > 50 ? 3 * previewCost : 0);
   }
-  function change(mutator, redraw = true, input = false) {
+  // navigation : seule la newsletter ouverte change, ce n’est pas une modification éditoriale (#199).
+  function change(mutator, redraw = true, input = false, navigation = false) {
     if (readOnly) throw readOnlyError();
-    if (input === "edit") guardEdit(); else if (restoring || !input) guard(); const next = M.copy(A.library); mutator(next); M.versions(next); M.library(next); A.library = next; revision++; lastChange = Date.now(); pruneDrafts();
+    if (input === "edit") guardEdit(); else if (restoring || !input) guard(); const next = M.copy(A.library); mutator(next); M.versions(next); M.library(next); A.library = next; revision++; lastChange = Date.now(); pruneDrafts(); if (!navigation) editorial = true;
     if (!A.doc().blocks.some(b => b.id === A.selected)) A.selected = A.doc().blocks[0]?.id || null;
     if (redraw) { clearTimeout(previewTimer); A.UI.refresh(); } else { A.UI.summary(); previewAfterInput(); }
     return save();
@@ -139,6 +171,7 @@
       A.selected = A.doc().blocks[0]?.id || null;
       // Après « Tout effacer » (#201), l’état visible est celui d’un navigateur neuf.
       show(record && record.reason !== "effacement" ? "Bibliothèque restaurée depuis ce navigateur." : FRESH, true);
+      try { meta = await A.Storage.loadMeta(); } catch { meta = {}; }
     } catch (cause) {
       failing(true); A.recoveryOnly = true; absent = cause.storage === "absent";
       const legacy = record && A.LegacyRecovery?.offer(record);
@@ -149,6 +182,9 @@
       if (absent) get("storage-help").textContent = "Aucun stockage n’est disponible dans ce navigateur : exportez une copie pour conserver votre travail.";
     }
     base = A.library; A.ready = true; get("workspace").disabled = !!A.LegacyRecovery?.pending(); A.UI.refresh();
+    // L’encart ne promet rien quand le stockage a échoué ; l’état de conservation durable est lu sans retarder l’ouverture.
+    if (A.recoveryOnly) { if (!absent) get("storage-help").textContent = "La bibliothèque enregistrée n’a pas pu être relue : exportez une copie de votre travail."; }
+    else { storageInfo(); readPersistence().then(storageInfo); }
     if (A.LegacyRecovery?.pending()) { get("save-rescue").hidden = true; get("library-count").textContent = A.LegacyRecovery.summary(); }
   }
   async function restoreLegacy(library, expectedToken) {
@@ -202,7 +238,11 @@
       await queue;
       const saved = await A.Storage.replace(next, token, {reason, keepPrevious});
       token = saved.token; base = A.library = next; revision++; failing(false);
-      A.removed.clear(); A.moved?.clear(); A.drafts.clear(); A.invalid.clear(); A.UI.clearFieldErrors();
+      A.removed.clear(); A.moved?.clear(); A.drafts.clear(); A.invalid.clear(); A.UI.clearFieldErrors(); editorial = false;
+      // Effacement : métadonnées supprimées avec la bibliothèque. Restauration : date d’export gardée, compteur remis à zéro.
+      meta = reason === "effacement" ? {} : {...meta, dirtySince: null};
+      if (reason !== "effacement") try { await A.Storage.saveMeta(meta); } catch {}
+      storageInfo();
       A.selected = A.doc().blocks[0]?.id || null;
       channel?.postMessage({type: reason, token: saved.token});
       A.UI.refresh(); A.error("");
@@ -312,5 +352,5 @@
   async function flush() { await settle(); if (failed || pending || A.recoveryOnly) throw new Error("La sauvegarde doit réussir avant de recharger l’application."); }
   const saved = () => !failed && !pending && !A.recoveryOnly;
   const restoreErrorFromState = () => { if ((failed || readOnly) && persistentError) A.error(persistentError); };
-  A.State = Object.freeze({guard, guardEdit, setDraft, dropDraft, dropFooterDraft, change, save, start, restoreLegacy, recover, replaceLibrary, settle, flush, saved, takeOver, outdated, reload, exported, noticeTicket: () => noticeTicket, restoreErrorFromState});
+  A.State = Object.freeze({libraryExported, guard, guardEdit, setDraft, dropDraft, dropFooterDraft, change, save, start, restoreLegacy, recover, replaceLibrary, settle, flush, saved, takeOver, outdated, reload, exported, noticeTicket: () => noticeTicket, restoreErrorFromState});
 })();

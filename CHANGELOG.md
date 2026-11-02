@@ -1,5 +1,18 @@
 # Historique des livraisons
 
+## 2 novembre 2026 - Encart de sauvegarde, rappel d’export et conservation durable (#199, premier lot)
+
+- L’encart de sauvegarde indique trois choses :
+  - où sont les newsletters (« dans ce navigateur, sur ce poste ») ;
+  - la date du dernier export proposé, ou l’absence d’export ;
+  - si le navigateur s’engage à les conserver.
+- Seul « Exporter la bibliothèque » date l’export, avec le libellé « dernier export proposé le… » : le navigateur ne confirme pas l’enregistrement du fichier. L’export d’une composition seule ou un export de secours ne le datent pas.
+- **Rappel :** après 7 jours de modifications sans export, un rappel propose d’exporter. Ouvrir une autre newsletter ne compte pas comme une modification. Le rappel disparaît après un export complet.
+- **Conservation durable :** elle est demandée une fois, à la première modification enregistrée, jamais à l’ouverture. Ses quatre états (accordée, non accordée, indisponible, erreur) ont chacun un message. Mesure dans Chromium 156, sans interface, version web et portable : non accordée. Le comportement d’une application installée, de Firefox et de Safari n’a pas été mesuré.
+- **Métadonnées :** rangées hors du modèle, dans une clé séparée du stockage. « Tout effacer » les supprime ; une restauration garde la date d’export et remet le compteur de modifications à zéro.
+- **Stockage en échec :** l’encart ne promet plus aucune conservation.
+- Quatre tests navigateur. Une mutation qui fait dater l’export par une composition seule est détectée.
+
 ## 2 novembre 2026 - Réagencer les blocs par glisser-déposer (#204)
 
 - **Glisser-déposer :** chaque entrée de « Composants du courriel » a une poignée, « Déplacer le bloc n « nom » ». À la souris, la faire glisser déplace le bloc à la position marquée. Un dépôt sur place, hors de la liste ou interrompu par Échap ne change rien et rend le focus à la poignée. Au toucher, la poignée ne glisse pas.
