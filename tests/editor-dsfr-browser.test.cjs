@@ -149,3 +149,42 @@ test('champs fichier : aria-labelledby vers leur libellé, nom accessible inchan
     }
   } finally { await browser.close(); }
 });
+
+// Grille DSFR de toute l'interface : chaque champ est dans un groupe DSFR (1,5 rem dessous) ; un texte d'aide
+// propre au champ reste dans son groupe, 0,5 rem sous lui ; les boutons d'un groupe d'actions sont espacés de 1 rem.
+const spacingViolations = () => {
+  const visible = e => e.getClientRects().length && getComputedStyle(e).visibility !== 'hidden', rem = parseFloat(getComputedStyle(document.documentElement).fontSize), found = [];
+  for (const control of document.querySelectorAll('input:not([type=hidden]), select, textarea')) {
+    if (!visible(control) || control.closest('dialog, .home-create')) continue;
+    const group = control.closest('.fr-input-group, .fr-select-group');
+    if (!group) { found.push(`${control.id} : hors groupe DSFR`); continue; }
+    let next = control.nextElementSibling; while (next && !visible(next)) next = next.nextElementSibling;
+    const help = next && next.matches('p') ? next : null, after = (help || control);
+    if (help && (help.getBoundingClientRect().top - control.getBoundingClientRect().bottom) / rem < 0.5) found.push(`${control.id} : aide à moins de 0,5 rem`);
+    let following = group.nextElementSibling; while (following && !visible(following)) following = following.nextElementSibling;
+    if (following && (following.getBoundingClientRect().top - after.getBoundingClientRect().bottom) / rem < 1.5) found.push(`${control.id} : ${((following.getBoundingClientRect().top - after.getBoundingClientRect().bottom) / rem).toFixed(2)} rem avant ${following.tagName.toLowerCase()}`);
+  }
+  for (const actions of document.querySelectorAll('.actions')) if (visible(actions) && getComputedStyle(actions).rowGap !== `${rem}px`) found.push(`actions : espacement ${getComputedStyle(actions).rowGap}`);
+  return found;
+};
+test('grille DSFR : champs groupés, aides et boutons espacés dans tout l’éditeur et l’accueil', async () => {
+  const browser = await chromium.launch({headless: true});
+  try {
+    const {page} = await open(browser);
+    await page.evaluate(async () => { const A = MailBuilder, doc = A.Model.create('Grille DSFR', [2, 50]); doc.blocks[1].additionalLinks = [{url: 'https://example.org/contact', label: 'Nous contacter'}]; await A.State.change(lib => { lib.documents = [doc]; lib.activeId = doc.id; }); });
+    const problems = [];
+    await page.locator('[data-action=library-home]').click(); await page.locator('#library-home').waitFor();
+    await page.evaluate(() => document.querySelectorAll('details').forEach(d => { d.open = true; }));
+    problems.push(...await page.evaluate(spacingViolations));
+    await page.locator('[data-action=resume-document]').click(); await page.locator('#editor-page').waitFor();
+    const blocks = await page.evaluate(() => MailBuilder.doc().blocks.map(b => b.id));
+    for (const id of blocks) {
+      await selectBlock(page, id); await page.locator('#block-editor input, #block-editor textarea').first().waitFor();
+      await page.evaluate(() => document.querySelectorAll('details').forEach(d => { d.open = true; }));
+      problems.push(...await page.evaluate(spacingViolations));
+    }
+    await selectBlock(page, blocks[0]); await page.locator('#image-source-f0').selectOption('remote'); await page.locator('#remote-image-url-f0').waitFor();
+    problems.push(...await page.evaluate(spacingViolations));
+    assert.deepEqual([...new Set(problems)], []);
+  } finally { await browser.close(); }
+});

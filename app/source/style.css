@@ -14,7 +14,10 @@ body { background:var(--background-alt-grey); }
 input,select,textarea { min-width:0; max-width:100%; }
 input[type=file] { width:100%; }
 .library-panel details { min-width:0; }
-.actions { display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin:16px 0; }
+.actions { display:flex; flex-wrap:wrap; align-items:center; gap:1rem; margin:1.5rem 0; }
+/* Groupes DSFR : aide propre au champ à 0,5 rem, comme l’écart entre libellé et champ. */
+.fr-input-group > p.muted, .fr-select-group > p.muted { margin:.5rem 0 0; }
+.fr-input-group > p.muted + input, .fr-input-group > p.muted + .fr-input { margin-top:.5rem; }
 .actions .fr-btn { max-width:100%; overflow-wrap:anywhere; }
 .save-panel { padding:16px 24px; margin-bottom:24px; background:var(--background-contrast-info); border-left:4px solid var(--border-plain-info); }
 .save-panel p:last-child { margin-bottom:0; }

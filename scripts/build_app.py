@@ -84,7 +84,16 @@ def build():
         .replace("@@SCRIPT@@", script)
     )
     csp = f"default-src 'none';script-src 'sha256-{digest}';style-src 'unsafe-inline';img-src data: blob:;frame-src blob:;base-uri 'none';form-action 'none';"
-    app_csp = csp.replace("img-src data: blob:", "img-src data: blob: https:").replace("script-src ", f"script-src 'sha256-{measure_hash}' ")
+    # ANDI, outil d'audit d'accessibilité injecté par favori : la page du builder autorise ses chemins exacts et le jQuery
+    # qu'il charge, rien d'autre. SNUM et l'aperçu isolé gardent leur politique.
+    andi = "https://www.ssa.gov/accessibility/andi/"
+    andi_jquery = "https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+    app_csp = (
+        csp.replace("img-src data: blob:", "img-src data: blob: https:")
+        .replace("script-src ", f"script-src 'sha256-{measure_hash}' ")
+        .replace(f"'sha256-{digest}';", f"'sha256-{digest}' {andi} {andi_jquery};", 1)
+        .replace("style-src 'unsafe-inline';", f"style-src 'unsafe-inline' {andi};", 1)
+    )
     portable = shell.replace("@@MANIFEST@@", "").replace(
         "@@CSP@@", app_csp + "font-src data:;connect-src 'none';worker-src 'none'"
     )

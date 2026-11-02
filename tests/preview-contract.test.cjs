@@ -29,8 +29,22 @@ test('#192 : seule la politique image du builder autorise HTTPS, SNUM et les san
     assert.deepEqual(directives['default-src'], ["'none'"]);
     assert.deepEqual(directives['connect-src'], file === 'web/index.html' ? ["'self'"] : ["'none'"]);
     assert.deepEqual(directives['img-src'], file === 'snum.html' ? ['data:', 'blob:'] : file === 'portable.html' ? ['data:', 'blob:', 'https:'] : ["'self'", 'data:', 'blob:', 'https:']);
-    assert.ok(directives['script-src'].every(value => /^'sha256-[^']+'$/.test(value)));
+    assert.ok(directives['script-src'].every(value => /^'sha256-[^']+'$/.test(value) || (file !== 'snum.html' && ANDI.script.includes(value))));
     assert.equal(html.includes('allow-same-origin'), false);
+  }
+});
+
+// ANDI (outil d'audit d'accessibilité) : la page du builder, web et portable, autorise exactement ses chemins
+// de scripts et de styles, et le jQuery 3.7.1 qu'il charge. SNUM et l'aperçu isolé n'autorisent rien de plus.
+const ANDI = {script: ['https://www.ssa.gov/accessibility/andi/', 'https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js'], style: ['https://www.ssa.gov/accessibility/andi/']};
+test('ANDI : seule la page du builder autorise ses chemins exacts', () => {
+  for (const file of ['portable.html', 'web/index.html', 'snum.html']) {
+    const html = fs.readFileSync('app/distribution/' + file, 'utf8');
+    const csp = /http-equiv="Content-Security-Policy" content="([^"]+)"/.exec(html)[1];
+    const directives = Object.fromEntries(csp.split(';').filter(Boolean).map(s => {const [key, ...values] = s.trim().split(/\s+/); return [key, values];}));
+    const external = name => directives[name].filter(value => value.startsWith('https://'));
+    assert.deepEqual(external('script-src'), file === 'snum.html' ? [] : ANDI.script, file);
+    assert.deepEqual(external('style-src'), file === 'snum.html' ? [] : ANDI.style, file);
   }
 });
 

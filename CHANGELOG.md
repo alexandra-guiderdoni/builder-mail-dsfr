@@ -1,5 +1,15 @@
 # Historique des livraisons
 
+## 2 novembre 2026 - Grille DSFR des champs et ANDI
+
+- Grille DSFR dans toute l’interface, d’abord dans « Modèles et identité » :
+  - chaque champ et chaque liste forment un groupe DSFR (`fr-input-group`, `fr-select-group`), à 1,5 rem de l’élément suivant ;
+  - les boutons d’un groupe d’actions sont espacés de 1 rem, comme dans `fr-btns-group`, au lieu de 8 px ;
+  - un texte d’aide propre à un champ reste dans son groupe, à 0,5 rem.
+  Avant, 20 champs étaient hors groupe ; certains touchaient leur aide (0 px) ou leurs boutons (8 à 16 px).
+- ANDI, outil d’audit d’accessibilité, peut s’exécuter sur le builder : la CSP de la page, web et portable, autorise exactement ses scripts et styles (`https://www.ssa.gov/accessibility/andi/`) et le jQuery 3.7.1 qu’il charge. Tout autre script externe reste bloqué. La page SNUM et l’aperçu isolé gardent leur politique.
+- Tests : un test de grille sur l’éditeur et l’accueil, un contrat CSP et un essai navigateur ANDI. Distributions régénérées.
+
 ## 2 novembre 2026 - Nom des champs fichier pour Tanaguru
 
 - Tanaguru signalait les champs d’image « sans nom accessible » : son calcul ne lit le `<label for>` que pour les champs texte, case à cocher, liste ou nombre, pas pour un champ fichier. Les navigateurs, eux, nommaient déjà ces champs par leur libellé. Chaque champ fichier pointe désormais aussi vers ce libellé par `aria-labelledby`, que Tanaguru lit pour tout élément ; le nom calculé reste identique. Le signalement de `size` sur la liste du catalogue est un faux positif de Tanaguru : le RGAA autorise `size` sur `select` ; rien n’est changé. Test de régression ajouté ; distributions régénérées.
