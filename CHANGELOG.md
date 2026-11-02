@@ -1,5 +1,10 @@
 # Historique des livraisons
 
+## 2 novembre 2026 - L’export de secours n’écrit plus dans le stockage (#199, correctif du premier lot)
+
+- Quand le navigateur refuse d’ouvrir les données au démarrage, « Exporter le travail temporaire » enregistrait la date d’export dans le stockage, que cette fenêtre ne doit pas toucher. L’export de secours ne date plus rien et n’écrit plus rien.
+- Détecté par le test existant d’écriture concurrente pendant la récupération, en échec sur `main` (CI du commit f40655f).
+
 ## 2 novembre 2026 - Encart de sauvegarde, rappel d’export et conservation durable (#199, premier lot)
 
 - L’encart de sauvegarde indique trois choses :

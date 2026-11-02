@@ -37,7 +37,7 @@
     storageInfo(); requestPersistence();
   }
   // Seul l’export complet de la bibliothèque date la sauvegarde ; une composition seule ou un export de secours ne la date pas.
-  async function libraryExported() { meta = {exportedAt: Date.now(), dirtySince: null}; storageInfo(); try { await A.Storage.saveMeta(meta); } catch {} }
+  async function libraryExported() { if (A.recoveryOnly) return; meta ={exportedAt: Date.now(), dirtySince: null}; storageInfo(); try { await A.Storage.saveMeta(meta); } catch {} }
   const QUIET_MS = 1000, FRESH = "Aucune sauvegarde : créez ou personnalisez une composition.";
   const cancelSuccess = () => { clearTimeout(successTimer); successTimer = null; };
   const say = text => { cancelSuccess(); get("save-announce").textContent = text; };
