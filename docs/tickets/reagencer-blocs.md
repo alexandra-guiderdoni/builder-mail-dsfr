@@ -1,6 +1,6 @@
 # Réagencer les blocs par glisser-déposer
 
-Statut : spécifié, non réalisé. Décisions prises en séance [cuisine-moi du 2 novembre 2026](../../cuisine-moi/2026-11-02-glisser-deposer-blocs.md), validées par Alex.
+Statut : spécifié, non réalisé, suivi dans l’issue #204. Décisions prises en séance [cuisine-moi du 2 novembre 2026](../../cuisine-moi/2026-11-02-glisser-deposer-blocs.md), validées par Alex. Révisé le même jour après relecture indépendante par Codex : règle d’annulation explicite, abandon par Échap, focus après annulation et refus.
 
 ## Problème et résultat attendu
 
@@ -24,6 +24,7 @@ L’utilisateur réordonne les blocs directement dans la liste « Composants du 
 - [ ] Chaque entrée de la liste a une poignée visible, dont le nom accessible désigne le bloc : « Déplacer le bloc n « nom » ». Le reste de l’entrée garde son rôle de sélection.
 - [ ] Faire glisser une entrée par sa poignée affiche la position d’insertion pendant le glissement. Le dépôt place le bloc à cette position.
 - [ ] Un dépôt à la position d’origine, ou hors de la liste, ne change rien et n’enregistre aucun déplacement.
+- [ ] Échap pendant un glissement l’abandonne : l’ordre reste inchangé, aucun déplacement n’est enregistré et le focus revient sur la poignée de départ.
 - [ ] Le glissement fait défiler la liste quand elle dépasse la zone visible. À vérifier sur Chrome, Edge et Firefox.
 - [ ] Au toucher, la poignée ne lance aucun glissement ; elle reste masquée ou inactive.
 
@@ -35,14 +36,27 @@ L’utilisateur réordonne les blocs directement dans la liste « Composants du 
 ### Annuler le déplacement
 
 - [ ] Après tout déplacement (glisser-déposer, Monter, Descendre, Déplacer à la position), « Annuler le déplacement du bloc « nom » » remet le bloc à sa position d’origine.
-- [ ] Un seul déplacement est mémorisé par composition. Une action suivante sur les blocs (déplacement, retrait, ajout, duplication) remplace ou retire cette annulation, de la même manière que pour le retrait.
-- [ ] Les annulations du retrait et du déplacement ne se contredisent pas. Annuler l’une n’applique jamais l’autre, et une annulation devenue sans objet n’est plus proposée.
+- [ ] Un seul déplacement est mémorisé par composition.
+- [ ] L’annulation du retrait garde son comportement actuel : elle reste proposée jusqu’à son utilisation (`A.removed`, une entrée par composition). Ce ticket ne la modifie pas.
+- [ ] Règle unique pour l’annulation du déplacement : elle reste proposée tant que l’ordre des blocs n’a pas changé depuis ce déplacement. Matrice :
+
+| Action suivante | Annulation du déplacement | Annulation du retrait |
+|---|---|---|
+| Nouveau déplacement | remplacée par celle du nouveau déplacement | inchangée |
+| Retrait d’un bloc | retirée | remplacée par ce retrait (comportement actuel) |
+| Ajout ou duplication d’un bloc | retirée | inchangée |
+| Annulation du retrait | retirée (l’ordre a changé) | consommée (comportement actuel) |
+| Annulation du déplacement | consommée | inchangée |
+| Saisie dans les champs d’un bloc | inchangée | inchangée |
+
+- [ ] Annuler un déplacement n’applique jamais l’annulation du retrait, et inversement. Une annulation retirée n’est plus proposée.
 
 ### Focus, annonces et persistance
 
 - [ ] Après un dépôt ou un « Déplacer à la position… », le bloc déplacé reste sélectionné. Le focus revient sur sa poignée ou sur le contrôle utilisé, et une annonce donne sa nouvelle position, comme l’annonce existante des déplacements d’un rang.
 - [ ] L’ordre obtenu est sauvegardé. Il est conservé après rechargement, export puis import, et dans l’aperçu et les fichiers HTML produits.
-- [ ] Un déplacement pendant une saisie invalide ou un chargement d’image suit les gardes existantes : il est refusé avec un message, sans perte de saisie.
+- [ ] Après « Annuler le déplacement », le bloc retrouve sa position d’origine et reste sélectionné. Le focus va sur sa poignée, et une annonce donne la position rétablie.
+- [ ] Un déplacement pendant une saisie invalide ou un chargement d’image suit les gardes existantes : il est refusé avec un message, sans perte de saisie. L’ordre reste inchangé et le focus revient sur le contrôle utilisé.
 
 ## Hors périmètre
 
@@ -57,7 +71,8 @@ L’utilisateur réordonne les blocs directement dans la liste « Composants du 
   - glisser-déposer simulé à la souris (Playwright `dragTo`) ;
   - « Déplacer à la position… » au clavier ;
   - annulation de chacune des voies ;
-  - dépôt sans effet ;
+  - chaque ligne de la matrice d’annulation ;
+  - dépôt sans effet et abandon par Échap ;
   - garde de saisie invalide ;
   - persistance après rechargement.
 - Non-régression des tests de focus des déplacements (`tests/block-actions-focus-browser.test.cjs`) et de l’annulation du retrait (`tests/undo-remove-browser.test.cjs`).
@@ -71,5 +86,4 @@ L’utilisateur réordonne les blocs directement dans la liste « Composants du 
 ## Points ouverts
 
 - Forme de « Déplacer à la position… » : liste des positions ou saisie d’un numéro.
-- Durée de vie de « Annuler le déplacement » : jusqu’à l’action suivante, ou disparition après un délai.
 - Nombre de blocs d’une newsletter réelle, pour confirmer l’intérêt de « Déplacer à la position… » -> Alex.
