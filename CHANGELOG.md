@@ -1,5 +1,11 @@
 # Historique des livraisons
 
+## 2 novembre 2026 - Le skill ne bloque plus sur un simple changement de présentation (#209, suite)
+
+- **Avant :** le contrat du skill `newsletter-contribution` comparait l’empreinte complète du catalogue. Une retouche de CSS du courriel bloquait donc la fabrication (« PRÉREQUIS TECHNIQUE »), alors que l’atelier relit ces données depuis #209 et que le skill exclut les styles de ce dont il dépend.
+- **Après :** une empreinte antérieure de même contrat de données (`catalog.compatible`) ne bloque plus. Une empreinte inconnue bloque toujours. Les clés, types et gabarits restent comparés composant par composant.
+- Le test « un style modifié ne bloque pas » ne changeait pas l’empreinte et passait artificiellement. Un nouveau test reproduit le cas réel ; il échouait avant le correctif.
+
 ## 2 novembre 2026 - Installer et travailler sans connexion : lien du portable, aide et états lisibles (#210)
 
 - **Télécharger l’atelier portable :** un lien sur le site enregistre le portable (`atelier-courriels-portable.html`). C’est un vrai téléchargement : le portable n’est jamais ouvert dans le site, où il partagerait les newsletters de la version web. Le lien est absent du portable lui-même et demande une connexion.

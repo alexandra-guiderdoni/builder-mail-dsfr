@@ -39,7 +39,9 @@ function verify(A) {
   const components = [...new Set([...Object.keys(found.components), ...Object.keys(expected.components)])]
     .filter(id => found.components[id] !== expected.components[id]);
   const formatsChanged = JSON.stringify(found.formats) !== JSON.stringify(expected.formats);
-  const catalogueChanged = found.catalogue !== expected.catalogue;
+  // #209 : une empreinte antérieure de même contrat de données (`compatible`) signale un changement de présentation, que
+  // l'atelier relit ; les gabarits que le skill remplit restent comparés composant par composant ci-dessus.
+  const catalogueChanged = found.catalogue !== expected.catalogue && !(A.catalog.compatible || []).includes(expected.catalogue);
   return {unchanged: !catalogueChanged && !components.length && !found.missingApi.length && !formatsChanged,
     components, catalogueChanged, missingApi: found.missingApi, formatsChanged, formats: found.formats};
 }

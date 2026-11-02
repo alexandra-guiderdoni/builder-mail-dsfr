@@ -26,6 +26,18 @@ test('un libellé, une valeur par défaut ou un style modifiés ne bloquent pas 
   assert.equal(verify(field('mail-31', 4, {default: 'Autre exemple'})).unchanged, true);
   assert.equal(verify({...A, catalog: {...A.catalog, layoutCss: A.catalog.layoutCss + '\n/* variante */'}}).unchanged, true);
 });
+// #209 : un changement de présentation change l'empreinte du catalogue, mais l'atelier relit les données de l'empreinte
+// antérieure (même contrat de données, liste `compatible`). Le skill ne doit pas bloquer ; une empreinte inconnue, si.
+test('une nouvelle empreinte de même contrat de données ne bloque pas ; une empreinte inconnue bloque', () => {
+  const expected = A.catalog.id, renamed = compatible => ({...A, catalog: {...A.catalog, id: 'empreinte-suivante', compatible}});
+  const presentation = verify(renamed([expected]));
+  assert.equal(presentation.catalogueChanged, false, JSON.stringify(presentation));
+  assert.equal(presentation.unchanged, true);
+  assert.doesNotThrow(() => assertVerified(renamed([expected])));
+  const unknown = verify(renamed([]));
+  assert.equal(unknown.catalogueChanged, true);
+  assert.throws(() => assertVerified(renamed([])), /PRÉREQUIS TECHNIQUE/);
+});
 test('une clé, un type, un gabarit ou un libellé de composant modifiés sont signalés', () => {
   for (const changed of [field('mail-31', 4, {type: 'url'}), field('mail-31', 0, {key: 'g0'}),
     altered('mail-31', c => ({semanticTemplate: c.semanticTemplate + '<!-- variante -->'})), altered('mail-31', () => ({label: 'Autre nom'}))]) {

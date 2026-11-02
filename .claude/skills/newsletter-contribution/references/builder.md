@@ -13,7 +13,10 @@ Le script lit `scripts/catalogue.py`, `app/source/model.js` et
 `app/source/render.js` du checkout fourni. Le catalogue compile les gabarits
 canoniques et les ressources incorporées. Refaire l'inspection après une
 mise à jour ; une empreinte de catalogue différente exige la migration native,
-pas le remplacement manuel de son identifiant.
+pas le remplacement manuel de son identifiant. Depuis #209, une empreinte
+antérieure de même contrat de données (`catalog.compatible`) est relue par
+l’atelier : l’audit ne la signale pas, et les gabarits restent comparés
+composant par composant.
 
 `layouts.cjs audit` rapproche le checkout de `assets/builder-contract.json`,
 contrat de ce skill comme consommateur du builder : structure de chaque
