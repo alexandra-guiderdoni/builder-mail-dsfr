@@ -75,7 +75,8 @@ const OLD_COMMIT = '56c5d56d5c904087b9c1f47411e1aa43cd7cc739';
 function oldBuilder() {
   if (process.env.OLD_BUILDER) return process.env.OLD_BUILDER;
   const target = fs.mkdtempSync(path.join(temporary, 'ancien-builder-'));
-  const archive = spawnSync('git', ['-C', root, 'archive', '--format=tar', OLD_COMMIT], {maxBuffer: 256 * 1024 * 1024});
+  // En conteneur CI, le checkout appartient à un autre utilisateur : exception limitée à cette lecture du dépôt testé.
+  const archive = spawnSync('git', ['-c', `safe.directory=${root}`, '-C', root, 'archive', '--format=tar', OLD_COMMIT], {maxBuffer: 256 * 1024 * 1024});
   assert.equal(archive.status, 0, `historique Git requis pour ${OLD_COMMIT} : ${archive.stderr}`);
   const extract = spawnSync('tar', ['-x', '-C', target], {input: archive.stdout});
   assert.equal(extract.status, 0, String(extract.stderr));
