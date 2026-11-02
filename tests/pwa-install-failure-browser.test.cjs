@@ -47,7 +47,7 @@ test('première installation : une ressource de précache absente sort de l’ou
     await settled(page);
     const text = await environment(page);
     assert.notEqual(text, WAITING, 'l’état d’ouverture ne doit pas durer après l’échec du précache');
-    assert.doesNotMatch(text, /disponibles hors connexion|prêt hors connexion/);
+    assert.doesNotMatch(text, /disponible hors connexion|fonctionne sans connexion/);
     const message = await help(page);
     assert(message, 'un message explicite est attendu');
     assert.match(message, /fichier portable/); assert.match(message, /pas pu être préparé/);
@@ -66,7 +66,7 @@ test('mise à jour en échec : la version précédente reste annoncée utilisabl
     const context = await browser.newContext({acceptDownloads: true, viewport: {width: 1600, height: 1000}}), page = await context.newPage(), errors = [];
     page.on('pageerror', e => errors.push(e.message));
     await page.goto(url); await page.waitForFunction(() => window.MailBuilder?.ready && !!navigator.serviceWorker.controller);
-    await page.waitForFunction(() => document.querySelector('#environment').textContent.includes('disponibles hors connexion'));
+    await page.waitForFunction(() => document.querySelector('#environment').textContent.includes('Version web · disponible hors connexion'));
     await enterEditor(page);
     await page.locator('#document-name').fill('Travail avant mise à jour'); await saved(page);
     const before = await state(page);
@@ -100,6 +100,6 @@ test('mise à jour en échec avec cache précédent absent : aucune promesse de 
     assert(message, 'un message explicite est attendu');
     assert.match(message, /pas pu être vérifiées/); assert.match(message, /ne comptez pas sur le hors connexion/); assert.match(message, /fichier portable/);
     assert.doesNotMatch(message, /reste disponible|sont disponibles hors connexion/);
-    assert.doesNotMatch(await environment(page), /disponibles hors connexion/);
+    assert.doesNotMatch(await environment(page), /disponible hors connexion/);
   } finally { await stop(server); await browser.close(); }
 });

@@ -1,5 +1,27 @@
 # Historique des livraisons
 
+## 2 novembre 2026 - Installer et travailler sans connexion : lien du portable, aide et états lisibles (#210)
+
+- **Télécharger l’atelier portable :** un lien sur le site enregistre le portable (`atelier-courriels-portable.html`). C’est un vrai téléchargement : le portable n’est jamais ouvert dans le site, où il partagerait les newsletters de la version web. Le lien est absent du portable lui-même et demande une connexion.
+- **Aide à l’installation :** quand le navigateur ne propose pas le bouton « Installer l’atelier », une phrase indique le menu du navigateur ou le portable. Elle se retire quand le bouton est proposé ou que l’atelier est installé.
+- **États lisibles :**
+
+  | Avant | Après |
+  |---|---|
+  | Version web · ressources disponibles hors connexion | Version web · disponible hors connexion |
+  | Version web · hors connexion non vérifié | Version web · hors connexion pas garanti |
+  | Hors connexion indisponible · utilisez le fichier portable | Version web · ne s’ouvrira pas sans connexion |
+  | Version web · mise à jour non préparée | Mise à jour reportée · version actuelle disponible hors connexion |
+  | Mise à jour non préparée · hors connexion non vérifié | Mise à jour reportée · hors connexion pas garanti |
+  | Préparation du hors connexion… | Préparation de l’accès hors connexion… |
+  | Hors connexion web indisponible · utilisez le fichier portable | Ce navigateur ne permet pas le hors connexion · utilisez l’atelier portable |
+  | Fichier portable · prêt hors connexion | Atelier portable · fonctionne sans connexion |
+
+  Les messages détaillés gardent leur contenu opérationnel et renvoient au lien de téléchargement.
+- **Aide repliable :** « Comprendre : installé, disponible hors connexion, sauvegardé » définit les trois notions et donne l’état technique du cache.
+- « Vos compositions » devient « Vos newsletters » dans ces messages.
+- Trois tests navigateur : téléchargement réel comparé au portable publié, aide selon l’invite et l’installation, absence sur le portable. Quatre tests réalignés sur les nouveaux libellés. Une mutation qui laisse l’aide affichée à côté du bouton est détectée.
+
 ## 2 novembre 2026 - Un changement de présentation ne coupe plus l’accès aux newsletters (#209)
 
 - **Avant :** l’empreinte du catalogue mêlait le contrat de données et la présentation (gabarits HTML, CSS du courriel). Une seule règle CSS ajoutée rendait illisibles les newsletters enregistrées, les exports et les sauvegardes, puisque la mise à jour atteint tous les postes en même temps.

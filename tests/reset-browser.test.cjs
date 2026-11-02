@@ -63,7 +63,7 @@ test('#201 tout effacer sur la version web : le programme hors connexion reste e
   try {
     const url = `http://127.0.0.1:${server.address().port}/`, {page} = await open(browser);
     await page.goto(url); await page.waitForFunction(() => window.MailBuilder?.ready && !!navigator.serviceWorker.controller);
-    await page.waitForFunction(() => document.querySelector('#environment').textContent.includes('disponibles hors connexion'));
+    await page.waitForFunction(() => document.querySelector('#environment').textContent.includes('Version web · disponible hors connexion'));
     await enterEditor(page); await filled(page);
     const caches = () => page.evaluate(async () => Promise.all((await caches.keys()).map(async key => [key, (await (await caches.open(key)).keys()).length])));
     const before = await caches();

@@ -6,7 +6,7 @@ const path = require('node:path');
 const {root, chromium, fs, assert} = require('./browser-support.cjs');
 test('un prompt consommé disparaît après annulation, acceptation ou rejet ; un nouvel événement le réactive', async () => {
   for (const outcome of ['dismissed', 'accepted', 'rejected']) {
-    const listeners = {}, elements = Object.fromEntries(['environment', 'install', 'update'].map(id => [id, {hidden: true, addEventListener(type, action) { this[type] = action; }}]));
+    const listeners = {}, elements = Object.fromEntries(['environment', 'install', 'update', 'install-help', 'install-explain', 'environment-detail'].map(id => [id, {hidden: true, addEventListener(type, action) { this[type] = action; }}]));
     const scope = {document: {querySelector: () => ({}), getElementById: id => elements[id]}, location: {protocol: 'https:'}, navigator: {}, addEventListener: (type, action) => { listeners[type] = action; }};
     scope.window = scope; scope.MailBuilder = {error: message => { scope.error = message; }, notice: message => { scope.notice = message; }};
     vm.runInNewContext(native.readFileSync(path.join(root, 'app/source/pwa.js'), 'utf8'), scope);
