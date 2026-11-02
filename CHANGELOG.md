@@ -1,5 +1,9 @@
 # Historique des livraisons
 
+## 2 novembre 2026 - Nom des champs fichier pour Tanaguru
+
+- Tanaguru signalait les champs d’image « sans nom accessible » : son calcul ne lit le `<label for>` que pour les champs texte, case à cocher, liste ou nombre, pas pour un champ fichier. Les navigateurs, eux, nommaient déjà ces champs par leur libellé. Chaque champ fichier pointe désormais aussi vers ce libellé par `aria-labelledby`, que Tanaguru lit pour tout élément ; le nom calculé reste identique. Le signalement de `size` sur la liste du catalogue est un faux positif de Tanaguru : le RGAA autorise `size` sur `select` ; rien n’est changé. Test de régression ajouté ; distributions régénérées.
+
 ## 2 novembre 2026 - Liste des composants et champ image
 
 - La liste « Composants du courriel » n’affiche plus le numéro DSFR en marge, redondant avec « 1. », « 2. »… de chaque bouton. Elle reste une liste ordonnée (`fr-raw-list`, `role="list"` pour que WebKit la conserve sans puce). Le trait du détail « Traitement de l’image » est désormais à 1 rem du champ fichier qu’il touchait. Test de régression ajouté ; distributions régénérées.

@@ -125,3 +125,27 @@ test('composants du courriel sans numéro redondant ; trait du champ image espac
     for (const gap of gaps) assert.ok(gap >= 1, `${gap} rem entre le champ fichier et le trait`);
   } finally { await browser.close(); }
 });
+
+// Champs fichier : nommés par leur <label for> et, en renfort, par aria-labelledby vers ce même libellé. Certains
+// outils d'audit (Tanaguru) ne lisent l'étiquette que pour les champs texte ; le nom calculé doit rester identique.
+test('champs fichier : aria-labelledby vers leur libellé, nom accessible inchangé', async () => {
+  const browser = await chromium.launch({headless: true});
+  try {
+    const {page} = await open(browser);
+    await page.evaluate(async () => { const A = MailBuilder, doc = A.Model.create('Nom des champs fichier', [2]); await A.State.change(lib => { lib.documents = [doc]; lib.activeId = doc.id; }); });
+    await selectBlock(page, await page.evaluate(() => MailBuilder.doc().blocks[0].id)); await page.locator('#field-f2').waitFor();
+    const fields = await page.evaluate(() => [...document.querySelectorAll('input[type=file][data-image-field]')].map(input => {
+      const ids = (input.getAttribute('aria-labelledby') || '').split(' ').filter(Boolean), label = input.labels[0];
+      return {id: input.id, labelledby: ids.map(id => document.getElementById(id)?.textContent), label: label?.textContent, sameLabel: ids.length === 1 && document.getElementById(ids[0]) === label};
+    }));
+    assert.equal(fields.length, 2);
+    for (const field of fields) { assert.equal(field.sameLabel, true, JSON.stringify(field)); assert.deepEqual(field.labelledby, [field.label]); }
+    const cdp = await page.context().newCDPSession(page);
+    for (const field of fields) {
+      const {result} = await cdp.send('Runtime.evaluate', {expression: `document.getElementById(${JSON.stringify(field.id)})`});
+      const {node} = await cdp.send('DOM.describeNode', {objectId: result.objectId});
+      const {nodes} = await cdp.send('Accessibility.getPartialAXTree', {backendNodeId: node.backendNodeId, fetchRelatives: false});
+      assert.equal(nodes[0].name.value, field.label, field.id);
+    }
+  } finally { await browser.close(); }
+});
