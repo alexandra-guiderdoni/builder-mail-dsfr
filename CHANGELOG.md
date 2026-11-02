@@ -1,5 +1,9 @@
 # Historique des livraisons
 
+## 2 novembre 2026 - Liste des composants et champ image
+
+- La liste « Composants du courriel » n’affiche plus le numéro DSFR en marge, redondant avec « 1. », « 2. »… de chaque bouton. Elle reste une liste ordonnée (`fr-raw-list`, `role="list"` pour que WebKit la conserve sans puce). Le trait du détail « Traitement de l’image » est désormais à 1 rem du champ fichier qu’il touchait. Test de régression ajouté ; distributions régénérées.
+
 ## 2 novembre 2026 - Espacement des modèles et identités
 
 - Dans « Mes modèles » et « Identités de service », le bouton d’enregistrement touchait le champ de nom. Champs et listes forment désormais des groupes DSFR (`fr-input-group`, `fr-select-group`) et le bouton rejoint un groupe d’actions : 1,5 rem sous le champ, 1 rem avant la liste. Test de régression ajouté ; distributions régénérées.

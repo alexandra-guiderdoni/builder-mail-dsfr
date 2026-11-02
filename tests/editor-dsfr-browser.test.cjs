@@ -105,3 +105,23 @@ test('modèles et identités : champ, bouton et liste espacés selon les groupes
     }
   } finally { await browser.close(); }
 });
+
+// Composants du courriel : la liste ordonnée reste une liste (rôle explicite, conservé par WebKit sans puce),
+// sans numéro DSFR en marge, puisque chaque bouton porte déjà « n. ». Champ image : le trait du détail
+// « Traitement de l'image » ne touche pas le champ fichier.
+test('composants du courriel sans numéro redondant ; trait du champ image espacé', async () => {
+  const browser = await chromium.launch({headless: true});
+  try {
+    const {page} = await open(browser);
+    await page.evaluate(async () => { const A = MailBuilder, doc = A.Model.create('Espacements', [2, 5]); await A.State.change(lib => { lib.documents = [doc]; lib.activeId = doc.id; }); });
+    const list = await page.locator('#block-list').evaluate(ol => ({tag: ol.tagName, role: ol.getAttribute('role'),
+      markers: [...ol.children].map(li => getComputedStyle(li, '::marker').content), texts: [...ol.querySelectorAll('button > span')].map(s => s.textContent)}));
+    assert.equal(list.tag, 'OL'); assert.equal(list.role, 'list');
+    assert.deepEqual(list.markers, ['none', 'none']);
+    assert.match(list.texts[0], /^1\. /); assert.match(list.texts[1], /^2\. /);
+    const id = await page.evaluate(() => MailBuilder.doc().blocks[0].id);
+    await selectBlock(page, id); await page.locator('#field-f2').waitFor();
+    const gaps = await page.evaluate(() => ['f0', 'f2'].map(key => (document.querySelector(`[data-image-details=${key}]`).getBoundingClientRect().top - document.getElementById(`field-${key}`).getBoundingClientRect().bottom) / parseFloat(getComputedStyle(document.documentElement).fontSize)));
+    for (const gap of gaps) assert.ok(gap >= 1, `${gap} rem entre le champ fichier et le trait`);
+  } finally { await browser.close(); }
+});
