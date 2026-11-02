@@ -20,6 +20,8 @@
   A.invalid = new Set(); A.drafts = new Map(); A.ready = false; A.recoveryOnly = false; A.pendingInputs = 0;
   // Dernier bloc retiré de chaque composition, en mémoire seulement : perdu à la fermeture de l’atelier.
   A.removed = new Map();
+  // Dernier déplacement de bloc de chaque composition (#204), avec l’ordre obtenu : annulable tant que cet ordre est inchangé.
+  A.moved = new Map();
   A.doc = () => A.library.documents.find(d => d.id === A.library.activeId);
   A.error = message => { const e = get("error"); e.textContent = message; e.hidden = !message; if (message) cancelSuccess(); };
   // Les alertes persistantes (échec de sauvegarde, lecture seule) sont stockées : une erreur ponctuelle (A.error(""))

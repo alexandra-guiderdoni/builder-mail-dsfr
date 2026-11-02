@@ -42,6 +42,12 @@
     get("undo-remove-zone").hidden = !available;
     get("undo-remove").textContent = available ? `Annuler le retrait du bloc « ${blockName(entry.block)} »` : "Annuler le retrait du bloc";
   }
+  function moving() {
+    const doc = A.doc(), entry = A.moved.get(doc.id), available = Boolean(entry) && doc.blocks.map(b => b.id).join() === entry.order.join();
+    if (entry && !available) A.moved.delete(doc.id);
+    get("undo-move-zone").hidden = !available;
+    get("undo-move").textContent = available ? `Annuler le déplacement du bloc « ${blockName(doc.blocks.find(b => b.id === entry.id))} »` : "Annuler le déplacement du bloc";
+  }
   // Rang d’un bloc tel que la liste l’affiche, pour les messages de statut des actions sur les blocs.
   const blockPlace = id => { const blocks = A.doc().blocks; return `en position ${blocks.findIndex(b => b.id === id) + 1} sur ${blocks.length}`; };
   function focusBlock(id) {
@@ -68,7 +74,8 @@
     get("block-list").innerHTML = A.doc().blocks.map((b, i) => {
       const definition = M.component(b.component), title = definition.fields.find(f => f.key === (b.component === "mail-31" ? "f4" : "")) || definition.fields.find(f => f.type === "text");
       const detail = title ? b.values[title.key].slice(0, 64) : "";
-      return `<li><button class="fr-btn fr-btn--secondary" type="button" data-select="${esc(b.id)}" aria-pressed="${A.selected === b.id}"><span>${i + 1}. ${esc(blockLabel(b, definition))}</span><small>${esc(detail)}</small></button></li>`;
+      // Poignée (#204) : glissable à la souris seulement ; au clavier, elle mène à « Déplacer à la position… ».
+      return `<li><button class="block-handle" type="button" data-drag-handle="${esc(b.id)}" draggable="false" aria-label="Déplacer le bloc ${i + 1} « ${esc(blockLabel(b, definition))} »"><span aria-hidden="true">⠿</span></button><button class="fr-btn fr-btn--secondary" type="button" data-select="${esc(b.id)}" aria-pressed="${A.selected === b.id}"><span>${i + 1}. ${esc(blockLabel(b, definition))}</span><small>${esc(detail)}</small></button></li>`;
     }).join("");
     catalogueAddHelp();
   }
@@ -120,7 +127,7 @@
         return A.RemoteImages.control(b, f, `<div class="image-field">${v ? `<img src="${esc(v)}" alt="Aperçu de l’image sélectionnée">` : '<p class="muted">Sans image</p>'}<div class="fr-input-group"><label class="fr-label" for="${id}" id="${id}-label">${esc(imageLabel)}</label><p id="image-help-${esc(f.key)}" class="muted">${esc(A.Images.inputHelp())}</p><input id="${id}" data-image-field="${esc(f.key)}" type="file" accept="image/png,image/jpeg,image/gif,image/webp" aria-labelledby="${id}-label" aria-describedby="image-help-${esc(f.key)}"></div><details data-image-details="${esc(f.key)}"><summary id="image-detail-summary-${esc(f.key)}">Traitement de l’image - ${esc(imageLabel)}</summary><p class="muted">${esc(A.Images.help(b.component, f.key))}</p></details>${b.component === "mail-31" && v && !b.remoteImages?.[f.key] ? '<div class="actions"><button class="fr-btn fr-btn--secondary" type="button" data-block-action="remove-image">Retirer l’image</button></div>' : ""}</div>`);
       }
       return `<div class="fr-input-group"><label class="fr-label" for="${id}">${esc(label)}</label>${f.type === "text" ? `<textarea class="fr-input" id="${id}" data-field="${f.key}" rows="3"${linkLabel ? ' data-link-label aria-required="true"' : ""}>${esc(v)}</textarea>` : `<input class="fr-input" id="${id}" data-field="${f.key}" type="${f.type === "url" ? "url" : "text"}"${required ? ' aria-required="true"' : ""} value="${esc(v)}">`}</div>`;
-    }).join("") + footerLinks(b) + `<div class="fr-input-group"><label class="fr-label" for="article-source">Lien source facultatif du bloc</label><input class="fr-input" id="article-source" type="url" data-source value="${esc(b.source)}"></div><div class="fr-input-group"><label class="fr-label" for="article-source-label">Intitulé du lien source</label><input class="fr-input" id="article-source-label" type="text" data-source-label value="${esc(b.sourceLabel ?? "")}" placeholder="Consulter la source" aria-describedby="source-label-help"><p id="source-label-help" class="muted">Sans intitulé, le lien affiche « Consulter la source ». Sans URL, aucun lien source n’est ajouté.</p></div><div class="actions"><button class="fr-btn fr-btn--secondary" type="button" data-return-to-block>Revenir au bloc sélectionné</button><button class="fr-btn fr-btn--secondary" data-block-action="up" ${index === 0 ? "disabled" : ""}>Monter</button><button class="fr-btn fr-btn--secondary" data-block-action="down" ${index === A.doc().blocks.length - 1 ? "disabled" : ""}>Descendre</button><button class="fr-btn fr-btn--secondary" data-block-action="duplicate">Dupliquer le bloc</button><button class="fr-btn fr-btn--secondary" data-block-action="remove">Retirer le bloc</button><button class="fr-btn fr-btn--secondary" data-action="cancel-fields">Annuler les champs invalides</button></div>`;
+    }).join("") + footerLinks(b) + `<div class="fr-input-group"><label class="fr-label" for="article-source">Lien source facultatif du bloc</label><input class="fr-input" id="article-source" type="url" data-source value="${esc(b.source)}"></div><div class="fr-input-group"><label class="fr-label" for="article-source-label">Intitulé du lien source</label><input class="fr-input" id="article-source-label" type="text" data-source-label value="${esc(b.sourceLabel ?? "")}" placeholder="Consulter la source" aria-describedby="source-label-help"><p id="source-label-help" class="muted">Sans intitulé, le lien affiche « Consulter la source ». Sans URL, aucun lien source n’est ajouté.</p></div><div class="fr-select-group"><label class="fr-label" for="move-position">Déplacer à la position</label><select class="fr-select" id="move-position">${A.doc().blocks.map((x, i) => `<option value="${i}"${i === index ? " selected" : ""}>${i + 1} - ${esc(blockName(x))}</option>`).join("")}</select></div><div class="actions"><button class="fr-btn fr-btn--secondary" type="button" data-return-to-block>Revenir au bloc sélectionné</button><button class="fr-btn fr-btn--secondary" type="button" data-block-action="move-to">Déplacer à cette position</button><button class="fr-btn fr-btn--secondary" data-block-action="up" ${index === 0 ? "disabled" : ""}>Monter</button><button class="fr-btn fr-btn--secondary" data-block-action="down" ${index === A.doc().blocks.length - 1 ? "disabled" : ""}>Descendre</button><button class="fr-btn fr-btn--secondary" data-block-action="duplicate">Dupliquer le bloc</button><button class="fr-btn fr-btn--secondary" data-block-action="remove">Retirer le bloc</button><button class="fr-btn fr-btn--secondary" data-action="cancel-fields">Annuler les champs invalides</button></div>`;
     for (const d of A.drafts.values()) {
       const input = d.doc === A.doc().id && d.block === b.id && get(d.input);
       if (input) { input.value = d.value; if (d.shown) fieldError(input, d.message); }
@@ -148,7 +155,7 @@
     selections();
     if (!A.invalid.has("document-name")) get("document-name").value = A.doc().name;
     if (!A.invalid.has("subject")) get("subject").value = A.doc().subject;
-    blockList(); fields(); preview(); removal();
+    blockList(); fields(); preview(); removal(); moving();
   }
   // Sous 576 px, les libellés dépassent la largeur d’une liste à plusieurs lignes : liste déroulante native.
   const narrowWindow = window.matchMedia("(max-width: 575px)");
@@ -194,5 +201,5 @@
     if (width !== editorWidth) { editorWidth = width; if (width) fitFields(); }
   }).observe(get("block-editor"));
   document.fonts.ready.then(fitFields);
-  A.UI = Object.freeze({refresh, preview, summary, fields, blockList, selections, catalogue, pageTitle, fieldError, clearFieldErrors, showLinkIssue, removal, blockName, blockPlace, focusBlock, documentLabels});
+  A.UI = Object.freeze({refresh, preview, summary, fields, blockList, selections, catalogue, pageTitle, fieldError, clearFieldErrors, showLinkIssue, removal, moving, blockName, blockPlace, focusBlock, documentLabels});
 })();

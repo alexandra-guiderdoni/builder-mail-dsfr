@@ -1,5 +1,13 @@
 # Historique des livraisons
 
+## 2 novembre 2026 - Réagencer les blocs par glisser-déposer (#204)
+
+- **Glisser-déposer :** chaque entrée de « Composants du courriel » a une poignée, « Déplacer le bloc n « nom » ». À la souris, la faire glisser déplace le bloc à la position marquée. Un dépôt sur place, hors de la liste ou interrompu par Échap ne change rien et rend le focus à la poignée. Au toucher, la poignée ne glisse pas.
+- **Déplacer à la position… :** l’éditeur du bloc propose une liste des positions, chacune avec le nom du bloc qui l’occupe, et le bouton « Déplacer à cette position ». Avec « Monter » et « Descendre », c’est l’alternative sans glissement (WCAG 2.2, 2.5.7). Au clavier, la poignée sélectionne le bloc et mène à cette liste.
+- **Annuler le déplacement :** il suit tout déplacement et reste proposé tant que l’ordre obtenu est inchangé. Une saisie le garde ; un retrait, un ajout, une duplication, l’annulation d’un retrait ou tout autre changement d’ordre le retire. L’annulation du retrait garde son comportement.
+- **Protections et annonces :** même garde que « Monter » ; en cas de refus, l’ordre reste inchangé et le focus va au champ à corriger. Chaque déplacement annonce la nouvelle position, et l’ordre est conservé après rechargement.
+- Cinq tests navigateur ; un test de liste ajusté à la poignée ; spécification `docs/tickets/reagencer-blocs.md` alignée.
+
 ## 2 novembre 2026 - Poids du courriel et aide à la copie en langage courant (#203)
 
 - Builder seulement ; la page SNUM garde ses textes, protégés par ses tests.

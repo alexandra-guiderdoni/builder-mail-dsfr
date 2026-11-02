@@ -80,6 +80,15 @@
       confirmIdentity(identity, doc, modified);
     },
     "remove-identity": () => A.Library.askRemoval("identities", selected(A.library.identities, "identities").id),
+    "undo-move": () => {
+      const docId = A.library.activeId, entry = A.moved.get(docId);
+      if (!entry || A.doc().blocks.map(b => b.id).join() !== entry.order.join()) { A.moved.delete(docId); A.UI.moving(); throw new Error("Ce déplacement ne peut plus être annulé : l’ordre des blocs a changé."); }
+      const saving = A.State.change(lib => { const blocks = lib.documents.find(d => d.id === docId).blocks, from = blocks.findIndex(b => b.id === entry.id); blocks.splice(entry.from, 0, ...blocks.splice(from, 1)); A.selected = entry.id; }, true, false);
+      A.moved.delete(docId); A.UI.moving();
+      get("block-list").querySelector(`[data-drag-handle="${entry.id}"]`)?.focus();
+      A.notice(`Déplacement annulé : bloc « ${A.UI.blockName(A.doc().blocks.find(b => b.id === entry.id))} » ${A.UI.blockPlace(entry.id)}.`);
+      return saving;
+    },
     "undo-remove": () => {
       const docId = A.library.activeId, entry = A.removed.get(docId);
       if (!entry) throw new Error("Aucun retrait de bloc à annuler dans cette composition.");

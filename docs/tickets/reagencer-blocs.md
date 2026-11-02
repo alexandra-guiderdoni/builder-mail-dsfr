@@ -1,6 +1,6 @@
 # Réagencer les blocs par glisser-déposer
 
-Statut : spécifié, non réalisé, suivi dans l’issue #204. Décisions prises en séance [cuisine-moi du 2 novembre 2026](../../cuisine-moi/2026-11-02-glisser-deposer-blocs.md), validées par Alex. Révisé le même jour après relecture indépendante par Codex : règle d’annulation explicite, abandon par Échap, focus après annulation et refus.
+Statut : réalisé (issue #204). Décisions prises en séance [cuisine-moi du 2 novembre 2026](../../cuisine-moi/2026-11-02-glisser-deposer-blocs.md), validées par Alex. Révisé le même jour après relecture indépendante par Codex : règle d’annulation explicite, abandon par Échap, focus après annulation et refus.
 
 ## Problème et résultat attendu
 
@@ -56,7 +56,7 @@ L’utilisateur réordonne les blocs directement dans la liste « Composants du 
 - [ ] Après un dépôt ou un « Déplacer à la position… », le bloc déplacé reste sélectionné. Le focus revient sur sa poignée ou sur le contrôle utilisé, et une annonce donne sa nouvelle position, comme l’annonce existante des déplacements d’un rang.
 - [ ] L’ordre obtenu est sauvegardé. Il est conservé après rechargement, export puis import, et dans l’aperçu et les fichiers HTML produits.
 - [ ] Après « Annuler le déplacement », le bloc retrouve sa position d’origine et reste sélectionné. Le focus va sur sa poignée, et une annonce donne la position rétablie.
-- [ ] Un déplacement pendant une saisie invalide ou un chargement d’image suit les gardes existantes : il est refusé avec un message, sans perte de saisie. L’ordre reste inchangé et le focus revient sur le contrôle utilisé.
+- [ ] Un déplacement pendant une saisie invalide ou un chargement d’image suit les gardes existantes : il est refusé avec un message, sans perte de saisie. L’ordre reste inchangé et le focus va au champ à corriger, comme pour Monter et Descendre.
 
 ## Hors périmètre
 

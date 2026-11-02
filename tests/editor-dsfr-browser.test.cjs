@@ -115,7 +115,7 @@ test('composants du courriel sans numéro redondant ; trait du champ image espac
     const {page} = await open(browser);
     await page.evaluate(async () => { const A = MailBuilder, doc = A.Model.create('Espacements', [2, 5]); await A.State.change(lib => { lib.documents = [doc]; lib.activeId = doc.id; }); });
     const list = await page.locator('#block-list').evaluate(ol => ({tag: ol.tagName, role: ol.getAttribute('role'),
-      markers: [...ol.children].map(li => getComputedStyle(li, '::marker').content), texts: [...ol.querySelectorAll('button > span')].map(s => s.textContent)}));
+      markers: [...ol.children].map(li => getComputedStyle(li, '::marker').content), texts: [...ol.querySelectorAll('[data-select] > span')].map(s => s.textContent)}));
     assert.equal(list.tag, 'OL'); assert.equal(list.role, 'list');
     assert.deepEqual(list.markers, ['none', 'none']);
     assert.match(list.texts[0], /^1\. /); assert.match(list.texts[1], /^2\. /);

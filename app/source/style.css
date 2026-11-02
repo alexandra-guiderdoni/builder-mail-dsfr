@@ -36,8 +36,12 @@ details::details-content { box-sizing:border-box; }
 summary { cursor:pointer; color:var(--text-action-high-blue-france); font-weight:700; }
 details p { font-size:.875rem; line-height:1.5rem; margin-top:8px; }
 .block-list { list-style:none; padding:0; margin:16px 0; }
-.block-list li { margin:8px 0; } .block-list button { width:100%; display:flex; flex-direction:column; align-items:start; text-align:left; }
-.block-list button>* { max-width:100%; overflow-wrap:anywhere; }
+.block-list li { margin:8px 0; display:flex; gap:.5rem; align-items:stretch; } .block-list [data-select] { flex:1; width:100%; display:flex; flex-direction:column; align-items:start; text-align:left; }
+/* Poignée de glisser-déposer (#204) : cible de 40 px, repère d’insertion pendant le glissement. */
+.block-handle { flex:none; width:2.5rem; min-height:2.5rem; border:1px solid var(--border-default-grey); background:var(--background-default-grey); color:var(--text-action-high-blue-france); cursor:grab; font-size:1.25rem; }
+.block-handle:focus-visible { outline:2px solid #0a76f6; outline-offset:2px; }
+.block-list li.drop-before { box-shadow:0 -3px 0 var(--border-action-high-blue-france); } .block-list li.drop-after { box-shadow:0 3px 0 var(--border-action-high-blue-france); }
+.block-list [data-select]>* { max-width:100%; overflow-wrap:anywhere; }
 .block-list [aria-pressed=true] { border-left:4px solid var(--border-action-high-blue-france); background:var(--background-action-low-blue-france); }
 .block-list small { font-size:.75rem; line-height:1.25rem; color:var(--text-mention-grey); overflow-wrap:anywhere; }
 .block-editor { margin-top:24px; border-top:1px solid var(--border-default-grey); padding-top:24px; }

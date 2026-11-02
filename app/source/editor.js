@@ -2,6 +2,17 @@
   "use strict";
   const A = window.MailBuilder, M = A.Model, get = id => document.getElementById(id);
   const attempt = async action => { try { await action(); } catch (cause) { if (cause.linkIssue) A.UI.showLinkIssue(cause.linkIssue); A.error(cause.message); } };
+  // Déplacement d’un bloc à une position (#204), par glisser-déposer ou « Déplacer à la position… », avec la garde de Monter et
+  // Descendre. Le déplacement mémorise l’ordre obtenu : « Annuler le déplacement » reste proposé tant que cet ordre est inchangé.
+  async function moveBlock(id, to) {
+    const blocks = A.doc().blocks, from = blocks.findIndex(b => b.id === id);
+    if (from < 0) throw new Error("Le bloc sélectionné a changé.");
+    if (to === from || to < 0 || to >= blocks.length) return false;
+    const saving = A.State.change(lib => { const list = lib.documents.find(d => d.id === lib.activeId).blocks; list.splice(to, 0, ...list.splice(from, 1)); A.selected = id; }, true, false);
+    A.moved.set(A.library.activeId, {id, from, order: A.doc().blocks.map(b => b.id)}); A.UI.moving();
+    A.notice(`Bloc «\u00a0${A.UI.blockName(A.doc().blocks.find(b => b.id === id))}\u00a0» déplacé ${A.UI.blockPlace(id)}.`);
+    await saving; return true;
+  }
   document.addEventListener("click", event => {
     const action = event.target.closest("[data-action]");
     if (action && !action.disabled) attempt(async () => { await A.Actions[action.dataset.action](); if (["new-document", "use-template"].includes(action.dataset.action)) { await A.Library.open(A.library.activeId); get("document-name").focus(); get("document-name").select(); } });
@@ -11,6 +22,8 @@
     const operation = event.target.closest("[data-block-action]");
     if (operation) attempt(async () => {
       const id = A.selected, actionName = operation.dataset.blockAction, removingLink = actionName === "remove-footer-link";
+      if (actionName === "move-to") { try { await moveBlock(id, Number(get("move-position").value)); } finally { get("move-position")?.focus(); } return; }
+      const before = A.doc().blocks.findIndex(b => b.id === id);
       // Garde unique (décision du 24 octobre) : Monter, Descendre, Retirer et Dupliquer sont refusés pendant un brouillon d’URL ;
       // les liens de pied et l’image restent des éditions de champ, qui ignorent les brouillons.
       const mode = ["up", "down", "remove", "duplicate"].includes(actionName) ? false : "edit";
@@ -45,6 +58,9 @@
       // Le rendu a remplacé le bouton activé : le focus est replacé tout de suite, sans attendre la sauvegarde (#43).
       const editor = get("block-editor"), catalogue = get("catalogue").closest("details").querySelector("summary"), selected = A.doc().blocks.find(b => b.id === A.selected);
       if (["up", "down"].includes(actionName)) {
+        const now = A.doc().blocks.findIndex(b => b.id === id);
+        if (now !== before) A.moved.set(A.library.activeId, {id, from: before, order: A.doc().blocks.map(b => b.id)});
+        A.UI.moving();
         const buttons = [actionName, actionName === "up" ? "down" : "up"].map(action => editor.querySelector(`[data-block-action="${action}"]`));
         (buttons.find(button => button && !button.disabled) || editor.querySelector("textarea,input")).focus();
         A.notice(`Bloc ${name} déplacé ${A.UI.blockPlace(id)}.`);
@@ -128,6 +144,35 @@
   // extérieure posée entre deux imports silencie bien la fin de chacun - plus de ré-autorisation accidentelle par un
   // import plus récent (#122, correctif Astra sur PR 129).
   let readingTicket = 0;
+  // Glisser-déposer des blocs (#204), à la souris seulement : la poignée ne devient glissable qu’après un appui de souris.
+  // Au clavier, la poignée sélectionne le bloc et mène à « Déplacer à la position… ». Échap ou un dépôt hors de la liste
+  // abandonnent sans rien changer et rendent le focus à la poignée.
+  const blockList = get("block-list"); let dragging = null;
+  const clearMarks = () => blockList.querySelectorAll(".drop-before, .drop-after").forEach(li => li.classList.remove("drop-before", "drop-after"));
+  const below = (event, li) => { const box = li.getBoundingClientRect(); return event.clientY > box.top + box.height / 2; };
+  const handleOf = id => [...blockList.querySelectorAll("[data-drag-handle]")].find(handle => handle.dataset.dragHandle === id);
+  blockList.addEventListener("pointerdown", event => { const handle = event.target.closest("[data-drag-handle]"); if (handle) handle.draggable = event.pointerType === "mouse"; });
+  blockList.addEventListener("click", event => {
+    const handle = event.target.closest("[data-drag-handle]"); if (!handle) return;
+    attempt(() => { A.State.guardEdit(); A.selected = handle.dataset.dragHandle; A.UI.blockList(); A.UI.fields(); get("move-position").focus(); });
+  });
+  blockList.addEventListener("dragstart", event => {
+    const handle = event.target.closest?.("[data-drag-handle]"); if (!handle) return;
+    dragging = {id: handle.dataset.dragHandle, dropped: false};
+    event.dataTransfer.effectAllowed = "move"; event.dataTransfer.setData("application/x-mail-block", dragging.id);
+  });
+  blockList.addEventListener("dragover", event => {
+    const li = dragging && event.target.closest("#block-list > li"); if (!li) return;
+    event.preventDefault(); event.dataTransfer.dropEffect = "move"; clearMarks(); li.classList.add(below(event, li) ? "drop-after" : "drop-before");
+  });
+  blockList.addEventListener("drop", event => {
+    const li = dragging && event.target.closest("#block-list > li"); if (!li) return;
+    event.preventDefault(); clearMarks(); dragging.dropped = true;
+    const id = dragging.id, from = A.doc().blocks.findIndex(b => b.id === id);
+    let to = [...blockList.children].indexOf(li) + (below(event, li) ? 1 : 0); if (from < to) to--;
+    attempt(async () => { try { await moveBlock(id, to); } finally { handleOf(id)?.focus(); } });
+  });
+  blockList.addEventListener("dragend", () => { clearMarks(); if (dragging && !dragging.dropped) handleOf(dragging.id)?.focus(); dragging = null; });
   get("project-input").addEventListener("change", event => {
     const file = event.target.files[0]; if (!file) return;
     attempt(async () => {
