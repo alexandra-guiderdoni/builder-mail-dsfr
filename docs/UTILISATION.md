@@ -78,6 +78,7 @@ Dans « Fichiers et récupération » :
 - « Exporter la composition active » produit un fichier de travail JSON avec ses images.
 - « Exporter la bibliothèque » transporte l’ensemble, modèles et identités compris.
 - Importer un fichier ajoute ses éléments aux éléments existants, avec de nouveaux identifiants. Un fichier du prototype est converti en composition de l’atelier.
+- « Restaurer une sauvegarde de la bibliothèque » remplace toutes les compositions, modèles et identités par celles d’un export de bibliothèque, après confirmation. La fenêtre propose d’exporter d’abord la bibliothèque actuelle ; celle-ci reste aussi récupérable par « Restaurer l’état précédent ». Une composition seule, des données enregistrées brutes ou un fichier d’un autre catalogue sont refusés sans rien changer. En cas d’échec d’écriture, la bibliothèque actuelle reste affichée et enregistrée.
 
 Le HTML téléchargé est une sortie pour la messagerie ; conserver aussi le JSON pour reprendre l’édition. L’import ne reconstruit pas une composition à partir d’un HTML arbitraire.
 

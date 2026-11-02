@@ -125,5 +125,39 @@
     } catch (cause) { if (get("library-dialog").open) get("library-dialog-error").textContent = cause.message; else A.error(cause.message); }
     finally { busy = false; get("library-confirm").disabled = get("library-cancel").disabled = false; }
   });
+  // Restaurer une sauvegarde (#200) : un export de bibliothèque remplace toute la bibliothèque, après confirmation,
+  // par le point d’entrée commun (#208). Tout autre fichier est refusé avant la fenêtre, sans rien changer.
+  const counted = lib => [[lib.documents.length, "composition"], [lib.templates.length, "modèle"], [lib.identities.length, "identité"]].map(([n, noun]) => `${n} ${noun}${n > 1 ? "s" : ""}`).join(", ");
+  let restoring = null, restoringBusy = false;
+  async function chooseRestore(file) {
+    let text; try { text = await file.text(); } catch { throw new Error(`Le fichier « ${file.name} » n’a pas pu être lu. Votre bibliothèque est inchangée.`); }
+    let raw; try { raw = JSON.parse(text); } catch { throw new Error("Le fichier JSON est invalide ou incomplet. Votre bibliothèque est inchangée."); }
+    if (raw && typeof raw === "object" && "token" in raw && "library" in raw) throw new Error("Ce fichier contient des données enregistrées brutes, réservées au diagnostic : il ne peut être ni restauré ni importé. Choisissez un export de bibliothèque.");
+    if (raw?.schema !== "dsfr-mail/library") throw new Error(["dsfr-mail/document", "builder-mail-prototype/1"].includes(raw?.schema) ? "Ce fichier contient une seule composition : utilisez « Importer une composition ou une bibliothèque JSON » pour l’ajouter. Votre bibliothèque est inchangée." : "Ce fichier n’est pas un export de bibliothèque de l’atelier. Votre bibliothèque est inchangée.");
+    const incoming = await A.Imports.prepare(text);
+    restoring = {library: incoming.value, name: file.name};
+    get("restore-dialog-description").textContent = `Le fichier « ${file.name} » contient ${counted(incoming.value)}. Il remplacera les ${counted(A.library)} de ce navigateur. La bibliothèque actuelle restera récupérable par « Restaurer l’état précédent ». Exportez-la d’abord pour en garder un fichier.`;
+    get("restore-dialog-error").textContent = "";
+    get("restore-dialog").showModal(); get("restore-cancel").focus();
+  }
+  get("restore-input").addEventListener("change", event => {
+    const file = event.target.files[0]; event.target.value = ""; if (!file) return;
+    attempt(() => chooseRestore(file));
+  });
+  get("restore-export").addEventListener("click", () => { try { A.Actions["export-library"](); } catch (cause) { get("restore-dialog-error").textContent = cause.message; } });
+  get("restore-cancel").addEventListener("click", () => get("restore-dialog").close());
+  get("restore-dialog").addEventListener("cancel", event => { if (restoringBusy) event.preventDefault(); });
+  get("restore-dialog").addEventListener("close", () => { if (restoring) get("restore-input").focus(); restoring = null; });
+  get("restore-form").addEventListener("submit", async event => {
+    event.preventDefault(); if (restoringBusy || !restoring) return;
+    const target = restoring; restoringBusy = true; get("restore-confirm").disabled = get("restore-cancel").disabled = get("restore-export").disabled = true; A.notice("");
+    try {
+      await A.State.replaceLibrary(M.copy(target.library), {reason: "remplacement", keepPrevious: true});
+      restoring = null; get("restore-dialog").close();
+      refresh(); show(false); get("home-title").focus();
+      A.notice(`Sauvegarde « ${target.name} » restaurée : ${counted(A.library)}. La bibliothèque précédente reste récupérable par « Restaurer l’état précédent ».`);
+    } catch (cause) { get("restore-dialog-error").textContent = cause.message; }
+    finally { restoringBusy = false; get("restore-confirm").disabled = get("restore-cancel").disabled = get("restore-export").disabled = false; }
+  });
   A.Library = Object.freeze({subjectNotice, refresh, open, home, duplicate, ask, askRemoval});
 })();

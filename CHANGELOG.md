@@ -1,5 +1,15 @@
 # Historique des livraisons
 
+## 2 novembre 2026 - Restaurer une sauvegarde de la bibliothèque (#200)
+
+- Dans « Fichiers et récupération », « Restaurer une sauvegarde de la bibliothèque » remplace toutes les compositions, modèles et identités par celles d’un export de bibliothèque, sans doublon. L’import qui ajoute reste inchangé.
+- Le fichier est entièrement validé avant la fenêtre de confirmation. Une composition seule renvoie vers « Importer » ; des données enregistrées brutes, un JSON invalide ou un autre catalogue sont refusés sans rien changer.
+- La fenêtre indique ce qui sera remplacé, propose « Exporter d’abord la bibliothèque actuelle », puis demande une confirmation distincte. La bibliothèque remplacée reste récupérable par « Restaurer l’état précédent ».
+- Le remplacement passe par le point d’entrée commun (#208) :
+  - en cas d’échec d’écriture, la bibliothèque actuelle reste affichée et enregistrée, avec le message dans la fenêtre ;
+  - les autres fenêtres passent en lecture seule avec le motif « remplacée ».
+- Quatre tests navigateur ; guide d’utilisation complété.
+
 ## 2 novembre 2026 - Point d’entrée commun pour remplacer ou effacer la bibliothèque (#208)
 
 - Fondation technique de la restauration (#200) et de l’effacement (#201), sans nouveau bouton :
