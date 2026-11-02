@@ -17,7 +17,9 @@ function loadBuilder(root) {
   const scope = {URL, URLSearchParams, atob, btoa, crypto: webcrypto, MailBuilder: {catalog: catalogue}};
   scope.window = scope;
   vm.createContext(scope);
-  for (const name of ['model.js', 'render.js']) {
+  // Les exemples embarqués (#202) sont chargés quand le checkout les fournit ; une version antérieure s’en passe.
+  for (const name of ['model.js', 'render.js', 'examples.js']) {
+    if (name === 'examples.js' && !fs.existsSync(path.join(root, 'app/source', name))) continue;
     const source = fs.readFileSync(path.join(root, 'app/source', name), 'utf8');
     vm.runInContext(source, scope, {filename: name, timeout: 10000});
   }

@@ -3,7 +3,7 @@
 (() => {
   "use strict";
   const A = window.MailBuilder, M = A.Model, get = id => document.getElementById(id);
-  const RULES = Object.freeze(["demo-domain", "demo-text", "weight", "label-domain", "bidi", "mixed-script"]);
+  const RULES = Object.freeze(["demo-domain", "demo-text", "example-text", "weight", "label-domain", "bidi", "mixed-script"]);
   // Décodage Punycode (RFC 3492) des étiquettes « xn-- », pour lire l’alphabet réel d’un domaine sans dépendance.
   function punycode(input) {
     const base = 36, tMin = 1, tMax = 26, digit = c => c >= 48 && c <= 57 ? c - 22 : c >= 65 && c <= 90 ? c - 65 : c >= 97 && c <= 122 ? c - 97 : base;
@@ -80,6 +80,9 @@
         return false;
       });
       if (unchanged.length) add("demo-text", `field-${unchanged[0].key}`, `valeur de démonstration du catalogue inchangée (${unchanged.map(f => f.label).join(", ")}).`);
+      // (2 bis) Texte d’un exemple embarqué resté tel quel (#202) ; ses liens relèvent déjà des domaines de démonstration.
+      const copied = definition.fields.filter(f => ["text", "alt"].includes(f.type) && A.Examples?.isExampleValue(block.component, f.key, block.values[f.key]));
+      if (copied.length) add("example-text", `field-${copied[0].key}`, `texte d’exemple inchangé (${copied.map(f => f.label).join(", ")}) : remplacez-le par votre contenu.`);
       for (const link of items) {
         const real = hostOf(link.url), shown = real && shownHosts(link.label).find(host => !sameSite(real, host));
         if (shown) add("label-domain", link.labelField, `l’intitulé annonce ${decodeHost(shown)}, mais le lien mène à ${decodeHost(real)}.`);

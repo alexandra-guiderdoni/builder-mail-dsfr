@@ -135,7 +135,12 @@ la mise en page. Éviter les doublons si identité, mentions et liens sont déj�
 ## Compositions de départ et assemblage
 
 `presets` lit les départs réellement définis dans `app/source/library-actions.js`.
-Les clés actuelles sont `@information`, `@lettre`, `@invitation`. Pour préparer
+Les clés actuelles sont `@information`, `@lettre`, `@invitation`. Depuis #202,
+ces départs ne contiennent plus de composant qui exige une illustration ; dans
+l’atelier, la vignette des articles du départ `@lettre` reste à fournir, alors
+que `seed` garde l’image du catalogue (poids à surveiller). Les exemples remplis
+de l’atelier (`app/source/examples.js`, `MailBuilder.Examples`) se chargent avec
+`loadBuilder` et se construisent par `Examples.build(clé)`. Pour préparer
 un squelette natif ou une sélection explicite de blocs :
 
 ```sh

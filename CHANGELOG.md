@@ -1,5 +1,28 @@
 # Historique des livraisons
 
+## 2 novembre 2026 - Exemples de newsletters et départs allégés (#202)
+
+- **Espace « Exemples » :** sur l’accueil, à l’écart de Mes newsletters, quatre newsletters remplies avec un contenu fictif crédible : information de service, lettre d’information, invitation, revue de presse.
+  - « Prévisualiser » les montre en lecture seule, dans un aperçu isolé.
+  - « Créer à partir de cet exemple » en ajoute une copie indépendante à Mes newsletters ; l’exemple reste inchangé.
+- **Versionnement :** les exemples sont décrits dans le code de l’atelier (`app/source/examples.js`), en composants et valeurs. L’atelier les construit à la demande avec le catalogue courant. Ils sont absents de la bibliothèque et des sauvegardes, et ne sont pas touchés par « Tout effacer ».
+- **Hors connexion :** l’aperçu et la création fonctionnent dans le portable dès la première ouverture, et dans la version web préparée hors connexion.
+- **Identité :** l’identité reste celle du catalogue (« Votre service »), et les seules images sont les logos Marianne.
+- **Liens :** les liens visent des domaines de démonstration.
+- **Contrôle avant copie :** une nouvelle règle signale les textes d’exemple restés tels quels (`example-text`). Avec les liens de démonstration et « Votre service », une copie non personnalisée est donc signalée avant l’envoi.
+- **Départs allégés :** les départs « Lettre d’information » et « Invitation » prennent la structure des exemples.
+  - « Deux cartes d’information » et « Titre principal avec image », qui exigeaient une illustration, sont remplacés.
+  - L’invitation place le bouton d’inscription avant le contact.
+  - La vignette des articles reste à fournir.
+  - Le départ « Lettre d’information » passe de 110,7 Kio à 73,3 Kio en HTML de copie, sous le repère de 90 Kio.
+- L’aide de « Tout effacer » parle de newsletters et précise que les exemples restent proposés.
+- Le skill `newsletter-contribution` charge et teste les exemples.
+- Sept tests ajoutés :
+  - accueil et aperçu, copie indépendante et « Tout effacer », poids, départs sans illustration requise, version web hors connexion ;
+  - la règle de contrôle et le test du skill.
+
+  Une mutation qui désactive la règle est détectée.
+
 ## 2 novembre 2026 - Le skill ne bloque plus sur un simple changement de présentation (#209, suite)
 
 - **Avant :** le contrat du skill `newsletter-contribution` comparait l’empreinte complète du catalogue. Une retouche de CSS du courriel bloquait donc la fabrication (« PRÉREQUIS TECHNIQUE »), alors que l’atelier relit ces données depuis #209 et que le skill exclut les styles de ce dont il dépend.

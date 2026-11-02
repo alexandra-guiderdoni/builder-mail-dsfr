@@ -82,3 +82,12 @@ test('la vérification ne réécrit jamais le contrat de référence', () => {
   const lock = path.join(__dirname, '../assets/builder-contract.json'), before = fs.readFileSync(lock, 'utf8');
   verify(field('mail-31', 4, {type: 'url'})); assert.equal(fs.readFileSync(lock, 'utf8'), before);
 });
+// #202 : les exemples embarqués de l’atelier se construisent, se valident et se rendent avec le catalogue courant.
+test('les exemples embarqués se construisent et se rendent avec le catalogue courant', () => {
+  assert.deepEqual(Array.from(A.Examples.list, e => e.key), ['information', 'lettre', 'invitation', 'revue']);
+  for (const example of A.Examples.list) {
+    const doc = A.Examples.build(example.key);
+    assert.equal(doc.catalogue, A.catalog.id); A.Render.assertOutput(doc);
+    assert.match(A.Render.html(doc), /<html/i); assert.ok(A.Render.plain(doc).length > 0, example.key);
+  }
+});

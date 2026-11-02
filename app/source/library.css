@@ -16,3 +16,11 @@
 .check-list { padding-left:0; list-style:none; } .check-list li { padding:12px 0; border-top:1px solid var(--border-default-grey); } .check-list p { margin:0 0 8px; overflow-wrap:anywhere; }
 /* « Repartir de zéro » (#201) : à l’écart de la liste, séparé par un trait. */
 .reset-zone { margin-top:2.5rem; padding-top:1.5rem; border-top:1px solid var(--border-default-grey); }
+/* Exemples (#202) : distincts de Mes newsletters, séparés par un trait ; espacements de la grille DSFR (1v = 0,25rem). */
+.examples-zone { margin-top:2.5rem; padding-top:1.5rem; border-top:1px solid var(--border-default-grey); }
+.examples-list { margin-bottom:0; } .examples-list .app-panel { height:100%; } .examples-list h4 { margin-bottom:.5rem; }
+.examples-list p { color:var(--text-mention-grey); margin-bottom:1rem; } .examples-list .actions { margin-bottom:0; }
+#example-dialog { font-family:Marianne,Arial,sans-serif; color:var(--text-default-grey); background:var(--background-default-grey); width:min(100% - 32px,760px); max-height:90vh; overflow:auto; border:0; padding:32px; border-top:4px solid var(--border-action-high-blue-france); }
+#example-dialog::backdrop { background:rgb(0 0 0 / 55%); }
+.example-preview { display:block; width:100%; height:60vh; margin-bottom:1.5rem; border:1px solid var(--border-default-grey); background:#fff; }
+@media(max-width:575px) { #example-dialog { padding:24px; } }

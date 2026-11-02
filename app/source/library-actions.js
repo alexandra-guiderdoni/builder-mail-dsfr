@@ -9,7 +9,11 @@
   // L’annonce de réussite attend la fin de la sauvegarde ; un échec a déjà affiché son propre message. Le jeton est relevé
   // au départ de l’action : une annonce posée pendant la sauvegarde (bloc ajouté, autre action) n’est pas écrasée.
   const announce = async (message, ticket) => { try { await A.State.flush(); } catch (cause) { if (get("error").hidden) throw cause; return; } A.notice(message, ticket); };
-  const starters = {information: [2, 5, 8, 19, 40, 47, 49], lettre: [2, 5, 10, 31, 35, 46, 47, 49], invitation: [2, 6, 19, 39, 40, 47, 49]};
+  // Départs alignés sur les exemples (#202) : aucun composant n’y exige d’illustration en dehors des logos Marianne.
+  const starters = {information: [2, 5, 8, 19, 40, 47, 49], lettre: [2, 5, 10, 31, 31, 35, 47, 49], invitation: [2, 5, 19, 40, 39, 47, 49]};
+  // La vignette d’article reste à fournir : avec celle du catalogue, deux articles dépassaient le repère de poids.
+  function start(key, name) { const doc = M.create(name, starters[key]); for (const b of doc.blocks) if (b.component === "mail-31") b.values.f0 = ""; return doc; }
+  A.Starters = Object.freeze({keys: Object.freeze(Object.keys(starters)), create: start});
   const family = b => M.component(b.component).family, framed = b => ["En-têtes", "Pieds de page"].includes(family(b));
   // Intact : valeurs éditoriales, source et liens égaux aux valeurs initiales du composant, identifiant ignoré.
   // Un intitulé de source vide et une liste de liens vide valent leur absence, comme dans l’éditeur et le rendu.
@@ -52,7 +56,7 @@
     "new-document": () => {
       const label = get("starter").selectedOptions[0].textContent.trim();
       const ticket = A.State.noticeTicket();
-      return A.State.change(lib => { const doc = M.create(M.uniqueName(label, lib.documents), starters[get("starter").value]); lib.documents.push(doc); lib.activeId = doc.id; })
+      return A.State.change(lib => { const doc = start(get("starter").value, M.uniqueName(label, lib.documents)); lib.documents.push(doc); lib.activeId = doc.id; })
         .then(() => A.notice("Newsletter créée : vérifiez son nom et l’objet du courriel, modifiables ci-dessous.", ticket));
     },
     "duplicate-document": () => A.Library.duplicate(A.library.activeId),

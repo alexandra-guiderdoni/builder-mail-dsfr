@@ -57,6 +57,7 @@ def build():
                 "view.js",
                 "images.js",
                 "files.js",
+                "examples.js",
                 "checks.js",
                 "library-actions.js",
                 "library.js",

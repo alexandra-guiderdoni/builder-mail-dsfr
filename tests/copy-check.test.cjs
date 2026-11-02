@@ -5,12 +5,12 @@ const vm = require('node:vm');
 const {domainToUnicode} = require('node:url');
 const {execFileSync} = require('node:child_process');
 
-// #36 : contrôle avant copie. Blocages : composition vide et refus existants. Avertissements : liste fermée de six règles.
+// #36 : contrôle avant copie. Blocages : composition vide et refus existants. Avertissements : liste fermée de sept règles.
 global.window = global;
 global.MailBuilder = {catalog: JSON.parse(execFileSync('python3', ['-c', 'import json;from scripts.catalogue import compile_catalogue;print(json.dumps(compile_catalogue()))'], {encoding: 'utf8'}))};
-for (const name of ['model.js', 'render.js', 'files.js', 'checks.js']) vm.runInThisContext(fs.readFileSync('app/source/' + name, 'utf8'), {filename: name});
+for (const name of ['model.js', 'render.js', 'files.js', 'examples.js', 'checks.js']) vm.runInThisContext(fs.readFileSync('app/source/' + name, 'utf8'), {filename: name});
 const {Model: M, Render: R, Checks: C} = MailBuilder;
-const RULES = ['demo-domain', 'demo-text', 'weight', 'label-domain', 'bidi', 'mixed-script'];
+const RULES = ['demo-domain', 'demo-text', 'example-text', 'weight', 'label-domain', 'bidi', 'mixed-script'];
 const index = id => MailBuilder.catalog.components.findIndex(c => c.id === id);
 const ok = {bytes: 1000, level: 'ok'};
 // Pied mail-50 aux textes modifiés : seul le lien testé peut produire un avertissement.
@@ -205,4 +205,14 @@ test('#192 : les URL d’images ont les exemples positifs et négatifs des contr
     for (const warning of warnings) { assert.equal(warning.field, 'remote-image-url-f0'); assert.equal(warning.block, doc.blocks[0].id); }
   }
   for (const address of ['http://www.exemple-info.gouv.fr/logo.png', 'https:www.exemple-info.gouv.fr/logo.png']) assert.throws(() => make(address), /HTTPS/);
+});
+
+// #202 : un texte d’exemple resté tel quel est signalé ; les liens restent couverts par les domaines de démonstration.
+test('une copie d’exemple non modifiée signale ses textes d’exemple ; un texte réécrit ne l’est plus', () => {
+  const doc = MailBuilder.Examples.build('information'), title = doc.blocks.findIndex(b => b.component === 'mail-05');
+  const found = C.warnings(doc, ok).filter(w => w.rule === 'example-text');
+  assert.ok(found.some(w => w.block === doc.blocks[title].id && w.field === 'field-f0' && /texte d’exemple inchangé/.test(w.message)), JSON.stringify(found));
+  assert.ok(!found.some(w => w.block === doc.blocks[0].id), 'l’en-tête garde les valeurs du catalogue, signalées par demo-text');
+  doc.blocks[title].values.f0 = 'Titre réécrit par le service';
+  assert.ok(!C.warnings(doc, ok).some(w => w.rule === 'example-text' && w.block === doc.blocks[title].id));
 });

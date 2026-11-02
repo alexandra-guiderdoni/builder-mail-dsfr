@@ -182,5 +182,38 @@
     } catch (cause) { get("reset-dialog-error").textContent = cause.message; }
     finally { resetBusy = false; get("reset-confirm").disabled = get("reset-cancel").disabled = get("reset-export").disabled = false; }
   });
+  // Exemples (#202) : construits depuis le code de l’atelier, jamais enregistrés ; seule leur copie entre dans Mes newsletters.
+  // Optional chaining : le contrat isolé de library.js (tests/document-labels.test.cjs) injecte un MailBuilder sans exemples.
+  get("examples-list").innerHTML = (A.Examples?.list || []).map(e => `<li class="fr-col-12 fr-col-md-6" data-example="${esc(e.key)}"><div class="app-panel"><h4>${esc(e.label)}</h4><p>${esc(e.description)}</p><div class="actions"><button class="fr-btn fr-btn--secondary" type="button" data-example-action="preview" aria-label="Prévisualiser l’exemple « ${esc(e.label)} »">Prévisualiser</button><button class="fr-btn fr-btn--secondary" type="button" data-example-action="create" aria-label="Créer à partir de cet exemple « ${esc(e.label)} »">Créer à partir de cet exemple</button></div></div></li>`).join("");
+  let previewing = null, previewUrl = "", releasePreviews = null;
+  async function createFrom(key) {
+    const example = A.Examples.get(key), ticket = A.State.noticeTicket();
+    await A.State.change(lib => { const doc = A.Examples.build(key, M.uniqueName(example.label, lib.documents)); lib.documents.push(doc); lib.activeId = doc.id; });
+    await open(A.library.activeId); get("document-name").focus(); get("document-name").select();
+    A.notice(`Newsletter créée à partir de l’exemple « ${example.label} » : remplacez ses textes, noms et liens fictifs avant l’envoi.`, ticket);
+  }
+  function preview(key, opener) {
+    const example = A.Examples.get(key);
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    previewUrl = URL.createObjectURL(new Blob([A.Render.html(A.Examples.build(key))], {type: "text/html"}));
+    previewing = {key, opener};
+    get("example-dialog-title").textContent = `Exemple : ${example.label}`;
+    get("example-create").setAttribute("aria-label", `Créer à partir de cet exemple « ${example.label} »`);
+    // Le cadre n’existe que pendant l’aperçu : aucun contexte de navigation ne reste derrière les autres dialogues.
+    const frame = document.createElement("iframe"); frame.id = "example-preview"; frame.className = "example-preview";
+    frame.setAttribute("sandbox", ""); frame.title = `Aperçu de l’exemple « ${example.label} »`; frame.src = previewUrl;
+    // Comme la confirmation avant copie, les aperçus de fond sont retirés tant que le dialogue est ouvert.
+    releasePreviews ??= A.Preview.suspend();
+    get("example-frame").replaceChildren(frame); get("example-dialog").showModal(); get("example-close").focus();
+  }
+  get("examples-list").addEventListener("click", event => {
+    const button = event.target.closest("[data-example-action]"), key = button?.closest("[data-example]")?.dataset.example;
+    if (!key) return;
+    if (button.dataset.exampleAction === "preview") attempt(() => preview(key, button));
+    else attempt(() => createFrom(key));
+  });
+  get("example-close").addEventListener("click", () => get("example-dialog").close());
+  get("example-dialog").addEventListener("close", () => { const opener = previewing?.opener; previewing = null; get("example-frame").replaceChildren(); releasePreviews?.(); releasePreviews = null; if (previewUrl) { URL.revokeObjectURL(previewUrl); previewUrl = ""; } opener?.isConnected && opener.focus(); });
+  get("example-create").addEventListener("click", () => { const key = previewing?.key; previewing = null; get("example-dialog").close(); if (key) attempt(() => createFrom(key)); });
   A.Library = Object.freeze({subjectNotice, refresh, open, home, duplicate, ask, askRemoval});
 })();
