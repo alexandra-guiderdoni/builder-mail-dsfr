@@ -60,7 +60,10 @@ function selection(A, root, selector) {
 function seed(A, root, selector, name) {
   assertVerified(A);
   if (typeof name !== 'string' || !name.trim()) throw new Error('Nom de composition requis.');
-  return A.Model.document(A.Model.create(name, selection(A, root, selector)));
+  const doc = A.Model.create(name, selection(A, root, selector));
+  // Comme les départs de l'atelier (#202) : la vignette d'article reste à fournir, sous le repère de poids.
+  if (selector.startsWith('@')) for (const block of doc.blocks) if (block.component === 'mail-31') block.values.f0 = '';
+  return A.Model.document(doc);
 }
 
 function personalize(A, doc) {

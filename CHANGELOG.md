@@ -9,19 +9,23 @@
 - **Hors connexion :** l’aperçu et la création fonctionnent dans le portable dès la première ouverture, et dans la version web préparée hors connexion.
 - **Identité :** l’identité reste celle du catalogue (« Votre service »), et les seules images sont les logos Marianne.
 - **Liens :** les liens visent des domaines de démonstration.
-- **Contrôle avant copie :** une nouvelle règle signale les textes d’exemple restés tels quels (`example-text`). Avec les liens de démonstration et « Votre service », une copie non personnalisée est donc signalée avant l’envoi.
+- **Contrôle avant copie :** une nouvelle règle (`example-text`) signale les textes d’exemple restés tels quels, objet du courriel compris. Avec les liens de démonstration et « Votre service », une copie non personnalisée est donc signalée avant l’envoi.
+  - Un libellé court qu’un service peut taper lui-même (« Revue de presse », « À la une ») n’est pas signalé seul. Un exemple n’est retenu que si le document en garde un texte d’au moins 40 caractères ou au moins trois textes.
+  - La formule de désabonnement, réutilisable, n’est jamais signalée.
 - **Départs allégés :** les départs « Lettre d’information » et « Invitation » prennent la structure des exemples.
   - « Deux cartes d’information » et « Titre principal avec image », qui exigeaient une illustration, sont remplacés.
   - L’invitation place le bouton d’inscription avant le contact.
-  - La vignette des articles reste à fournir.
+  - La vignette des articles reste à fournir, dans l’atelier comme avec le `seed` du skill.
   - Le départ « Lettre d’information » passe de 110,7 Kio à 73,3 Kio en HTML de copie, sous le repère de 90 Kio.
+- **Double clic :** « Créer à partir de cet exemple » et « Créer une newsletter » ne créent plus deux newsletters. Ce second défaut existait avant ce lot.
 - L’aide de « Tout effacer » parle de newsletters et précise que les exemples restent proposés.
 - Le skill `newsletter-contribution` charge et teste les exemples.
-- Sept tests ajoutés :
-  - accueil et aperçu, copie indépendante et « Tout effacer », poids, départs sans illustration requise, version web hors connexion ;
-  - la règle de contrôle et le test du skill.
+- **Revue :** Codex et un audit ShipGuard réduit ont relu le lot. Leurs constats sont corrigés : double clic, faux positifs, objet non signalé, libération des aperçus si l’ouverture du dialogue échoue, divergence du `seed`, aperçu hors de la tabulation.
+- Dix tests ajoutés :
+  - accueil et aperçu, copie indépendante et « Tout effacer », poids, départs sans illustration requise, version web hors connexion, double clic ;
+  - deux tests de la règle de contrôle, le test du skill et celui du `seed`.
 
-  Une mutation qui désactive la règle est détectée.
+  Trois mutations sont détectées : la règle désactivée, le verrou de création retiré, le seuil anti-faux-positif retiré.
 
 ## 2 novembre 2026 - Le skill ne bloque plus sur un simple changement de présentation (#209, suite)
 

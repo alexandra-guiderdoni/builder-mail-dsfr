@@ -115,3 +115,18 @@ test('#202 version web préparée hors connexion : aperçu et création sans ré
     assert.equal(await page.locator('#document-name').inputValue(), 'Lettre d’information');
   } finally { await browser.close(); server.close(); }
 });
+
+test('#202 double clic : une seule copie par création, depuis un exemple comme depuis un départ', async () => {
+  const browser = await chromium.launch();
+  try {
+    const {page} = await open(browser); await home(page);
+    const count = () => page.evaluate(() => MailBuilder.library.documents.length), before = await count();
+    await item(page, 'Invitation').getByRole('button', {name: 'Créer à partir de cet exemple « Invitation »'}).dblclick();
+    await page.locator('#editor-page').waitFor({state: 'visible'}); await saved(page);
+    assert.equal(await count(), before + 1, 'exemple');
+    await home(page);
+    await page.locator('[data-action=new-document]').dblclick();
+    await page.locator('#editor-page').waitFor({state: 'visible'}); await saved(page);
+    assert.equal(await count(), before + 2, 'départ');
+  } finally { await browser.close(); }
+});

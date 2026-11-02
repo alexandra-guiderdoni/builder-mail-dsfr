@@ -70,3 +70,9 @@ test('annoncer un squelette à personnaliser et échouer sans fichier sur compos
   assert.equal(spawnSync(process.execPath, [script, 'seed', root, 'mail-99', 'Refus', absent]).status, 1);
   assert.ok(!fs.existsSync(absent));
 });
+// #202 : le squelette @lettre suit le départ de l’atelier, vignettes à fournir.
+test('seed @lettre laisse la vignette des articles à fournir, comme l’atelier', () => {
+  const doc = seed(A, root, '@lettre', 'Lettre de recette');
+  const articles = doc.blocks.filter(b => b.component === 'mail-31');
+  assert.equal(articles.length, 2); assert.ok(articles.every(b => b.values.f0 === ''));
+});

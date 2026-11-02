@@ -185,8 +185,14 @@
   // Exemples (#202) : construits depuis le code de l’atelier, jamais enregistrés ; seule leur copie entre dans Mes newsletters.
   // Optional chaining : le contrat isolé de library.js (tests/document-labels.test.cjs) injecte un MailBuilder sans exemples.
   get("examples-list").innerHTML = (A.Examples?.list || []).map(e => `<li class="fr-col-12 fr-col-md-6" data-example="${esc(e.key)}"><div class="app-panel"><h4>${esc(e.label)}</h4><p>${esc(e.description)}</p><div class="actions"><button class="fr-btn fr-btn--secondary" type="button" data-example-action="preview" aria-label="Prévisualiser l’exemple « ${esc(e.label)} »">Prévisualiser</button><button class="fr-btn fr-btn--secondary" type="button" data-example-action="create" aria-label="Créer à partir de cet exemple « ${esc(e.label)} »">Créer à partir de cet exemple</button></div></div></li>`).join("");
-  let previewing = null, previewUrl = "", releasePreviews = null;
+  let previewing = null, previewUrl = "", releasePreviews = null, creating = false;
+  // Un second clic pendant la sauvegarde ne crée pas de seconde copie.
   async function createFrom(key) {
+    if (creating) return;
+    creating = true;
+    try { await createExample(key); } finally { creating = false; }
+  }
+  async function createExample(key) {
     const example = A.Examples.get(key), ticket = A.State.noticeTicket();
     await A.State.change(lib => { const doc = A.Examples.build(key, M.uniqueName(example.label, lib.documents)); lib.documents.push(doc); lib.activeId = doc.id; });
     await open(A.library.activeId); get("document-name").focus(); get("document-name").select();
@@ -201,10 +207,14 @@
     get("example-create").setAttribute("aria-label", `Créer à partir de cet exemple « ${example.label} »`);
     // Le cadre n’existe que pendant l’aperçu : aucun contexte de navigation ne reste derrière les autres dialogues.
     const frame = document.createElement("iframe"); frame.id = "example-preview"; frame.className = "example-preview";
-    frame.setAttribute("sandbox", ""); frame.title = `Aperçu de l’exemple « ${example.label} »`; frame.src = previewUrl;
+    // Aperçu non interactif : hors de la tabulation, Échap reste reçu par le dialogue.
+    frame.setAttribute("sandbox", ""); frame.tabIndex = -1; frame.title = `Aperçu de l’exemple « ${example.label} »`; frame.src = previewUrl;
     // Comme la confirmation avant copie, les aperçus de fond sont retirés tant que le dialogue est ouvert.
     releasePreviews ??= A.Preview.suspend();
-    get("example-frame").replaceChildren(frame); get("example-dialog").showModal(); get("example-close").focus();
+    get("example-frame").replaceChildren(frame);
+    try { get("example-dialog").showModal(); }
+    catch (cause) { get("example-frame").replaceChildren(); releasePreviews?.(); releasePreviews = null; previewing = null; URL.revokeObjectURL(previewUrl); previewUrl = ""; throw cause; }
+    get("example-close").focus();
   }
   get("examples-list").addEventListener("click", event => {
     const button = event.target.closest("[data-example-action]"), key = button?.closest("[data-example]")?.dataset.example;

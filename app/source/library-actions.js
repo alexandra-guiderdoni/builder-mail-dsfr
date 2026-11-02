@@ -52,12 +52,19 @@
     identityTarget = undefined; identityDialog.close();
     try { applyIdentity(target.identity, target.doc, target.name); } catch (cause) { A.error(cause.message); }
   });
+  let creating = false;
   A.Actions = {
-    "new-document": () => {
-      const label = get("starter").selectedOptions[0].textContent.trim();
-      const ticket = A.State.noticeTicket();
-      return A.State.change(lib => { const doc = start(get("starter").value, M.uniqueName(label, lib.documents)); lib.documents.push(doc); lib.activeId = doc.id; })
-        .then(() => A.notice("Newsletter créée : vérifiez son nom et l’objet du courriel, modifiables ci-dessous.", ticket));
+    // Un second clic pendant la sauvegarde ne crée pas de seconde newsletter.
+    // Une garde levée de façon synchrone par State.change libère aussi le verrou.
+    "new-document": async () => {
+      if (creating) return;
+      creating = true;
+      try {
+        const label = get("starter").selectedOptions[0].textContent.trim();
+        const ticket = A.State.noticeTicket();
+        await A.State.change(lib => { const doc = start(get("starter").value, M.uniqueName(label, lib.documents)); lib.documents.push(doc); lib.activeId = doc.id; });
+        A.notice("Newsletter créée : vérifiez son nom et l’objet du courriel, modifiables ci-dessous.", ticket);
+      } finally { creating = false; }
     },
     "duplicate-document": () => A.Library.duplicate(A.library.activeId),
     "remove-document": () => A.Library.ask("remove", A.library.activeId),

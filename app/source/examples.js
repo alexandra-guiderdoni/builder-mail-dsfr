@@ -54,12 +54,28 @@
     example.blocks.forEach((b, i) => Object.assign(doc.blocks[i].values, b.values || {}));
     return M.document(doc);
   }
-  // Valeurs propres aux exemples, par composant et par champ : le contrôle avant copie signale celles restées telles quelles.
-  const values = new Map();
-  for (const example of LIST) for (const b of example.blocks) for (const [key, value] of Object.entries(b.values || {})) {
-    if (!value.trim() || value === M.component(b.component).fields.find(f => f.key === key)?.default) continue;
-    values.set(`${b.component} ${key}`, (values.get(`${b.component} ${key}`) || new Set()).add(value));
+  // Textes propres à chaque exemple (objet, champs texte et alternatives), pour le contrôle avant copie. La formule de
+  // désabonnement est réutilisable telle quelle : elle n’en fait pas partie. Les valeurs du catalogue relèvent de demo-text.
+  const index = new Map(), note = (slot, value, key) => {
+    if (!index.has(slot)) index.set(slot, new Map());
+    index.get(slot).set(value, (index.get(slot).get(value) || new Set()).add(key));
+  };
+  for (const example of LIST) {
+    note("subject", example.subject, example.key);
+    for (const b of example.blocks) if (b.component !== "mail-49") for (const [key, value] of Object.entries(b.values || {})) {
+      const field = M.component(b.component).fields.find(f => f.key === key);
+      if (["text", "alt"].includes(field?.type) && value.trim() && value !== field.default) note(`${b.component} ${key}`, value, example.key);
+    }
   }
-  const isExampleValue = (component, key, value) => !!values.get(`${component} ${key}`)?.has(value);
-  A.Examples = Object.freeze({list: LIST, get, build, isExampleValue});
+  // Un libellé court peut être tapé par l’usager : un exemple n’est retenu que si le document en garde un texte long
+  // (au moins 40 caractères) ou au moins trois textes. Seuls les champs de ces exemples sont alors signalés.
+  const SPECIFIC = 40, ENOUGH = 3;
+  function copied(doc) {
+    const hits = [], look = (slot, value) => typeof value === "string" && index.get(slot)?.get(value);
+    if (look("subject", doc.subject)) hits.push({block: null, key: "subject", value: doc.subject, examples: look("subject", doc.subject)});
+    for (const b of doc.blocks) for (const [key, value] of Object.entries(b.values)) { const examples = look(`${b.component} ${key}`, value); if (examples) hits.push({block: b.id, key, value, examples}); }
+    const kept = new Set(LIST.map(e => e.key).filter(key => { const own = hits.filter(h => h.examples.has(key)); return own.length >= ENOUGH || own.some(h => h.value.length >= SPECIFIC); }));
+    return hits.filter(h => [...h.examples].some(key => kept.has(key))).map(({block, key}) => ({block, key}));
+  }
+  A.Examples = Object.freeze({list: LIST, get, build, copied});
 })();

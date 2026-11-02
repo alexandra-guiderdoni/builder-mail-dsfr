@@ -212,7 +212,19 @@ test('une copie d’exemple non modifiée signale ses textes d’exemple ; un te
   const doc = MailBuilder.Examples.build('information'), title = doc.blocks.findIndex(b => b.component === 'mail-05');
   const found = C.warnings(doc, ok).filter(w => w.rule === 'example-text');
   assert.ok(found.some(w => w.block === doc.blocks[title].id && w.field === 'field-f0' && /texte d’exemple inchangé/.test(w.message)), JSON.stringify(found));
-  assert.ok(!found.some(w => w.block === doc.blocks[0].id), 'l’en-tête garde les valeurs du catalogue, signalées par demo-text');
+  assert.ok(!found.some(w => w.block === doc.blocks[0].id && w.field !== 'subject'), 'l’en-tête garde les valeurs du catalogue, signalées par demo-text');
   doc.blocks[title].values.f0 = 'Titre réécrit par le service';
   assert.ok(!C.warnings(doc, ok).some(w => w.rule === 'example-text' && w.block === doc.blocks[title].id));
+});
+// #202, revues Codex et ShipGuard : un libellé générique tapé hors exemple n’est pas signalé ; l’objet d’exemple resté tel quel l’est.
+test('example-text : pas de faux positif sur des libellés génériques, objet d’exemple signalé', () => {
+  const own = M.create('Départ', [index('mail-02'), index('mail-05'), index('mail-19'), index('mail-49')]);
+  own.blocks[1].values.f0 = 'Revue de presse'; own.blocks[2].values.f0 = 'À la une';
+  Object.assign(own.blocks[3].values, {f0: 'Si vous ne souhaitez plus recevoir ces messages,', f2: 'désabonnez-vous de la liste.'});
+  assert.deepEqual(C.warnings(own, ok).filter(w => w.rule === 'example-text'), []);
+  const copy = MailBuilder.Examples.build('lettre');
+  for (const block of copy.blocks) for (const field of M.component(block.component).fields) if (field.type === 'text' && block.values[field.key]) block.values[field.key] = `Texte du service ${field.key}`;
+  const found = C.warnings(copy, ok).filter(w => w.rule === 'example-text');
+  assert.deepEqual(found.map(w => w.field), ['subject'], JSON.stringify(found));
+  assert.match(found[0].message, /objet/i);
 });

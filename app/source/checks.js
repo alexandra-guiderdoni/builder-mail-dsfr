@@ -67,7 +67,7 @@
     ];
   }
   function warnings(value, weight) {
-    const found = [];
+    const found = [], fromExamples = A.Examples?.copied(value) || [];
     value.blocks.forEach((block, index) => {
       const definition = M.component(block.component), name = `Bloc ${index + 1} « ${definition.label} »`;
       const add = (rule, field, detail) => { if (!found.some(w => w.rule === rule && w.block === block.id)) found.push({rule, block: block.id, field, message: `${name} : ${detail}`}); };
@@ -81,7 +81,7 @@
       });
       if (unchanged.length) add("demo-text", `field-${unchanged[0].key}`, `valeur de démonstration du catalogue inchangée (${unchanged.map(f => f.label).join(", ")}).`);
       // (2 bis) Texte d’un exemple embarqué resté tel quel (#202) ; ses liens relèvent déjà des domaines de démonstration.
-      const copied = definition.fields.filter(f => ["text", "alt"].includes(f.type) && A.Examples?.isExampleValue(block.component, f.key, block.values[f.key]));
+      const copied = definition.fields.filter(f => fromExamples.some(h => h.block === block.id && h.key === f.key));
       if (copied.length) add("example-text", `field-${copied[0].key}`, `texte d’exemple inchangé (${copied.map(f => f.label).join(", ")}) : remplacez-le par votre contenu.`);
       for (const link of items) {
         const real = hostOf(link.url), shown = real && shownHosts(link.label).find(host => !sameSite(real, host));
@@ -90,6 +90,7 @@
       for (const link of items) if (BIDI.test(link.url)) add("bidi", link.urlField, "caractère de contrôle bidirectionnel dans l’adresse du lien.");
       for (const link of items) { const host = hostOf(link.url); if (host && mixedScripts(host)) add("mixed-script", link.urlField, `le domaine ${decodeHost(host)} mélange plusieurs alphabets.`); }
     });
+    if (fromExamples.some(h => h.key === "subject") && value.blocks.length) found.push({rule: "example-text", block: value.blocks[0].id, field: "subject", message: "Objet du courriel : objet d’exemple inchangé : remplacez-le par le vôtre."});
     if (weight && weight.level !== "ok" && value.blocks.length) {
       const target = weight.target, block = value.blocks.find(b => b.id === target?.block) || value.blocks[0];
       const first = M.component(block.component).fields.find(f => f.type === "text") || M.component(block.component).fields[0];
