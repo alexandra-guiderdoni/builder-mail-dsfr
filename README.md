@@ -47,6 +47,8 @@ npm test
 
 Les tests navigateur nécessitent le Chromium de la version Playwright épinglée. La [maintenance](docs/MAINTENANCE.md) décrit les sources, les prérequis, la recette Firefox, le stockage et la procédure de mise à jour.
 
+Le skill d’agent [`newsletter-contribution`](.claude/skills/newsletter-contribution/SKILL.md) explique le builder, aide à choisir les blocs et fabrique des compositions rééditables avec son moteur natif. `npm test` exécute aussi ses tests, qui éprouvent son contrat avec le builder : clés et types des champs, gabarits, fonctions utilisées et versions de composition. Une évolution qui casse ce contrat met à jour les références du skill et `assets/builder-contract.json` dans le même commit.
+
 ## Sources et périmètre
 
 - [Cadrage confirmé](docs/cadrage-source.md) et [spécification](SPECIFICATION.md) : intention et contraintes.

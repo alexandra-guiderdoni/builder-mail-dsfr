@@ -19,6 +19,10 @@ test('aucun contournement ne laisse la publication passer malgré un échec', ()
   assert.doesNotMatch(jobs.tests, /^\s+if:/m);
 });
 
+test('le job de tests reçoit l’historique dont le skill newsletter a besoin (#197)', () => {
+  assert.match(jobs.tests, /^\s+fetch-depth: 0$/m);
+});
+
 test('le job de tests ne reçoit aucun droit de publication', () => {
   assert.doesNotMatch(jobs.tests, /pages: write|id-token: write/);
 });

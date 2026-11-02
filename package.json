@@ -5,7 +5,7 @@
   "scripts": {
     "build": "python3 scripts/build_app.py",
     "check": "python3 scripts/check_provenance.py && python3 scripts/build_app.py --check && python3 scripts/build.py --check",
-    "test": "node --test --test-concurrency=1 tests/*.test.cjs",
+    "test": "node --test --test-concurrency=1 tests/*.test.cjs .claude/skills/newsletter-contribution/tests/*.test.cjs",
     "test:engines": "node tests/run-engines.cjs"
   },
   "devDependencies": {

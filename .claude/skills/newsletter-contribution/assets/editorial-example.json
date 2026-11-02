@@ -1,0 +1,33 @@
+{
+  "name": "Template éditorial — démonstration",
+  "subject": "La lettre — contenu de démonstration",
+  "service": "SERVICE ÉMETTEUR",
+  "title": "REVUE DE PRESSE",
+  "subtitle": "L’essentiel de l’actualité · date de l’édition",
+  "intro": "Exemple de structure à remplacer par vos contenus. Bonne lecture !",
+  "sections": [
+    {
+      "title": "01 · PREMIÈRE RUBRIQUE",
+      "articles": [
+        {"title": "Premier titre fourni pour cette rubrique", "url": "https://example.org/article-1", "source": "Source de démonstration", "date": "Date fournie", "crd": true},
+        {"title": "Deuxième titre, volontairement plus long pour observer le retour à la ligne dans la colonne de lecture", "url": "https://example.org/article-2", "source": "Autre source", "date": "Date fournie"}
+      ]
+    },
+    {
+      "title": "02 · SECONDE RUBRIQUE",
+      "articles": [
+        {"title": "Troisième titre fourni pour cette rubrique", "url": "https://example.org/article-3", "source": "Source de démonstration", "date": "Date fournie"}
+      ]
+    }
+  ],
+  "footerNote": "Revue de presse · périodicité fournie\nMention de diffusion fournie",
+  "signature": "Équipe émettrice\nService et bureau fournis",
+  "footer": {
+    "prompt": "Vous souhaitez gérer votre abonnement ? Vous avez des questions ?",
+    "links": [
+      {"url": "mailto:subscribe@example.org?subject=Abonnement", "label": "→ S’abonner"},
+      {"url": "mailto:unsubscribe@example.org?subject=Desabonnement", "label": "→ Se désabonner"},
+      {"url": "mailto:contact@example.org?subject=Question", "label": "→ Nous contacter"}
+    ]
+  }
+}

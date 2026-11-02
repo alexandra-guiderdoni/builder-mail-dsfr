@@ -1,5 +1,12 @@
 # Historique des livraisons
 
+## 2 novembre 2026 — Skill d’agent newsletter versionné avec le builder (#197)
+
+- Outillage d’agent seulement, sans changement de l’application. Le skill `newsletter-contribution` rejoint ce dépôt (origine : `5eb43a046` du dépôt de travail de son auteur). Ses empreintes figées au 23 octobre bloquaient toute fabrication (10 tests sur 66 en échec) à cause du renommage des libellés (#88) et de l’empreinte de fichiers sources entiers.
+- Le contrat ne retient plus que ce dont le skill dépend : clés et types des champs, gabarits, titres, liens et noms des composants, fonctions `Model` et `Render` utilisées, versions de composition acceptées et attribuées. Preuves par mutation du builder : un libellé ou une valeur par défaut modifiés passent ; un gabarit modifié, une version 3 acceptée, une fonction retirée ou un libellé d’interface cité renommé échouent.
+- Références mises à jour pour les images par adresse HTTPS et la version 2 (#192), le contrôle avant copie ou téléchargement (#36) et le HTML téléchargé produit par `Render.exportHtml` (#117). Les tests navigateur du skill passent ce contrôle explicitement.
+- `npm test` et la CI exécutent les 73 tests du skill, dont le refus d’un builder antérieur réel extrait de l’historique ; la CI récupère donc l’historique complet.
+
 ## 2 novembre 2026 — Répétition CI du test modal (#173)
 
 - Observation seulement, sans changement de l’application ni de la publication. L’échec modal survenait environ une fois sur 20 exécutions de CI : quatre exécutions vertes ne départagent rien. Un workflow manuel, sans droit de publication, rejoue le seul fichier modal le nombre de fois demandé (60 par défaut) et échoue au premier bilan non nul, avec la trace de chaque exécution en échec. Le test journalise désormais le délai d’atteinte de l’aperçu aussi au succès, pour savoir si la garde a dû attendre.
