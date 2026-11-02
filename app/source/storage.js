@@ -37,25 +37,33 @@
       tx.onerror = tx.onabort = () => reject(failure("inaccessible", "Bibliothèque locale inaccessible : lecture impossible ; les données présentes ne sont pas remplacées."));
     });
   }
-  async function save(value, expectedToken) {
+  // Motifs d’un remplacement voulu (#208) : une fenêtre concurrente les annonce au lieu d’un conflit ou d’une disparition.
+  const REASONS = {remplacement: "La bibliothèque a été remplacée par une sauvegarde restaurée dans une autre fenêtre : vos dernières modifications ne sont pas enregistrées ici.",
+    effacement: "La bibliothèque a été effacée dans une autre fenêtre : vos dernières modifications ne sont pas enregistrées ici."};
+  // Une seule transaction contrôle le jeton puis écrit. Une sauvegarde ordinaire garde l’état courant comme état précédent ;
+  // un remplacement le garde ou l’efface selon l’appelant, et marque l’enregistrement de son motif.
+  async function write(value, expectedToken, {reason, keepPrevious = true} = {}) {
     const snapshot = A.Model.copy(A.Model.library(value)), db = await database();
     return new Promise((resolve, reject) => {
       const tx = db.transaction("library", "readwrite"), store = tx.objectStore("library"), previous = store.get("current");
-      const record = {token: crypto.randomUUID(), library: snapshot, app: version}; let conflict, refusal;
+      const record = {token: crypto.randomUUID(), library: snapshot, app: version, ...(reason ? {reason} : {})}; let conflict, refusal;
       previous.onsuccess = () => {
-        if ((previous.result?.token ?? null) !== expectedToken) { conflict = previous.result ? "conflit" : "réinitialisé"; tx.abort(); return; }
-        try { if (previous.result) store.put(previous.result, "previous"); store.put(record, "current"); }
+        const found = previous.result;
+        if ((found?.token ?? null) !== expectedToken) { conflict = !found ? "réinitialisé" : REASONS[found.reason] ? found.reason : "conflit"; tx.abort(); return; }
+        try { if (keepPrevious && found) store.put(found, "previous"); else if (!keepPrevious) store.delete("previous"); store.put(record, "current"); }
         catch (cause) { refusal = cause; tx.abort(); }
       };
       tx.oncomplete = () => resolve(record);
       // Le quota peut être refusé par l’écriture, par la requête ou à la validation de la transaction.
       tx.onerror = tx.onabort = event => {
         const name = (refusal || tx.error || event?.target?.error)?.name;
-        reject(conflict ? failure(conflict, conflict === "conflit" ? "Une autre fenêtre a modifié la bibliothèque : vos dernières modifications ne sont pas enregistrées ici." : "La bibliothèque enregistrée a disparu du stockage : vos dernières modifications restent en mémoire seulement.")
+        reject(conflict ? failure(conflict, conflict === "conflit" ? "Une autre fenêtre a modifié la bibliothèque : vos dernières modifications ne sont pas enregistrées ici." : conflict === "réinitialisé" ? "La bibliothèque enregistrée a disparu du stockage : vos dernières modifications restent en mémoire seulement." : REASONS[conflict])
           : name === "QuotaExceededError" ? failure("saturé", "Espace de stockage saturé : vos dernières modifications ne sont pas enregistrées.")
           : failure("inaccessible", "Bibliothèque locale inaccessible : vos dernières modifications ne sont pas enregistrées."));
       };
     });
   }
-  A.Storage = Object.freeze({load, save, version});
+  const save = (value, expectedToken) => write(value, expectedToken);
+  const replace = (value, expectedToken, {reason, keepPrevious}) => write(value, expectedToken, {reason, keepPrevious});
+  A.Storage = Object.freeze({load, save, replace, reasons: Object.keys(REASONS), version});
 })();

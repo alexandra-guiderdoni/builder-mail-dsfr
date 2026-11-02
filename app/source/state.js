@@ -32,20 +32,23 @@
   // Tant que le travail n’est pas sauvegardé, l’export de secours suit le message d’échec.
   // L’alerte persistante efface sa mémoire seulement quand plus aucune cause (échec ou lecture seule) ne la soutient (#122).
   function failing(value) { failed = value; get("save-rescue").hidden = !value || !!readOnly; if (!value && !readOnly) persistentError = ""; }
-  const readOnlyError = () => new Error(readOnly === "version" ? "Cette fenêtre utilise une autre version de l’atelier : exportez la bibliothèque en mémoire, puis rechargez la page avant de reprendre la main." : readOnly === "stockage" ? "La bibliothèque enregistrée a disparu du stockage : exportez la bibliothèque en mémoire ou reprenez la main pour l’enregistrer de nouveau." : "Une autre fenêtre détient la bibliothèque : cette fenêtre est en lecture seule. Exportez la bibliothèque en mémoire ou reprenez la main.");
+  // Remplacement ou effacement voulus dans une autre fenêtre (#208) : jamais présentés comme une disparition.
+  const WANTED = {remplacement: "La bibliothèque a été remplacée par une sauvegarde restaurée dans une autre fenêtre.", effacement: "La bibliothèque a été effacée dans une autre fenêtre."};
+  const readOnlyError = () => new Error(readOnly === "version" ? "Cette fenêtre utilise une autre version de l’atelier : exportez la bibliothèque en mémoire, puis rechargez la page avant de reprendre la main." : readOnly === "stockage" ? "La bibliothèque enregistrée a disparu du stockage : exportez la bibliothèque en mémoire ou reprenez la main pour l’enregistrer de nouveau." : WANTED[readOnly] ? `${WANTED[readOnly]} Cette fenêtre est en lecture seule : exportez la bibliothèque en mémoire ou reprenez la main.` : "Une autre fenêtre détient la bibliothèque : cette fenêtre est en lecture seule. Exportez la bibliothèque en mémoire ou reprenez la main.");
   function lock(kind, reason) {
     if (readOnly === "version") return;
     A.notice("");
     const editing = get("editing"), late = kind === "version", focused = editing.contains(document.activeElement) || (late && document.activeElement?.dataset.action === "take-over");
     readOnly = kind; editing.disabled = true; get("read-only").hidden = false;
     show(failed ? "Lecture seule : modifications non sauvegardées. Exportez votre bibliothèque." : "Lecture seule : cette fenêtre n’enregistre plus rien.", true); get("save-rescue").hidden = true;
-    get("read-only-message").textContent = `${reason} Cette fenêtre n’enregistre plus rien. ${late ? "Exportez la bibliothèque en mémoire, puis rechargez cette page avant de reprendre la main." : kind === "stockage" ? "Exportez la bibliothèque en mémoire pour la conserver, ou reprenez la main : cette bibliothèque sera enregistrée de nouveau dans ce navigateur." : "Exportez la bibliothèque en mémoire pour la conserver, ou reprenez la main : les compositions modifiées ici seront ajoutées en copies, sans remplacer celles de l’autre fenêtre."}`;
+    get("read-only-message").textContent = `${reason} Cette fenêtre n’enregistre plus rien. ${late ? "Exportez la bibliothèque en mémoire, puis rechargez cette page avant de reprendre la main." : kind === "stockage" ? "Exportez la bibliothèque en mémoire pour la conserver, ou reprenez la main : cette bibliothèque sera enregistrée de nouveau dans ce navigateur." : WANTED[kind] ? `Exportez la bibliothèque en mémoire pour la conserver, ou reprenez la main : les compositions modifiées ici seront ajoutées en copies à la bibliothèque ${kind === "effacement" ? "effacée" : "remplacée"}.` : "Exportez la bibliothèque en mémoire pour la conserver, ou reprenez la main : les compositions modifiées ici seront ajoutées en copies, sans remplacer celles de l’autre fenêtre."}`;
     get("read-only").querySelector("[data-action=take-over]").hidden = late; get("read-only").querySelector("[data-action=reload-page]").hidden = !late;
     if (focused) get("read-only-title").focus();
   }
   function storageLock(cause) {
     if (cause.storage === "conflit") lock("conflit", "Une autre fenêtre a enregistré la bibliothèque après la dernière sauvegarde de celle-ci.");
     else if (cause.storage === "réinitialisé") lock("stockage", "La bibliothèque enregistrée a disparu du stockage de ce navigateur.");
+    else if (WANTED[cause.storage]) lock(cause.storage, WANTED[cause.storage]);
   }
   // Saisies d’URL en cours : conservées hors du modèle tant qu’elles sont invalides, jamais diffusées.
   const draftKey = (doc, block, input) => `${doc}|${block}|${input}`;
@@ -181,6 +184,30 @@
     }
     finally { restoring = false; pending--; get("workspace").disabled = false; }
   }
+  // Remplacement ou effacement de toute la bibliothèque (#208), seul chemin pour la restauration (#200) et l’effacement (#201).
+  // Rien ne change en mémoire tant que l’écriture n’est pas validée ; les annulations, brouillons et champs invalides de
+  // l’ancien état sont ensuite vidés, et les autres fenêtres reçoivent le motif. Une bibliothèque enregistrée illisible n’est
+  // jamais écrasée : ses données brutes doivent d’abord être exportées.
+  async function replaceLibrary(library, {reason, keepPrevious = false}) {
+    if (!WANTED[reason]) throw new Error("Motif de remplacement inconnu.");
+    if (readOnly) throw readOnlyError();
+    guardEdit();
+    if (A.recoveryOnly) throw new Error(absent ? "Aucun stockage n’est disponible dans ce navigateur : rien ne peut être remplacé ni effacé." : "La bibliothèque enregistrée ne peut pas être relue : exportez d’abord les données enregistrées brutes, dans « Fichiers et récupération », avant de la remplacer ou de l’effacer.");
+    const next = M.copy(M.library(library));
+    restoring = true; pending++; get("workspace").disabled = true;
+    try {
+      await queue;
+      const saved = await A.Storage.replace(next, token, {reason, keepPrevious});
+      token = saved.token; base = A.library = next; revision++; failing(false);
+      A.removed.clear(); A.moved?.clear(); A.drafts.clear(); A.invalid.clear(); A.UI.clearFieldErrors();
+      A.selected = A.doc().blocks[0]?.id || null;
+      channel?.postMessage({type: reason, token: saved.token});
+      A.UI.refresh(); A.error("");
+      show("Bibliothèque sauvegardée dans ce navigateur.", true);
+      return saved;
+    } catch (cause) { storageLock(cause); throw cause; }
+    finally { restoring = false; pending--; get("workspace").disabled = false; }
+  }
   // Le jeton du stockage n'est connu qu'après une lecture réussie. Après un refus initial, une restauration écrirait avec un jeton nul
   // et signalerait un faux conflit ; relire le jeton pour forcer l'écriture écraserait une autre fenêtre. La page n'écrit donc rien :
   // elle propose d'exporter le travail temporaire, puis de recharger pour relire la bibliothèque enregistrée avec son vrai jeton.
@@ -263,7 +290,9 @@
     } finally { restoring = false; pending--; get("workspace").disabled = false; }
   }
   channel?.addEventListener("message", event => {
-    if (!A.ready || event.data?.type !== "takeover" || event.data.token === token) return;
+    if (!A.ready || event.data?.token === token) return;
+    if (WANTED[event.data?.type]) { lock(event.data.type, WANTED[event.data.type]); setPersistentError(`${WANTED[event.data.type]} Cette fenêtre passe en lecture seule.`); return; }
+    if (event.data?.type !== "takeover") return;
     lock("reprise", "Une autre fenêtre a repris la main sur la bibliothèque."); setPersistentError("Une autre fenêtre a repris la main sur la bibliothèque : cette fenêtre passe en lecture seule.");
   });
   function outdated() { lock("version", "Une nouvelle version de l’atelier est active dans une autre fenêtre."); setPersistentError("Une nouvelle version de l’atelier est active dans une autre fenêtre : cette fenêtre passe en lecture seule."); }
@@ -280,5 +309,5 @@
   async function flush() { await settle(); if (failed || pending || A.recoveryOnly) throw new Error("La sauvegarde doit réussir avant de recharger l’application."); }
   const saved = () => !failed && !pending && !A.recoveryOnly;
   const restoreErrorFromState = () => { if ((failed || readOnly) && persistentError) A.error(persistentError); };
-  A.State = Object.freeze({guard, guardEdit, setDraft, dropDraft, dropFooterDraft, change, save, start, restoreLegacy, recover, settle, flush, saved, takeOver, outdated, reload, exported, noticeTicket: () => noticeTicket, restoreErrorFromState});
+  A.State = Object.freeze({guard, guardEdit, setDraft, dropDraft, dropFooterDraft, change, save, start, restoreLegacy, recover, replaceLibrary, settle, flush, saved, takeOver, outdated, reload, exported, noticeTicket: () => noticeTicket, restoreErrorFromState});
 })();

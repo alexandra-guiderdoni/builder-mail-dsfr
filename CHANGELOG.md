@@ -1,5 +1,15 @@
 # Historique des livraisons
 
+## 2 novembre 2026 - Point d’entrée commun pour remplacer ou effacer la bibliothèque (#208)
+
+- Fondation technique de la restauration (#200) et de l’effacement (#201), sans nouveau bouton :
+  - **Écriture d’abord :** `A.State.replaceLibrary` écrit la nouvelle bibliothèque en une seule transaction, avec contrôle du jeton, puis seulement l’affiche. En cas d’échec (quota, stockage indisponible, jeton périmé), mémoire et stockage restent strictement inchangés.
+  - **État précédent :** il est gardé pour une restauration et effacé pour un effacement, si bien que « Restaurer l’état précédent » ne retrouve plus rien.
+  - **Mémoires vidées :** les annulations de retrait, les brouillons et les champs invalides de l’ancien état.
+  - **Autres fenêtres :** elles passent en lecture seule avec le motif, « remplacée » ou « effacée », jamais « disparu ». Le passage est immédiat par diffusion, ou au plus tard à leur prochaine modification dans un navigateur sans `BroadcastChannel`.
+  - **Bibliothèque illisible :** une bibliothèque enregistrée illisible n’est jamais écrasée ; l’atelier demande d’exporter d’abord ses données brutes.
+- Quatre tests navigateur. Une mutation qui affiche avant d’écrire est détectée.
+
 ## 2 novembre 2026 - Grille DSFR des champs et ANDI
 
 - Grille DSFR dans toute l’interface, d’abord dans « Modèles et identité » :
