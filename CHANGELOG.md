@@ -10,7 +10,7 @@
 - **Identité :** l’identité reste celle du catalogue (« Votre service »), et les seules images sont les logos Marianne.
 - **Liens :** les liens visent des domaines de démonstration.
 - **Contrôle avant copie :** une nouvelle règle (`example-text`) signale les textes d’exemple restés tels quels, objet du courriel compris. Avec les liens de démonstration et « Votre service », une copie non personnalisée est donc signalée avant l’envoi.
-  - Un libellé court qu’un service peut taper lui-même (« Revue de presse », « À la une ») n’est pas signalé seul. Un exemple n’est retenu que si le document en garde un texte d’au moins 40 caractères ou au moins trois textes.
+  - Un libellé court qu’un service peut taper lui-même (« Revue de presse », « À la une ») n’est pas signalé seul. Un exemple n’est retenu que si le document en garde un texte d’au moins 40 caractères ou au moins trois textes distincts : un même libellé répété ne compte qu’une fois.
   - La formule de désabonnement, réutilisable, n’est jamais signalée.
 - **Départs allégés :** les départs « Lettre d’information » et « Invitation » prennent la structure des exemples.
   - « Deux cartes d’information » et « Titre principal avec image », qui exigeaient une illustration, sont remplacés.
@@ -21,9 +21,9 @@
 - L’aide de « Tout effacer » parle de newsletters et précise que les exemples restent proposés.
 - Le skill `newsletter-contribution` charge et teste les exemples.
 - **Revue :** Codex et un audit ShipGuard réduit ont relu le lot. Leurs constats sont corrigés : double clic, faux positifs, objet non signalé, libération des aperçus si l’ouverture du dialogue échoue, divergence du `seed`, aperçu hors de la tabulation.
-- Dix tests ajoutés :
+- Onze tests ajoutés :
   - accueil et aperçu, copie indépendante et « Tout effacer », poids, départs sans illustration requise, version web hors connexion, double clic ;
-  - deux tests de la règle de contrôle, le test du skill et celui du `seed`.
+  - trois tests de la règle de contrôle, le test du skill et celui du `seed`.
 
   Trois mutations sont détectées : la règle désactivée, le verrou de création retiré, le seuil anti-faux-positif retiré.
 

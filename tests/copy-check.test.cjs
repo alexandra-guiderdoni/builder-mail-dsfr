@@ -228,3 +228,9 @@ test('example-text : pas de faux positif sur des libellés génériques, objet d
   assert.deepEqual(found.map(w => w.field), ['subject'], JSON.stringify(found));
   assert.match(found[0].message, /objet/i);
 });
+// Revue Codex : un même libellé répété ne compte qu’une fois pour le seuil de trois textes.
+test('example-text : un libellé d’exemple répété dans plusieurs blocs ne suffit pas', () => {
+  const own = M.create('Lettre', [index('mail-31'), index('mail-31'), index('mail-31')]);
+  own.blocks.forEach((b, i) => Object.assign(b.values, {f2: 'Webinaire', f3: `https://www.exemple-info.gouv.fr/w${i}`, f4: `Titre ${i}`, f5: 'Service', f6: 'Date'}));
+  assert.deepEqual(C.warnings(own, ok).filter(w => w.rule === 'example-text'), []);
+});

@@ -68,13 +68,13 @@
     }
   }
   // Un libellé court peut être tapé par l’usager : un exemple n’est retenu que si le document en garde un texte long
-  // (au moins 40 caractères) ou au moins trois textes. Seuls les champs de ces exemples sont alors signalés.
+  // (au moins 40 caractères) ou au moins trois textes distincts. Seuls les champs de ces exemples sont alors signalés.
   const SPECIFIC = 40, ENOUGH = 3;
   function copied(doc) {
     const hits = [], look = (slot, value) => typeof value === "string" && index.get(slot)?.get(value);
-    if (look("subject", doc.subject)) hits.push({block: null, key: "subject", value: doc.subject, examples: look("subject", doc.subject)});
-    for (const b of doc.blocks) for (const [key, value] of Object.entries(b.values)) { const examples = look(`${b.component} ${key}`, value); if (examples) hits.push({block: b.id, key, value, examples}); }
-    const kept = new Set(LIST.map(e => e.key).filter(key => { const own = hits.filter(h => h.examples.has(key)); return own.length >= ENOUGH || own.some(h => h.value.length >= SPECIFIC); }));
+    if (look("subject", doc.subject)) hits.push({block: null, key: "subject", value: doc.subject, signature: "subject", examples: look("subject", doc.subject)});
+    for (const b of doc.blocks) for (const [key, value] of Object.entries(b.values)) { const examples = look(`${b.component} ${key}`, value); if (examples) hits.push({block: b.id, key, value, signature: `${b.component} ${key} ${value}`, examples}); }
+    const kept = new Set(LIST.map(e => e.key).filter(key => { const own = hits.filter(h => h.examples.has(key)); return new Set(own.map(h => h.signature)).size >= ENOUGH || own.some(h => h.value.length >= SPECIFIC); }));
     return hits.filter(h => [...h.examples].some(key => kept.has(key))).map(({block, key}) => ({block, key}));
   }
   A.Examples = Object.freeze({list: LIST, get, build, copied});
