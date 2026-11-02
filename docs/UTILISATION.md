@@ -47,6 +47,8 @@ Les actions d’une entrée visent cette entrée, même si une autre composition
 - « Exporter » télécharge cette composition JSON avec ses images.
 - « Supprimer » demande confirmation ; annuler laisse la composition intacte. Si la dernière entrée est retirée, une nouvelle composition avec les six blocs de départ est créée pour poursuivre.
 
+« Tout effacer », en bas de l’accueil dans « Repartir de zéro », supprime toutes les compositions, modèles et identités de ce navigateur et ramène l’atelier à l’état d’une première ouverture. La fenêtre de confirmation propose d’exporter d’abord la bibliothèque. Rien n’est récupérable ensuite dans l’atelier, pas même par « Restaurer l’état précédent ». L’atelier installé et son fonctionnement hors connexion sont conservés.
+
 Le cache web conserve le programme, tandis que la bibliothèque conserve les compositions. **Changer d’édition ne nécessite aucun nettoyage du cache.** Pour transporter ou sauvegarder les newsletters, utiliser l’export de bibliothèque dans « Fichiers et récupération », disponible depuis l’accueil et l’éditeur. La bibliothèque reste propre au navigateur et à son origine ; elle n’est pas synchronisée entre postes.
 
 ## Images et identité du service

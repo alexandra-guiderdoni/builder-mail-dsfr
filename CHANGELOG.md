@@ -1,5 +1,16 @@
 # Historique des livraisons
 
+## 2 novembre 2026 - Tout effacer (#201)
+
+- En bas de « Mes newsletters », la zone « Repartir de zéro » propose « Tout effacer ». Une simple fenêtre indique ce qui sera supprimé, propose d’exporter d’abord la bibliothèque, puis demande confirmation.
+- L’effacement passe par le point d’entrée commun (#208) :
+  - aucun état précédent n’est gardé, si bien que « Restaurer l’état précédent » ne retrouve rien ;
+  - les annulations en mémoire sont vidées ;
+  - les autres fenêtres passent en lecture seule avec le motif « effacée » ;
+  - une bibliothèque enregistrée illisible n’est jamais effacée.
+- L’état obtenu est identique à celui d’un navigateur neuf, y compris après rechargement : même composition de départ et même message. Le cache hors connexion de la version web reste en place.
+- Fenêtre de restauration (#200) : description reformulée. Deux tests navigateur ajoutés, dont un sur la version web hors connexion ; guide complété.
+
 ## 2 novembre 2026 - Restaurer une sauvegarde de la bibliothèque (#200)
 
 - Dans « Fichiers et récupération », « Restaurer une sauvegarde de la bibliothèque » remplace toutes les compositions, modèles et identités par celles d’un export de bibliothèque, sans doublon. L’import qui ajoute reste inchangé.

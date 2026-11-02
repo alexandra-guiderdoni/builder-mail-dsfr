@@ -14,3 +14,5 @@
 @media(max-width:991px) { .library-panel>.app-panel { grid-template-columns:1fr; } }
 @media(max-width:575px) { .home-create { align-items:stretch; flex-direction:column; } .home-create>div { min-width:0; width:100%; } .app-panel { padding:16px; } #library-dialog,#identity-dialog,#check-dialog { padding:24px; } }
 .check-list { padding-left:0; list-style:none; } .check-list li { padding:12px 0; border-top:1px solid var(--border-default-grey); } .check-list p { margin:0 0 8px; overflow-wrap:anywhere; }
+/* « Repartir de zéro » (#201) : à l’écart de la liste, séparé par un trait. */
+.reset-zone { margin-top:2.5rem; padding-top:1.5rem; border-top:1px solid var(--border-default-grey); }

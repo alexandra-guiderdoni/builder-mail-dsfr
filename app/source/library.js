@@ -136,7 +136,7 @@
     if (raw?.schema !== "dsfr-mail/library") throw new Error(["dsfr-mail/document", "builder-mail-prototype/1"].includes(raw?.schema) ? "Ce fichier contient une seule composition : utilisez « Importer une composition ou une bibliothèque JSON » pour l’ajouter. Votre bibliothèque est inchangée." : "Ce fichier n’est pas un export de bibliothèque de l’atelier. Votre bibliothèque est inchangée.");
     const incoming = await A.Imports.prepare(text);
     restoring = {library: incoming.value, name: file.name};
-    get("restore-dialog-description").textContent = `Le fichier « ${file.name} » contient ${counted(incoming.value)}. Il remplacera les ${counted(A.library)} de ce navigateur. La bibliothèque actuelle restera récupérable par « Restaurer l’état précédent ». Exportez-la d’abord pour en garder un fichier.`;
+    get("restore-dialog-description").textContent = `Le fichier « ${file.name} » contient ${counted(incoming.value)}. Il remplacera le contenu actuel de ce navigateur : ${counted(A.library)}. La bibliothèque actuelle restera récupérable par « Restaurer l’état précédent ». Exportez-la d’abord pour en garder un fichier.`;
     get("restore-dialog-error").textContent = "";
     get("restore-dialog").showModal(); get("restore-cancel").focus();
   }
@@ -158,6 +158,29 @@
       A.notice(`Sauvegarde « ${target.name} » restaurée : ${counted(A.library)}. La bibliothèque précédente reste récupérable par « Restaurer l’état précédent ».`);
     } catch (cause) { get("restore-dialog-error").textContent = cause.message; }
     finally { restoringBusy = false; get("restore-confirm").disabled = get("restore-cancel").disabled = get("restore-export").disabled = false; }
+  });
+  // Tout effacer (#201) : la bibliothèque revient à l’état d’un navigateur neuf, sans état précédent récupérable,
+  // par le point d’entrée commun (#208). Le programme hors connexion n’est pas touché.
+  let resetBusy = false;
+  get("library-home").addEventListener("click", event => {
+    if (!event.target.closest("[data-action=reset-library]")) return;
+    attempt(async () => {
+      A.State.guard();
+      get("reset-dialog-description").textContent = `Tout le contenu de ce navigateur sera supprimé : ${counted(A.library)}. Il ne pourra pas être récupéré dans l’atelier. Exportez-le d’abord pour en garder un fichier.`;
+      get("reset-dialog-error").textContent = ""; get("reset-dialog").showModal(); get("reset-cancel").focus();
+    });
+  });
+  get("reset-export").addEventListener("click", () => { try { A.Actions["export-library"](); } catch (cause) { get("reset-dialog-error").textContent = cause.message; } });
+  get("reset-cancel").addEventListener("click", () => get("reset-dialog").close());
+  get("reset-dialog").addEventListener("cancel", event => { if (resetBusy) event.preventDefault(); });
+  get("reset-form").addEventListener("submit", async event => {
+    event.preventDefault(); if (resetBusy) return;
+    resetBusy = true; get("reset-confirm").disabled = get("reset-cancel").disabled = get("reset-export").disabled = true; A.notice("");
+    try {
+      await A.State.replaceLibrary(M.initial(), {reason: "effacement", keepPrevious: false});
+      get("reset-dialog").close(); refresh(); show(false); get("home-title").focus();
+    } catch (cause) { get("reset-dialog-error").textContent = cause.message; }
+    finally { resetBusy = false; get("reset-confirm").disabled = get("reset-cancel").disabled = get("reset-export").disabled = false; }
   });
   A.Library = Object.freeze({subjectNotice, refresh, open, home, duplicate, ask, askRemoval});
 })();

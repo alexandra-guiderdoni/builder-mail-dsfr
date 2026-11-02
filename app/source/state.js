@@ -8,7 +8,7 @@
   // Une fenêtre sans la main reste en lecture seule ; base est la bibliothèque relue ou écrite sous son jeton.
   let readOnly = null, base, exportedRevision = -1, leaving = false;
   const channel = window.BroadcastChannel ? new BroadcastChannel("builder-mail-dsfr-library") : null;
-  const QUIET_MS = 1000;
+  const QUIET_MS = 1000, FRESH = "Aucune sauvegarde : créez ou personnalisez une composition.";
   const cancelSuccess = () => { clearTimeout(successTimer); successTimer = null; };
   const say = text => { cancelSuccess(); get("save-announce").textContent = text; };
   const show = (text, now = false) => { get("save-state").textContent = text; if (now) say(text); };
@@ -135,7 +135,8 @@
       token = record?.token ?? null; opened = true;
       if (record) A.library = M.copy(M.library(record.library));
       A.selected = A.doc().blocks[0]?.id || null;
-      show(record ? "Bibliothèque restaurée depuis ce navigateur." : "Aucune sauvegarde : créez ou personnalisez une composition.", true);
+      // Après « Tout effacer » (#201), l’état visible est celui d’un navigateur neuf.
+      show(record && record.reason !== "effacement" ? "Bibliothèque restaurée depuis ce navigateur." : FRESH, true);
     } catch (cause) {
       failing(true); A.recoveryOnly = true; absent = cause.storage === "absent";
       const legacy = record && A.LegacyRecovery?.offer(record);
@@ -203,7 +204,7 @@
       A.selected = A.doc().blocks[0]?.id || null;
       channel?.postMessage({type: reason, token: saved.token});
       A.UI.refresh(); A.error("");
-      show("Bibliothèque sauvegardée dans ce navigateur.", true);
+      show(reason === "effacement" ? FRESH : "Bibliothèque sauvegardée dans ce navigateur.", true);
       return saved;
     } catch (cause) { storageLock(cause); throw cause; }
     finally { restoring = false; pending--; get("workspace").disabled = false; }
