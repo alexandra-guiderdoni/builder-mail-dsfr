@@ -1,0 +1,45 @@
+name: Répéter le test modal (#173)
+
+# Observation de l'intermittence #173 : rejoue le seul fichier modal, sans publication.
+on:
+  workflow_dispatch:
+    inputs:
+      repetitions:
+        description: Nombre d’exécutions du fichier de test modal
+        required: true
+        default: '60'
+
+permissions:
+  contents: read
+
+jobs:
+  repetition:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    container:
+      image: mcr.microsoft.com/playwright:v1.64.1-noble@sha256:47b510dd9230bf0b9bfc9b20102241e577ea7a99334ab4c3ca19f19770e9b8ea
+      options: --init --ipc=host
+    steps:
+      - name: Lire les sources
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Fixer la version de Node
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+        with:
+          node-version: '24.22.1'
+      - name: Installer Playwright depuis le verrou
+        run: npm ci --ignore-scripts
+      - name: Répéter le test modal
+        env:
+          REPETITIONS: ${{ inputs.repetitions }}
+        run: |
+          case "$REPETITIONS" in ''|*[!0-9]*) echo "répétitions invalides : $REPETITIONS"; exit 2;; esac
+          mkdir -p repetition
+          failures=0
+          for i in $(seq 1 "$REPETITIONS"); do
+            if node --test --test-reporter=tap tests/modal-background-browser.test.cjs > "repetition/$i.tap" 2>&1; then result=ok; else result=echec; failures=$((failures + 1)); cat "repetition/$i.tap"; fi
+            echo "$i $result $(grep -o '"generation":[0-9]*,"reachedAfter":[0-9]*' "repetition/$i.tap" | tr '\n' ' ')"
+          done
+          echo "bilan : $failures échec(s) sur $REPETITIONS exécutions"
+          test "$failures" -eq 0

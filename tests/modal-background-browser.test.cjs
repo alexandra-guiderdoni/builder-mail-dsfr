@@ -17,7 +17,7 @@ async function reachable(page, frame, generation) {
   }
   return Date.now() - started;
 }
-async function documents(page, generation, previous) {
+async function documents(page, generation, previous, t) {
   const frames = {};
   for (const id of ['preview', 'catalogue-preview']) {
     const element = await page.locator('#' + id).elementHandle();
@@ -55,6 +55,8 @@ async function documents(page, generation, previous) {
   }
   assert.equal(seen.clicks.length, 1, 'un clic par nouveau document' + (missingClick ? ' — ' + JSON.stringify(missingClick) : ''));
   assert.equal(seen.clicks[0].trusted, true);
+  // Délai d'atteinte aussi journalisé au succès : la répétition CI de #173 mesure si la garde a dû attendre.
+  t.diagnostic(JSON.stringify({generation, reachedAfter}));
   return frames;
 }
 
@@ -146,7 +148,7 @@ test('le fond reçoit le geste parent sans sortie, Tab reste modal et chaque fer
     await saved(page); await expand(page, 'Ajouter un composant');
     await page.locator('#catalogue').selectOption('mail-19');
     await page.locator('#catalogue-preview').waitFor({state: 'visible'});
-    let frames = await documents(page, 0);
+    let frames = await documents(page, 0, null, t);
     const expectedHtml = await page.evaluate(() => MailBuilder.Render.exportHtml(MailBuilder.doc()));
     await page.evaluate(types => {
       window.__backgroundTrace = {phase: '', rows: [], dropped: 0, copyCalls: 0};
@@ -211,7 +213,7 @@ test('le fond reçoit le geste parent sans sortie, Tab reste modal et chaque fer
       await page.locator('#check-dialog').waitFor({state: 'hidden'});
       assert.equal(await page.evaluate(() => document.activeElement.dataset.action), 'export-mail', 'focus rendu au déclencheur');
       assert.equal(downloads, cycle);
-      frames = await documents(page, cycle + 1, frames);
+      frames = await documents(page, cycle + 1, frames, t);
     }
     const trace = await page.evaluate(() => window.__backgroundTrace);
     assert.equal(trace.copyCalls, 0); assert.equal(trace.dropped, 0); assert.equal(downloads, 1);

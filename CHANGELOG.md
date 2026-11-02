@@ -1,5 +1,9 @@
 # Historique des livraisons
 
+## 2 novembre 2026 — Répétition CI du test modal (#173)
+
+- Observation seulement, sans changement de l’application ni de la publication. L’échec modal survenait environ une fois sur 20 exécutions de CI : quatre exécutions vertes ne départagent rien. Un workflow manuel, sans droit de publication, rejoue le seul fichier modal le nombre de fois demandé (60 par défaut) et échoue au premier bilan non nul, avec la trace de chaque exécution en échec. Le test journalise désormais le délai d’atteinte de l’aperçu aussi au succès, pour savoir si la garde a dû attendre.
+
 ## 1er novembre 2026 — Contrôle positif de l’aperçu après la modale (#173)
 
 - Tests seulement, sans changement de l’application. La récidive de la CI 41322924838 montre le clic de contrôle reçu par l’iframe hôte, dans le parent, alors que le nouveau document d’aperçu avait moins de 112 ms. Avant ce clic, une garde survole l’aperçu jusqu’à ce qu’un mouvement de pointeur de confiance atteigne ce document, dans une limite de 2 s qui échoue avec diagnostic ; le geste souris d’origine est conservé. Un témoin négatif (aperçu jamais atteint) et une atteinte tardive sont testés. Aucune reproduction locale de l’intermittence : l’effet sur la CI reste à observer.
