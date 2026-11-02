@@ -41,7 +41,7 @@ test('SNUM #46 : un bloc mail-31 sans image par article, rubriques V519 numérot
     assert.equal(block.values.f6, `${article.fact}\nÀ retenir : ${article.takeaway}\nPour le SNUM : ${article.snum_interest}\nMots-clés : ${article.keywords.join(' · ')}`);
   }
   assert.equal(articles.filter(b => b.values.f5.startsWith('Essentiel · ')).length, 2);
-  assert.equal(doc.subject, 'Revue de presse — mardi 16 mars 2027');
+  assert.equal(doc.subject, 'Revue de presse - mardi 16 mars 2027');
   assert.equal(doc.blocks[2].values.f0, 'Édition du mardi 16 mars 2027\n\nVeille du 2 mars 2027 au 15 mars 2027 · 7 articles sélectionnés, dont 2 essentiels.');
   assert.equal(doc.blocks[0].values.f4, 'Service');
   assert.equal(doc.blocks[15].values.f0, 'Sélection d’articles préparée à partir de la Collecte.\n\nL’équipe de veille du Service');

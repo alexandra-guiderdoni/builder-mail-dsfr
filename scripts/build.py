@@ -55,7 +55,7 @@ def build():
         base_csp + "connect-src 'self'; worker-src 'self'; manifest-src 'self'",
     )
     manifest = {
-        "name": "Builder mail DSFR — prototype",
+        "name": "Builder mail DSFR - prototype",
         "short_name": "Mail DSFR",
         "id": "./",
         "start_url": "./",

@@ -3,8 +3,8 @@
   "version": 1,
   "catalogue": "6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278f74858e8cddd6e72af8b",
   "id": "sortie-attendue-46",
-  "name": "Revue de presse — mardi 16 mars 2027",
-  "subject": "Revue de presse — mardi 16 mars 2027",
+  "name": "Revue de presse - mardi 16 mars 2027",
+  "subject": "Revue de presse - mardi 16 mars 2027",
   "blocks": [
     {
       "id": "bloc-01",
@@ -22,7 +22,7 @@
       "id": "bloc-02",
       "component": "mail-05",
       "values": {
-        "f0": "Revue de presse — mardi 16 mars 2027"
+        "f0": "Revue de presse - mardi 16 mars 2027"
       },
       "source": ""
     },

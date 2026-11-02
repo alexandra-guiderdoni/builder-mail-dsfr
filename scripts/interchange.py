@@ -79,7 +79,7 @@ def schema(catalogue):
                 "values": object_schema(fields, component["label"]),
                 "source": text,
             },
-            f"{component['family']} — {component['label']}",
+            f"{component['family']} - {component['label']}",
         )
         reference = {"$ref": f"#/$defs/{key}"}
         definitions[key]["properties"]["sourceLabel"] = {

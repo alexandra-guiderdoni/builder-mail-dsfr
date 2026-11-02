@@ -125,7 +125,7 @@
   let readings = 0; const reading = "Lecture du fichier de travail…";
   // Compteur de reads actifs : seul le PREMIER import pose la notice de lecture et capture le jeton ; les suivants s'empilent
   // sans toucher ni au #notice ni au ticket. Le jeton reste donc stable tant qu'un import est en cours, et une annonce
-  // extérieure posée entre deux imports silencie bien la fin de chacun — plus de ré-autorisation accidentelle par un
+  // extérieure posée entre deux imports silencie bien la fin de chacun - plus de ré-autorisation accidentelle par un
   // import plus récent (#122, correctif Astra sur PR 129).
   let readingTicket = 0;
   get("project-input").addEventListener("change", event => {

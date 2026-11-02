@@ -40,13 +40,13 @@ test('#192 : les 24 champs offrent des commandes nommées et les deux sources',a
   for(const component of components){
    await page.evaluate(index=>MailBuilder.State.change(lib=>{lib.documents.find(d=>d.id===lib.activeId).blocks=MailBuilder.Model.create('Sources',[index]).blocks;}),component.index);
    for(const field of component.fields){
-    const selector=page.getByRole('combobox',{name:'Source — '+field.label,exact:true});assert.equal(await selector.inputValue(),'local');
+    const selector=page.getByRole('combobox',{name:'Source - '+field.label,exact:true});assert.equal(await selector.inputValue(),'local');
     assert.equal(await page.locator(`[data-image-field="${field.key}"]`).isVisible(),true);
     // selectOption exerce change ; le clavier natif nécessite une recette visible séparée.
     await selector.selectOption('remote');
     assert.equal(await selector.inputValue(),'remote');
-    const input=page.getByRole('textbox',{name:'Adresse HTTPS directe — '+field.label,exact:true});assert.equal(await input.isVisible(),true);
-    assert.equal(await page.getByRole('button',{name:'Appliquer l’adresse — '+field.label,exact:true}).isVisible(),true);
+    const input=page.getByRole('textbox',{name:'Adresse HTTPS directe - '+field.label,exact:true});assert.equal(await input.isVisible(),true);
+    assert.equal(await page.getByRole('button',{name:'Appliquer l’adresse - '+field.label,exact:true}).isVisible(),true);
     await selector.selectOption('local');fields++;
    }
   }

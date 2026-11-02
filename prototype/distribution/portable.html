@@ -1,8 +1,8 @@
 <!doctype html>
 <!-- PDG-LARGE-FILE-JUSTIFICATION: prototype distribué autonome, assemblé depuis des sources séparées ; scripts et images incorporés pour le double-clic hors connexion. -->
 <html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-Yfc685I0AxMnTH9v2C3HlHQ1a0XKhvAoOOd8PHkvA4E='; style-src 'unsafe-inline'; img-src data: blob:; frame-src blob:; base-uri 'none'; form-action 'none'; connect-src 'none'; worker-src 'none'"><meta name="theme-color" content="#000091">
-<title>Builder de courriels DSFR — prototype de faisabilité</title><style>:root { color-scheme:light; font:100%/1.5 Arial,Helvetica,sans-serif; color:#161616; background:#f6f6f6; }
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-z3mUto/rOUVFR1VINT0mrTDJ1E3Cx9XmGmp/V1D+2tQ='; style-src 'unsafe-inline'; img-src data: blob:; frame-src blob:; base-uri 'none'; form-action 'none'; connect-src 'none'; worker-src 'none'"><meta name="theme-color" content="#000091">
+<title>Builder de courriels DSFR - prototype de faisabilité</title><style>:root { color-scheme:light; font:100%/1.5 Arial,Helvetica,sans-serif; color:#161616; background:#f6f6f6; }
 * { box-sizing:border-box; }
 body { margin:0; }
 a { color:#000091; }
@@ -291,7 +291,7 @@ small { font-size:.9rem; }
   function fromSnum(input) {
     const packet = window.SnumMail.parse(input), doc = initial();
     doc.service = "SNUM";
-    doc.subject = `Revue de presse — ${packet.edition_date_long}`;
+    doc.subject = `Revue de presse - ${packet.edition_date_long}`;
     doc.blocks = packet.articles.map((article, i) => ({...block("text", `snum-${i}`),
       title: article.title,
       body: `${article.source} · ${article.publication_date_long}\n\n${article.fact}\n\n${article.takeaway}\n\n${article.snum_interest}\n\n${article.keywords.join(" · ")}${article.essential ? "\nEssentiel" : ""}`,

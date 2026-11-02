@@ -31,7 +31,7 @@
     });
   }
   function convert(input) {
-    const packet = window.SnumMail.parse(input), doc = M.create(`Revue de presse — ${packet.edition_date_long}`, [2, 5]);
+    const packet = window.SnumMail.parse(input), doc = M.create(`Revue de presse - ${packet.edition_date_long}`, [2, 5]);
     M.setTexts(doc.blocks[0], [SERVICE]); M.setTexts(doc.blocks[1], [doc.subject]);
     doc.blocks.push(textBlock(19, intro(packet)));
     const groups = new Map();

@@ -35,7 +35,7 @@
     get("identity-dialog-title").textContent = `Appliquer l’identité « ${identity.name} » ?`;
     get("identity-dialog-blocks").replaceChildren(...modified.map(({b, index}) => {
       const definition = M.component(b.component), title = definition.fields.find(f => f.type === "text"), item = document.createElement("li");
-      item.textContent = `${index + 1}. ${definition.label}${title && b.values[title.key] ? ` — ${b.values[title.key].slice(0, 64)}` : ""}`;
+      item.textContent = `${index + 1}. ${definition.label}${title && b.values[title.key] ? ` - ${b.values[title.key].slice(0, 64)}` : ""}`;
       return item;
     }));
     identityDialog.showModal(); get("identity-cancel").focus();

@@ -1,6 +1,6 @@
 /* Le cache concerne uniquement les ressources publiques du prototype, jamais les brouillons. */
 const PREFIX = "builder-mail-prototype-" + encodeURIComponent(self.registration.scope) + "-";
-const CACHE = PREFIX + "61ddec62895690f4";
+const CACHE = PREFIX + "4434eb51476ffa91";
 const FILES = ["./", "./index.html", "./manifest.webmanifest", "./icon.svg"];
 self.addEventListener("install", event => event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(FILES))));
 self.addEventListener("activate", event => event.waitUntil((async () => {

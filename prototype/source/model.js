@@ -58,7 +58,7 @@
   function fromSnum(input) {
     const packet = window.SnumMail.parse(input), doc = initial();
     doc.service = "SNUM";
-    doc.subject = `Revue de presse — ${packet.edition_date_long}`;
+    doc.subject = `Revue de presse - ${packet.edition_date_long}`;
     doc.blocks = packet.articles.map((article, i) => ({...block("text", `snum-${i}`),
       title: article.title,
       body: `${article.source} · ${article.publication_date_long}\n\n${article.fact}\n\n${article.takeaway}\n\n${article.snum_interest}\n\n${article.keywords.join(" · ")}${article.essential ? "\nEssentiel" : ""}`,
