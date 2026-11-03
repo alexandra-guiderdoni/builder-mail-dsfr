@@ -165,3 +165,21 @@ test('#207 avant la lecture du stockage : ni accueil habituel ni accueil guidé,
     assert.equal(after['reset-zone'] || after['resume-document'] || after['home-intro'], false);
   } finally { await browser.close(); }
 });
+
+// #207 : VoiceOver annonçait « Mes newsletters et édition navigation vide » à la première visite. La navigation n'est
+// exposée que si l'un de ses boutons est visible ; elle revient avec « Reprendre » et dans l'éditeur.
+test('#207 première visite : pas de navigation vide exposée, elle revient avec « Reprendre » et dans l’éditeur', async () => {
+  const browser = await chromium.launch({headless: true});
+  try {
+    const context = await browser.newContext({viewport: {width: 1600, height: 1000}}), page = await context.newPage();
+    await page.goto(portable); await page.waitForFunction(() => window.MailBuilder?.ready);
+    const nav = () => page.evaluate(() => { const e = document.querySelector('nav.workspace-nav'); return !e.closest('[hidden]') && e.getClientRects().length > 0; });
+    const landmarks = async () => (await page.locator('body').ariaSnapshot()).split('\n').filter(l => /- navigation "Mes newsletters et édition"/.test(l)).length;
+    assert.equal(await nav(), false, 'première visite : navigation masquée');
+    assert.equal(await landmarks(), 0, 'aucun repère de navigation dans l’arbre d’accessibilité');
+    await page.locator('[data-example=information] [data-example-action=create]').click(); await saved(page);
+    assert.equal(await nav(), true, 'éditeur : « Retour à Mes newsletters »');
+    await page.locator('[data-action=library-home]').click(); await page.locator('#library-home').waitFor();
+    assert.equal(await nav(), true, 'accueil habituel : « Reprendre »');
+  } finally { await browser.close(); }
+});

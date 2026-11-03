@@ -6,9 +6,11 @@
   get("library-name").setAttribute("aria-describedby", "library-dialog-error");
   const find = id => { const doc = A.library.documents.find(d => d.id === id); if (!doc) throw new Error("Cette newsletter n’est plus disponible."); return doc; };
   const attempt = async action => { try { await action(); } catch (cause) { A.error(cause.message); } };
+  // #207 : la navigation n’est exposée que si l’un de ses boutons est visible (VoiceOver annonçait une navigation vide).
+  const syncNav = () => { get("workspace-nav").hidden = get("resume-document").hidden && get("library-back").hidden; };
   function show(editor) {
     get("library-home").hidden = editor; get("editor-page").hidden = !editor;
-    get("library-back").hidden = !editor; get("resume-document").hidden = editor || !!A.State?.fresh?.(); A.UI.pageTitle();
+    get("library-back").hidden = !editor; get("resume-document").hidden = editor || !!A.State?.fresh?.(); syncNav(); A.UI.pageTitle();
     get(editor ? "composition-title" : "home-title").focus();
   }
   // Première visite (#205) : l’accueil guide en trois étapes. Les zones existantes (exemples, plan vide, aide à l’installation)
@@ -33,7 +35,7 @@
     if (fresh) get("examples-title").setAttribute("aria-level", "4"); else get("examples-title").removeAttribute("aria-level");
     for (const card of get("examples-list").querySelectorAll("h4")) if (fresh) card.setAttribute("aria-level", "5"); else card.removeAttribute("aria-level");
     get("newsletter-list").hidden = fresh; get("reset-zone").hidden = fresh; get("library-count").hidden = fresh; get("storage-help").hidden = fresh;
-    get("resume-document").hidden = fresh || !get("editor-page").hidden;
+    get("resume-document").hidden = fresh || !get("editor-page").hidden; syncNav();
   }
   function refresh() {
     welcome();
