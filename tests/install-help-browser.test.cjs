@@ -27,6 +27,9 @@ test('#210 site : lien de téléchargement réel du portable et aide à l’inst
   const browser = await chromium.launch(), {server, url} = await serve();
   try {
     const page = await opened(browser, url);
+    // #205 : à la première visite sur le site, l’aide à l’installation forme la troisième étape de l’accueil guidé.
+    assert.equal(await page.locator('#welcome-install-step').isVisible(), true);
+    assert.equal(await page.locator('#welcome-install #install-help').count(), 1);
     const link = page.locator('#portable-download');
     assert.equal(await link.isVisible(), true);
     assert.equal(await link.textContent(), 'Télécharger l’atelier portable');
