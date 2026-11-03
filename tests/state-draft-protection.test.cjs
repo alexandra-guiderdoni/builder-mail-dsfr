@@ -29,7 +29,7 @@ async function setup({failSave = false, resetOnce = false} = {}) {
   A.UI = {refresh() {}, clearFieldErrors() {}};
   A.Storage = {version: record.app, load: async () => record, save: async (library, token) => {
     if (failSave) throw new Error('refus de stockage témoin');
-    if (resetOnce) { resetOnce = false; throw Object.assign(new Error('La bibliothèque enregistrée a disparu du stockage.'), {storage: 'réinitialisé'}); }
+    if (resetOnce) { resetOnce = false; throw Object.assign(new Error('Les newsletters enregistrées ont disparu du stockage.'), {storage: 'réinitialisé'}); }
     assert.equal(token, record?.token ?? null); writes++;
     return record = {token: 'token-suivant', app: 'version-temoin', library: A.Model.copy(library)};
   }};
@@ -113,7 +113,7 @@ test('stockage disparu : bandeau dédié puis reprise qui réenregistre la mémo
   await h.A.State.takeOver();
   assert.equal(h.element('read-only').hidden, true);
   assert.equal(h.record().library.documents[0].name, 'Travail en mémoire');
-  assert.match(h.element('notice').textContent, /enregistrée de nouveau/);
+  assert.match(h.element('notice').textContent, /enregistrées de nouveau/);
   assert.doesNotMatch(h.element('notice').textContent, /rien n’avait changé/);
 });
 

@@ -73,7 +73,7 @@
     A.State.guard(); const made = M.derive(find(id), M.uniqueName(`${find(id).name} · copie`, A.library.documents)), clone = made.doc;
     A.notice(""); const ticket = A.State.noticeTicket(); await A.State.change(lib => { lib.documents.push(clone); lib.activeId = clone.id; });
     await A.State.settle(); focusRow(clone.id);
-    A.notice(subjectNotice(A.State.saved() ? "Copie indépendante ajoutée et sauvegardée dans Mes newsletters" : "Copie indépendante ajoutée en mémoire, non sauvegardée : exportez vos newsletters pour la conserver", made.replacedSubject), ticket);
+    A.notice(subjectNotice(A.State.saved() ? "Copie indépendante ajoutée et enregistrée dans Mes newsletters" : "Copie indépendante ajoutée en mémoire, non enregistrée : exportez vos newsletters pour la conserver", made.replacedSubject), ticket);
   }
   function ask(kind, id) {
     A.State.guard(); const doc = find(id), removing = kind === "remove";
@@ -146,7 +146,7 @@
       const fallback = A.library.documents[Math.min(target.index, A.library.documents.length - 1)].id;
       focusRow(target.kind === "rename" ? target.id : fallback, target.kind === "rename" ? "rename" : "open");
       if (A.State.saved()) A.notice(target.kind === "rename" ? "Nom enregistré." : emptied ? "Dernière newsletter supprimée. Une newsletter de départ avec six blocs est prête pour la suite." : "Newsletter supprimée ; les autres sont conservées.");
-      else A.notice(`${target.kind === "rename" ? "Nom modifié en mémoire, non sauvegardé" : emptied ? "Dernière newsletter retirée en mémoire, retrait non sauvegardé ; une newsletter de départ avec six blocs est prête" : "Newsletter retirée en mémoire, retrait non sauvegardé"} : exportez vos newsletters pour conserver cet état.`);
+      else A.notice(`${target.kind === "rename" ? "Nom modifié en mémoire, non enregistré" : emptied ? "Dernière newsletter retirée en mémoire, retrait non enregistré ; une newsletter de départ avec six blocs est prête" : "Newsletter retirée en mémoire, retrait non enregistré"} : exportez vos newsletters pour conserver cet état.`);
     } catch (cause) { if (get("library-dialog").open) get("library-dialog-error").textContent = cause.message; else A.error(cause.message); }
     finally { busy = false; get("library-confirm").disabled = get("library-cancel").disabled = false; }
   });
@@ -156,8 +156,8 @@
   let restoring = null, restoringBusy = false;
   async function chooseRestore(file) {
     let text; try { text = await file.text(); } catch { throw new Error(`Le fichier « ${file.name} » n’a pas pu être lu. Vos newsletters sont inchangées.`); }
-    let raw; try { raw = JSON.parse(text); } catch { throw new Error("Le fichier JSON est invalide ou incomplet. Vos newsletters sont inchangées."); }
-    if (raw && typeof raw === "object" && "token" in raw && "library" in raw) throw new Error("Ce fichier contient des données enregistrées brutes, réservées au diagnostic : il ne peut être ni restauré ni importé. Choisissez une sauvegarde exportée par l’atelier.");
+    let raw; try { raw = JSON.parse(text); } catch { throw new Error("Le fichier ou le contenu collé est invalide ou incomplet. Vos newsletters sont inchangées."); }
+    if (raw && typeof raw === "object" && "token" in raw && "library" in raw) throw new Error("Ce fichier est une copie de diagnostic : il ne peut être ni restauré ni importé. Choisissez une sauvegarde exportée par l’atelier.");
     if (raw?.schema !== "dsfr-mail/library") throw new Error(["dsfr-mail/document", "builder-mail-prototype/1"].includes(raw?.schema) ? "Ce fichier contient une seule newsletter : utilisez « Ajouter une newsletter ou une sauvegarde depuis un fichier ». Vos newsletters sont inchangées." : "Ce fichier n’est pas une sauvegarde de l’atelier. Vos newsletters sont inchangées.");
     const incoming = await A.Imports.prepare(text);
     restoring = {library: incoming.value, name: file.name, note: A.Imports.upgradedNote(incoming)};

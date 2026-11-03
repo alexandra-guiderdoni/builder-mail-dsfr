@@ -43,12 +43,12 @@ for (const [engine, launcher] of [[{chromium: 'Chromium', webkit: 'WebKit', fire
         await page.keyboard.type('Bulletin de rentrée'); await saved(page);
         doc = await last(page);
         assert.equal(doc.name, 'Bulletin de rentrée'); assert.equal(doc.subject, label);
-        // Deuxième création du même point de départ : numérotée, jamais deux fois « Nouvelle composition ».
+        // Deuxième création du même point de départ : numérotée, jamais deux fois « Nouvelle newsletter ».
         await create(page, value);
         assert.equal((await last(page)).name, `${label}`);
         await create(page, value);
         assert.equal((await last(page)).name, `${label} (2)`); assert.equal((await last(page)).subject, `${label} (2)`);
-        assert((await state(page)).documents.every(d => d.name !== 'Nouvelle composition' && d.subject !== 'Nouvelle composition'));
+        assert((await state(page)).documents.every(d => d.name !== 'Nouvelle newsletter' && d.subject !== 'Nouvelle newsletter'));
       } finally { await browser.close(); }
     });
   }
@@ -84,8 +84,8 @@ for (const [engine, launcher] of [[{chromium: 'Chromium', webkit: 'WebKit', fire
       await page.evaluate(() => window.releaseCreationSave());
       await page.locator('#notice').filter({hasText: /Newsletter créée depuis le modèle.*L’objet d’origine contenait une date/}).waitFor();
       let doc = await last(page);
-      assert.equal(doc.name, 'Modèle daté · composition');
-      assert.equal(doc.subject, 'Modèle daté · composition', 'aucun objet daté hérité');
+      assert.equal(doc.name, 'Modèle daté · newsletter');
+      assert.equal(doc.subject, 'Modèle daté · newsletter', 'aucun objet daté hérité');
       const message = await notice(page);
       assert(message.includes(DATED) && /date/.test(message), `signalement attendu : ${message}`);
       assert.deepEqual(await focusOnName(page), {focused: true, selected: true});
@@ -94,7 +94,7 @@ for (const [engine, launcher] of [[{chromium: 'Chromium', webkit: 'WebKit', fire
       await page.locator('#saved-templates').selectOption(templates[1].id);
       await click(page, '[data-action=use-template]'); await page.locator('#notice').filter({hasText: /^Newsletter créée depuis le modèle\.$/}).waitFor();
       doc = await last(page);
-      assert.equal(doc.name, 'Modèle neutre · composition'); assert.equal(doc.subject, UNDATED);
+      assert.equal(doc.name, 'Modèle neutre · newsletter'); assert.equal(doc.subject, UNDATED);
       assert.equal(await notice(page), 'Newsletter créée depuis le modèle.', 'aucun signalement sans date');
       assert.equal((await state(page)).templates.find(t => t.id === templates[0].id).subject, DATED, 'le modèle lui-même est intact');
     } finally { await browser.close(); }

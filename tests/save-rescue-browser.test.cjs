@@ -8,7 +8,7 @@ const {rejectLargeWrites, limitNativeQuota} = require('./portability-storage.cjs
 const rescue = '[data-action=rescue-export]';
 const promise = /récupér|restaur|état précédent|données enregistrées restent/i;
 const kinds = {absent: /Stockage indisponible/, inaccessible: /inaccessible/, sature: /saturé/, conflit: /Une autre fenêtre/};
-const failed = page => page.locator('#save-state').filter({hasText: 'Modifications non sauvegardées'}).waitFor();
+const failed = page => page.locator('#save-state').filter({hasText: 'Modifications non enregistrées'}).waitFor();
 
 // Quota réel de Chromium : fixé avant la première ouverture du stockage, il refuse une écriture volumineuse.
 // Sous le plafond natif de 524288 caractères des inputs WebKit, au-dessus du quota de 400000 octets.
@@ -70,7 +70,7 @@ test('stockage absent, inaccessible, saturé ou en conflit : messages distincts,
     if (/restent dans ce navigateur/.test(await absent.page.locator('.save-panel').innerText())) problems.push('absent : le panneau promet une conservation dans le navigateur');
     await absent.page.locator('#document-name').fill('Travail sans stockage');
     const absentState = await absent.page.locator('#save-state').innerText();
-    if (!/non sauvegardées/.test(absentState) || promise.test(absentState)) problems.push(`absent : état de sauvegarde inexact : ${absentState}`);
+    if (!/non enregistrées/.test(absentState) || promise.test(absentState)) problems.push(`absent : état de sauvegarde inexact : ${absentState}`);
     try { await rescueBesideMessage(absent.page); const file = JSON.parse(await fs.readFile(await download(absent.page, rescue, 'secours-absent.json'), 'utf8')); if (file.documents[0].name !== 'Travail sans stockage') problems.push('absent : export différent de la mémoire'); } catch (cause) { problems.push(`absent : ${cause.message.split('\n')[0]}`); }
 
     const closed = await open(browser, {}, page => page.addInitScript(() => { IDBFactory.prototype.open = function() { const request = {}; queueMicrotask(() => request.onerror?.()); return request; }; }));
@@ -120,7 +120,7 @@ test('après un échec de sauvegarde, les changements de vue gardent le travail 
     assert.doesNotMatch(await page.locator('#error').innerText(), /recharger l’application/);
     await click(page, `[data-document="${first}"] [data-library-action=duplicate]`);
     await page.locator('#notice').filter({hasText: 'Copie indépendante'}).waitFor();
-    assert.match(await page.locator('#notice').innerText(), /non sauvegardée/);
+    assert.match(await page.locator('#notice').innerText(), /non enregistrée/);
     assert.doesNotMatch(await page.locator('#error').innerText(), /recharger l’application/);
     await click(page, '[data-action=new-document]'); await page.locator('#editor-page').waitFor({state: 'visible'});
     assert.equal((await state(page)).documents.length, 3);
@@ -218,12 +218,12 @@ test('une bibliothèque de version inconnue ne promet une restauration que si un
     const library = await state(page), unknown = {token: 'version-inconnue-synthetique', library: {...library, version: 99}};
     await write([['current', unknown]]);
     await page.reload(); await page.waitForFunction(() => window.MailBuilder?.ready);
-    await page.locator('#error').filter({hasText: 'Version de bibliothèque non prise en charge'}).waitFor();
+    await page.locator('#error').filter({hasText: 'Version de sauvegarde non prise en charge'}).waitFor();
     assert.doesNotMatch(await page.locator('#error').innerText(), promise);
     assert.equal(await page.locator(rescue).count(), 1); assert(await page.locator(rescue).isVisible());
     await write([['previous', {token: 'precedent-synthetique', library: {...library, documents: library.documents.map(d => ({...d, name: 'État précédent synthétique'}))}}]]);
     await page.reload(); await page.waitForFunction(() => window.MailBuilder?.ready);
-    await page.locator('#error').filter({hasText: 'Version de bibliothèque non prise en charge'}).waitFor();
+    await page.locator('#error').filter({hasText: 'Version de sauvegarde non prise en charge'}).waitFor();
     assert.match(await page.locator('#error').innerText(), /« Restaurer l’état précédent »/);
   } finally { await browser.close(); }
 });

@@ -147,7 +147,7 @@ test('après la saisie, l’import, la restauration et le changement d’image c
     assert.match(await page.locator('#error').innerText(), /image/i);
     assert.equal(await page.evaluate(() => JSON.stringify(MailBuilder.library)), before);
     await corrupt('current'); await page.reload(); await page.waitForFunction(() => window.MailBuilder?.ready);
-    assert.equal(await page.locator('#save-state').innerText(), 'Bibliothèque non restaurée.'); assert.match(await page.locator('#error').innerText(), /image/i);
+    assert.equal(await page.locator('#save-state').innerText(), 'Newsletters non restaurées.'); assert.match(await page.locator('#error').innerText(), /image/i);
     // Changement d’image : un fichier altéré est refusé, le fichier valide est incorporé.
     const fresh = await open(browser);
     await fresh.page.evaluate(() => MailBuilder.State.change(lib => { lib.documents.find(d => d.id === lib.activeId).blocks.push(MailBuilder.Model.createBlock(27)); }));

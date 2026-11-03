@@ -16,7 +16,7 @@ test('import JSON collé, exemple téléchargeable et refus sans perte dans le b
     const imported = await state(page); assert.equal(imported.documents.length, 1);
     assert.equal(imported.documents.find(d => d.id === imported.activeId).blocks.length, 3);
     await page.locator('#json-input').fill(JSON.stringify(require('./fixtures/snum.cjs')())); await click(page, '[data-action=json-import]');
-    await page.locator('#error').filter({hasText: 'Composition'}).waitFor(); assert.deepEqual(await state(page), imported);
+    await page.locator('#error').filter({hasText: 'Newsletter :'}).waitFor(); assert.deepEqual(await state(page), imported);
     assert.equal(await page.locator('#snum-input').count(), 0);
   } finally { await browser.close(); }
 });

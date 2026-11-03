@@ -22,7 +22,7 @@ async function composition(page, all, title) {
   await page.evaluate(() => { if (window.portabilityPreviewLoads) return; window.portabilityPreviewLoads = []; document.getElementById('preview').addEventListener('load', () => window.portabilityPreviewLoads.push(document.getElementById('preview').src)); });
   const value = await page.evaluate(({all, title}) => JSON.stringify(MailBuilder.Model.create(title, all ? MailBuilder.catalog.components.map(c => c.id) : [0])), {all, title});
   await expand(page, 'Importer du JSON'); await page.locator('#json-input').fill(value); await click(page, '[data-action=json-import]');
-  await page.locator('#notice').filter({hasText: 'Newsletter ou sauvegarde JSON ajoutée.'}).waitFor(); await saved(page);
+  await page.locator('#notice').filter({hasText: 'Newsletter ou sauvegarde ajoutée.'}).waitFor(); await saved(page);
   const frame = await (await page.locator('#preview').elementHandle()).contentFrame();
   await frame.waitForFunction(expected => document.title === expected, title, {timeout: 10000});
   const requestedUrl = await page.locator('#preview').getAttribute('src');

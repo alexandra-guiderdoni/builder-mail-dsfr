@@ -85,7 +85,7 @@
     const blocks = A.doc().blocks, active = get("block-list").querySelector('[aria-pressed="true"]')?.dataset.select;
     const index = blocks.findIndex(b => b.id === active);
     const choice = component ? `Composant choisi : « ${component.label} ».` : select.options.length ? "Choisissez un composant dans la liste." : "Aucun composant ne correspond à la recherche.";
-    const destination = index < 0 ? "Ajout en fin de composition." : `Ajout après le bloc ${index + 1} « ${blockName(blocks[index])} ».`;
+    const destination = index < 0 ? "Ajout en fin de newsletter." : `Ajout après le bloc ${index + 1} « ${blockName(blocks[index])} ».`;
     get("catalogue-add-help").textContent = `${choice} ${destination}`;
   }
   function footerLinks(b) {

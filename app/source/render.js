@@ -65,7 +65,7 @@
   function warnings(value) {
     M.document(value);
     const count = value.blocks.filter(b => b.component === PREHEADER).length;
-    return count > 1 ? [`${count} pré-en-têtes masqués dans la composition : seul le premier est utilisé, placé en tête du corps quelle que soit sa position.`] : [];
+    return count > 1 ? [`${count} pré-en-têtes masqués dans la newsletter : seul le premier est utilisé, placé en tête du corps quelle que soit sa position.`] : [];
   }
   function block(value, context = [], preview = false) {
     M.block(value);

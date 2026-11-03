@@ -1,7 +1,7 @@
 const test = require('node:test');
 const {chromium, open, expand, saved, state, store, assert} = require('./browser-support.cjs');
 const reading = 'Lecture du fichier de travail…';
-const unreadable = 'Le fichier « illisible.json » n’a pas pu être lu. Vérifiez qu’il est toujours présent sur votre poste, puis choisissez-le de nouveau ou collez son contenu dans « Importer du JSON ». Votre bibliothèque n’est pas modifiée.';
+const unreadable = 'Le fichier « illisible.json » n’a pas pu être lu. Vérifiez qu’il est toujours présent sur votre poste, puis choisissez-le de nouveau ou collez son contenu dans « Importer du JSON ». Vos newsletters ne sont pas modifiées.';
 const status = page => page.evaluate(() => { const error = document.querySelector('#error'); return {error: error.hidden ? null : error.textContent, notice: document.querySelector('#notice').textContent}; });
 const upload = (page, name, content) => page.locator('#project-input').setInputFiles({name, mimeType: 'application/json', buffer: Buffer.from(content)});
 
@@ -28,8 +28,8 @@ test('application : un fichier illisible affiche un message français, retire la
 
     await page.evaluate(() => { delete File.prototype.text; });
     await upload(page, 'incomplet.json', '{"schema":');
-    await page.waitForFunction(() => document.querySelector('#error').textContent === 'Le fichier JSON est invalide ou incomplet.');
-    assert.deepEqual(await status(page), {error: 'Le fichier JSON est invalide ou incomplet.', notice: ''});
+    await page.waitForFunction(() => document.querySelector('#error').textContent === 'Le fichier ou le contenu collé est invalide ou incomplet.');
+    assert.deepEqual(await status(page), {error: 'Le fichier ou le contenu collé est invalide ou incomplet.', notice: ''});
     assert.deepEqual(await state(page), before); assert.deepEqual(await store(page), persisted);
 
     await upload(page, 'synthetique.json', incoming);

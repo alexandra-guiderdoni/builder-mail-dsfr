@@ -62,8 +62,8 @@ test('#200 refus sans modification : composition seule, données brutes, JSON in
     const composition = await page.evaluate(() => JSON.stringify(MailBuilder.doc()));
     const raw = JSON.stringify(await store(page));
     const other = JSON.parse(await backup(page, ['Autre'])); other.catalogue = '0'.repeat(64);
-    for (const [file, content, message] of [['composition.json', composition, /seule newsletter.*Ajouter une newsletter/], ['brut.json', raw, /données enregistrées brutes/],
-      ['casse.json', '{"schema":', /JSON est invalide/], ['autre.json', JSON.stringify(other), /autre catalogue/]]) {
+    for (const [file, content, message] of [['composition.json', composition, /seule newsletter.*Ajouter une newsletter/], ['brut.json', raw, /copie de diagnostic/],
+      ['casse.json', '{"schema":', /contenu collé est invalide/], ['autre.json', JSON.stringify(other), /autre catalogue/]]) {
       await page.evaluate(() => MailBuilder.error(''));
       await choose(page, file, content);
       await page.locator('#error').filter({hasText: message}).waitFor({timeout: 5000});

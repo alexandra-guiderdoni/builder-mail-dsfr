@@ -70,26 +70,26 @@
   // L’alerte persistante efface sa mémoire seulement quand plus aucune cause (échec ou lecture seule) ne la soutient (#122).
   function failing(value) { failed = value; get("save-rescue").hidden = !value || !!readOnly; if (!value && !readOnly) persistentError = ""; }
   // Remplacement ou effacement voulus dans une autre fenêtre (#208) : jamais présentés comme une disparition.
-  const WANTED = {remplacement: "La bibliothèque a été remplacée par une sauvegarde restaurée dans une autre fenêtre.", effacement: "La bibliothèque a été effacée dans une autre fenêtre."};
-  const readOnlyError = () => new Error(readOnly === "version" ? "Cette fenêtre utilise une autre version de l’atelier : exportez la bibliothèque en mémoire, puis rechargez la page avant de reprendre la main." : readOnly === "stockage" ? "La bibliothèque enregistrée a disparu du stockage : exportez la bibliothèque en mémoire ou reprenez la main pour l’enregistrer de nouveau." : WANTED[readOnly] ? `${WANTED[readOnly]} Cette fenêtre est en lecture seule : exportez la bibliothèque en mémoire ou reprenez la main.` : "Une autre fenêtre détient la bibliothèque : cette fenêtre est en lecture seule. Exportez la bibliothèque en mémoire ou reprenez la main.");
+  const WANTED = {remplacement: "Vos newsletters ont été remplacées par une sauvegarde restaurée dans une autre fenêtre.", effacement: "Vos newsletters ont été effacées dans une autre fenêtre."};
+  const readOnlyError = () => new Error(readOnly === "version" ? "Cette fenêtre utilise une autre version de l’atelier : exportez les newsletters de cette fenêtre, puis rechargez la page avant de reprendre la main." : readOnly === "stockage" ? "Les newsletters enregistrées ont disparu du stockage : exportez les newsletters de cette fenêtre ou reprenez la main pour les enregistrer de nouveau." : WANTED[readOnly] ? `${WANTED[readOnly]} Cette fenêtre est en lecture seule : exportez les newsletters de cette fenêtre ou reprenez la main.` : "Une autre fenêtre a la main sur vos newsletters : cette fenêtre est en lecture seule. Exportez les newsletters de cette fenêtre ou reprenez la main.");
   function lock(kind, reason) {
     if (readOnly === "version") return;
     A.notice("");
     const editing = get("editing"), late = kind === "version", focused = editing.contains(document.activeElement) || (late && document.activeElement?.dataset.action === "take-over");
     readOnly = kind; editing.disabled = true; get("read-only").hidden = false;
-    show(failed ? "Lecture seule : modifications non sauvegardées. Exportez votre bibliothèque." : "Lecture seule : cette fenêtre n’enregistre plus rien.", true); get("save-rescue").hidden = true;
-    get("read-only-message").textContent = `${reason} Cette fenêtre n’enregistre plus rien. ${late ? "Exportez la bibliothèque en mémoire, puis rechargez cette page avant de reprendre la main." : kind === "stockage" ? "Exportez la bibliothèque en mémoire pour la conserver, ou reprenez la main : cette bibliothèque sera enregistrée de nouveau dans ce navigateur." : WANTED[kind] ? `Exportez la bibliothèque en mémoire pour la conserver, ou reprenez la main : les compositions modifiées ici seront ajoutées en copies à la bibliothèque ${kind === "effacement" ? "effacée" : "remplacée"}.` : "Exportez la bibliothèque en mémoire pour la conserver, ou reprenez la main : les compositions modifiées ici seront ajoutées en copies, sans remplacer celles de l’autre fenêtre."}`;
+    show(failed ? "Lecture seule : modifications non enregistrées. Exportez vos newsletters." : "Lecture seule : cette fenêtre n’enregistre plus rien.", true); get("save-rescue").hidden = true;
+    get("read-only-message").textContent = `${reason} Cette fenêtre n’enregistre plus rien. ${late ? "Exportez les newsletters de cette fenêtre, puis rechargez cette page avant de reprendre la main." : kind === "stockage" ? "Exportez les newsletters de cette fenêtre pour les conserver, ou reprenez la main : ces newsletters seront enregistrées de nouveau dans ce navigateur." : WANTED[kind] ? `Exportez les newsletters de cette fenêtre pour les conserver, ou reprenez la main : les newsletters modifiées ici seront ajoutées en copies ${kind === "effacement" ? "après l’effacement" : "à la sauvegarde restaurée"}.` : "Exportez les newsletters de cette fenêtre pour les conserver, ou reprenez la main : les newsletters modifiées ici seront ajoutées en copies, sans remplacer celles de l’autre fenêtre."}`;
     get("read-only").querySelector("[data-action=take-over]").hidden = late; get("read-only").querySelector("[data-action=reload-page]").hidden = !late;
     if (focused) get("read-only-title").focus();
   }
   function storageLock(cause) {
-    if (cause.storage === "conflit") lock("conflit", "Une autre fenêtre a enregistré la bibliothèque après la dernière sauvegarde de celle-ci.");
-    else if (cause.storage === "réinitialisé") lock("stockage", "La bibliothèque enregistrée a disparu du stockage de ce navigateur.");
+    if (cause.storage === "conflit") lock("conflit", "Une autre fenêtre a enregistré vos newsletters après le dernier enregistrement de celle-ci.");
+    else if (cause.storage === "réinitialisé") lock("stockage", "Les newsletters enregistrées ont disparu du stockage de ce navigateur.");
     else if (WANTED[cause.storage]) lock(cause.storage, WANTED[cause.storage]);
   }
   // Saisies d’URL en cours : conservées hors du modèle tant qu’elles sont invalides, jamais diffusées.
   const draftKey = (doc, block, input) => `${doc}|${block}|${input}`;
-  function guardEdit() { if (A.LegacyRecovery?.pending()) throw new Error("Restaurez d’abord la bibliothèque ancienne après correction de ses adresses. Les données enregistrées restent intactes."); if (restoring) throw new Error("Attendez la fin de la récupération avant cette action."); if (A.pendingInputs) throw new Error("Attendez la fin du chargement du fichier avant cette action."); if (A.invalid.size) throw new Error("Corrigez les champs signalés ou annulez leur modification avant cette action."); }
+  function guardEdit() { if (A.LegacyRecovery?.pending()) throw new Error("Restaurez d’abord vos anciennes newsletters après correction de leurs adresses. Les données enregistrées restent intactes."); if (restoring) throw new Error("Attendez la fin de la récupération avant cette action."); if (A.pendingInputs) throw new Error("Attendez la fin du chargement du fichier avant cette action."); if (A.invalid.size) throw new Error("Corrigez les champs signalés ou annulez leur modification avant cette action."); }
   function guard() {
     guardEdit();
     const draft = [...A.drafts.values()].find(d => d.doc === A.library.activeId);
@@ -124,7 +124,7 @@
     if (readOnly) throw readOnlyError();
     // Première visite : la newsletter de départ n’est pas un travail à enregistrer.
     if (fresh) { show(FRESH, true); return queue; }
-    if (A.recoveryOnly) { failing(true); show(absent ? "Modifications non sauvegardées : aucun stockage n’est disponible. Exportez votre bibliothèque." : "Modifications non sauvegardées : la bibliothèque enregistrée reste inchangée. Exportez votre bibliothèque.", true); return Promise.resolve(); }
+    if (A.recoveryOnly) { failing(true); show(absent ? "Modifications non enregistrées : aucun stockage n’est disponible. Exportez vos newsletters." : "Modifications non enregistrées : les newsletters enregistrées restent inchangées. Exportez vos newsletters.", true); return Promise.resolve(); }
     latest = {current: revision, library: A.library, editorial: editorial || latest?.editorial}; editorial = false;
     cancelSuccess(); show("Sauvegarde en cours…");
     if (running) return queue;
@@ -138,8 +138,8 @@
             if (task.editorial) modified();
             if (task.current === revision && !readOnly) { failing(false); if (!A.invalid.size && !A.drafts.size) A.error(""); const text = A.invalid.size || A.drafts.size ? "Newsletters enregistrées dans ce navigateur, sauf les champs invalides." : "Newsletters enregistrées dans ce navigateur."; show(text); announceSuccess(text); }
           } catch (cause) {
-            failing(true); setPersistentError(`${cause.message} ${cause.storage === "conflit" ? "Exportez la bibliothèque en mémoire pour conserver ce travail, puis rechargez cette page." : "Exportez la bibliothèque en mémoire pour conserver ce travail."}`);
-            show("Modifications non sauvegardées. Exportez votre bibliothèque.", true);
+            failing(true); setPersistentError(`${cause.message} ${cause.storage === "conflit" ? "Exportez les newsletters de cette fenêtre pour conserver ce travail, puis rechargez cette page." : "Exportez les newsletters de cette fenêtre pour conserver ce travail."}`);
+            show("Modifications non enregistrées. Exportez vos newsletters.", true);
             storageLock(cause);
           }
         }
@@ -184,15 +184,15 @@
     } catch (cause) {
       failing(true); A.recoveryOnly = true; absent = cause.storage === "absent"; begin(false);
       const legacy = record && A.LegacyRecovery?.offer(record);
-      const advice = legacy ? "Les données enregistrées sont conservées : utilisez la récupération guidée ci-dessous pour corriger les anciennes adresses." : absent ? "Exportez la bibliothèque en mémoire pour conserver votre travail : la fermeture de cette page l’efface." : "Cette page n’écrit rien dans la bibliothèque locale : exportez la bibliothèque en mémoire pour conserver votre travail.";
+      const advice = legacy ? "Les données enregistrées sont conservées : utilisez la récupération guidée ci-dessous pour corriger les anciennes adresses." : absent ? "Exportez les newsletters de cette fenêtre pour conserver votre travail : la fermeture de cette page l’efface." : "Cette page n’écrit rien dans ce navigateur : exportez les newsletters de cette fenêtre pour conserver votre travail.";
       const restore = !legacy && !cause.storage && await restorable() ? " Une sauvegarde précédente lisible existe : « Restaurer l’état précédent », dans « Sauvegarde et import », permet de la relire." : "";
       setPersistentError(`${cause.message} ${advice}${restore}`);
-      show(absent ? "Stockage indisponible : travail en mémoire seulement." : "Bibliothèque non restaurée.", true);
+      show(absent ? "Stockage indisponible : travail en mémoire seulement." : "Newsletters non restaurées.", true);
       if (absent) get("storage-help").textContent = "Aucun stockage n’est disponible dans ce navigateur : exportez une copie pour conserver votre travail.";
     }
     base = A.library; A.ready = true; get("workspace").disabled = !!A.LegacyRecovery?.pending(); A.UI.refresh();
     // L’encart ne promet rien quand le stockage a échoué ; l’état de conservation durable est lu sans retarder l’ouverture.
-    if (A.recoveryOnly) { if (!absent) get("storage-help").textContent = "La bibliothèque enregistrée n’a pas pu être relue : exportez une copie de votre travail."; }
+    if (A.recoveryOnly) { if (!absent) get("storage-help").textContent = "Les newsletters enregistrées n’ont pas pu être relues : exportez une copie de votre travail."; }
     else { storageInfo(); readPersistence().then(storageInfo); }
     if (A.LegacyRecovery?.pending()) { get("save-rescue").hidden = true; get("library-count").textContent = A.LegacyRecovery.summary(); }
     // #209 : relue sous une empreinte antérieure de même contrat de données, la bibliothèque est enregistrée ré-estampillée
@@ -209,11 +209,11 @@
       const saved = await A.Storage.save(restored, expectedToken);
       token = saved.token; base = A.library = restored; A.recoveryOnly = false; failing(false); revision++; begin(false);
       A.selected = A.doc().blocks[0]?.id || null; A.LegacyRecovery.close(); A.UI.refresh();
-      if (readOnly) show("Bibliothèque corrigée enregistrée ; cette fenêtre reste en lecture seule.", true);
-      else { A.error(""); show("Bibliothèque corrigée restaurée et sauvegardée dans ce navigateur.", true); A.notice("Vos compositions sont retrouvées. L’original est conservé comme état précédent.", ticket); get("home-title").focus(); }
+      if (readOnly) show("Newsletters corrigées enregistrées ; cette fenêtre reste en lecture seule.", true);
+      else { A.error(""); show("Newsletters corrigées restaurées et enregistrées dans ce navigateur.", true); A.notice("Vos newsletters sont retrouvées. L’original est conservé comme état précédent.", ticket); get("home-title").focus(); }
     } catch (cause) {
       if (!A.recoveryOnly) throw cause;
-      throw new Error(`${cause.message} La récupération n’a rien enregistré ; conservez les données brutes et rechargez l’atelier avant de réessayer.`);
+      throw new Error(`${cause.message} La récupération n’a rien enregistré ; conservez les données enregistrées telles quelles et rechargez l’atelier avant de réessayer.`);
     } finally { restoring = false; pending--; get("workspace").disabled = !!A.LegacyRecovery?.pending(); }
   }
   async function recover() {
@@ -227,7 +227,7 @@
       token = saved.token; base = A.library = restored; A.recoveryOnly = false; failing(false); revision++; begin(false);
       A.selected = A.doc().blocks[0]?.id || null; A.UI.refresh(); A.error("");
       show("Newsletters enregistrées dans ce navigateur."); announceSuccess("Newsletters enregistrées dans ce navigateur.");
-      A.notice("État précédent relu. Contrôlez les compositions avant de poursuivre.", ticket);
+      A.notice("État précédent relu. Contrôlez les newsletters avant de poursuivre.", ticket);
     } catch (cause) {
       show("Récupération impossible ; le travail actuel est conservé.", true);
       storageLock(cause);
@@ -243,7 +243,7 @@
     if (!WANTED[reason]) throw new Error("Motif de remplacement inconnu.");
     if (readOnly) throw readOnlyError();
     guardEdit();
-    if (A.recoveryOnly) throw new Error(absent ? "Aucun stockage n’est disponible dans ce navigateur : rien ne peut être remplacé ni effacé." : "La bibliothèque enregistrée ne peut pas être relue : exportez d’abord les données enregistrées brutes, dans « Sauvegarde et import », avant de la remplacer ou de l’effacer.");
+    if (A.recoveryOnly) throw new Error(absent ? "Aucun stockage n’est disponible dans ce navigateur : rien ne peut être remplacé ni effacé." : "Les newsletters enregistrées ne peuvent pas être relues : exportez d’abord une copie de diagnostic, dans « Sauvegarde et import », avant de les remplacer ou de les effacer.");
     const next = M.copy(M.library(library));
     restoring = true; pending++; get("workspace").disabled = true;
     try {
@@ -278,11 +278,11 @@
     }
     const storage = !!window.indexedDB;
     document.getElementById("reopen-text").textContent = storage
-      ? "Le navigateur a refusé l’ouverture de la bibliothèque enregistrée au démarrage. Cette page n’y a rien écrit et ne peut pas la restaurer sans risquer d’écraser une autre fenêtre. Exportez d’abord le travail temporaire affiché ici, puis rechargez l’atelier : il relira la bibliothèque enregistrée. Le navigateur peut demander une confirmation avant de recharger ; confirmez une fois le fichier exporté, puis importez-le pour retrouver ce travail."
+      ? "Le navigateur a refusé l’ouverture du stockage au démarrage. Cette page n’y a rien écrit et ne peut pas le restaurer sans risquer d’écraser une autre fenêtre. Exportez d’abord le travail temporaire affiché ici, puis rechargez l’atelier : il relira les newsletters enregistrées. Le navigateur peut demander une confirmation avant de recharger ; confirmez une fois le fichier exporté, puis importez-le pour retrouver ce travail."
       : "Aucun stockage n’est disponible dans ce navigateur : cette page n’a rien à restaurer. Exportez le travail temporaire pour le conserver, la fermeture de cette page l’efface.";
     document.getElementById("reopen-reload").hidden = !storage; box.hidden = false;
     document.getElementById("reopen-title").focus();
-    A.notice("Restauration non lancée : aucune écriture n’a été faite dans la bibliothèque enregistrée.", ticket);
+    A.notice("Restauration non lancée : rien n’a été écrit dans ce navigateur.", ticket);
   }
   function rebase(stored) {
     const memory = M.copy(A.library), now = new Date(), stamp = ` · copie à ${now.getHours()} h ${String(now.getMinutes()).padStart(2, "0")}`;
@@ -316,14 +316,14 @@
     next.activeId = active; return {library: M.library(M.versions(next)), copies, drafts, selected};
   }
   async function takeOver() {
-    if (!readOnly) throw new Error("Cette fenêtre détient déjà la bibliothèque.");
+    if (!readOnly) throw new Error("Cette fenêtre a déjà la main.");
     if (readOnly === "version") throw readOnlyError();
     if (restoring) throw new Error("Attendez la fin de l’opération en cours avant de reprendre la main.");
     if (A.pendingInputs) throw new Error("Attendez la fin du chargement du fichier avant de reprendre la main.");
     restoring = true; pending++; get("workspace").disabled = true; A.notice(""); const ticket = noticeTicket; show("Reprise de la main en cours…");
     try {
       await queue; const record = await A.Storage.load();
-      if (record?.app && record.app !== A.Storage.version) { lock("version", "La bibliothèque a été enregistrée par une autre version de l’atelier."); throw readOnlyError(); }
+      if (record?.app && record.app !== A.Storage.version) { lock("version", "Vos newsletters ont été enregistrées par une autre version de l’atelier."); throw readOnlyError(); }
       const {library, copies, drafts, selected} = rebase(record ? M.copy(M.library(record.library)) : null);
       if (readOnly === "version") throw readOnlyError();
       const saved = await A.Storage.save(library, record?.token ?? null);
@@ -331,29 +331,29 @@
       channel?.postMessage({type: "takeover", token: saved.token});
       if (!A.doc().blocks.some(b => b.id === A.selected)) A.selected = A.doc().blocks[0]?.id || null;
       // Un retard signalé pendant l’écriture garde la lecture seule : la bibliothèque écrite est déjà en mémoire.
-      if (readOnly === "version") { A.UI.refresh(); show("Bibliothèque sauvegardée ; cette fenêtre reste en lecture seule : exportez puis rechargez-la.", true); return; }
+      if (readOnly === "version") { A.UI.refresh(); show("Newsletters enregistrées ; cette fenêtre reste en lecture seule : exportez puis rechargez-la.", true); return; }
       readOnly = null;
       get("editing").disabled = false; get("read-only").hidden = true; A.invalid.clear(); A.UI.clearFieldErrors();
       A.UI.refresh(); A.error("");
       const savedText = A.drafts.size ? "Newsletters enregistrées dans ce navigateur, sauf les champs invalides." : "Newsletters enregistrées dans ce navigateur.";
       show(savedText); announceSuccess(savedText); get(get("editor-page").hidden ? "home-title" : "composition-title").focus();
-      A.notice(!record ? "Main reprise : la bibliothèque en mémoire est enregistrée de nouveau dans ce navigateur." : copies ? `Main reprise : ${copies > 1 ? `${copies} copies horodatées ajoutées` : "une copie horodatée ajoutée"} à la bibliothèque enregistrée, sans rien remplacer. L’autre fenêtre ne peut plus enregistrer ; elle passe en lecture seule au plus tard à sa prochaine modification.` : "Main reprise : rien n’avait changé dans cette fenêtre, la bibliothèque enregistrée est conservée telle quelle.", ticket);
+      A.notice(!record ? "Main reprise : les newsletters de cette fenêtre sont enregistrées de nouveau dans ce navigateur." : copies ? `Main reprise : ${copies > 1 ? `${copies} copies horodatées ajoutées` : "une copie horodatée ajoutée"} aux newsletters enregistrées, sans rien remplacer. L’autre fenêtre ne peut plus enregistrer ; elle passe en lecture seule au plus tard à sa prochaine modification.` : "Main reprise : rien n’avait changé dans cette fenêtre, les newsletters enregistrées sont conservées telles quelles.", ticket);
     } catch (cause) {
       show("Reprise impossible : rien n’a été enregistré.", true);
       if (readOnly === "version") throw cause;
-      throw new Error(`${cause.message} Rien n’a été enregistré : exportez la bibliothèque en mémoire pour conserver le travail de cette fenêtre.`);
+      throw new Error(`${cause.message} Rien n’a été enregistré : exportez les newsletters de cette fenêtre pour conserver le travail de cette fenêtre.`);
     } finally { restoring = false; pending--; get("workspace").disabled = false; }
   }
   channel?.addEventListener("message", event => {
     if (!A.ready || event.data?.token === token) return;
     if (WANTED[event.data?.type]) { lock(event.data.type, WANTED[event.data.type]); setPersistentError(`${WANTED[event.data.type]} Cette fenêtre passe en lecture seule.`); return; }
     if (event.data?.type !== "takeover") return;
-    lock("reprise", "Une autre fenêtre a repris la main sur la bibliothèque."); setPersistentError("Une autre fenêtre a repris la main sur la bibliothèque : cette fenêtre passe en lecture seule.");
+    lock("reprise", "Une autre fenêtre a repris la main sur vos newsletters."); setPersistentError("Une autre fenêtre a repris la main sur vos newsletters : cette fenêtre passe en lecture seule.");
   });
   function outdated() { lock("version", "Une nouvelle version de l’atelier est active dans une autre fenêtre."); setPersistentError("Une nouvelle version de l’atelier est active dans une autre fenêtre : cette fenêtre passe en lecture seule."); }
   const exported = () => { exportedRevision = revision; };
   function reload() {
-    if ((failed || pending || A.invalid.size || A.pendingInputs) && exportedRevision !== revision) throw new Error("Exportez d’abord la bibliothèque en mémoire : le rechargement efface le travail non enregistré de cette fenêtre.");
+    if ((failed || pending || A.invalid.size || A.pendingInputs) && exportedRevision !== revision) throw new Error("Exportez d’abord les newsletters de cette fenêtre : le rechargement efface le travail non enregistré de cette fenêtre.");
     // Un export du modèle ne contient pas les brouillons : laisser beforeunload demander l’abandon.
     leaving = !A.drafts.size; location.reload();
   }

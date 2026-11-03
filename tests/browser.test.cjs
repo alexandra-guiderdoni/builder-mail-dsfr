@@ -86,7 +86,7 @@ test('parcours complet par les contrôles : bibliothèque, identités, modèles,
     assert.equal(clipboard.plain.split(packet.articles[0].url).length - 1, 2); assert(clipboard.html.includes('data:image/png;base64,')); assert(!clipboard.plain.includes(packet.watch[0].summary));
     const before = await state(page), bad = {...project, version: 99};
     const badPath = path.join(evidence, 'invalid-application.json'); await fs.writeFile(badPath, JSON.stringify(bad)); await page.locator('#project-input').setInputFiles(badPath);
-    await page.locator('#error').filter({hasText: 'Version de composition'}).waitFor(); assert.deepEqual(await state(page), before);
+    await page.locator('#error').filter({hasText: 'Version de newsletter'}).waitFor(); assert.deepEqual(await state(page), before);
     await page.reload(); await page.waitForFunction(() => window.MailBuilder?.ready); assert.equal((await state(page)).documents.length, 4);
     const fresh = await open(browser, {offline: true}); await expand(fresh.page, 'Sauvegarde et import'); await fresh.page.locator('#project-input').setInputFiles(libraryPath); await saved(fresh.page);
     // #205 : dans un navigateur neuf, la newsletter de départ est écartée par l’import : seules les 4 importées restent.

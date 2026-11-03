@@ -25,7 +25,7 @@
   function applyIdentity(identityId, docId, label) {
     const saving = A.State.change(lib => {
       const doc = lib.documents.find(d => d.id === docId), identity = lib.identities.find(i => i.id === identityId);
-      if (!doc || lib.activeId !== docId || !identity) throw new Error("La composition ou l’identité a changé ; recommencez l’application de l’identité.");
+      if (!doc || lib.activeId !== docId || !identity) throw new Error("La newsletter ou l’identité a changé ; recommencez l’application de l’identité.");
       const frames = M.copy(identity.blocks); frames.forEach(b => { b.id = M.id(); });
       doc.blocks = [...frames.filter(b => family(b) === "En-têtes"), ...doc.blocks.filter(b => !framed(b)), ...frames.filter(b => family(b) === "Pieds de page")];
     });
@@ -75,7 +75,7 @@
     "save-template": async () => { const label = name("template-name"); A.notice(""); const ticket = A.State.noticeTicket(); await A.State.change(lib => { unique(lib.templates, label, "Un modèle"); lib.templates.push(M.clone(A.doc(), label)); }); await announce(`Modèle « ${label} » enregistré dans ce navigateur.`, ticket); },
     "use-template": () => {
       const template = selected(A.library.templates, "saved-templates"), ticket = A.State.noticeTicket(); let replaced = null;
-      return A.State.change(lib => { const made = M.derive(template, M.uniqueName(`${template.name} · composition`, lib.documents)); replaced = made.replacedSubject; lib.documents.push(made.doc); lib.activeId = made.doc.id; })
+      return A.State.change(lib => { const made = M.derive(template, M.uniqueName(`${template.name} · newsletter`, lib.documents)); replaced = made.replacedSubject; lib.documents.push(made.doc); lib.activeId = made.doc.id; })
         .then(() => A.notice(A.Library.subjectNotice("Newsletter créée depuis le modèle", replaced), ticket));
     },
     "remove-template": () => A.Library.askRemoval("templates", selected(A.library.templates, "saved-templates").id),
@@ -134,23 +134,23 @@
     "export-document": () => { A.State.guard(); if (A.State.fresh()) return A.notice("Rien à exporter pour l’instant : créez d’abord une newsletter."); A.Files.json(M.document(A.doc()), A.Files.exportName(A.doc().name, "courriel.json")); A.notice(`Newsletter proposée au téléchargement ${A.Files.imageContents(A.doc())}.`); },
     "export-library": () => { A.State.guard(); if (A.State.fresh()) return A.notice("Rien à exporter pour l’instant : créez d’abord une newsletter."); A.Files.json(M.library(A.library), A.Files.exportName("bibliotheque-courriels", "json")); A.State.exported(); A.State.libraryExported(); A.notice("Newsletters proposées au téléchargement, avec modèles et identités."); },
     "export-library-reminder": () => A.Actions["export-library"](),
-    "read-only-export": () => { A.Files.json(M.library(A.library), "bibliotheque.courriels.json"); A.State.exported(); A.notice("Bibliothèque en mémoire proposée au téléchargement : elle contient le travail de cette fenêtre, avec modèles et identités."); },
+    "read-only-export": () => { A.Files.json(M.library(A.library), "bibliotheque.courriels.json"); A.State.exported(); A.notice("Newsletters de cette fenêtre proposées au téléchargement, avec leur travail non enregistré, les modèles et les identités."); },
     "take-over": A.State.takeOver,
     "reload-page": A.State.reload,
     // Décision #32/#37 : le secours exporte la bibliothèque en mémoire même pendant une saisie d’URL invalide (le brouillon n’en fait pas partie).
-    "rescue-export": () => { A.State.guardEdit(); A.Files.json(M.library(A.library), "bibliotheque.courriels.json"); A.State.exported(); A.notice("Bibliothèque en mémoire proposée au téléchargement, avec modèles et identités."); },
+    "rescue-export": () => { A.State.guardEdit(); A.Files.json(M.library(A.library), "bibliotheque.courriels.json"); A.State.exported(); A.notice("Newsletters de cette fenêtre proposées au téléchargement, avec modèles et identités."); },
     // Jeton relevé au départ : la copie brute n’écrase pas une annonce plus récente posée pendant la lecture du stockage (#122).
-    "export-stored": async () => { const ticket = A.State.noticeTicket(); const record = await A.Storage.load(); if (!record) throw new Error("Aucune donnée enregistrée."); A.Files.json(record, "recuperation.stockage.json"); A.notice("Copie brute du stockage proposée au téléchargement pour récupération.", ticket); },
+    "export-stored": async () => { const ticket = A.State.noticeTicket(); const record = await A.Storage.load(); if (!record) throw new Error("Aucune donnée enregistrée."); A.Files.json(record, "recuperation.stockage.json"); A.notice("Copie de diagnostic du stockage proposée au téléchargement pour récupération.", ticket); },
     "export-mail": async () => {
       A.State.guard(); const html = A.Render.exportHtml(A.doc());
       if (!(await A.Checks.confirm("export", A.Checks.warnings(A.doc(), {...A.Render.weightDetails(html, A.doc()), action: "export"})))) return;
       A.Files.download(html, "text/html;charset=utf-8", A.Files.exportName(A.doc().name, "html")); A.notice(["Courriel proposé au téléchargement.", ...A.Render.warnings(A.doc())].join(" "));
     },
     "copy": A.Files.copy,
-    "example-json": () => { A.State.guard(); A.Files.json(M.create("Exemple de composition", [5, 19, 40]), "exemple.courriel.json"); A.notice("Exemple JSON proposé au téléchargement. Votre newsletter actuelle est conservée."); },
+    "example-json": () => { A.State.guard(); A.Files.json(M.create("Exemple de newsletter", [5, 19, 40]), "exemple.courriel.json"); A.notice("Exemple de fichier de newsletter proposé au téléchargement. Votre newsletter actuelle est conservée."); },
     "json-import": async () => {
       const incoming = await A.Imports.prepare(get("json-input").value), merged = A.Imports.merge(A.library, incoming), ticket = A.State.noticeTicket();
-      return A.State.change(lib => { Object.assign(lib, merged); A.State.withoutStarter(lib); }).then(async () => { await A.Library.open(A.library.activeId); A.notice(`Newsletter ou sauvegarde JSON ajoutée. Les éléments existants sont conservés.${A.Imports.upgradedNote(incoming)}`, ticket); });
+      return A.State.change(lib => { Object.assign(lib, merged); A.State.withoutStarter(lib); }).then(async () => { await A.Library.open(A.library.activeId); A.notice(`Newsletter ou sauvegarde ajoutée. Les éléments existants sont conservés.${A.Imports.upgradedNote(incoming)}`, ticket); });
     }
   };
 })();

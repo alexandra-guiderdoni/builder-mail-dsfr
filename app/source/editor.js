@@ -87,7 +87,7 @@
       if (input.hasAttribute("data-link-label") && !input.value.trim()) throw new Error("Renseignez l’intitulé du lien.");
       mutator(next); M.library(next); A.invalid.delete(input.id); A.UI.fieldError(input, "");
       A.State.change(mutator, false, true); A.UI.selections(); A.UI.blockList();
-    } catch (cause) { A.invalid.add(input.id); A.UI.fieldError(input, cause.message); A.error(`${cause.message} Ce champ n’est pas sauvegardé.`); }
+    } catch (cause) { A.invalid.add(input.id); A.UI.fieldError(input, cause.message); A.error(`${cause.message} Ce champ n’est pas enregistré.`); }
   }
   get("document-name").addEventListener("input", event => edit(event.target, lib => { lib.documents.find(d => d.id === lib.activeId).name = event.target.value; }));
   get("subject").addEventListener("input", event => edit(event.target, lib => { lib.documents.find(d => d.id === lib.activeId).subject = event.target.value; }));
@@ -127,7 +127,7 @@
       A.State.guard(); const display = component && A.Images.displayWidth(component, key);
       A.pendingInputs++; A.notice("Chargement de l’image locale…"); const ticket = A.State.noticeTicket();
       const image = await A.Files.image(file, display).finally(() => { A.pendingInputs--; });
-      await A.State.change(lib => { const b = lib.documents.find(d => d.id === docId)?.blocks.find(b => b.id === blockId); if (!b) throw new Error("La composition a changé pendant le chargement de l’image."); M.localImage(b, key, image.value); });
+      await A.State.change(lib => { const b = lib.documents.find(d => d.id === docId)?.blocks.find(b => b.id === blockId); if (!b) throw new Error("La newsletter a changé pendant le chargement de l’image."); M.localImage(b, key, image.value); });
       A.notice(A.Images.describe(image), ticket);
     });
   });

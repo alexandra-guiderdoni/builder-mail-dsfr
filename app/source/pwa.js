@@ -68,7 +68,7 @@
     const check = () => {
       if (["installed", "activating", "activated"].includes(worker.state)) installed = true;
       if (worker.state === "redundant" && !installed) failed(!registration.active);
-      if (worker.state === "installed" && navigator.serviceWorker.controller) { update.hidden = false; A.notice("Une mise à jour est prête. Vos données seront sauvegardées avant son activation."); }
+      if (worker.state === "installed" && navigator.serviceWorker.controller) { update.hidden = false; A.notice("Une mise à jour est prête. Vos newsletters seront enregistrées avant son activation."); }
     };
     worker.addEventListener("statechange", check); check();
   };

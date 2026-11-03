@@ -84,7 +84,7 @@ test('#208 bibliothèque enregistrée illisible : remplacement et effacement ref
     await page.evaluate(() => { MailBuilder.recoveryOnly = true; });
     for (const reason of ['remplacement', 'effacement']) {
       const refused = await replace(page, 'Interdit', {reason, keepPrevious: reason === 'remplacement'});
-      assert.equal(refused.ok, false); assert.match(refused.message, /données enregistrées brutes/);
+      assert.equal(refused.ok, false); assert.match(refused.message, /copie de diagnostic/);
     }
     assert.deepEqual((await store(page)).library.documents.map(d => d.name), ['Avant']);
   } finally { await browser.close(); }

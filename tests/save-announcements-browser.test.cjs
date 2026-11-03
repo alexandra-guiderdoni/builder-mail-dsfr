@@ -106,9 +106,9 @@ test('une erreur d’écriture est annoncée immédiatement, sans attendre la te
     });
     await type(page, '#subject', 'Panne');
     await until(page, () => window.announcements.length > 0, true);
-    assert.match((await announced(page)).at(-1), /^Modifications non sauvegardées/);
+    assert.match((await announced(page)).at(-1), /^Modifications non enregistrées/);
     await page.clock.runFor(5000);
-    assert.ok((await announced(page)).every(text => !text.startsWith('Bibliothèque sauvegardée')));
+    assert.ok((await announced(page)).every(text => !text.startsWith('Newsletters enregistrées')));
   } finally { await browser.close(); }
 });
 

@@ -64,7 +64,7 @@ test('catalogue sans destination active : l’aide indique la fin et l’ajout y
     await expand(page, 'Ajouter un composant');
     await page.locator('#catalogue').selectOption('mail-51');
     await page.evaluate(() => { MailBuilder.selected = null; MailBuilder.UI.blockList(); });
-    assert.match(await page.locator('#catalogue-add-help').textContent(), /en fin de composition/);
+    assert.match(await page.locator('#catalogue-add-help').textContent(), /en fin de newsletter/);
     const before = await page.evaluate(() => MailBuilder.doc().blocks.map(b => b.id));
     await click(page, '#catalogue-add');
     const after = await page.evaluate(() => MailBuilder.doc().blocks);

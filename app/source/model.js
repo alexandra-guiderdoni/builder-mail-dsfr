@@ -118,14 +118,14 @@
   }
   function document(value) {
     value = current(value);
-    object(value, ["schema", "version", "catalogue", "id", "name", "subject", "blocks"], "Composition");
-    if (value.schema !== "dsfr-mail/document" || ![1, 2].includes(value.version)) fail("Version de composition non prise en charge.");
-    if (value.catalogue !== A.catalog.id) fail("Cette composition utilise un autre catalogue. Conservez son fichier original pour une migration.");
+    object(value, ["schema", "version", "catalogue", "id", "name", "subject", "blocks"], "Newsletter");
+    if (value.schema !== "dsfr-mail/document" || ![1, 2].includes(value.version)) fail("Version de newsletter non prise en charge.");
+    if (value.catalogue !== A.catalog.id) fail("Cette newsletter utilise un autre catalogue. Conservez son fichier original pour une migration.");
     for (const key of ["id", "name", "subject"]) text(value[key], key);
-    if (!value.id || !value.name.trim()) fail("Identifiant et nom de composition requis.");
+    if (!value.id || !value.name.trim()) fail("Identifiant et nom de newsletter requis.");
     blocks(value.blocks);
-    if (value.version === 2 && !remoteBlocks(value.blocks)) fail("Version de composition non prise en charge : la version 2 est réservée aux images distantes.");
-    if (value.version === 1 && remoteBlocks(value.blocks)) fail("Les images distantes nécessitent une composition de version 2. Le fichier original reste inchangé.");
+    if (value.version === 2 && !remoteBlocks(value.blocks)) fail("Version de newsletter non prise en charge : la version 2 est réservée aux images distantes.");
+    if (value.version === 1 && remoteBlocks(value.blocks)) fail("Les images distantes nécessitent une newsletter de version 2. Le fichier original reste inchangé.");
     return value;
   }
   function library(value) {
@@ -133,10 +133,10 @@
     try { libraryFields(value); accepted = collected; return value; } finally { collected = undefined; }
   }
   function libraryFields(value) {
-    object(value, ["schema", "version", "catalogue", "activeId", "documents", "templates", "identities"], "Bibliothèque");
-    if (value.schema !== "dsfr-mail/library" || ![1, 2].includes(value.version)) fail("Version de bibliothèque non prise en charge ; les données sont conservées.");
-    if (value.catalogue !== A.catalog.id) fail("Cette bibliothèque utilise un autre catalogue ; les données restent intactes pour une migration.");
-    if (!Array.isArray(value.documents) || !Array.isArray(value.templates) || !Array.isArray(value.identities)) fail("Bibliothèque incomplète.");
+    object(value, ["schema", "version", "catalogue", "activeId", "documents", "templates", "identities"], "Sauvegarde");
+    if (value.schema !== "dsfr-mail/library" || ![1, 2].includes(value.version)) fail("Version de sauvegarde non prise en charge ; les données sont conservées.");
+    if (value.catalogue !== A.catalog.id) fail("Cette sauvegarde utilise un autre catalogue ; les données restent intactes pour une migration.");
+    if (!Array.isArray(value.documents) || !Array.isArray(value.templates) || !Array.isArray(value.identities)) fail("Sauvegarde incomplète.");
     for (const list of [value.documents, value.templates, value.identities]) {
       const ids = new Set();
       for (const item of list) {
@@ -147,11 +147,11 @@
           blocks(item.blocks);
           if (item.blocks.some(b => !["En-têtes", "Pieds de page"].includes(component(b.component).family))) fail("Une identité contient seulement ses en-têtes et pieds de page.");
         } else document(item);
-        if (ids.has(item.id)) fail("Identifiant de bibliothèque dupliqué."); ids.add(item.id);
+        if (ids.has(item.id)) fail("Identifiant dupliqué dans la sauvegarde."); ids.add(item.id);
       }
     }
-    if (value.version === 2 && ![...value.documents, ...value.templates, ...value.identities].some(i => remoteBlocks(i.blocks))) fail("Version de bibliothèque non prise en charge ; la version 2 est réservée aux images distantes.");
-    if (value.version === 1 && ([...value.documents, ...value.templates].some(d => d.version === 2) || value.identities.some(i => remoteBlocks(i.blocks)))) fail("Les images distantes nécessitent une bibliothèque de version 2. Le fichier original reste inchangé.");
+    if (value.version === 2 && ![...value.documents, ...value.templates, ...value.identities].some(i => remoteBlocks(i.blocks))) fail("Version de sauvegarde non prise en charge ; la version 2 est réservée aux images distantes.");
+    if (value.version === 1 && ([...value.documents, ...value.templates].some(d => d.version === 2) || value.identities.some(i => remoteBlocks(i.blocks)))) fail("Les images distantes nécessitent une sauvegarde de version 2. Le fichier original reste inchangé.");
     if (!value.documents.some(d => d.id === value.activeId)) fail("Newsletter ouverte absente.");
     return value;
   }
@@ -175,7 +175,7 @@
     const definition = component(typeof index === "number" ? `mail-${String(index).padStart(2, "0")}` : index);
     return {id: id(), component: definition.id, values: Object.fromEntries(definition.fields.map(f => [f.key, f.default])), source: ""};
   }
-  function create(name = "Nouvelle composition", indices = [2, 5, 19, 40, 47, 49]) {
+  function create(name = "Nouvelle newsletter", indices = [2, 5, 19, 40, 47, 49]) {
     return {schema: "dsfr-mail/document", version: 1, catalogue: A.catalog.id, id: id(), name, subject: name, blocks: indices.map(createBlock)};
   }
   function clone(value, name = value.name) {

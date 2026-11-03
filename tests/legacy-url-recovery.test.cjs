@@ -48,7 +48,7 @@ test('#193 : une URL ancienne ne masque pas une autre donnée invalide ou un pro
 test('#193 : ancien export refusé avec les emplacements à corriger, sans réinterpréter les adresses', () => {
   const value = library(), block = value.documents[0].blocks[0]; block.values[field(block)] = RAW;
   const before = JSON.stringify(value);
-  assert.throws(() => I.parse(before), error => /copie du fichier JSON/.test(error.message) && error.message.includes('documents.0.blocks.0.values.') && /restent inchangés/.test(error.message));
+  assert.throws(() => I.parse(before), error => /copie du fichier avant/.test(error.message) && error.message.includes('documents.0.blocks.0.values.') && /restent inchangés/.test(error.message));
   assert.equal(JSON.stringify(value), before);
   block.values[field(block)] = 'https://exemple.invalid/destination-choisie';
   assert.deepEqual(I.parse(JSON.stringify(value)).value, value);

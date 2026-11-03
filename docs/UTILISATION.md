@@ -141,11 +141,11 @@ Les images locales sont incorporées ; leur présence dans le fichier ne démont
 
 ### Bibliothèque ancienne avec une adresse HTTPS abrégée (#193)
 
-Une ancienne version acceptait des adresses comme `https:exemple.fr/page`, dont la destination peut dépendre du contexte de collage. Elles ne sont plus autorisées. Si une bibliothèque déjà enregistrée en contient, l’écran « Retrouver votre bibliothèque » présente ses compositions, modèles et identités avec leur contenu textuel, puis les champs concernés. Il ne remplace pas vos données par la composition de départ et ne devine pas la destination des liens.
+Une ancienne version acceptait des adresses comme `https:exemple.fr/page`, dont la destination peut dépendre du contexte de collage. Elles ne sont plus autorisées. Si une bibliothèque déjà enregistrée en contient, l’écran « Retrouver vos newsletters » présente ses compositions, modèles et identités avec leur contenu textuel, puis les champs concernés. Il ne remplace pas vos données par la composition de départ et ne devine pas la destination des liens.
 
-1. Choisir **« Exporter la copie brute d’origine »** pour conserver le relevé exact lu au démarrage. Ce téléchargement ne contient pas les corrections en cours ; il reste attaché à l’original même si une autre fenêtre modifie ensuite le stockage.
+1. Choisir **« Exporter une copie de diagnostic »** pour conserver le relevé exact lu au démarrage. Ce téléchargement ne contient pas les corrections en cours ; il reste attaché à l’original même si une autre fenêtre modifie ensuite le stockage.
 2. Corriger chaque destination complète en `https://` après l’avoir vérifiée. Un lien source facultatif peut être retiré ; un lien requis doit être corrigé. Les règles existantes des liens `mailto` de pied de page restent applicables.
-3. Choisir **« Restaurer la bibliothèque corrigée »**. Avant ce clic, aucune correction n’est enregistrée et aucune copie/export de courriel n’est autorisée. L’atelier valide toute la bibliothèque et conserve l’original comme état précédent dans la même transaction. Cet état précédent sera remplacé par la sauvegarde suivante : garder le téléchargement brut pour une conservation durable.
+3. Choisir **« Restaurer les newsletters corrigées »**. Avant ce clic, aucune correction n’est enregistrée et aucune copie/export de courriel n’est autorisée. L’atelier valide toute la bibliothèque et conserve l’original comme état précédent dans la même transaction. Cet état précédent sera remplacé par la sauvegarde suivante : garder le téléchargement brut pour une conservation durable.
 
 Si une autre fenêtre a enregistré la bibliothèque entre-temps, la récupération est refusée sans écraser son travail. Conserver la copie brute et les destinations choisies, puis recharger pour repartir des données courantes. Si une autre erreur que ces seules URL est présente, l’atelier conserve son refus habituel ; il ne tolère pas les formats inconnus, images invalides ou protocoles interdits.
 
@@ -155,7 +155,7 @@ Pour un **ancien fichier JSON importé**, l’import reste non destructif : un m
 
 Un champ invalide est signalé et sa nouvelle valeur n’est pas enregistrée. Corriger ce champ ou utiliser « Annuler les champs invalides » avant de changer de composition ou d’exporter. Un import refusé conserve les compositions existantes.
 
-Si la sauvegarde échoue, le travail reste en mémoire : exporter la bibliothèque avant de fermer. Le message nomme la cause (stockage indisponible, bibliothèque locale inaccessible, espace de stockage saturé ou autre fenêtre) et le bouton « Exporter la bibliothèque en mémoire » le suit directement. Si une autre fenêtre a enregistré des changements, voir « Plusieurs fenêtres » ci-dessous.
+Si la sauvegarde échoue, le travail reste en mémoire : exporter la bibliothèque avant de fermer. Le message nomme la cause (stockage indisponible, bibliothèque locale inaccessible, espace de stockage saturé ou autre fenêtre) et le bouton « Exporter les newsletters de cette fenêtre » le suit directement. Si une autre fenêtre a enregistré des changements, voir « Plusieurs fenêtres » ci-dessous.
 
 Après un échec, l’accueil et l’éditeur restent accessibles : ces changements de vue conservent le travail en mémoire, sans l’enregistrer. Le rechargement et l’application d’une mise à jour restent refusés jusqu’à une sauvegarde réussie.
 
@@ -163,7 +163,7 @@ Un retour à l’accueil n’est refusé que pour un champ invalide ou un fichie
 
 Si le navigateur avertit lors d’une fermeture pendant la sauvegarde, annuler le départ et attendre l’indication de sauvegarde réussie avant de fermer à nouveau.
 
-« Restaurer l’état précédent » relit la sauvegarde précédant la dernière écriture réussie ; ce n’est pas un historique illimité ni une annulation de chaque frappe. Exporter d’abord le travail à conserver. Si le navigateur a refusé l’ouverture de la bibliothèque au démarrage, « Restaurer l’état précédent » n’écrit rien : la page propose d’exporter le travail temporaire, puis de recharger l’atelier pour relire la bibliothèque enregistrée (aucun faux conflit de fenêtre, et le contrôle de conflit reste actif). « Exporter les données enregistrées brutes » produit une copie de secours pour le diagnostic ; ce format brut n’est pas un fichier de composition importable.
+« Restaurer l’état précédent » relit la sauvegarde précédant la dernière écriture réussie ; ce n’est pas un historique illimité ni une annulation de chaque frappe. Exporter d’abord le travail à conserver. Si le navigateur a refusé l’ouverture de la bibliothèque au démarrage, « Restaurer l’état précédent » n’écrit rien : la page propose d’exporter le travail temporaire, puis de recharger l’atelier pour relire la bibliothèque enregistrée (aucun faux conflit de fenêtre, et le contrôle de conflit reste actif). « Exporter une copie de diagnostic » produit une copie de secours pour le diagnostic ; ce format brut n’est pas un fichier de composition importable.
 
 Après une mise à jour de l’atelier qui ne change que la présentation du courriel, les newsletters enregistrées, les exports et les sauvegardes d’une version antérieure s’ouvrent normalement ; un message indique qu’ils ont été mis à jour vers le modèle courant. Une version ou un catalogue inconnu n’est pas réinterprété : conserver le fichier d’origine et demander une migration. Si la bibliothèque stockée ne peut pas être relue, l’atelier préserve le stockage existant ; le travail temporaire doit être exporté. Le message ne propose « Restaurer l’état précédent » que si une sauvegarde précédente lisible a été trouvée.
 
@@ -171,7 +171,7 @@ Après une mise à jour de l’atelier qui ne change que la présentation du cou
 
 Une seule fenêtre de l’atelier enregistre à la fois dans la bibliothèque de ce navigateur. Quand une autre fenêtre a enregistré entre-temps, ou a repris la main, cette fenêtre passe en lecture seule : un bandeau l’indique, la saisie est désactivée et rien n’y est plus enregistré. Le bandeau propose deux actions :
 
-- « Exporter la bibliothèque en mémoire » : le fichier contient le travail de cette fenêtre, y compris ses modifications non enregistrées ;
+- « Exporter les newsletters de cette fenêtre » : le fichier contient le travail de cette fenêtre, y compris ses modifications non enregistrées ;
 - « Reprendre la main » : l’atelier relit la bibliothèque enregistrée, la conserve telle quelle et y ajoute en copies les compositions, modèles et identités modifiés dans cette fenêtre, suffixés de l’heure, par exemple « Lettre d’octobre · copie à 14 h 32 ». Rien n’est fusionné ni remplacé : comparer les deux versions, puis supprimer celle qui ne sert plus. Une suppression faite dans cette fenêtre n’est pas reportée. L’autre fenêtre passe à son tour en lecture seule ; selon le navigateur, elle peut ne le découvrir qu’à sa prochaine modification.
 
 Si l’enregistrement échoue pendant la reprise, rien n’est écrit : la fenêtre reste en lecture seule et son travail doit être exporté.

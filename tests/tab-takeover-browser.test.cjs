@@ -121,12 +121,12 @@ test('sans notification interfenêtres, la première modification de l’ancien 
     await first.locator('#subject').fill(subject);
     await first.waitForFunction(() => {
       const status = document.querySelector('#save-state').textContent;
-      return status.startsWith('Lecture seule') || status === 'Newsletters sauvegardées dans ce navigateur.';
+      return status.startsWith('Lecture seule') || status === 'Newsletters enregistrées dans ce navigateur.';
     });
     assert.equal((await store(other)).token, storedAfterTakeover.token, 'Une tentative refusée ne doit pas remplacer le jeton du nouveau propriétaire.');
     await expectReadOnly(first, 'ancien onglet à sa première modification');
     assert.match(await first.locator('#error').innerText(), /Une autre fenêtre.*Exportez/s);
-    assert.match(await first.locator('#save-state').innerText(), /Lecture seule.*non sauvegardées/);
+    assert.match(await first.locator('#save-state').innerText(), /Lecture seule.*non enregistrées/);
     const expectedMemory = structuredClone(oldMemory);
     expectedMemory.documents.find(doc => doc.id === expectedMemory.activeId).subject = subject;
     const memoryAfterRefusal = await state(first);

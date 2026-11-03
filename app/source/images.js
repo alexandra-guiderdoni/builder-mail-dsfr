@@ -59,7 +59,7 @@
     M.image(original);
     const image = await decoded(original), from = [image.naturalWidth, image.naturalHeight];
     if (source === "image/gif" && gifFrames(atob(payload(original))) > 1) {
-      if (bytes > contract.animatedGifBytes) throw new Error(`GIF animé refusé : ${mio(bytes)}, au-delà de la limite de 1 Mio. Un GIF animé n’est ni réduit ni recompressé : allégez-le (moins d’images, de couleurs ou de pixels) ou choisissez une image fixe. La composition n’est pas modifiée.`);
+      if (bytes > contract.animatedGifBytes) throw new Error(`GIF animé refusé : ${mio(bytes)}, au-delà de la limite de 1 Mio. Un GIF animé n’est ni réduit ni recompressé : allégez-le (moins d’images, de couleurs ou de pixels) ou choisissez une image fixe. La newsletter n’est pas modifiée.`);
       return {value: original, type: source, width: from[0], height: from[1], bytes, animated: true, resized: false};
     }
     const width = Math.min(from[0], targetWidth(display)), height = Math.max(1, Math.round(from[1] * width / from[0]));
@@ -79,7 +79,7 @@
       ? `GIF animé conservé tel quel, ${number(result.width)} × ${number(result.height)} pixels, ${kio(result.bytes)}`
       : `${result.resized ? "réduite à " : ""}${number(result.width)} × ${number(result.height)} pixels, ${result.type === "image/png" ? "PNG" : "JPEG"}, ${kio(result.bytes)}`;
     const warning = result.bytes > contract.warningBytes ? ` Attention : ${kio(result.bytes)} après compression, au-delà des 300 Kio conseillés par image ; le courriel sera plus lourd à envoyer et à recevoir. Choisissez si possible une image plus légère.` : "";
-    return `Image locale incorporée à la composition : ${summary}.${warning}`;
+    return `Image locale incorporée à la newsletter : ${summary}.${warning}`;
   }
   A.Images = Object.freeze({contract, displayWidth, targetWidth, help, inputHelp, gifFrames, prepare, describe});
 })();

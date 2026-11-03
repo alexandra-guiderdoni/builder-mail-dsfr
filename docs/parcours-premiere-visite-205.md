@@ -50,6 +50,8 @@ Pendant la première visite, la liste des newsletters, « Reprendre », le compt
 
 ### Proposé pour #207 (parcours de secours, hors tâches du test)
 
+Réalisé le 3 novembre 2026 sur la branche `feature/messages-207`, selon les principes ci-dessous. Sont conservés : « Importer du JSON » (contrat du skill), « Outil de composition institutionnelle » et les messages de l’ancienne distribution 09eff89 que vérifie `remote-images-browser`. « Copie brute » et « données enregistrées brutes » deviennent « copie de diagnostic ».
+
 Environ 90 messages d’erreur et de récupération (lecture seule entre fenêtres, stockage inaccessible, ancienne bibliothèque, versions de fichier) gardent « bibliothèque », « composition » et « JSON ». Exemples : « Exportez la bibliothèque en mémoire », « Modifications non sauvegardées. Exportez votre bibliothèque. », « Version de composition non prise en charge. ». Leur reformulation touche une vingtaine de fichiers de test et se fait avec #207, selon les principes ci-dessous. L’inventaire s’obtient par une recherche des mots « JSON », « composition », « bibliothèque », « brutes », « prototype » dans `app/source/`.
 
 ### Principes

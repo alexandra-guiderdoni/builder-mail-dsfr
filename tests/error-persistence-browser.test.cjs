@@ -10,7 +10,7 @@ const {rejectLargeWrites, limitNativeQuota} = require('./portability-storage.cjs
 // Quota réel de Chromium : fixé avant la première ouverture du stockage.
 const bulky = 'Objet de remplissage synthétique. '.repeat(20000);
 const limitQuota = engineName === 'chromium' ? limitNativeQuota : rejectLargeWrites;
-const failed = page => page.locator('#save-state').filter({hasText: 'Modifications non sauvegardées'}).waitFor();
+const failed = page => page.locator('#save-state').filter({hasText: 'Modifications non enregistrées'}).waitFor();
 
 test('cancel-fields n’éteint pas l’alerte persistante d’échec de sauvegarde', async () => {
   const browser = await chromium.launch({headless: true});

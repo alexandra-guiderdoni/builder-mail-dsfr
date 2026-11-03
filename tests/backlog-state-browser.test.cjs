@@ -135,7 +135,7 @@ test('#166 : suppression IndexedDB réelle, diagnostic stockage, export mémoire
     await click(page, TAKE_OVER); await saved(page);
     assert.equal(await page.locator(READ_ONLY).isVisible(), false);
     assert.deepEqual((await store(page)).library, memory);
-    assert.match(await page.locator('#notice').innerText(), /bibliothèque en mémoire.*enregistrée de nouveau/);
+    assert.match(await page.locator('#notice').innerText(), /newsletters de cette fenêtre.*enregistrées de nouveau/);
     assert.doesNotMatch(await page.locator('#notice').innerText(), /copie horodatée|autre fenêtre/);
     assert.equal(await page.locator('#subject').inputValue(), 'Travail conservé après disparition du stockage');
   } finally { await browser.close(); }

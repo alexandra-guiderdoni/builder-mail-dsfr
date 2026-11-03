@@ -15,7 +15,7 @@ test('quota simulé : aucune écriture partielle, export du travail puis récup�
       IDBObjectStore.prototype.put = function(...args) { if (window.failWrites && this.name === 'library') throw new DOMException('Quota de recette', 'QuotaExceededError'); return put.apply(this, args); };
     });
     await page.locator('#document-name').fill('Travail en mémoire');
-    await page.locator('#save-state').filter({hasText: 'Modifications non sauvegardées'}).waitFor();
+    await page.locator('#save-state').filter({hasText: 'Modifications non enregistrées'}).waitFor();
     assert.deepEqual(await store(page), before);
     await expand(page, 'Sauvegarde et import');
     const output = await download(page, '[data-action=export-document]', 'quota-composition.json');
@@ -55,7 +55,7 @@ test('une version de bibliothèque inconnue reste intacte jusqu’à récupérat
       await new Promise((resolve, reject) => { const request = indexedDB.open('builder-mail-dsfr-library', 1); request.onsuccess = () => { const tx = request.result.transaction('library', 'readwrite'); tx.objectStore('library').put(record, 'current'); tx.oncomplete = resolve; tx.onerror = reject; }; });
     });
     await page.reload(); await page.waitForFunction(() => window.MailBuilder?.ready);
-    await page.locator('#error').filter({hasText: 'Version de bibliothèque non prise en charge'}).waitFor();
+    await page.locator('#error').filter({hasText: 'Version de sauvegarde non prise en charge'}).waitFor();
     await enterEditor(page);
     await page.locator('#document-name').fill('Travail temporaire récupérable');
     assert.equal((await store(page)).library.version, 99);
@@ -156,7 +156,7 @@ test('abandon de transaction après écriture : la transaction est abandonnée a
       };
     });
     await page.locator('#document-name').fill('Travail en mémoire');
-    await page.locator('#save-state').filter({hasText: 'Modifications non sauvegardées'}).waitFor();
+    await page.locator('#save-state').filter({hasText: 'Modifications non enregistrées'}).waitFor();
     assert.equal(await page.evaluate(() => window.abortedAfterPut), 1, 'l’abandon doit survenir après l’écriture de current');
     // Depuis #32, un abandon sans erreur nommée est classé « inaccessible » ; un vrai QuotaExceededError est classé
     // « saturé » (couvert par save-rescue-browser, pas ici). Ce test ne doit pas accepter « saturé », qui serait un
@@ -213,7 +213,7 @@ for (const carrier of quotaCarriers) {
         };
       }, carrier);
       await page.locator('#document-name').fill('Travail en mémoire');
-      await page.locator('#save-state').filter({hasText: 'Modifications non sauvegardées'}).waitFor();
+      await page.locator('#save-state').filter({hasText: 'Modifications non enregistrées'}).waitFor();
       assert.equal(await page.evaluate(() => window.carrierError), null, 'le moteur doit accepter la redéfinition de error sur l’instance');
       assert.equal(await page.evaluate(() => window.abortedAfterPut), 1, 'l’abandon doit survenir après l’écriture de current');
       const errorText = await page.locator('#error').innerText();

@@ -13,7 +13,7 @@ async function importDocument(page, build) {
   // La notice précédente est effacée : elle ne réapparaît qu’après l’import, l’ouverture et la sauvegarde.
   await page.evaluate(() => MailBuilder.notice(''));
   await click(page, '[data-action=json-import]');
-  await page.locator('#notice').filter({hasText: 'Newsletter ou sauvegarde JSON ajoutée'}).waitFor();
+  await page.locator('#notice').filter({hasText: 'Newsletter ou sauvegarde ajoutée'}).waitFor();
   await saved(page);
 }
 
@@ -174,7 +174,7 @@ test('identité : une composition changée pendant la confirmation est signalée
     await page.evaluate(() => MailBuilder.State.change(lib => { lib.activeId = lib.documents.find(d => d.id !== lib.activeId).id; }));
     const before = await state(page);
     await click(page, '#identity-confirm');
-    await page.locator('#error').filter({hasText: 'La composition ou l’identité a changé'}).waitFor();
+    await page.locator('#error').filter({hasText: 'La newsletter ou l’identité a changé'}).waitFor();
     assert.equal(await dialogOpen(page), false);
     assert.deepEqual(await state(page), before);
     assert.deepEqual(errors, []);

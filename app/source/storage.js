@@ -12,10 +12,10 @@
       let settled = false, request;
       const refused = (kind, message) => { settled = true; reject(failure(kind, message)); };
       if (!window.indexedDB) { refused("absent", "Stockage indisponible dans ce navigateur : rien n’y est enregistré ni relu."); return; }
-      try { request = indexedDB.open("builder-mail-dsfr-library", 1); } catch { refused("inaccessible", "Bibliothèque locale inaccessible : le navigateur refuse son ouverture."); return; }
+      try { request = indexedDB.open("builder-mail-dsfr-library", 1); } catch { refused("inaccessible", "Stockage du navigateur inaccessible : le navigateur refuse son ouverture."); return; }
       request.onupgradeneeded = () => request.result.createObjectStore("library");
-      request.onerror = () => refused("inaccessible", "Bibliothèque locale inaccessible : le navigateur refuse son ouverture.");
-      request.onblocked = () => refused("inaccessible", "Bibliothèque locale inaccessible : fermez les autres fenêtres de l’atelier pour l’ouvrir.");
+      request.onerror = () => refused("inaccessible", "Stockage du navigateur inaccessible : le navigateur refuse son ouverture.");
+      request.onblocked = () => refused("inaccessible", "Stockage du navigateur inaccessible : fermez les autres fenêtres de l’atelier pour l’ouvrir.");
       request.onsuccess = () => {
         const db = request.result;
         if (settled) { db.close(); return; }
@@ -34,12 +34,12 @@
     return new Promise((resolve, reject) => {
       const tx = db.transaction("library", "readonly"), request = tx.objectStore("library").get(key);
       tx.oncomplete = () => resolve(request.result);
-      tx.onerror = tx.onabort = () => reject(failure("inaccessible", "Bibliothèque locale inaccessible : lecture impossible ; les données présentes ne sont pas remplacées."));
+      tx.onerror = tx.onabort = () => reject(failure("inaccessible", "Stockage du navigateur inaccessible : lecture impossible ; les données présentes ne sont pas remplacées."));
     });
   }
   // Motifs d’un remplacement voulu (#208) : une fenêtre concurrente les annonce au lieu d’un conflit ou d’une disparition.
-  const REASONS = {remplacement: "La bibliothèque a été remplacée par une sauvegarde restaurée dans une autre fenêtre : vos dernières modifications ne sont pas enregistrées ici.",
-    effacement: "La bibliothèque a été effacée dans une autre fenêtre : vos dernières modifications ne sont pas enregistrées ici."};
+  const REASONS = {remplacement: "Vos newsletters ont été remplacées par une sauvegarde restaurée dans une autre fenêtre : vos dernières modifications ne sont pas enregistrées ici.",
+    effacement: "Vos newsletters ont été effacées dans une autre fenêtre : vos dernières modifications ne sont pas enregistrées ici."};
   // Une seule transaction contrôle le jeton puis écrit. Une sauvegarde ordinaire garde l’état courant comme état précédent ;
   // un remplacement le garde ou l’efface selon l’appelant, et marque l’enregistrement de son motif.
   async function write(value, expectedToken, {reason, keepPrevious = true} = {}) {
@@ -57,9 +57,9 @@
       // Le quota peut être refusé par l’écriture, par la requête ou à la validation de la transaction.
       tx.onerror = tx.onabort = event => {
         const name = (refusal || tx.error || event?.target?.error)?.name;
-        reject(conflict ? failure(conflict, conflict === "conflit" ? "Une autre fenêtre a modifié la bibliothèque : vos dernières modifications ne sont pas enregistrées ici." : conflict === "réinitialisé" ? "La bibliothèque enregistrée a disparu du stockage : vos dernières modifications restent en mémoire seulement." : REASONS[conflict])
+        reject(conflict ? failure(conflict, conflict === "conflit" ? "Une autre fenêtre a modifié vos newsletters : vos dernières modifications ne sont pas enregistrées ici." : conflict === "réinitialisé" ? "Les newsletters enregistrées ont disparu du stockage : vos dernières modifications restent en mémoire seulement." : REASONS[conflict])
           : name === "QuotaExceededError" ? failure("saturé", "Espace de stockage saturé : vos dernières modifications ne sont pas enregistrées.")
-          : failure("inaccessible", "Bibliothèque locale inaccessible : vos dernières modifications ne sont pas enregistrées."));
+          : failure("inaccessible", "Stockage du navigateur inaccessible : vos dernières modifications ne sont pas enregistrées."));
       };
     });
   }
@@ -72,7 +72,7 @@
     return new Promise((resolve, reject) => {
       const tx = db.transaction("library", "readwrite"); tx.objectStore("library").put(meta, "meta");
       tx.oncomplete = () => resolve(meta);
-      tx.onerror = tx.onabort = () => reject(failure("inaccessible", "Bibliothèque locale inaccessible : la date du dernier export n’est pas enregistrée."));
+      tx.onerror = tx.onabort = () => reject(failure("inaccessible", "Stockage du navigateur inaccessible : la date du dernier export n’est pas enregistrée."));
     });
   }
   const replace = (value, expectedToken, {reason, keepPrevious}) => write(value, expectedToken, {reason, keepPrevious});

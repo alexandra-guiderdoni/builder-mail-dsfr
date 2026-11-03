@@ -39,7 +39,7 @@ test('#193 : bibliothèque issue de l’ancien modèle, récupération guidée p
   assert.equal(await panel.isVisible(), true, 'les compositions anciennes doivent être proposées à la récupération, pas remplacées silencieusement');
   assert.match(await panel.innerText(), /Composition saine conservée/);
   assert.match(await panel.innerText(), /Composition ancienne à corriger/);
-  assert.match(await page.locator('#library-count').innerText(), /2 compositions/);
+  assert.match(await page.locator('#library-count').innerText(), /2 newsletters/);
   const input = panel.locator('input[type=url]'); assert.equal(await input.inputValue(), RAW);
   assert.equal(await panel.locator('[data-legacy-restore]').isDisabled(), true);
   assert.equal(await page.locator('#workspace').isVisible(), false, 'la bibliothèque de départ ne doit pas passer pour les données retrouvées');
