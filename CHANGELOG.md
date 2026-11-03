@@ -13,7 +13,7 @@
 - **Ouverture sans bascule :** tant que le stockage n’est pas lu, l’accueil ne montre que son titre et « Lecture de vos newsletters… ». L’accueil habituel, « Reprendre » et « Tout effacer » compris, ne s’affiche plus un instant avant l’accueil guidé. Un test retient l’ouverture du stockage pour vérifier cet état.
 - **États d’entrée :** première visite, newsletters existantes, retour après « Tout effacer » et stockage illisible sont testés dans le portable et dans la version web (`entry-states-browser`).
 - **Accessibilité :** requalification ciblée de l’accueil refondu, automatique et sans lecteur d’écran réel, dans `docs/accessibilite/accueil-20261103/RAPPORT.md`. Aucune violation axe ; contrastes, titres, ordre clavier, focus et largeur de 320 px vérifiés.
-- **Reste pour #207, après le test #206 :** le README en mode d’emploi.
+- **README en mode d’emploi :** il commence par ouvrir l’atelier, créer une newsletter en quatre étapes et ne pas perdre son travail. Les recettes, audits et commandes de développement passent dans une section « Pour l’équipe technique », sous forme de liens vers `docs/`. À ajuster après le test #206.
 
 ## 3 novembre 2026 - Accueil guidé de la première visite (#205)
 

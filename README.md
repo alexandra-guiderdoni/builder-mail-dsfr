@@ -1,42 +1,43 @@
 # Atelier de courriels DSFR
 
-Application locale pour composer des courriels à partir des **52 sections et variantes du modèle officiel épinglé**, conserver plusieurs compositions, réutiliser des modèles et des identités de service, puis récupérer le courriel dans sa messagerie.
+Créez vos newsletters aux couleurs de l’État, puis collez-les dans votre messagerie. Sans compte et sans rien installer. L’atelier fonctionne même sans connexion.
 
-**État vérifié au 1er novembre 2026 :** code livré sur `main` au SHA `cbe93e3`, CI complète **606/606**, aucun échec ni test ignoré. Le [bilan de livraison](docs/ETAT-LIVRAISON.md) consolide les preuves, les limites natives et les deux issues ouvertes (#13 et #52, Outlook/Mélissa). La conformité RGAA exhaustive et la qualification du parc restent à démontrer.
+**[Ouvrir l’atelier](https://alexandra-guiderdoni.github.io/builder-mail-dsfr/)**
 
-**Qualifications historiques.** Édition, bibliothèque, copie et installation avec relance hors connexion ont été exercées sur Mac. Des messages envoyés depuis Gmail et Mélissa ont été reçus avec les images PNG/JPEG conservées. Le débordement horizontal découvert dans le message Mélissa possède une correction et des tests dédiés. Windows/Outlook, le lecteur d’écran retenu, l’installation sur le parc et l’autorisation de son accès au site restent à qualifier. Le [dossier de recette](docs/RECETTE-APPLICATION.md) distingue chaque preuve et ses limites.
+## Deux façons de l’ouvrir
 
-## Ouvrir l’atelier
+- **En ligne :** ouvrez [l’atelier](https://alexandra-guiderdoni.github.io/builder-mail-dsfr/) dans votre navigateur. Si le navigateur le propose, « Installer l’atelier » l’ajoute à vos applications.
+- **En fichier :** [téléchargez l’atelier portable](https://alexandra-guiderdoni.github.io/builder-mail-dsfr/atelier-portable.html), rangez-le dans vos documents, puis ouvrez-le par un double-clic. Il fonctionne sans connexion.
 
-La [campagne RGAA](docs/accessibilite/css-20261023/RAPPORT.md) publie les matrices des 106 critères et 258 tests, les corrections vérifiées et les lacunes restantes. La campagne historique qui suivait #28 comptait **134 tests réussis**, avec les contrôles ajoutés pour les liens `mailto:` des pieds de page, les liens de texte des articles, la variante `mail-31` sans image et les liens supplémentaires de `mail-50`, après le [correctif des défilements internes #28](docs/RECETTE-DEFILEMENT.md). Les anciens reçus gardent leurs empreintes et leur périmètre historique. Quatre causes sont corrigées dans le rendu dérivé, dont quinze déclarations CSS invalides retirées sans changement de couleur observé ; cette campagne laissait huit familles de signalements du validateur HTML à instruire. Un objet vide utilise le nom de composition comme titre de l’export HTML, avec une aide associée au champ Objet. Les 13 intitulés des liens intégrés aux composants sont obligatoires avant copie ou téléchargement HTML ; les anciens JSON restent récupérables et leur aperçu indique les liens à compléter sans les activer. Le nom de composition et les 13 champs URL annoncent aussi leur contrainte. **La conformité RGAA à 100 % reste à démontrer**, avec qualification de chaque test applicable et essais humains manquants.
+## Créer une newsletter en quatre étapes
 
-Le [protocole de contraste](docs/accessibilite/contrastes-20261022/RAPPORT.md) décrit 80 observations ciblées et cinq contrôles négatifs. Leur renouvellement sur cette version figure dans la campagne courante ; il ne qualifie pas globalement les critères de couleur.
+1. **Partez d’un modèle.** Dans « Exemples », choisissez « Créer à partir de cet exemple » : la newsletter est déjà remplie, il ne reste qu’à l’adapter. Pour partir d’un plan vide, choisissez un « Point de départ », puis « Créer une newsletter ».
+2. **Remplacez les contenus.** Cliquez sur un bloc pour modifier ses textes, ses liens et ses images (« Depuis mon ordinateur »). « Ajouter un composant » ajoute un bloc.
+3. **Relisez l’aperçu** du courriel.
+4. **Copiez le courriel.** « Copier le courriel », puis collez dans un nouveau message de votre messagerie (`Ctrl+V`, ou `⌘V` sur Mac). Ajoutez l’objet, puis **envoyez-vous d’abord un test.**
 
-Le [complément historique de zoom natif Firefox](docs/accessibilite/zoom-20261023/RAPPORT.md) conserve 245 observations, avec les 52 composants et les vrais aperçus isolés. Certains titres ne doublent pas au réglage 200 % ; le portable permet leur doublement à 240 % dans les deux modes testés. Lisibilité et fonctionnalités restent à qualifier, sans nouveau taux RGAA.
+Avant la copie, l’atelier signale ce qui reste à vérifier : textes d’exemple non remplacés, liens de démonstration, « Votre service » à la place du nom de votre service.
 
-**[Ouvrir l’atelier en ligne](https://alexandra-guiderdoni.github.io/builder-mail-dsfr/)**. Le correctif #28 et le rechargement hors connexion après préparation du cache ont été vérifiés le 23 octobre 2026 ; [reçu de publication et limites](docs/recette-defilement-publication.json). Dans une session existante, activer « Appliquer la mise à jour » lorsqu’il apparaît.
+## Ne pas perdre votre travail
 
-Télécharger puis ouvrir [le fichier portable](app/distribution/portable.html) par double-clic. Il contient l’interface, les composants et les images de départ ; il fonctionne dès la première ouverture sans réseau. Aucun Python, Node.js, compte ou service d’IA n’est nécessaire sur le poste métier.
+- **Vos newsletters sont enregistrées automatiquement,** dans ce navigateur et sur ce poste seulement.
+- **Gardez-en une copie dans un fichier :** « Exporter Mes newsletters », dans « Sauvegarde et import » en bas de page. Faites-le régulièrement, et toujours avant de changer de poste ou de navigateur. Effacer les données du navigateur efface aussi vos newsletters.
+- **Pour les retrouver,** dans « Sauvegarde et import » : « Restaurer une sauvegarde », puis choisissez votre fichier.
+- **La version en ligne et le fichier portable ne partagent pas leurs newsletters.** Pour passer de l’un à l’autre, exportez dans l’un, puis, dans l’autre, choisissez « Ajouter une newsletter ou une sauvegarde depuis un fichier ».
 
-L’accueil « Mes newsletters » retrouve les compositions de ce navigateur. Ouvrir une édition, la renommer, la dupliquer, l’exporter ou la supprimer après confirmation. Dans l’éditeur, « Retour à Mes newsletters » ramène à cet accueil. Les fichiers et sauvegardes restent accessibles depuis les deux vues.
+## Bon à savoir
 
-La liste, le catalogue ouvert, les champs de contenu et l’aperçu s’allongent dans la page. « Revenir au bloc sélectionné » facilite le retour depuis les champs. La zone technique JSON reste compacte.
+- L’atelier n’envoie rien et ne se connecte à aucune messagerie : c’est vous qui collez et envoyez le message.
+- L’affichage dans Outlook et dans Mélissa n’est pas encore vérifié dans tous les cas. Le test envoyé à vous-même reste indispensable.
+- Un courriel trop lourd peut être coupé par certaines messageries. L’atelier vous prévient et indique quoi alléger.
 
-Personnaliser les blocs, charger ses images locales ou appliquer une adresse HTTPS, puis attendre l’indication de sauvegarde. **Exporter régulièrement la bibliothèque** : les données du navigateur dépendent du profil et de son origine. Un fichier de travail exporté contient les images locales. Chaque champ image accepte aussi une adresse HTTPS directe : l’image reste hébergée, nécessite le réseau pour être rechargée et n’est pas archivée dans l’export. Ces références utilisent le format v2, refusé par les anciennes versions ; le tout-local reste v1. Changer de newsletter ne demande pas de vider le cache du programme.
+Pour aller plus loin (modèles, identités de service, images en ligne, plusieurs fenêtres, messages d’erreur) : le [guide d’utilisation](docs/UTILISATION.md).
 
-Chaque bloc propose « Lien source facultatif du bloc » et **« Intitulé du lien source »** : remplacer « Consulter la source » par le texte souhaité. Cet intitulé est conservé dans la bibliothèque, les modèles, les fichiers et la copie du courriel. L’interface utilise localement Marianne, la grille, les champs et les boutons du DSFR 1.15.4 ; les espacements et le repli des colonnes ont été vérifiés de 320 à 1440 px.
+---
 
-Le [guide d’utilisation](docs/UTILISATION.md) explique modèles, identités, imports JSON, exports et récupération. Le [format JSON générique](docs/FORMAT-JSON.md) possède un [exemple importable](app/distribution/exemple.courriel.json) et un [schéma](app/distribution/courriels.schema.json). Les anciens fichiers de composition v1 restent acceptés.
+## Pour l’équipe technique
 
-La collecte SNUM a sa [page HTML autonome dédiée](app/distribution/snum.html) : elle convertit le paquet métier en composition JSON, à importer ensuite dans le builder. Elle organise les rubriques et les articles avec le même moteur de rendu. Le builder ne contient plus d’import spécifique SNUM.
-
-La [variante web](app/distribution/web/index.html) partage le moteur du portable et est publiée sur GitHub Pages. Son cache a été exercé sur l’origine publique ; sa relance après installation a été observée en boucle locale sur le Mac. L’installation sur le parc reste à qualifier. Pour retrouver ses compositions sur l’origine web, importer un export JSON de sa bibliothèque portable.
-
-Pour la recette métier, importer [la bibliothèque des neuf familles](app/distribution/qualification.courriels.json) : elle contient les 52 sections à examiner dans les messages reçus.
-
-## Développer et vérifier
-
-Python 3.10+ et Node.js 24.22.1 (version épinglée en CI) servent à la génération et aux recettes, uniquement sur le poste de développement :
+Les distributions sont générées depuis `app/source/`, `app/snum/`, `app/assets/`, `scripts/` et `reference/catalogue.json`. Python 3.10+ et Node.js 24.22.1 servent seulement sur le poste de développement :
 
 ```sh
 python3 scripts/build_app.py
@@ -45,20 +46,20 @@ PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm ci --ignore-scripts
 npm test
 ```
 
-Les tests navigateur nécessitent le Chromium de la version Playwright épinglée. La [maintenance](docs/MAINTENANCE.md) décrit les sources, les prérequis, la recette Firefox, le stockage et la procédure de mise à jour.
+| Besoin | Document |
+|---|---|
+| État livré, preuves et limites | [Bilan de livraison](docs/ETAT-LIVRAISON.md), [historique des livraisons](CHANGELOG.md) |
+| Recettes | [Recette de l’application](docs/RECETTE-APPLICATION.md), [défilements #28](docs/RECETTE-DEFILEMENT.md), [reçu de publication](docs/recette-defilement-publication.json) |
+| Accessibilité | [Campagne RGAA](docs/accessibilite/css-20261023/RAPPORT.md), [contrastes](docs/accessibilite/contrastes-20261022/RAPPORT.md), [zoom Firefox](docs/accessibilite/zoom-20261023/RAPPORT.md), [accueil refondu](docs/accessibilite/accueil-20261103/RAPPORT.md) |
+| Maintenance | [Sources, prérequis, stockage, mises à jour](docs/MAINTENANCE.md) |
+| Format des fichiers | [Format JSON générique](docs/FORMAT-JSON.md), [exemple importable](app/distribution/exemple.courriel.json), [schéma](app/distribution/courriels.schema.json) |
+| Recette métier | [Bibliothèque des neuf familles](app/distribution/qualification.courriels.json), avec les 52 sections à examiner dans les messages reçus |
+| Collecte SNUM | [Page autonome](app/distribution/snum.html) : convertit le paquet métier en fichier à importer dans l’atelier |
+| Skill d’agent | [`newsletter-contribution`](.claude/skills/newsletter-contribution/SKILL.md) ; ses tests vérifient son contrat avec l’atelier (`assets/builder-contract.json`), à mettre à jour dans le même commit qu’une évolution qui le casse |
+| Intention et contraintes | [Cadrage](docs/cadrage-source.md), [spécification](SPECIFICATION.md), [suivi des critères](docs/SUIVI-APPLICATION.md), [notice des références](reference/NOTICE.md) |
+| Prototype conservé | [Fichier](prototype/distribution/portable.html) et [recette historique](docs/RECETTE.md) |
 
-Le skill d’agent [`newsletter-contribution`](.claude/skills/newsletter-contribution/SKILL.md) explique le builder, aide à choisir les blocs et fabrique des compositions rééditables avec son moteur natif. `npm test` exécute aussi ses tests, qui éprouvent son contrat avec le builder : clés et types des champs, gabarits, fonctions utilisées et versions de composition. Une évolution qui casse ce contrat met à jour les références du skill et `assets/builder-contract.json` dans le même commit.
-
-## Sources et périmètre
-
-- [Cadrage confirmé](docs/cadrage-source.md) et [spécification](SPECIFICATION.md) : intention et contraintes.
-- [Suivi des critères](docs/SUIVI-APPLICATION.md) : réalisation et qualification restante.
-- [Notice des références](reference/NOTICE.md) : origine, empreintes et adaptations.
-- [Prototype conservé](prototype/distribution/portable.html) et [sa recette historique](docs/RECETTE.md) : première tranche, distincte de cette application.
-
-Sources éditables : `app/source/`, `app/snum/`, `app/assets/`, `scripts/` et `reference/catalogue.json`. Les distributions sont générées ; les gabarits officiels sont conservés sous `reference/dsfr-mail/`. Aucun DSFR web n’est chargé dans le courriel.
-
-Le dépôt officiel, son clone de référence et le projet SNUM restent en lecture seule. La publication autorisée concerne uniquement `main` dans le dépôt personnel du builder. Les essais de messagerie ont reçu leur autorisation distincte ; l’application n’accède à aucun compte et n’envoie aucun message. Aucun déploiement sur le parc n’est déduit de cette publication Git.
+Le dépôt officiel du modèle de courriel, son clone de référence et le projet SNUM restent en lecture seule. La publication autorisée concerne uniquement `main` de ce dépôt ; aucun déploiement sur le parc n’en découle.
 
 <!-- PDG-LARGE-FILE-JUSTIFICATION: les distributions HTML incorporent le moteur, le catalogue et les ressources pour le premier démarrage hors connexion ; le gabarit amont est conservé intégralement comme référence vérifiable. Les sources applicatives restent modulaires. -->
 
