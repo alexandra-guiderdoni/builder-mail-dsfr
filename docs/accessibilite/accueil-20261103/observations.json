@@ -1,0 +1,994 @@
+{
+  "collected": "2026-11-03T18:35:10.367Z",
+  "axe": "axe-core (ay11-pre-audit)",
+  "results": [
+    {
+      "name": "portable — première visite",
+      "axe": {
+        "violations": [],
+        "incomplete": [
+          {
+            "id": "color-contrast",
+            "impact": "serious",
+            "help": "Elements must meet minimum color contrast ratio thresholds",
+            "nodes": [
+              {
+                "target": "#starter",
+                "summary": "Fix any of the following:\n  Element's background color could not be determined due to a background image"
+              }
+            ]
+          }
+        ],
+        "passes": 27
+      },
+      "headings": [
+        "h1 Atelier de courriels DSFR",
+        "h2 Mes newsletters",
+        "h3 Créer votre première newsletter",
+        "h3 Exemples",
+        "h4 Information de service",
+        "h4 Lettre d’information",
+        "h4 Invitation",
+        "h4 Revue de presse",
+        "h3 Garder une copie de vos newsletters"
+      ],
+      "overflow": 0,
+      "tabs": [
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Prévisualiser l’exemple « Information de service »",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": true,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Créer à partir de cet exemple « Information de service »",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": true,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Prévisualiser l’exemple « Lettre d’information »",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": true,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Créer à partir de cet exemple « Lettre d’information »",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": true,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Prévisualiser l’exemple « Invitation »",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": true,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Créer à partir de cet exemple « Invitation »",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": true,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Prévisualiser l’exemple « Revue de presse »",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": true,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Créer à partir de cet exemple « Revue de presse »",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": true,
+          "inEditor": false
+        },
+        {
+          "tag": "select",
+          "id": "starter",
+          "text": "Information de serviceLettre d’informationInvitation",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": true,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Créer une newsletter",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": true,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Restaurer une sauvegarde",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": true,
+          "inEditor": false
+        },
+        {
+          "tag": "summary",
+          "id": "files-summary",
+          "text": "Sauvegarde et import",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": false,
+          "inEditor": false
+        },
+        {
+          "tag": "summary",
+          "id": "",
+          "text": "Importer du JSON",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": false,
+          "inEditor": false
+        },
+        {
+          "tag": "body",
+          "id": "",
+          "text": "Aller au contenu Outil de composition institutionnelleAtelier de courr",
+          "visible": true,
+          "indicator": false,
+          "inWelcome": false,
+          "inEditor": false
+        }
+      ]
+    },
+    {
+      "name": "web — première visite (étape « Installer »)",
+      "axe": {
+        "violations": [],
+        "incomplete": [
+          {
+            "id": "color-contrast",
+            "impact": "serious",
+            "help": "Elements must meet minimum color contrast ratio thresholds",
+            "nodes": [
+              {
+                "target": "#starter",
+                "summary": "Fix any of the following:\n  Element's background color could not be determined due to a background image"
+              },
+              {
+                "target": "#portable-download",
+                "summary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+              }
+            ]
+          }
+        ],
+        "passes": 27
+      },
+      "headings": [
+        "h1 Atelier de courriels DSFR",
+        "h2 Mes newsletters",
+        "h3 Créer votre première newsletter",
+        "h3 Exemples",
+        "h4 Information de service",
+        "h4 Lettre d’information",
+        "h4 Invitation",
+        "h4 Revue de presse",
+        "h3 Garder une copie de vos newsletters",
+        "h3 Installer l’atelier (facultatif)"
+      ],
+      "overflow": 0,
+      "tabs": [
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Prévisualiser l’exemple « Information de service »",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": true,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Créer à partir de cet exemple « Information de service »",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": true,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Prévisualiser l’exemple « Lettre d’information »",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": true,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Créer à partir de cet exemple « Lettre d’information »",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": true,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Prévisualiser l’exemple « Invitation »",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": true,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Créer à partir de cet exemple « Invitation »",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": true,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Prévisualiser l’exemple « Revue de presse »",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": true,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Créer à partir de cet exemple « Revue de presse »",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": true,
+          "inEditor": false
+        },
+        {
+          "tag": "select",
+          "id": "starter",
+          "text": "Information de serviceLettre d’informationInvitation",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": true,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Créer une newsletter",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": true,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Restaurer une sauvegarde",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": true,
+          "inEditor": false
+        },
+        {
+          "tag": "a",
+          "id": "portable-download",
+          "text": "Télécharger l’atelier portable",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": true,
+          "inEditor": false
+        },
+        {
+          "tag": "summary",
+          "id": "",
+          "text": "Comprendre : installé, disponible hors connexion, sauvegardé",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": true,
+          "inEditor": false
+        },
+        {
+          "tag": "summary",
+          "id": "files-summary",
+          "text": "Sauvegarde et import",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": false,
+          "inEditor": false
+        },
+        {
+          "tag": "summary",
+          "id": "",
+          "text": "Importer du JSON",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": false,
+          "inEditor": false
+        },
+        {
+          "tag": "body",
+          "id": "",
+          "text": "Aller au contenu Outil de composition institutionnelleAtelier de courr",
+          "visible": true,
+          "indicator": false,
+          "inWelcome": false,
+          "inEditor": false
+        }
+      ]
+    },
+    {
+      "name": "web — première visite à 320 px",
+      "axe": {
+        "violations": [],
+        "incomplete": [
+          {
+            "id": "color-contrast",
+            "impact": "serious",
+            "help": "Elements must meet minimum color contrast ratio thresholds",
+            "nodes": [
+              {
+                "target": "#starter",
+                "summary": "Fix any of the following:\n  Element's background color could not be determined due to a background image"
+              },
+              {
+                "target": "#portable-download",
+                "summary": "Fix any of the following:\n  Element's background color could not be determined due to a background gradient"
+              }
+            ]
+          }
+        ],
+        "passes": 27
+      },
+      "headings": [
+        "h1 Atelier de courriels DSFR",
+        "h2 Mes newsletters",
+        "h3 Créer votre première newsletter",
+        "h3 Exemples",
+        "h4 Information de service",
+        "h4 Lettre d’information",
+        "h4 Invitation",
+        "h4 Revue de presse",
+        "h3 Garder une copie de vos newsletters",
+        "h3 Installer l’atelier (facultatif)"
+      ],
+      "overflow": 0,
+      "tabs": [
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Prévisualiser l’exemple « Information de service »",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": true,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Créer à partir de cet exemple « Information de service »",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": true,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Prévisualiser l’exemple « Lettre d’information »",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": true,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Créer à partir de cet exemple « Lettre d’information »",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": true,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Prévisualiser l’exemple « Invitation »",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": true,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Créer à partir de cet exemple « Invitation »",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": true,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Prévisualiser l’exemple « Revue de presse »",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": true,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Créer à partir de cet exemple « Revue de presse »",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": true,
+          "inEditor": false
+        },
+        {
+          "tag": "select",
+          "id": "starter",
+          "text": "Information de serviceLettre d’informationInvitation",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": true,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Créer une newsletter",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": true,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Restaurer une sauvegarde",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": true,
+          "inEditor": false
+        },
+        {
+          "tag": "a",
+          "id": "portable-download",
+          "text": "Télécharger l’atelier portable",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": true,
+          "inEditor": false
+        },
+        {
+          "tag": "summary",
+          "id": "",
+          "text": "Comprendre : installé, disponible hors connexion, sauvegardé",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": true,
+          "inEditor": false
+        },
+        {
+          "tag": "summary",
+          "id": "files-summary",
+          "text": "Sauvegarde et import",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": false,
+          "inEditor": false
+        },
+        {
+          "tag": "summary",
+          "id": "",
+          "text": "Importer du JSON",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": false,
+          "inEditor": false
+        },
+        {
+          "tag": "body",
+          "id": "",
+          "text": "Aller au contenu Outil de composition institutionnelleAtelier de courr",
+          "visible": true,
+          "indicator": false,
+          "inWelcome": false,
+          "inEditor": false
+        }
+      ]
+    },
+    {
+      "name": "portable — lecture du stockage en cours",
+      "axe": {
+        "violations": [],
+        "incomplete": [],
+        "passes": 20
+      },
+      "headings": [
+        "h1 Atelier de courriels DSFR",
+        "h2 Mes newsletters"
+      ],
+      "overflow": 0,
+      "tabs": [
+        {
+          "tag": "summary",
+          "id": "files-summary",
+          "text": "Sauvegarde et import",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": false,
+          "inEditor": false
+        },
+        {
+          "tag": "summary",
+          "id": "",
+          "text": "Importer du JSON",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": false,
+          "inEditor": false
+        },
+        {
+          "tag": "body",
+          "id": "",
+          "text": "Aller au contenu Outil de composition institutionnelleAtelier de courr",
+          "visible": true,
+          "indicator": false,
+          "inWelcome": false,
+          "inEditor": false
+        }
+      ],
+      "ready": false
+    },
+    {
+      "name": "portable — newsletters existantes",
+      "axe": {
+        "violations": [],
+        "incomplete": [
+          {
+            "id": "color-contrast",
+            "impact": "serious",
+            "help": "Elements must meet minimum color contrast ratio thresholds",
+            "nodes": [
+              {
+                "target": "#starter",
+                "summary": "Fix any of the following:\n  Element's background color could not be determined due to a background image"
+              }
+            ]
+          }
+        ],
+        "passes": 27
+      },
+      "headings": [
+        "h1 Atelier de courriels DSFR",
+        "h2 Mes newsletters",
+        "h3 Ouvrir Information de service",
+        "h3 Exemples",
+        "h4 Information de service",
+        "h4 Lettre d’information",
+        "h4 Invitation",
+        "h4 Revue de presse",
+        "h3 Repartir de zéro"
+      ],
+      "overflow": 0,
+      "tabs": [
+        {
+          "tag": "select",
+          "id": "starter",
+          "text": "Information de serviceLettre d’informationInvitation",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": false,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Créer une newsletter",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": false,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Ouvrir Information de service",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": false,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Renommer la newsletter Information de service",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": false,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Dupliquer la newsletter Information de service",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": false,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Exporter la newsletter Information de service",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": false,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Supprimer la newsletter Information de service",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": false,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Prévisualiser l’exemple « Information de service »",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": false,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Créer à partir de cet exemple « Information de service »",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": false,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Prévisualiser l’exemple « Lettre d’information »",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": false,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Créer à partir de cet exemple « Lettre d’information »",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": false,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Prévisualiser l’exemple « Invitation »",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": false,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Créer à partir de cet exemple « Invitation »",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": false,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Prévisualiser l’exemple « Revue de presse »",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": false,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Créer à partir de cet exemple « Revue de presse »",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": false,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Tout effacer",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": false,
+          "inEditor": false
+        },
+        {
+          "tag": "summary",
+          "id": "files-summary",
+          "text": "Sauvegarde et import",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": false,
+          "inEditor": false
+        },
+        {
+          "tag": "summary",
+          "id": "",
+          "text": "Importer du JSON",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": false,
+          "inEditor": false
+        },
+        {
+          "tag": "body",
+          "id": "",
+          "text": "Aller au contenu Outil de composition institutionnelleAtelier de courr",
+          "visible": true,
+          "indicator": false,
+          "inWelcome": false,
+          "inEditor": false
+        }
+      ]
+    },
+    {
+      "name": "portable — stockage illisible",
+      "axe": {
+        "violations": [],
+        "incomplete": [
+          {
+            "id": "color-contrast",
+            "impact": "serious",
+            "help": "Elements must meet minimum color contrast ratio thresholds",
+            "nodes": [
+              {
+                "target": "#starter",
+                "summary": "Fix any of the following:\n  Element's background color could not be determined due to a background image"
+              }
+            ]
+          }
+        ],
+        "passes": 27
+      },
+      "headings": [
+        "h1 Atelier de courriels DSFR",
+        "h2 Mes newsletters",
+        "h3 Ouvrir Mon premier courriel",
+        "h3 Exemples",
+        "h4 Information de service",
+        "h4 Lettre d’information",
+        "h4 Invitation",
+        "h4 Revue de presse",
+        "h3 Repartir de zéro"
+      ],
+      "overflow": 0,
+      "tabs": [
+        {
+          "tag": "select",
+          "id": "starter",
+          "text": "Information de serviceLettre d’informationInvitation",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": false,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Créer une newsletter",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": false,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Ouvrir Mon premier courriel",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": false,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Renommer la newsletter Mon premier courriel",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": false,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Dupliquer la newsletter Mon premier courriel",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": false,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Exporter la newsletter Mon premier courriel",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": false,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Supprimer la newsletter Mon premier courriel",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": false,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Prévisualiser l’exemple « Information de service »",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": false,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Créer à partir de cet exemple « Information de service »",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": false,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Prévisualiser l’exemple « Lettre d’information »",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": false,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Créer à partir de cet exemple « Lettre d’information »",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": false,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Prévisualiser l’exemple « Invitation »",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": false,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Créer à partir de cet exemple « Invitation »",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": false,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Prévisualiser l’exemple « Revue de presse »",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": false,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Créer à partir de cet exemple « Revue de presse »",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": false,
+          "inEditor": false
+        },
+        {
+          "tag": "button",
+          "id": "",
+          "text": "Tout effacer",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": false,
+          "inEditor": false
+        },
+        {
+          "tag": "summary",
+          "id": "files-summary",
+          "text": "Sauvegarde et import",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": false,
+          "inEditor": false
+        },
+        {
+          "tag": "summary",
+          "id": "",
+          "text": "Importer du JSON",
+          "visible": true,
+          "indicator": true,
+          "inWelcome": false,
+          "inEditor": false
+        },
+        {
+          "tag": "body",
+          "id": "",
+          "text": "Aller au contenu Outil de composition institutionnelleAtelier de courr",
+          "visible": true,
+          "indicator": false,
+          "inWelcome": false,
+          "inEditor": false
+        }
+      ]
+    },
+    {
+      "name": "focus après « Restaurer une sauvegarde »",
+      "focus": {
+        "tag": "input",
+        "id": "restore-input",
+        "label": "Restaurer une sauvegarde",
+        "visible": true
+      }
+    }
+  ]
+}
