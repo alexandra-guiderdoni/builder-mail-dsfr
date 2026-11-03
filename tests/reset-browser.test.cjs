@@ -5,7 +5,7 @@ const {root, portable, open, enterEditor, saved, state, store, chromium, fs, ass
 
 // #201 : « Tout effacer » vide la bibliothèque par le point d'entrée commun (#208) et ramène à l'état visible d'un
 // navigateur neuf, sans état précédent récupérable ; le programme hors connexion reste en place.
-const dialog = '#reset-dialog', fresh = 'Aucune sauvegarde : créez ou personnalisez une composition.';
+const dialog = '#reset-dialog', fresh = 'Rien n’est encore enregistré dans ce navigateur.';
 async function filled(page) {
   await page.evaluate(async () => {
     const A = MailBuilder, docs = ['Lettre A', 'Lettre B'].map(name => A.Model.create(name));

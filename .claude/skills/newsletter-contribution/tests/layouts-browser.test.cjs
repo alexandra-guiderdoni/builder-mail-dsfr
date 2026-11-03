@@ -14,7 +14,7 @@ const {chromium} = require(process.env.PLAYWRIGHT_MODULE || path.join(root, 'nod
 const evidence = process.env.NEWSLETTER_EVIDENCE || require('node:fs').mkdtempSync(path.join(require('node:os').tmpdir(), 'newsletter-evidence-'));
 const A = loadBuilder(root), coverage = audit(A);
 const click = async (page, selector) => { await page.locator(selector).focus(); await page.locator(selector).press('Enter'); };
-const saved = page => page.waitForFunction(() => document.querySelector('#save-state').textContent === 'Newsletters sauvegardées dans ce navigateur.');
+const saved = page => page.waitForFunction(() => document.querySelector('#save-state').textContent === 'Newsletters enregistrées dans ce navigateur.');
 async function download(page, selector, name, action) {
   const event = page.waitForEvent('download');
   if (action) await throughChecks(page, action, () => click(page, selector)); else await click(page, selector);

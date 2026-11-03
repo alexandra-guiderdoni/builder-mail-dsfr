@@ -1,5 +1,5 @@
 const test = require('node:test');
-const {click, open, enterEditor, chromium, assert, nativeAxTree, note} = require('./browser-support.cjs');
+const {click, open, enterEditor, established, chromium, assert, nativeAxTree, note} = require('./browser-support.cjs');
 
 // Arbre natif CDP sous Chromium ; noms ARIA calculés par Playwright sur les autres moteurs.
 async function buttons(page) {
@@ -34,7 +34,8 @@ test('Dupliquer et Retirer nomment le bloc ou la composition dans leur intitulé
 test('la liste des compositions précise la composition visée par Dupliquer et Supprimer', async () => {
   const browser = await chromium.launch();
   try {
-    const {page} = await open(browser);
+    // #205 : une newsletter enregistrée remplace l’accueil guidé de première visite.
+    const {page} = await open(browser); await established(page);
     await click(page, '[data-action=library-home]');
     const names = scoped(await buttons(page)), item = await page.locator('#newsletter-list [data-library-action=duplicate]').first().evaluate(e => [e.textContent.trim(), e.getAttribute('aria-label')]);
     assert(names.some(n => /^Dupliquer la newsletter /.test(n)), JSON.stringify(names));

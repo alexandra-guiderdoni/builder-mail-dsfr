@@ -1,5 +1,5 @@
 const test = require('node:test');
-const {root, evidence, portable, click, open, saved, expand, download, state, chromium, fs, assert} = require('./browser-support.cjs');
+const {root, evidence, portable, click, open, enterEditor, saved, expand, download, state, chromium, fs, assert} = require('./browser-support.cjs');
 const path = require('node:path');
 const row = id => `[data-document="${id}"]`;
 
@@ -11,7 +11,9 @@ test('accueil et gestion ciblée : ancienne composition, images, renommage, copi
     const page = await context.newPage(); await page.goto(portable); await page.waitForFunction(() => window.MailBuilder?.ready);
     assert.equal(await page.locator('#library-home').count(), 1, 'Un accueil de bibliothèque est attendu.');
     assert(await page.locator('#library-home').isVisible()); assert(!(await page.locator('#editor-page').isVisible()));
-    await click(page, '[data-action=resume-document]'); await page.locator('#document-name').fill('Édition A'); await saved(page);
+    // #205 : navigateur neuf, accueil guidé sans « Reprendre » ; la newsletter de départ est ouverte directement.
+    assert(await page.locator('#welcome').isVisible()); assert(!(await page.locator('[data-action=resume-document]').isVisible()));
+    await enterEditor(page); await page.locator('#document-name').fill('Édition A'); await saved(page);
     const a = (await state(page)).activeId;
     await click(page, '[data-action=library-home]'); assert.equal(await page.locator('#home-title').evaluate(e => e === document.activeElement), true);
     await page.locator('#starter').selectOption('lettre'); await click(page, '[data-action=new-document]');

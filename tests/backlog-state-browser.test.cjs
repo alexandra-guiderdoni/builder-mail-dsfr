@@ -46,7 +46,7 @@ test('#162 : reprise réelle entre onglets, brouillon remappé et corrigeable sa
     const exported = await jsonDownload(other, EXPORT_MEMORY); excludesDraft(exported);
     assert.deepEqual(exported, await state(other));
     await click(other, TAKE_OVER); await other.locator(READ_ONLY).waitFor({state: 'hidden'});
-    await other.locator('#save-state').filter({hasText: 'les champs invalides restent non enregistrés'}).waitFor();
+    await other.locator('#save-state').filter({hasText: 'sauf les champs invalides'}).waitFor();
     assert.equal(await other.locator(READ_ONLY).isVisible(), false);
     const after = await other.evaluate(() => ({doc: MailBuilder.doc().id, block: MailBuilder.selected, drafts: [...MailBuilder.drafts.values()], library: MailBuilder.Model.library(MailBuilder.library)}));
     assert.notEqual(after.doc, before.doc, 'la composition récupérable a un nouvel identifiant');

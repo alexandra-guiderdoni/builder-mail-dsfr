@@ -1,6 +1,6 @@
 const test = require('node:test');
 const path = require('node:path');
-const {root, portable, click, open, saved, state, store, chromium, nativeAx, assert} = require('./browser-support.cjs');
+const {root, portable, click, open, established, saved, state, store, chromium, nativeAx, assert} = require('./browser-support.cjs');
 test('une ouverture bloquée puis réussie tardivement est fermée sans empoisonner la nouvelle connexion', async () => {
   const browser = await chromium.launch({headless: true});
   try {
@@ -81,7 +81,8 @@ test('une sauvegarde lente retient seulement l’écriture en cours et la derni�
 test('un changement de composition refusé rétablit toujours le sélecteur', async () => {
   const browser = await chromium.launch({headless: true});
   try {
-    const {page} = await open(browser);
+    // #205 : la newsletter de départ est enregistrée, sinon la création l’écarterait.
+    const {page} = await open(browser); await established(page);
     await click(page, '#library-back'); await click(page, '[data-action=new-document]'); await saved(page);
     const before = await state(page), other = before.documents.find(d => d.id !== before.activeId).id;
     await page.evaluate(() => { MailBuilder.pendingInputs = 1; });

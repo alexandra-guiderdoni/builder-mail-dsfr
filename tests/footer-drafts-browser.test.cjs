@@ -20,7 +20,7 @@ for (const [name, draftIndex, removedIndex] of [['précédent conservé', 0, 1],
         return JSON.stringify(doc);
       });
       await expand(page, 'Sauvegarde et import');
-      await page.getByLabel('Importer une newsletter ou une sauvegarde (JSON)', {exact: true}).setInputFiles({name:'pied-deux-liens.courriel.json',mimeType:'application/json',buffer:Buffer.from(json)});
+      await page.getByLabel('Ajouter une newsletter ou une sauvegarde depuis un fichier', {exact: true}).setInputFiles({name:'pied-deux-liens.courriel.json',mimeType:'application/json',buffer:Buffer.from(json)});
       await page.locator('#document-name').waitFor({state:'visible'});
       await page.waitForFunction(() => MailBuilder.doc().name === 'Pied avec deux liens'); await saved(page);
       await page.locator(`#field-footer-url-${draftIndex}`).fill(DRAFT);

@@ -123,10 +123,11 @@ test('#202 double clic : une seule copie par création, depuis un exemple comme 
     const count = () => page.evaluate(() => MailBuilder.library.documents.length), before = await count();
     await item(page, 'Invitation').getByRole('button', {name: 'Créer à partir de cet exemple « Invitation »'}).dblclick();
     await page.locator('#editor-page').waitFor({state: 'visible'}); await saved(page);
-    assert.equal(await count(), before + 1, 'exemple');
+    // #205 : première création d’un navigateur neuf, la copie remplace la newsletter de départ jamais proposée.
+    assert.equal(await count(), before, 'exemple');
     await home(page);
     await page.locator('[data-action=new-document]').dblclick();
     await page.locator('#editor-page').waitFor({state: 'visible'}); await saved(page);
-    assert.equal(await count(), before + 2, 'départ');
+    assert.equal(await count(), before + 1, 'départ');
   } finally { await browser.close(); }
 });

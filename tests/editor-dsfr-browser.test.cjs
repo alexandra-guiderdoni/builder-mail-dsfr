@@ -1,6 +1,6 @@
 const test = require('node:test');
 const path = require('node:path');
-const {open, enterEditor, click, saved, expand, download, confirmChecks, selectBlock, state, chromium, fs, evidence, assert} = require('./browser-support.cjs');
+const {open, enterEditor, established, click, saved, expand, download, confirmChecks, selectBlock, state, chromium, fs, evidence, assert} = require('./browser-support.cjs');
 
 test('intitulé source : saisie, aperçu, presse-papiers, fichier, rechargement et transfert hors connexion', async () => {
   const browser = await chromium.launch({headless: true});
@@ -49,7 +49,8 @@ test('intitulé source : saisie, aperçu, presse-papiers, fichier, rechargement 
 test('ressources DSFR locales : Marianne, conteneurs communs, grille et repli à cinq largeurs', async () => {
   const browser = await chromium.launch({headless: true});
   try {
-    const {page, observations} = await open(browser, {offline: true}), checks = [];
+    // #205 : la carte mesurée n’existe qu’une fois une newsletter enregistrée.
+    const {page, observations} = await open(browser, {offline: true}), checks = []; await established(page);
     for (const width of [320, 768, 992, 1248, 1440]) {
       await page.setViewportSize({width, height: 1000});
       const value = await page.evaluate(() => {

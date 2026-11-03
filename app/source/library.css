@@ -24,3 +24,6 @@
 #example-dialog::backdrop { background:rgb(0 0 0 / 55%); }
 .example-preview { display:block; width:100%; height:60vh; margin-bottom:1.5rem; border:1px solid var(--border-default-grey); background:#fff; }
 @media(max-width:575px) { #example-dialog { padding:24px; } }
+/* Première visite (#205) : trois étapes numérotées ; les zones déplacées perdent leur séparateur de section. */
+.welcome-steps { margin:1.5rem 0 2rem; padding-left:1.75rem; } .welcome-steps>li { margin-bottom:2rem; padding-bottom:1.5rem; border-bottom:1px solid var(--border-default-grey); } .welcome-steps>li::marker { font-weight:700; font-size:1.375rem; color:var(--text-title-blue-france); }
+.welcome .examples-zone { margin-top:1rem; padding-top:0; border-top:0; } .welcome .home-create { margin:1.5rem 0 0; } .welcome .install-help { margin-top:0; }

@@ -4,11 +4,13 @@ Ouvrir `app/distribution/portable.html` dans Firefox ou un navigateur compatible
 
 ## Composer
 
+À la première visite, et après « Tout effacer », l’accueil guide en trois étapes : créer sa première newsletter depuis un exemple ou un plan vide, garder une copie (export, ou « Restaurer une sauvegarde » pour qui possède déjà un fichier), puis installer l’atelier, étape facultative absente du portable. Dès la première newsletter enregistrée, l’accueil habituel la remplace.
+
 1. L’accueil « Mes newsletters » présente les éditions déjà conservées. Ouvrir une entrée, ou choisir un point de départ puis « Créer une newsletter ». Plusieurs newsletters peuvent coexister. Sous la liste, « Exemples » propose quatre newsletters déjà remplies avec un contenu fictif : information de service, lettre d’information, invitation et revue de presse. « Prévisualiser » les montre en lecture seule ; « Créer à partir de cet exemple » en ajoute une copie à Mes newsletters, l’exemple restant inchangé. Les exemples font partie de l’atelier : ils fonctionnent hors connexion, ne sont pas touchés par « Tout effacer » et n’entrent pas dans les sauvegardes. Avant la copie ou le téléchargement du courriel, le contrôle signale les textes d’exemple restés tels quels, les liens de démonstration et « Votre service » : les remplacer avant l’envoi.
 2. Modifier le nom de la newsletter et l’objet du courriel. L’objet est conservé dans le fichier de travail ; le reporter dans la messagerie lors de la reprise. Si l’objet reste vide, le nom de la newsletter devient le titre du HTML exporté et apparaît dans son onglet ; aucun objet de messagerie n’est rempli automatiquement.
 3. Sélectionner un bloc dans la liste, puis modifier ses textes, liens et alternatives. Les liens doivent être des URL HTTPS complètes ; les pieds de page acceptent aussi une adresse `mailto:` avec un objet facultatif.
 4. Dans « Ajouter un composant », rechercher une famille ou une variante puis l’ajouter. Les boutons du bloc permettent de le déplacer, de le dupliquer ou de le retirer au clavier. Après un retrait, « Annuler le retrait du bloc », sous le résumé de la composition, le rétablit à sa place avec ses textes, images et liens, sans effacer les saisies faites depuis. Seul le dernier retrait de chaque composition est conservé, en mémoire, jusqu’au retrait suivant dans cette composition ou à la fermeture de l’atelier.
-5. Contrôler l’aperçu et l’indication « Newsletters sauvegardées dans ce navigateur ».
+5. Contrôler l’aperçu et l’indication « Newsletters enregistrées dans ce navigateur ».
 
 Le catalogue conserve les structures et les styles du modèle de courriel épinglé. Les variantes encadrent la présentation ; aucun HTML libre n’est interprété. Le texte ressemblant à une balise reste du texte. Le lien source facultatif d’un bloc est conservé après duplication et dans les sorties HTML et texte.
 
@@ -73,7 +75,7 @@ Certains en-têtes comportent deux images, pour les modes clair et sombre : pers
 
 « Mes modèles » enregistre une copie réutilisable de la composition. Créer depuis un modèle ajoute une nouvelle composition indépendante. Retirer un modèle ou une identité laisse intactes les compositions déjà créées depuis cet élément.
 
-La sauvegarde est automatique dans le navigateur. « Sauvegarder maintenant » permet de réessayer après une erreur temporaire. Mes newsletters regroupe les newsletters, modèles et identités ; rien n’est synchronisé entre postes, navigateurs ou origines.
+L’enregistrement est automatique dans le navigateur. « Enregistrer maintenant dans ce navigateur » permet de réessayer après une erreur temporaire. Une sauvegarde désigne un fichier exporté. Mes newsletters regroupe les newsletters, modèles et identités ; rien n’est synchronisé entre postes, navigateurs ou origines.
 
 Sous l’indicateur de sauvegarde, un encart rappelle où sont les données (« dans ce navigateur, sur ce poste »), la date du dernier export complet proposé et l’engagement du navigateur à les conserver. Seul « Exporter Mes newsletters » date l’export ; l’export d’une newsletter seule ou un export de secours ne le date pas. Le navigateur ne confirme pas qu’un téléchargement a abouti : l’encart parle d’export « proposé ». Après 7 jours de modifications sans export complet, un rappel propose d’exporter ; ouvrir une newsletter n’est pas une modification. À la première modification enregistrée, l’atelier demande au navigateur une conservation durable : selon sa réponse, l’encart indique qu’il s’engage à conserver les données, qu’il peut les effacer s’il manque d’espace (exporter alors régulièrement), que la demande n’est pas possible ou qu’elle a échoué. « Tout effacer » efface aussi la date ; « Restaurer une sauvegarde » la conserve et remet le rappel à zéro.
 

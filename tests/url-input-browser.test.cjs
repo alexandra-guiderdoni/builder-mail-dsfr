@@ -1,5 +1,5 @@
 const test = require('node:test');
-const {chromium, open, click, expand, saved, selectBlock, confirmChecks, announced, state, assert} = require('./browser-support.cjs');
+const {chromium, open, click, expand, established, saved, selectBlock, confirmChecks, announced, state, assert} = require('./browser-support.cjs');
 
 const OLD = 'https://exemple.invalid/ancien', NEW = 'https://exemple.invalid/nouveau';
 async function setup(page) {
@@ -183,7 +183,8 @@ test('un brouillon d’URL n’est diffusé depuis aucune autre composition', as
 
 async function importFooter(page, links) {
   const doc = await page.evaluate(links => { const doc = MailBuilder.Model.create('Pied de recette', [50]); doc.blocks[0].additionalLinks = links; return doc; }, links);
-  await expand(page, 'Sauvegarde et import');
+  // #205 : la newsletter de départ est enregistrée, sinon l’import l’écarterait et le compte ne croîtrait pas.
+  await established(page); await expand(page, 'Sauvegarde et import');
   const count = (await state(page)).documents.length;
   await page.locator('#project-input').setInputFiles({name: 'pied.courriel.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(doc))});
   await page.waitForFunction(count => MailBuilder.library.documents.length === count + 1, count); await saved(page);

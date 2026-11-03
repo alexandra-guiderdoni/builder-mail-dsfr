@@ -8,10 +8,28 @@
   const attempt = async action => { try { await action(); } catch (cause) { A.error(cause.message); } };
   function show(editor) {
     get("library-home").hidden = editor; get("editor-page").hidden = !editor;
-    get("library-back").hidden = !editor; get("resume-document").hidden = editor; A.UI.pageTitle();
+    get("library-back").hidden = !editor; get("resume-document").hidden = editor || !!A.State?.fresh?.(); A.UI.pageTitle();
     get(editor ? "composition-title" : "home-title").focus();
   }
+  // Première visite (#205) : l’accueil guide en trois étapes. Les zones existantes (exemples, plan vide, aide à l’installation)
+  // y sont déplacées, jamais dupliquées : identifiants et écouteurs restent uniques. Elles regagnent ensuite leur place.
+  // Les repères sont posés au premier accueil guidé : le contrat isolé de library.js n’a pas de vrai DOM.
+  let movable;
+  const anchored = () => [["examples", "welcome-create"], ["home-create", "welcome-create"], ["install-help", "welcome-install"]]
+    .map(([id, slot]) => { const node = get(id), anchor = document.createComment(""); node.before(anchor); return {node, anchor, slot: get(slot)}; });
+  function welcome() {
+    const fresh = !!A.State?.fresh?.();
+    get("welcome").hidden = !fresh; get("home-intro").hidden = fresh;
+    if (fresh) movable ??= anchored();
+    for (const {node, anchor, slot} of movable || []) if (fresh) slot.append(node); else if (anchor.nextSibling !== node) anchor.after(node);
+    // Sous le titre d’étape, « Exemples » descend d’un niveau.
+    if (fresh) get("examples-title").setAttribute("aria-level", "4"); else get("examples-title").removeAttribute("aria-level");
+    get("newsletter-list").hidden = fresh; get("reset-zone").hidden = fresh; get("library-count").hidden = fresh; get("storage-help").hidden = fresh;
+    get("resume-document").hidden = fresh || !get("editor-page").hidden;
+    get("welcome-install-step").hidden = !fresh || get("install-help").hidden;
+  }
   function refresh() {
+    welcome();
     const labels = new Map(A.UI.documentLabels());
     get("newsletter-list").innerHTML = A.library.documents.map(doc => `<li class="fr-col-12 fr-col-md-6" data-document="${esc(doc.id)}"><div class="app-panel"><h3><button class="fr-btn fr-btn--tertiary-no-outline" data-library-action="open" aria-label="Ouvrir ${esc(labels.get(doc.id))}">${esc(labels.get(doc.id))}</button></h3><p>${esc(doc.subject || "Sans objet")} · ${doc.blocks.length} blocs${doc.id === A.library.activeId ? " · Newsletter ouverte" : ""}</p><div class="actions">${[["rename", "Renommer"], ["duplicate", "Dupliquer"], ["export", "Exporter"], ["remove", "Supprimer"]].map(([action, label]) => `<button class="fr-btn fr-btn--secondary" data-library-action="${action}" aria-label="${label} la newsletter ${esc(labels.get(doc.id))}">${label}</button>`).join("")}</div></div></li>`).join("");
     get("resume-document").textContent = `Reprendre « ${labels.get(A.doc().id)} »`;
@@ -133,7 +151,7 @@
     let text; try { text = await file.text(); } catch { throw new Error(`Le fichier « ${file.name} » n’a pas pu être lu. Vos newsletters sont inchangées.`); }
     let raw; try { raw = JSON.parse(text); } catch { throw new Error("Le fichier JSON est invalide ou incomplet. Vos newsletters sont inchangées."); }
     if (raw && typeof raw === "object" && "token" in raw && "library" in raw) throw new Error("Ce fichier contient des données enregistrées brutes, réservées au diagnostic : il ne peut être ni restauré ni importé. Choisissez une sauvegarde exportée par l’atelier.");
-    if (raw?.schema !== "dsfr-mail/library") throw new Error(["dsfr-mail/document", "builder-mail-prototype/1"].includes(raw?.schema) ? "Ce fichier contient une seule newsletter : utilisez « Importer une newsletter ou une sauvegarde (JSON) » pour l’ajouter. Vos newsletters sont inchangées." : "Ce fichier n’est pas une sauvegarde de l’atelier. Vos newsletters sont inchangées.");
+    if (raw?.schema !== "dsfr-mail/library") throw new Error(["dsfr-mail/document", "builder-mail-prototype/1"].includes(raw?.schema) ? "Ce fichier contient une seule newsletter : utilisez « Ajouter une newsletter ou une sauvegarde depuis un fichier ». Vos newsletters sont inchangées." : "Ce fichier n’est pas une sauvegarde de l’atelier. Vos newsletters sont inchangées.");
     const incoming = await A.Imports.prepare(text);
     restoring = {library: incoming.value, name: file.name, note: A.Imports.upgradedNote(incoming)};
     get("restore-dialog-description").textContent = `Le fichier « ${file.name} » contient ${counted(incoming.value)}. Il remplacera le contenu actuel de ce navigateur : ${counted(A.library)}. Vos newsletters actuelles resteront récupérables par « Restaurer l’état précédent ». Exportez-la d’abord pour en garder un fichier.${restoring.note}`;
@@ -194,7 +212,7 @@
   }
   async function createExample(key) {
     const example = A.Examples.get(key), ticket = A.State.noticeTicket();
-    await A.State.change(lib => { const doc = A.Examples.build(key, M.uniqueName(example.label, lib.documents)); lib.documents.push(doc); lib.activeId = doc.id; });
+    await A.State.change(lib => { A.State.withoutStarter(lib); const doc = A.Examples.build(key, M.uniqueName(example.label, lib.documents)); lib.documents.push(doc); lib.activeId = doc.id; });
     await open(A.library.activeId); get("document-name").focus(); get("document-name").select();
     A.notice(`Newsletter créée à partir de l’exemple « ${example.label} » : remplacez ses textes, noms et liens fictifs avant l’envoi.`, ticket);
   }

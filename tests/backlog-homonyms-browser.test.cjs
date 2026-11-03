@@ -12,7 +12,7 @@ test('#168 : double import UI, noms conservés et choix accessibles distincts da
     }, {name, subject});
     await expand(page, 'Sauvegarde et import');
     for (const expected of [1, 2]) {
-      await page.getByLabel('Importer une newsletter ou une sauvegarde (JSON)', {exact: true}).setInputFiles({name: 'homonyme.courriel.json', mimeType: 'application/json', buffer: Buffer.from(input)});
+      await page.getByLabel('Ajouter une newsletter ou une sauvegarde depuis un fichier', {exact: true}).setInputFiles({name: 'homonyme.courriel.json', mimeType: 'application/json', buffer: Buffer.from(input)});
       await page.waitForFunction(({name, expected}) => MailBuilder.library.documents.filter(d => d.name === name).length === expected, {name, expected});
       await saved(page);
     }

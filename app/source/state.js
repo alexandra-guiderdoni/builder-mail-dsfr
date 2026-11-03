@@ -10,6 +10,9 @@
   const channel = window.BroadcastChannel ? new BroadcastChannel("builder-mail-dsfr-library") : null;
   // Encart de sauvegarde (#199) : dernier export complet proposé, modifications depuis, conservation durable du stockage.
   let meta = {}, persistence = "inconnue", persistRequested = false, editorial = false;
+  // Première visite (#205) : rien d’enregistré dans ce navigateur, ou retour après « Tout effacer ». La newsletter de départ
+  // reste en mémoire sans être proposée ; elle est écartée à la première création et l’état cesse à la première modification.
+  let fresh = false;
   const DAY = 864e5, REMINDER_DAYS = 7;
   const PERSISTENCE = {accordée: "Le navigateur s’engage à les conserver.", "non accordée": "Le navigateur peut les effacer s’il manque d’espace : exportez-les régulièrement.",
     indisponible: "Ce navigateur ne permet pas de demander leur conservation durable : exportez-les régulièrement.", erreur: "La demande de conservation durable a échoué : exportez-les régulièrement."};
@@ -38,7 +41,7 @@
   }
   // Seul l’export complet de la bibliothèque date la sauvegarde ; une composition seule ou un export de secours ne la date pas.
   async function libraryExported() { if (A.recoveryOnly) return; meta ={exportedAt: Date.now(), dirtySince: null}; storageInfo(); try { await A.Storage.saveMeta(meta); } catch {} }
-  const QUIET_MS = 1000, FRESH = "Aucune sauvegarde : créez ou personnalisez une composition.";
+  const QUIET_MS = 1000, FRESH = "Rien n’est encore enregistré dans ce navigateur.";
   const cancelSuccess = () => { clearTimeout(successTimer); successTimer = null; };
   const say = text => { cancelSuccess(); get("save-announce").textContent = text; };
   const show = (text, now = false) => { get("save-state").textContent = text; if (now) say(text); };
@@ -129,7 +132,7 @@
           try {
             const saved = await A.Storage.save(task.library, token); token = saved.token; base = task.library;
             if (task.editorial) modified();
-            if (task.current === revision && !readOnly) { failing(false); if (!A.invalid.size && !A.drafts.size) A.error(""); const text = A.invalid.size || A.drafts.size ? "Newsletters sauvegardées ; les champs invalides restent non enregistrés." : "Newsletters sauvegardées dans ce navigateur."; show(text); announceSuccess(text); }
+            if (task.current === revision && !readOnly) { failing(false); if (!A.invalid.size && !A.drafts.size) A.error(""); const text = A.invalid.size || A.drafts.size ? "Newsletters enregistrées dans ce navigateur, sauf les champs invalides." : "Newsletters enregistrées dans ce navigateur."; show(text); announceSuccess(text); }
           } catch (cause) {
             failing(true); setPersistentError(`${cause.message} ${cause.storage === "conflit" ? "Exportez la bibliothèque en mémoire pour conserver ce travail, puis rechargez cette page." : "Exportez la bibliothèque en mémoire pour conserver ce travail."}`);
             show("Modifications non sauvegardées. Exportez votre bibliothèque.", true);
@@ -155,7 +158,7 @@
   // navigation : seule la newsletter ouverte change, ce n’est pas une modification éditoriale (#199).
   function change(mutator, redraw = true, input = false, navigation = false) {
     if (readOnly) throw readOnlyError();
-    if (input === "edit") guardEdit(); else if (restoring || !input) guard(); const next = M.copy(A.library); mutator(next); M.versions(next); M.library(next); A.library = next; revision++; lastChange = Date.now(); pruneDrafts(); if (!navigation) editorial = true;
+    if (input === "edit") guardEdit(); else if (restoring || !input) guard(); const next = M.copy(A.library); mutator(next); M.versions(next); M.library(next); A.library = next; revision++; lastChange = Date.now(); pruneDrafts(); if (!navigation) { editorial = true; fresh = false; }
     if (!A.doc().blocks.some(b => b.id === A.selected)) A.selected = A.doc().blocks[0]?.id || null;
     if (redraw) { clearTimeout(previewTimer); A.UI.refresh(); } else { A.UI.summary(); previewAfterInput(); }
     return save();
@@ -171,10 +174,11 @@
       upgraded = !!record && record.library.catalogue !== A.catalog.id;
       A.selected = A.doc().blocks[0]?.id || null;
       // Après « Tout effacer » (#201), l’état visible est celui d’un navigateur neuf.
-      show(record && record.reason !== "effacement" ? "Newsletters retrouvées dans ce navigateur." : FRESH, true);
+      fresh = !record || record.reason === "effacement";
+      show(fresh ? FRESH : "Newsletters retrouvées dans ce navigateur.", true);
       try { meta = await A.Storage.loadMeta(); } catch { meta = {}; }
     } catch (cause) {
-      failing(true); A.recoveryOnly = true; absent = cause.storage === "absent";
+      failing(true); A.recoveryOnly = true; absent = cause.storage === "absent"; fresh = false;
       const legacy = record && A.LegacyRecovery?.offer(record);
       const advice = legacy ? "Les données enregistrées sont conservées : utilisez la récupération guidée ci-dessous pour corriger les anciennes adresses." : absent ? "Exportez la bibliothèque en mémoire pour conserver votre travail : la fermeture de cette page l’efface." : "Cette page n’écrit rien dans la bibliothèque locale : exportez la bibliothèque en mémoire pour conserver votre travail.";
       const restore = !legacy && !cause.storage && await restorable() ? " Une sauvegarde précédente lisible existe : « Restaurer l’état précédent », dans « Sauvegarde et import », permet de la relire." : "";
@@ -218,7 +222,7 @@
       const restored = M.copy(M.library(previous.library)), saved = await A.Storage.save(restored, token);
       token = saved.token; base = A.library = restored; A.recoveryOnly = false; failing(false); revision++;
       A.selected = A.doc().blocks[0]?.id || null; A.UI.refresh(); A.error("");
-      show("Newsletters sauvegardées dans ce navigateur."); announceSuccess("Newsletters sauvegardées dans ce navigateur.");
+      show("Newsletters enregistrées dans ce navigateur."); announceSuccess("Newsletters enregistrées dans ce navigateur.");
       A.notice("État précédent relu. Contrôlez les compositions avant de poursuivre.", ticket);
     } catch (cause) {
       show("Récupération impossible ; le travail actuel est conservé.", true);
@@ -241,7 +245,7 @@
     try {
       await queue;
       const saved = await A.Storage.replace(next, token, {reason, keepPrevious});
-      token = saved.token; base = A.library = next; revision++; failing(false);
+      token = saved.token; base = A.library = next; revision++; failing(false); fresh = reason === "effacement";
       A.removed.clear(); A.moved?.clear(); A.drafts.clear(); A.invalid.clear(); A.UI.clearFieldErrors(); editorial = false;
       // Effacement : métadonnées supprimées avec la bibliothèque. Restauration : date d’export gardée, compteur remis à zéro.
       meta = reason === "effacement" ? {} : {...meta, dirtySince: null};
@@ -250,7 +254,7 @@
       A.selected = A.doc().blocks[0]?.id || null;
       channel?.postMessage({type: reason, token: saved.token});
       A.UI.refresh(); A.error("");
-      show(reason === "effacement" ? FRESH : "Newsletters sauvegardées dans ce navigateur.", true);
+      show(reason === "effacement" ? FRESH : "Newsletters enregistrées dans ce navigateur.", true);
       return saved;
     } catch (cause) { storageLock(cause); throw cause; }
     finally { restoring = false; pending--; get("workspace").disabled = false; }
@@ -327,7 +331,7 @@
       readOnly = null;
       get("editing").disabled = false; get("read-only").hidden = true; A.invalid.clear(); A.UI.clearFieldErrors();
       A.UI.refresh(); A.error("");
-      const savedText = A.drafts.size ? "Newsletters sauvegardées ; les champs invalides restent non enregistrés." : "Newsletters sauvegardées dans ce navigateur.";
+      const savedText = A.drafts.size ? "Newsletters enregistrées dans ce navigateur, sauf les champs invalides." : "Newsletters enregistrées dans ce navigateur.";
       show(savedText); announceSuccess(savedText); get(get("editor-page").hidden ? "home-title" : "composition-title").focus();
       A.notice(!record ? "Main reprise : la bibliothèque en mémoire est enregistrée de nouveau dans ce navigateur." : copies ? `Main reprise : ${copies > 1 ? `${copies} copies horodatées ajoutées` : "une copie horodatée ajoutée"} à la bibliothèque enregistrée, sans rien remplacer. L’autre fenêtre ne peut plus enregistrer ; elle passe en lecture seule au plus tard à sa prochaine modification.` : "Main reprise : rien n’avait changé dans cette fenêtre, la bibliothèque enregistrée est conservée telle quelle.", ticket);
     } catch (cause) {
@@ -356,5 +360,7 @@
   async function flush() { await settle(); if (failed || pending || A.recoveryOnly) throw new Error("La sauvegarde doit réussir avant de recharger l’application."); }
   const saved = () => !failed && !pending && !A.recoveryOnly;
   const restoreErrorFromState = () => { if ((failed || readOnly) && persistentError) A.error(persistentError); };
-  A.State = Object.freeze({libraryExported, guard, guardEdit, setDraft, dropDraft, dropFooterDraft, change, save, start, restoreLegacy, recover, replaceLibrary, settle, flush, saved, takeOver, outdated, reload, exported, noticeTicket: () => noticeTicket, restoreErrorFromState});
+  // Appelée dans le mutateur d’une création : sans effet hors première visite, elle retire la newsletter de départ jamais proposée.
+  const withoutStarter = lib => { if (fresh) lib.documents = lib.documents.filter(d => d.id !== A.library.documents[0].id); };
+  A.State = Object.freeze({fresh: () => fresh, withoutStarter, libraryExported, guard, guardEdit, setDraft, dropDraft, dropFooterDraft, change, save, start, restoreLegacy, recover, replaceLibrary, settle, flush, saved, takeOver, outdated, reload, exported, noticeTicket: () => noticeTicket, restoreErrorFromState});
 })();

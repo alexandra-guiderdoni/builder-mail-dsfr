@@ -13,7 +13,8 @@ test('pieds de page mailto : import natif, saisie, refus ciblé, sauvegarde, cop
     await expand(page,'Importer du JSON');await page.locator('#json-input').fill(incoming);
     await click(page,'[data-action=json-import]');await saved(page);
     const imported=await state(page), doc=imported.documents.find(d=>d.id===imported.activeId);
-    assert.equal(imported.documents.length,2);assert.equal(doc.blocks.length,4);
+    // #205 : la newsletter de départ d’un navigateur neuf est écartée par l’import.
+    assert.equal(imported.documents.length,1);assert.equal(doc.blocks.length,4);
     const expected=[];
     for(const [i,block] of doc.blocks.entries()) {
       await selectBlock(page,block.id);

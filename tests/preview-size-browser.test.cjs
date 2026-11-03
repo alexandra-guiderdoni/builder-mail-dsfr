@@ -1,7 +1,7 @@
 const test = require('node:test');
 const http = require('node:http');
 const path = require('node:path');
-const {open, enterEditor, click, expand, saved, chromium, fs, root, assert} = require('./browser-support.cjs');
+const {open, enterEditor, established, click, expand, saved, chromium, fs, root, assert} = require('./browser-support.cjs');
 const {waitForPreviewResources} = require('./preview-resources.cjs');
 
 async function server() {
@@ -80,7 +80,8 @@ test('import et changement de composition chargent le bon aperçu depuis l’éd
   const browser = await chromium.launch();
   try {
     for (const fromHome of [false, true]) {
-      const {page, context} = await open(browser);
+      // #205 : la newsletter d’origine est enregistrée, sinon l’import l’écarterait comme newsletter de départ.
+      const {page, context} = await open(browser); await established(page);
       const originalId = await page.locator('#documents').inputValue();
       if (fromHome) { await click(page, '[data-action=library-home]'); await page.locator('#library-home').waitFor({state: 'visible'}); }
       const title = fromHome ? 'Import depuis accueil' : 'Import depuis éditeur';

@@ -1,6 +1,6 @@
 const test = require('node:test');
 const {chromium, webkit} = require('playwright');
-const {portable, click, assert} = require('./browser-support.cjs');
+const {portable, click, established, assert} = require('./browser-support.cjs');
 
 for (const [engineName, engine] of [['Chromium', chromium], ['WebKit', webkit]]) {
   for (const width of [320, 768]) {
@@ -9,7 +9,8 @@ for (const [engineName, engine] of [['Chromium', chromium], ['WebKit', webkit]])
       try {
         const page = await (await browser.newContext({viewport: {width, height: 700}})).newPage();
         await page.goto(portable); await page.waitForFunction(() => window.MailBuilder?.ready);
-        await click(page, '[data-action=resume-document]'); await page.locator('#editor-page').waitFor({state: 'visible'});
+        // #205 : une newsletter enregistrée remplace l’accueil guidé de première visite.
+        await established(page); await click(page, '[data-action=resume-document]'); await page.locator('#editor-page').waitFor({state: 'visible'});
         await page.locator('summary').filter({hasText: 'Ajouter un composant'}).click();
         const geometry = await page.evaluate(() => {
           const c = document.getElementById('catalogue'), d = document.documentElement;

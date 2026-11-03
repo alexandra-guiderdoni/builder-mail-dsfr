@@ -12,7 +12,8 @@ test('import JSON collé, exemple téléchargeable et refus sans perte dans le b
     assert.deepEqual(await state(page), before);
     const exampleText = await fs.readFile(examplePath, 'utf8');
     await page.locator('#json-input').fill(exampleText); await click(page, '[data-action=json-import]'); await saved(page);
-    const imported = await state(page); assert.equal(imported.documents.length, 2);
+    // #205 : la newsletter de départ d’un navigateur neuf est écartée par l’import.
+    const imported = await state(page); assert.equal(imported.documents.length, 1);
     assert.equal(imported.documents.find(d => d.id === imported.activeId).blocks.length, 3);
     await page.locator('#json-input').fill(JSON.stringify(require('./fixtures/snum.cjs')())); await click(page, '[data-action=json-import]');
     await page.locator('#error').filter({hasText: 'Composition'}).waitFor(); assert.deepEqual(await state(page), imported);

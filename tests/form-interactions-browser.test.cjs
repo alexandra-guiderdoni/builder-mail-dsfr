@@ -1,7 +1,7 @@
 const test = require('node:test');
 const path = require('node:path');
 const {createHash} = require('node:crypto');
-const {root, evidence, open, click, enterEditor, expand, saved, state, chromium, nativeAx, nativeAxNode, fs, assert} = require('./browser-support.cjs');
+const {root, evidence, open, click, enterEditor, established, expand, saved, state, chromium, nativeAx, nativeAxNode, fs, assert} = require('./browser-support.cjs');
 const directory = path.join(evidence, 'form-interactions');
 const doc = page => page.evaluate(() => JSON.parse(JSON.stringify(MailBuilder.doc())));
 
@@ -134,7 +134,7 @@ test('renommage : rejet du vide, correction, annulations et retour du focus sont
   const browser = await chromium.launch(), observations = [];
   let completed = false;
   try {
-    const {page} = await open(browser); await click(page, '[data-action=library-home]');
+    const {page} = await open(browser); await established(page); await click(page, '[data-action=library-home]');
     const before = await state(page), id = before.activeId, button = `[data-document="${id}"] [data-library-action=rename]`;
     const focusReturned = async step => {
       await page.waitForFunction(selector => document.activeElement === document.querySelector(selector), button);

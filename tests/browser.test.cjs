@@ -89,7 +89,8 @@ test('parcours complet par les contrôles : bibliothèque, identités, modèles,
     await page.locator('#error').filter({hasText: 'Version de composition'}).waitFor(); assert.deepEqual(await state(page), before);
     await page.reload(); await page.waitForFunction(() => window.MailBuilder?.ready); assert.equal((await state(page)).documents.length, 4);
     const fresh = await open(browser, {offline: true}); await expand(fresh.page, 'Sauvegarde et import'); await fresh.page.locator('#project-input').setInputFiles(libraryPath); await saved(fresh.page);
-    const restored = await state(fresh.page); assert.equal(restored.documents.length, 5); assert.equal(restored.templates.length, 1); assert.equal(restored.identities.length, 1); assert(JSON.stringify(restored).includes(image));
+    // #205 : dans un navigateur neuf, la newsletter de départ est écartée par l’import : seules les 4 importées restent.
+    const restored = await state(fresh.page); assert.equal(restored.documents.length, 4); assert.equal(restored.templates.length, 1); assert.equal(restored.identities.length, 1); assert(JSON.stringify(restored).includes(image));
     await focusPage(page); await enterEditor(page); await page.frameLocator('#preview').locator('img').first().waitFor({state: 'visible'});
     await page.screenshot({path: path.join(evidence, 'bibliotheque-verifiee.png'), fullPage: true});
     assert.deepEqual(errors, []); assert(!requests.some(url => /^https?:/.test(url)));

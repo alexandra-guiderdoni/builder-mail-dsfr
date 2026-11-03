@@ -180,7 +180,7 @@
       if (first) { A.notice(reading); readingTicket = A.State.noticeTicket(); }
       try {
         const incoming = await A.Imports.prepare(file), merged = A.Imports.merge(A.library, incoming);
-        await A.State.change(lib => { Object.assign(lib, merged); }); await A.Library.open(A.library.activeId); A.notice(`Import ajouté à Mes newsletters, ${A.Files.imageContents(merged)}. Les newsletters existantes sont conservées.${A.Imports.upgradedNote(incoming)}`, readingTicket);
+        await A.State.change(lib => { Object.assign(lib, merged); A.State.withoutStarter(lib); }); await A.Library.open(A.library.activeId); A.notice(`Import ajouté à Mes newsletters, ${A.Files.imageContents(merged)}. Les newsletters existantes sont conservées.${A.Imports.upgradedNote(incoming)}`, readingTicket);
       } finally { if (!--readings && get("notice").textContent === reading) A.notice(""); }
     });
     event.target.value = "";

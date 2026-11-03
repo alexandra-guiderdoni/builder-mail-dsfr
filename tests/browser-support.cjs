@@ -73,9 +73,15 @@ async function open(browser, contextOptions = {}, beforeNavigate) {
   await enterEditor(page);
   return {context, page, observations};
 }
-async function enterEditor(page) { if (await page.locator('[data-action=resume-document]').isVisible()) await click(page, '[data-action=resume-document]'); await page.locator('#editor-page').waitFor({state: 'visible'}); await page.evaluate(() => document.fonts.ready); }
+// Première visite (#205) : la newsletter de départ n’est pas proposée à l’accueil ; les tests qui la composent l’ouvrent directement.
+async function enterEditor(page) {
+  if (await page.locator('[data-action=resume-document]').isVisible()) await click(page, '[data-action=resume-document]');
+  else if (await page.locator('#welcome').isVisible()) await page.evaluate(() => MailBuilder.Library.open(MailBuilder.library.activeId));
+  await page.locator('#editor-page').waitFor({state: 'visible'}); await page.evaluate(() => document.fonts.ready); }
+// Première visite (#205) : une modification enregistrée fait de la newsletter de départ une newsletter de la liste, comme une première saisie.
+async function established(page) { await page.evaluate(() => MailBuilder.State.change(() => {})); await saved(page); }
 async function saved(page) {
-  await page.waitForFunction(() => document.querySelector('#save-state').textContent === 'Newsletters sauvegardées dans ce navigateur.');
+  await page.waitForFunction(() => document.querySelector('#save-state').textContent === 'Newsletters enregistrées dans ce navigateur.');
 }
 async function expand(page, text) {
   const summary = page.locator('summary').filter({hasText: text});
@@ -154,4 +160,4 @@ async function selectBlockEffective(page, id, {focusInView = false} = {}) {
 async function focusPage(page) { await page.bringToFront(); await page.waitForFunction(() => document.hasFocus()); }
 const state = page => page.evaluate(() => JSON.parse(JSON.stringify(MailBuilder.library)));
 const store = page => page.evaluate(() => MailBuilder.Storage.load());
-module.exports = {root, evidence, portable, click, open, enterEditor, saved, expand, download, confirmChecks, announced, pageState, selectBlock, selectBlockEffective, focusPage, duplicateBlock, state, store, chromium, fs, assert, engines, engineName, note, nativeAx, nativeAxTree, nativeAxNode, ariaHeadings};
+module.exports = {root, evidence, portable, click, open, enterEditor, established, saved, expand, download, confirmChecks, announced, pageState, selectBlock, selectBlockEffective, focusPage, duplicateBlock, state, store, chromium, fs, assert, engines, engineName, note, nativeAx, nativeAxTree, nativeAxNode, ariaHeadings};

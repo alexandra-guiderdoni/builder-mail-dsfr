@@ -62,13 +62,14 @@
       try {
         const label = get("starter").selectedOptions[0].textContent.trim();
         const ticket = A.State.noticeTicket();
-        await A.State.change(lib => { const doc = start(get("starter").value, M.uniqueName(label, lib.documents)); lib.documents.push(doc); lib.activeId = doc.id; });
+        await A.State.change(lib => { A.State.withoutStarter(lib); const doc = start(get("starter").value, M.uniqueName(label, lib.documents)); lib.documents.push(doc); lib.activeId = doc.id; });
         A.notice("Newsletter créée : vérifiez son nom et l’objet du courriel, modifiables ci-dessous.", ticket);
       } finally { creating = false; }
     },
     "duplicate-document": () => A.Library.duplicate(A.library.activeId),
     "remove-document": () => A.Library.ask("remove", A.library.activeId),
     "library-home": () => A.Library.home(),
+    "welcome-restore": () => { const input = get("restore-input"); input.closest("details").open = true; input.focus(); },
     "resume-document": () => A.Library.open(A.library.activeId),
     "open-document": async () => { const id = get("documents").value; if (id && id !== A.library.activeId) await A.Library.open(id); },
     "save-template": async () => { const label = name("template-name"); A.notice(""); const ticket = A.State.noticeTicket(); await A.State.change(lib => { unique(lib.templates, label, "Un modèle"); lib.templates.push(M.clone(A.doc(), label)); }); await announce(`Modèle « ${label} » enregistré dans ce navigateur.`, ticket); },
@@ -149,7 +150,7 @@
     "example-json": () => { A.State.guard(); A.Files.json(M.create("Exemple de composition", [5, 19, 40]), "exemple.courriel.json"); A.notice("Exemple JSON proposé au téléchargement. Votre newsletter actuelle est conservée."); },
     "json-import": async () => {
       const incoming = await A.Imports.prepare(get("json-input").value), merged = A.Imports.merge(A.library, incoming), ticket = A.State.noticeTicket();
-      return A.State.change(lib => { Object.assign(lib, merged); }).then(async () => { await A.Library.open(A.library.activeId); A.notice(`Newsletter ou sauvegarde JSON ajoutée. Les éléments existants sont conservés.${A.Imports.upgradedNote(incoming)}`, ticket); });
+      return A.State.change(lib => { Object.assign(lib, merged); A.State.withoutStarter(lib); }).then(async () => { await A.Library.open(A.library.activeId); A.notice(`Newsletter ou sauvegarde JSON ajoutée. Les éléments existants sont conservés.${A.Imports.upgradedNote(incoming)}`, ticket); });
     }
   };
 })();

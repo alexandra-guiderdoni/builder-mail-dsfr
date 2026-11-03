@@ -36,7 +36,7 @@ async function open(browser, mode = 'capture') {
   await page.locator('summary').filter({hasText: 'Sauvegarde et import'}).click();
   const doc = fixture(A);
   await page.locator('#project-input').setInputFiles({name: 'copie-de-recette.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(doc))});
-  await page.waitForFunction(name => MailBuilder.doc().name === name && document.querySelector('#save-state').textContent.includes('sauvegardée'), doc.name);
+  await page.waitForFunction(name => MailBuilder.doc().name === name && document.querySelector('#save-state').textContent.includes('enregistrée'), doc.name);
   return {context, page};
 }
 

@@ -1,5 +1,5 @@
 const test = require('node:test');
-const {open, click, expand, saved, selectBlock, state, store, enterEditor, chromium, assert} = require('./browser-support.cjs');
+const {open, click, expand, established, saved, selectBlock, state, store, enterEditor, chromium, assert} = require('./browser-support.cjs');
 
 // Lettre entièrement fictive : titre, article avec image générée, paragraphe, pied de page avec deux liens supplémentaires.
 async function importLetter(page) {
@@ -16,7 +16,8 @@ async function importLetter(page) {
   });
   await expand(page, 'Sauvegarde et import');
   await page.locator('#project-input').setInputFiles({name: 'lettre-retrait.courriel.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(doc))});
-  await saved(page);
+  // L’encart peut déjà annoncer un enregistrement antérieur : attendre la lettre importée ouverte avant sa sauvegarde.
+  await page.waitForFunction(name => MailBuilder.doc().name === name, doc.name); await saved(page);
   return page.evaluate(() => MailBuilder.doc());
 }
 const g = name => `«\u00a0${name}\u00a0»`;
@@ -119,7 +120,8 @@ test('dernier bloc et liens supplémentaires restaurés ; seul le retrait le plu
 test('chaque composition garde son propre dernier retrait, y compris lorsqu’elle a été vidée', async () => {
   const browser = await chromium.launch({headless: true});
   try {
-    const {page, observations} = await open(browser);
+    // #205 : la newsletter de départ est enregistrée, sinon l’import l’écarterait.
+    const {page, observations} = await open(browser); await established(page);
     const letter = await importLetter(page), other = (await state(page)).documents.find(d => d.id !== letter.id);
     await remove(page, letter.blocks[1].id);
     assert.equal(await page.locator('#undo-remove').isVisible(), true, 'Le retrait doit proposer « Annuler le retrait ».');

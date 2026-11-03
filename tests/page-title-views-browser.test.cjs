@@ -1,6 +1,6 @@
 const test = require('node:test');
 const {chromium: chromiumEngine, webkit} = require('playwright');
-const {portable, click, saved, assert} = require('./browser-support.cjs');
+const {portable, click, established, saved, assert} = require('./browser-support.cjs');
 const BRAND = 'Atelier de courriels DSFR', HOME = `Mes newsletters – ${BRAND}`;
 const settled = async (page, expected, message) => { await page.waitForFunction(v => document.title === v, expected, {timeout: 3000}).catch(() => {}); assert.equal(await page.title(), expected, message); };
 const editor = name => `${name} – Éditeur – ${BRAND}`;
@@ -12,7 +12,8 @@ for (const [engineName, engine] of [['Chromium', chromiumEngine], ['WebKit', web
       const context = await browser.newContext({viewport: {width: 1200, height: 900}}), page = await context.newPage();
       await page.goto(portable); await page.waitForFunction(() => window.MailBuilder?.ready);
       await settled(page, HOME, 'accueil au chargement');
-      await click(page, '[data-action=resume-document]');
+      // #205 : une newsletter enregistrée remplace l’accueil guidé de première visite.
+      await established(page); await click(page, '[data-action=resume-document]');
       const first = await page.locator('#document-name').inputValue();
       await settled(page, editor(first), 'éditeur : nom de la composition ouverte');
       await page.locator('#document-name').fill('Édition & <A>'); await saved(page);
