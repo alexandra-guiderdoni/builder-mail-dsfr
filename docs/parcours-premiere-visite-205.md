@@ -66,7 +66,7 @@ Les messages d’erreur gardent toute leur information opérationnelle ; seul le
 
 ## Hors périmètre
 
-README en mode d’emploi et bascule visible avant la lecture du stockage : #207, après le test #206.
+README en mode d’emploi : #207, après le test #206. La bascule visible avant la lecture du stockage est corrigée le 3 novembre 2026.
 
 ## Décisions d’Alex (3 novembre 2026)
 

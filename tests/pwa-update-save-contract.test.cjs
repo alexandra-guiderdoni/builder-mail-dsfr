@@ -15,7 +15,7 @@ const ticks = async (count = 20) => { for (let i = 0; i < count; i++) await new 
 // Charge le vrai state.js et le pwa.js testé dans un même contexte, avec un service worker simulé qui garde une version en attente.
 async function scenario({pwa = read('pwa.js'), storage = {}, loadFails = false, fakeState = null, prepare = null} = {}) {
   const log = {posted: [], reloads: 0, calls: [], errors: []}, elements = {}, listeners = {}, worker = {listeners: {}};
-  const element = id => elements[id] ||= {id, hidden: true, textContent: '', disabled: false, addEventListener(type, action) { this[type] = action; }};
+  const element = id => elements[id] ||= {id, hidden: true, textContent: '', disabled: false, removeAttribute() {}, addEventListener(type, action) { this[type] = action; }};
   const registration = {waiting: {postMessage: message => { log.posted.push(message.type); log.calls.push('post'); }}, addEventListener() {}};
   const scope = {
     document: {querySelector: () => ({}), getElementById: element},

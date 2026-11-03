@@ -12,7 +12,7 @@ async function setup({failSave = false, resetOnce = false} = {}) {
   const nodes = new Map(), events = {};
   const element = id => {
     if (!nodes.has(id)) nodes.set(id, {id, textContent: '', hidden: false, disabled: false, dataset: {},
-      contains: () => false, focus() {}, querySelector: sel => element(id + sel)});
+      contains: () => false, focus() {}, removeAttribute() {}, querySelector: sel => element(id + sel)});
     return nodes.get(id);
   };
   let notify, reloads = 0, writes = 0;

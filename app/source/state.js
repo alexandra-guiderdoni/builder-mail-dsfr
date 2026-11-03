@@ -190,7 +190,7 @@
       show(absent ? "Stockage indisponible : travail en mémoire seulement." : "Newsletters non restaurées.", true);
       if (absent) get("storage-help").textContent = "Aucun stockage n’est disponible dans ce navigateur : exportez une copie pour conserver votre travail.";
     }
-    base = A.library; A.ready = true; get("workspace").disabled = !!A.LegacyRecovery?.pending(); A.UI.refresh();
+    base = A.library; A.ready = true; get("workspace").disabled = !!A.LegacyRecovery?.pending(); get("workspace").removeAttribute("aria-busy"); A.UI.refresh();
     // L’encart ne promet rien quand le stockage a échoué ; l’état de conservation durable est lu sans retarder l’ouverture.
     if (A.recoveryOnly) { if (!absent) get("storage-help").textContent = "Les newsletters enregistrées n’ont pas pu être relues : exportez une copie de votre travail."; }
     else { storageInfo(); readPersistence().then(storageInfo); }

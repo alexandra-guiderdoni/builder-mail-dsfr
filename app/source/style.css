@@ -9,6 +9,8 @@ body { background:var(--background-alt-grey); }
 /* #210 : aide à l’installation et téléchargement du portable, espacements de la grille DSFR (1v = 0,25rem). */
 .install-help { max-width:60ch; margin-top:1rem; } .install-help p, .install-help ul { margin:0 0 .5rem; } .install-help p, .install-help li, .install-help summary { font-size:.875rem; line-height:1.5rem; } .install-help details { margin-top:.5rem; } .install-help summary { cursor:pointer; }
 #workspace,#editing { min-width:0; border:0; margin:0; padding:0; }
+/* #207 : avant la lecture du stockage, ni accueil habituel ni accueil guidé ; seul le titre reste. */
+#workspace[aria-busy="true"] #resume-document, #workspace[aria-busy="true"] #library-home > :not(#home-title) { display:none; }
 .app-panel { min-width:0; padding:24px; background:var(--background-default-grey); border:1px solid var(--border-default-grey); }
 .app-panel h2 { font-size:1.25rem; line-height:1.75rem; margin-bottom:24px; }
 .app-panel h3 { font-size:1.125rem; line-height:1.5rem; margin-bottom:8px; }

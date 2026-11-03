@@ -1,5 +1,5 @@
 const test = require('node:test');
-const {open, saved, chromium, assert} = require('./browser-support.cjs');
+const {open, saved, portable, chromium, assert} = require('./browser-support.cjs');
 
 // #205 : à la première visite, l'accueil guide en trois étapes (créer, garder une copie, installer) et ne présente pas la
 // newsletter de départ comme un travail à reprendre. Elle est écartée à la première création ; l'accueil habituel revient
@@ -134,5 +134,34 @@ test('#205 titres des cartes d’exemple : un niveau sous « Exemples » pendant
     await page.locator('[data-example=information] [data-example-action=create]').click();
     await page.locator('#editor-page').waitFor({state: 'visible'}); await saved(page); await home(page);
     assert.deepEqual(await levels(), [null, null, null, null]);
+  } finally { await browser.close(); }
+});
+
+// #207 : tant que le stockage n'est pas lu, l'atelier ne sait pas s'il s'agit d'une première visite. Il ne montre ni
+// l'accueil habituel (« Reprendre », « Tout effacer ») ni l'accueil guidé, seulement la lecture en cours.
+test('#207 avant la lecture du stockage : ni accueil habituel ni accueil guidé, puis l’accueil guidé', async () => {
+  const browser = await chromium.launch({headless: true});
+  try {
+    const context = await browser.newContext({viewport: {width: 1600, height: 1000}}), page = await context.newPage();
+    // L'ouverture de la base est retenue jusqu'à `__releaseStorage()`, puis transmise à la vraie requête.
+    await page.addInitScript(() => {
+      const real = indexedDB.open.bind(indexedDB), held = [];
+      window.__releaseStorage = () => held.splice(0).forEach(go => go());
+      indexedDB.open = (...args) => {
+        const request = {};
+        held.push(() => { const r = real(...args); for (const type of ['upgradeneeded', 'success', 'error', 'blocked']) r.addEventListener(type, () => { request.result = r.result; request.error = r.error; request['on' + type]?.(); }); });
+        return request;
+      };
+    });
+    await page.goto(portable); await page.locator('#save-state').waitFor();
+    const shown = () => page.evaluate(() => Object.fromEntries(['home-intro', 'home-create', 'newsletter-list', 'examples', 'reset-zone', 'resume-document', 'welcome', 'home-title']
+      .map(id => { const e = document.getElementById(id); return [id, !e.closest('[hidden]') && e.getClientRects().length > 0]; })));
+    assert.equal(await page.evaluate(() => !!MailBuilder.ready), false, 'le stockage n’est pas encore lu');
+    assert.equal(await page.locator('#save-state').textContent(), 'Lecture de vos newsletters…');
+    assert.deepEqual(await shown(), {'home-intro': false, 'home-create': false, 'newsletter-list': false, examples: false, 'reset-zone': false, 'resume-document': false, welcome: false, 'home-title': true});
+    await page.evaluate(() => window.__releaseStorage()); await page.waitForFunction(() => window.MailBuilder?.ready);
+    const after = await shown();
+    assert.equal(after.welcome && after.examples && after['home-create'], true, 'accueil guidé, avec exemples et plan vide');
+    assert.equal(after['reset-zone'] || after['resume-document'] || after['home-intro'], false);
   } finally { await browser.close(); }
 });

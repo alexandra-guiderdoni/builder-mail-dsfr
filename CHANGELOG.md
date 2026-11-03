@@ -10,7 +10,8 @@
 - **Enregistré ou sauvegardé :** « sauvegardé » ne désigne plus l’enregistrement dans le navigateur (« Modifications non enregistrées »).
 - **Conservés :** « Importer du JSON », cité par le skill `newsletter-contribution` ; « Outil de composition institutionnelle », où « composition » désigne l’action de composer.
 - **Tests :** les tests sont adaptés aux nouveaux libellés. Le test des images distantes vérifie toujours le message de l’ancienne distribution 09eff89, inchangé.
-- **Restent pour #207, après le test #206 :** le README en mode d’emploi et la bascule visible avant la lecture du stockage.
+- **Ouverture sans bascule :** tant que le stockage n’est pas lu, l’accueil ne montre que son titre et « Lecture de vos newsletters… ». L’accueil habituel, « Reprendre » et « Tout effacer » compris, ne s’affiche plus un instant avant l’accueil guidé. Un test retient l’ouverture du stockage pour vérifier cet état.
+- **Reste pour #207, après le test #206 :** le README en mode d’emploi.
 
 ## 3 novembre 2026 - Accueil guidé de la première visite (#205)
 
