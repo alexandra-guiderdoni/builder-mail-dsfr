@@ -6,7 +6,8 @@
   // le bouton ou que l’atelier est installé. Le détail technique de l’état va dans l’aide repliable.
   const help = document.getElementById("install-help"), explain = document.getElementById("install-explain"), detail = document.getElementById("environment-detail");
   let installPrompt, registration, installed = !!window.matchMedia?.("(display-mode: standalone)").matches;
-  const explainInstall = () => { explain.hidden = installed || !install.hidden; };
+  // L’accueil guidé (#205) retire son étape « Installer » quand l’atelier est installé.
+  const explainInstall = () => { explain.hidden = installed || !install.hidden; A.Library?.welcome?.(); };
   help.hidden = false; explainInstall();
   window.addEventListener("beforeinstallprompt", event => { event.preventDefault(); installPrompt = event; install.hidden = false; explainInstall(); });
   install.addEventListener("click", async () => {

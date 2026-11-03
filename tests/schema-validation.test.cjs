@@ -1,7 +1,7 @@
 const test = require('node:test');
 const path = require('node:path');
 const {spawnSync} = require('node:child_process');
-const {root, evidence, open, expand, download, chromium, fs, assert} = require('./browser-support.cjs');
+const {root, evidence, open, established, expand, download, chromium, fs, assert} = require('./browser-support.cjs');
 const dist = path.join(root, 'app/distribution');
 const schemaPath = path.join(dist, 'courriels.schema.json');
 const validator = path.join(__dirname, 'validate-schema.cjs');
@@ -38,7 +38,8 @@ test('le validateur exerce bien le schéma 2020-12 et rejette un témoin invalid
 test('exemples livrés et exports de l’application conformes au schéma JSON', async () => {
   const browser = await chromium.launch({headless: true});
   try {
-    const {page} = await open(browser, {offline: true});
+    // #205 : rien n’est exporté en première visite ; une newsletter enregistrée l’est.
+    const {page} = await open(browser, {offline: true}); await established(page);
     await expand(page, 'Sauvegarde et import');
     const documentExport = await download(page, '[data-action=export-document]', 'schema-composition.json');
     const libraryExport = await download(page, '[data-action=export-library]', 'schema-bibliotheque.json');

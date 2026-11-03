@@ -61,6 +61,8 @@ test('#210 site : l’aide se retire quand le navigateur propose l’installatio
     assert.equal(await visible(page, '#install-explain'), false, 'le bouton est proposé : l’aide se retire');
     await page.evaluate(() => window.dispatchEvent(new Event('appinstalled')));
     assert.equal(await visible(page, '#install'), false);
+    // #205 : installé, l’atelier n’a plus d’étape « Installer » dans l’accueil guidé.
+    assert.equal(await visible(page, '#welcome-install-step'), false);
     assert.equal(await visible(page, '#install-explain'), false, 'l’atelier est installé : l’aide se retire');
     assert.match(await page.locator('#environment').textContent(), /installé/);
     assert.equal(await visible(page, '#portable-download'), true, 'le portable reste téléchargeable');

@@ -74,3 +74,65 @@ test('#205 étape « Garder une copie » : restaurer une sauvegarde ouvre le cha
     assert.equal((await view(page)).welcome, true, 'ouvrir la restauration ne quitte pas la première visite');
   } finally { await browser.close(); }
 });
+
+// Revue Codex et ShipGuard (#205) : la newsletter de départ n'est écartée que par son identifiant, et seule une bibliothèque
+// encore jamais enregistrée reste en première visite. Rien n'est écrit ni exporté tant qu'il n'y a rien à garder.
+const stored = page => page.evaluate(async () => ((await MailBuilder.Storage.load())?.library.documents || []).map(d => d.name));
+test('#205 reprise de main après une restauration dans une autre fenêtre : aucune newsletter réelle n’est écartée', async () => {
+  const browser = await chromium.launch({headless: true});
+  try {
+    const {page: a, context} = await open(browser); await home(a);
+    const b = await context.newPage(); await b.goto(a.url()); await b.waitForFunction(() => window.MailBuilder?.ready);
+    const content = await b.evaluate(() => { const A = MailBuilder, lib = A.Model.initial(); lib.documents = [A.Model.create('Newsletter réelle à conserver')]; lib.activeId = lib.documents[0].id; return JSON.stringify(A.Model.library(lib)); });
+    await b.locator('summary').filter({hasText: 'Sauvegarde et import'}).click();
+    await b.locator('#restore-input').setInputFiles({name: 'sauvegarde.json', mimeType: 'application/json', buffer: Buffer.from(content)});
+    await b.locator('#restore-confirm').click(); await b.locator('#restore-dialog').waitFor({state: 'hidden'});
+    await a.locator('#read-only').waitFor({state: 'visible'});
+    await a.locator('[data-action=take-over]').click(); await a.locator('#read-only').waitFor({state: 'hidden'});
+    const taken = await view(a);
+    assert.equal(taken.welcome, false, 'la bibliothèque reprise n’est plus une première visite');
+    assert.deepEqual(taken.names, ['Newsletter réelle à conserver']);
+    await a.locator('[data-example=lettre] [data-example-action=create]').click();
+    await a.locator('#editor-page').waitFor({state: 'visible'}); await saved(a);
+    assert.deepEqual(await stored(a), ['Newsletter réelle à conserver', 'Lettre d’information']);
+  } finally { await browser.close(); }
+});
+
+test('#205 « Enregistrer maintenant » en première visite n’écrit rien : la première visite survit au rechargement', async () => {
+  const browser = await chromium.launch({headless: true});
+  try {
+    const {page} = await open(browser); await home(page);
+    await page.locator('summary').filter({hasText: 'Sauvegarde et import'}).click();
+    await page.locator('[data-action=save-now]').click();
+    await page.locator('#save-state').filter({hasText: 'Rien n’est encore enregistré'}).waitFor();
+    assert.deepEqual(await stored(page), []);
+    await page.reload(); await page.waitForFunction(() => window.MailBuilder?.ready);
+    assert.equal((await view(page)).welcome, true);
+  } finally { await browser.close(); }
+});
+
+test('#205 exports en première visite : rien n’est proposé au téléchargement, un message l’explique', async () => {
+  const browser = await chromium.launch({headless: true});
+  try {
+    const {page} = await open(browser); await home(page);
+    await page.locator('summary').filter({hasText: 'Sauvegarde et import'}).click();
+    for (const action of ['export-library', 'export-document']) {
+      const download = page.waitForEvent('download', {timeout: 1500}).then(() => true, () => false);
+      await page.locator(`[data-action=${action}]`).click();
+      assert.equal(await download, false, `${action} : aucun téléchargement`);
+      assert.match(await page.locator('#notice').textContent(), /Rien à exporter/);
+    }
+  } finally { await browser.close(); }
+});
+
+test('#205 titres des cartes d’exemple : un niveau sous « Exemples » pendant la première visite seulement', async () => {
+  const browser = await chromium.launch({headless: true});
+  try {
+    const {page} = await open(browser); await home(page);
+    const levels = () => page.locator('#examples-list h4').evaluateAll(list => list.map(h => h.getAttribute('aria-level')));
+    assert.deepEqual(await levels(), ['5', '5', '5', '5']);
+    await page.locator('[data-example=information] [data-example-action=create]').click();
+    await page.locator('#editor-page').waitFor({state: 'visible'}); await saved(page); await home(page);
+    assert.deepEqual(await levels(), [null, null, null, null]);
+  } finally { await browser.close(); }
+});

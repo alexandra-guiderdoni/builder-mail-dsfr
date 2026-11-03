@@ -12,7 +12,9 @@
   let meta = {}, persistence = "inconnue", persistRequested = false, editorial = false;
   // Première visite (#205) : rien d’enregistré dans ce navigateur, ou retour après « Tout effacer ». La newsletter de départ
   // reste en mémoire sans être proposée ; elle est écartée à la première création et l’état cesse à la première modification.
-  let fresh = false;
+  // La newsletter de départ est désignée par son identifiant, relevé à l’entrée en première visite (revue #205) : jamais par sa position.
+  let fresh = false, starterId = null;
+  const begin = value => { fresh = value; starterId = value ? A.library.documents[0]?.id ?? null : null; };
   const DAY = 864e5, REMINDER_DAYS = 7;
   const PERSISTENCE = {accordée: "Le navigateur s’engage à les conserver.", "non accordée": "Le navigateur peut les effacer s’il manque d’espace : exportez-les régulièrement.",
     indisponible: "Ce navigateur ne permet pas de demander leur conservation durable : exportez-les régulièrement.", erreur: "La demande de conservation durable a échoué : exportez-les régulièrement."};
@@ -120,6 +122,8 @@
   function save() {
     if (restoring) throw new Error("Attendez la fin de la récupération avant de sauvegarder.");
     if (readOnly) throw readOnlyError();
+    // Première visite : la newsletter de départ n’est pas un travail à enregistrer.
+    if (fresh) { show(FRESH, true); return queue; }
     if (A.recoveryOnly) { failing(true); show(absent ? "Modifications non sauvegardées : aucun stockage n’est disponible. Exportez votre bibliothèque." : "Modifications non sauvegardées : la bibliothèque enregistrée reste inchangée. Exportez votre bibliothèque.", true); return Promise.resolve(); }
     latest = {current: revision, library: A.library, editorial: editorial || latest?.editorial}; editorial = false;
     cancelSuccess(); show("Sauvegarde en cours…");
@@ -158,7 +162,7 @@
   // navigation : seule la newsletter ouverte change, ce n’est pas une modification éditoriale (#199).
   function change(mutator, redraw = true, input = false, navigation = false) {
     if (readOnly) throw readOnlyError();
-    if (input === "edit") guardEdit(); else if (restoring || !input) guard(); const next = M.copy(A.library); mutator(next); M.versions(next); M.library(next); A.library = next; revision++; lastChange = Date.now(); pruneDrafts(); if (!navigation) { editorial = true; fresh = false; }
+    if (input === "edit") guardEdit(); else if (restoring || !input) guard(); const next = M.copy(A.library); mutator(next); M.versions(next); M.library(next); A.library = next; revision++; lastChange = Date.now(); pruneDrafts(); if (!navigation) { editorial = true; begin(false); }
     if (!A.doc().blocks.some(b => b.id === A.selected)) A.selected = A.doc().blocks[0]?.id || null;
     if (redraw) { clearTimeout(previewTimer); A.UI.refresh(); } else { A.UI.summary(); previewAfterInput(); }
     return save();
@@ -174,11 +178,11 @@
       upgraded = !!record && record.library.catalogue !== A.catalog.id;
       A.selected = A.doc().blocks[0]?.id || null;
       // Après « Tout effacer » (#201), l’état visible est celui d’un navigateur neuf.
-      fresh = !record || record.reason === "effacement";
+      begin(!record || record.reason === "effacement");
       show(fresh ? FRESH : "Newsletters retrouvées dans ce navigateur.", true);
       try { meta = await A.Storage.loadMeta(); } catch { meta = {}; }
     } catch (cause) {
-      failing(true); A.recoveryOnly = true; absent = cause.storage === "absent"; fresh = false;
+      failing(true); A.recoveryOnly = true; absent = cause.storage === "absent"; begin(false);
       const legacy = record && A.LegacyRecovery?.offer(record);
       const advice = legacy ? "Les données enregistrées sont conservées : utilisez la récupération guidée ci-dessous pour corriger les anciennes adresses." : absent ? "Exportez la bibliothèque en mémoire pour conserver votre travail : la fermeture de cette page l’efface." : "Cette page n’écrit rien dans la bibliothèque locale : exportez la bibliothèque en mémoire pour conserver votre travail.";
       const restore = !legacy && !cause.storage && await restorable() ? " Une sauvegarde précédente lisible existe : « Restaurer l’état précédent », dans « Sauvegarde et import », permet de la relire." : "";
@@ -203,7 +207,7 @@
     try {
       if (readOnly) throw readOnlyError();
       const saved = await A.Storage.save(restored, expectedToken);
-      token = saved.token; base = A.library = restored; A.recoveryOnly = false; failing(false); revision++;
+      token = saved.token; base = A.library = restored; A.recoveryOnly = false; failing(false); revision++; begin(false);
       A.selected = A.doc().blocks[0]?.id || null; A.LegacyRecovery.close(); A.UI.refresh();
       if (readOnly) show("Bibliothèque corrigée enregistrée ; cette fenêtre reste en lecture seule.", true);
       else { A.error(""); show("Bibliothèque corrigée restaurée et sauvegardée dans ce navigateur.", true); A.notice("Vos compositions sont retrouvées. L’original est conservé comme état précédent.", ticket); get("home-title").focus(); }
@@ -220,7 +224,7 @@
       await queue; const previous = await A.Storage.load("previous");
       if (!previous) throw new Error("Aucun état précédent disponible.");
       const restored = M.copy(M.library(previous.library)), saved = await A.Storage.save(restored, token);
-      token = saved.token; base = A.library = restored; A.recoveryOnly = false; failing(false); revision++;
+      token = saved.token; base = A.library = restored; A.recoveryOnly = false; failing(false); revision++; begin(false);
       A.selected = A.doc().blocks[0]?.id || null; A.UI.refresh(); A.error("");
       show("Newsletters enregistrées dans ce navigateur."); announceSuccess("Newsletters enregistrées dans ce navigateur.");
       A.notice("État précédent relu. Contrôlez les compositions avant de poursuivre.", ticket);
@@ -245,7 +249,7 @@
     try {
       await queue;
       const saved = await A.Storage.replace(next, token, {reason, keepPrevious});
-      token = saved.token; base = A.library = next; revision++; failing(false); fresh = reason === "effacement";
+      token = saved.token; base = A.library = next; revision++; failing(false); begin(reason === "effacement");
       A.removed.clear(); A.moved?.clear(); A.drafts.clear(); A.invalid.clear(); A.UI.clearFieldErrors(); editorial = false;
       // Effacement : métadonnées supprimées avec la bibliothèque. Restauration : date d’export gardée, compteur remis à zéro.
       meta = reason === "effacement" ? {} : {...meta, dirtySince: null};
@@ -323,7 +327,7 @@
       const {library, copies, drafts, selected} = rebase(record ? M.copy(M.library(record.library)) : null);
       if (readOnly === "version") throw readOnlyError();
       const saved = await A.Storage.save(library, record?.token ?? null);
-      token = saved.token; base = A.library = library; A.drafts = drafts; A.selected = selected; revision++; failing(false); A.recoveryOnly = false;
+      token = saved.token; base = A.library = library; A.drafts = drafts; A.selected = selected; revision++; failing(false); A.recoveryOnly = false; begin(false);
       channel?.postMessage({type: "takeover", token: saved.token});
       if (!A.doc().blocks.some(b => b.id === A.selected)) A.selected = A.doc().blocks[0]?.id || null;
       // Un retard signalé pendant l’écriture garde la lecture seule : la bibliothèque écrite est déjà en mémoire.
@@ -361,6 +365,6 @@
   const saved = () => !failed && !pending && !A.recoveryOnly;
   const restoreErrorFromState = () => { if ((failed || readOnly) && persistentError) A.error(persistentError); };
   // Appelée dans le mutateur d’une création : sans effet hors première visite, elle retire la newsletter de départ jamais proposée.
-  const withoutStarter = lib => { if (fresh) lib.documents = lib.documents.filter(d => d.id !== A.library.documents[0].id); };
+  const withoutStarter = lib => { if (fresh && starterId) lib.documents = lib.documents.filter(d => d.id !== starterId); };
   A.State = Object.freeze({fresh: () => fresh, withoutStarter, libraryExported, guard, guardEdit, setDraft, dropDraft, dropFooterDraft, change, save, start, restoreLegacy, recover, replaceLibrary, settle, flush, saved, takeOver, outdated, reload, exported, noticeTicket: () => noticeTicket, restoreErrorFromState});
 })();

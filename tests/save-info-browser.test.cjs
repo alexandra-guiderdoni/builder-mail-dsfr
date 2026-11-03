@@ -1,5 +1,5 @@
 const test = require('node:test');
-const {open, saved, expand, download, chromium, assert} = require('./browser-support.cjs');
+const {open, established, saved, expand, download, chromium, assert} = require('./browser-support.cjs');
 
 // #199 : l’encart dit où sont les données, quand le dernier export complet a été proposé et si le navigateur s’engage à les
 // conserver ; un rappel apparaît après 7 jours de modifications sans export. Métadonnées hors du modèle (clé « meta »).
@@ -15,6 +15,8 @@ test('#199 encart : emplacement, aucun export puis dernier export complet daté 
     const {page} = await open(browser);
     assert.match(await help(page), /dans ce navigateur, sur ce poste/); assert.match(await help(page), /Aucun export proposé/);
     assert.equal(await page.locator('#save-reminder').isVisible(), false);
+    // #205 : rien n’est exporté en première visite ; une newsletter enregistrée l’est.
+    await established(page);
     await expand(page, 'Sauvegarde et import');
     await download(page, '[data-action=export-document]', 'composition-seule.json');
     assert.match(await help(page), /Aucun export proposé/, 'exporter une composition seule ne date pas la sauvegarde');

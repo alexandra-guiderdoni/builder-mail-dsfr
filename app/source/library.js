@@ -19,14 +19,21 @@
     .map(([id, slot]) => { const node = get(id), anchor = document.createComment(""); node.before(anchor); return {node, anchor, slot: get(slot)}; });
   function welcome() {
     const fresh = !!A.State?.fresh?.();
-    get("welcome").hidden = !fresh; get("home-intro").hidden = fresh;
+    // Sans bouton ni explication, l’atelier est installé (pwa.js) : l’étape « Installer » n’a plus d’objet, et l’aide garde
+    // dans l’en-tête le lien du portable (#210).
+    const installStep = fresh && !get("install-help").hidden && !(get("install-explain").hidden && get("install").hidden);
+    get("welcome").hidden = !fresh; get("home-intro").hidden = fresh; get("welcome-install-step").hidden = !installStep;
     if (fresh) movable ??= anchored();
-    for (const {node, anchor, slot} of movable || []) if (fresh) slot.append(node); else if (anchor.nextSibling !== node) anchor.after(node);
+    // Une zone déjà en place n’est pas réinsérée : le focus qu’elle contient est préservé.
+    for (const {node, anchor, slot} of movable || []) {
+      if (node.id === "install-help" ? installStep : fresh) { if (node.parentNode !== slot) slot.append(node); }
+      else if (anchor.nextSibling !== node) anchor.after(node);
+    }
     // Sous le titre d’étape, « Exemples » descend d’un niveau.
     if (fresh) get("examples-title").setAttribute("aria-level", "4"); else get("examples-title").removeAttribute("aria-level");
+    for (const card of get("examples-list").querySelectorAll("h4")) if (fresh) card.setAttribute("aria-level", "5"); else card.removeAttribute("aria-level");
     get("newsletter-list").hidden = fresh; get("reset-zone").hidden = fresh; get("library-count").hidden = fresh; get("storage-help").hidden = fresh;
     get("resume-document").hidden = fresh || !get("editor-page").hidden;
-    get("welcome-install-step").hidden = !fresh || get("install-help").hidden;
   }
   function refresh() {
     welcome();
@@ -243,5 +250,5 @@
   get("example-close").addEventListener("click", () => get("example-dialog").close());
   get("example-dialog").addEventListener("close", () => { const opener = previewing?.opener; previewing = null; get("example-frame").replaceChildren(); releasePreviews?.(); releasePreviews = null; if (previewUrl) { URL.revokeObjectURL(previewUrl); previewUrl = ""; } opener?.isConnected && opener.focus(); });
   get("example-create").addEventListener("click", () => { const key = previewing?.key; previewing = null; get("example-dialog").close(); if (key) attempt(() => createFrom(key)); });
-  A.Library = Object.freeze({subjectNotice, refresh, open, home, duplicate, ask, askRemoval});
+  A.Library = Object.freeze({subjectNotice, refresh, welcome, open, home, duplicate, ask, askRemoval});
 })();
