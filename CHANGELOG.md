@@ -1,5 +1,20 @@
 # Historique des livraisons
 
+## 3 novembre 2026 - Accueil guidé de la première visite (#205)
+
+- **Première visite :** quand rien n’est encore enregistré dans ce navigateur, ou après « Tout effacer », l’accueil guide en trois étapes :
+  1. créer sa première newsletter, depuis un exemple ou un plan vide ;
+  2. garder une copie, par l’export de Mes newsletters ou « Restaurer une sauvegarde » ;
+  3. installer l’atelier (facultatif), avec l’aide et le lien du portable de #210. Cette étape est absente du portable et de l’atelier déjà installé.
+- **Rien à reprendre :** la newsletter de départ « Mon premier courriel » n’est plus présentée comme un travail en cours. La liste, « Reprendre », le compteur et « Repartir de zéro » sont masqués pendant la première visite. La newsletter de départ est écartée à la première création (exemple, plan vide ou import).
+- **Retour à l’accueil habituel :** dès la première modification enregistrée, et après une reprise de main, une restauration ou une récupération guidée.
+- **Rien n’est écrit ni exporté tant qu’il n’y a rien à garder :** « Enregistrer maintenant » n’écrit rien, et les exports répondent « Rien à exporter pour l’instant ».
+- **Vocabulaire :** « enregistré » désigne le navigateur ; « sauvegarde » est réservé au fichier exporté. Le champ d’import par fichier devient « Ajouter une newsletter ou une sauvegarde depuis un fichier ». « Importer du JSON » est conservé, car le skill `newsletter-contribution` le cite.
+- **Revue :** Codex et ShipGuard ont relu le lot. Leurs constats sont corrigés, dont une perte de données : après une reprise de main, la création suivante pouvait écarter une vraie newsletter. La newsletter de départ est désormais désignée par son identifiant.
+- **Tests :** `welcome-browser` (9 tests) et un contrôle de l’étape d’installation sur la version web. Les tests existants sont adaptés aux libellés et à la newsletter de départ écartée.
+- **Reporté à #207 :** environ 90 messages d’erreur et de récupération à reformuler, la bascule visible avant la lecture du stockage et le README en mode d’emploi.
+- **Test utilisateur :** protocole dans `docs/protocole-test-206.md`.
+
 ## 2 novembre 2026 - Exemples de newsletters et départs allégés (#202)
 
 - **Espace « Exemples » :** sur l’accueil, à l’écart de Mes newsletters, quatre newsletters remplies avec un contenu fictif crédible : information de service, lettre d’information, invitation, revue de presse.

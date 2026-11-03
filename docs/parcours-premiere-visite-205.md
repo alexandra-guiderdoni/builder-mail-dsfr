@@ -1,6 +1,6 @@
 # Parcours de première visite (#205)
 
-État : réalisé sur la branche `feature/accueil-premiere-visite-205`, partie de `main` à `3cf3bfd`, non fusionné. Reste la validation par Alex avant le test #206. Suite complète 737/737 et `npm run check` au vert le 3 novembre 2026.
+État : réalisé et fusionné sur `main` le 3 novembre 2026, avant le test #206, à la demande d’Alex. Suite complète et `npm run check` au vert le 3 novembre 2026.
 
 ## Constat sur l’atelier actuel
 

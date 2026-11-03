@@ -1,6 +1,6 @@
 # Protocole du test utilisateur de l’accueil (#206)
 
-État : à relire par Alex avant la première séance. Parcours testé : #205, branche `feature/accueil-premiere-visite-205` au commit `712855c`.
+État : à relire par Alex avant la première séance. Parcours testé : #205, fusionné sur `main` le 3 novembre 2026.
 
 ## Objectif
 
@@ -24,7 +24,7 @@ Le test relève aussi les mots mal compris. Il ne produit pas de score global.
 
 ## Matériel
 
-- **Fichier :** le portable de la branche, `app/distribution/portable.html`, renommé `atelier-courriels-portable.html`. Il est remis par messagerie ou sur clé, comme un vrai envoi.
+- **Fichier :** le portable de `main`, `app/distribution/portable.html`, renommé `atelier-courriels-portable.html`. Il est remis par messagerie ou sur clé, comme un vrai envoi.
 - **Navigateur :** celui du poste, noté dans la grille.
 - **Profil neuf :** un profil de navigateur neuf par testeur. Ne pas utiliser de fenêtre de navigation privée : sa fermeture efface les données, et la tâche 4 ne pourrait plus réussir.
 - **Fichier de secours :** une sauvegarde préparée à l’avance avec une newsletter fictive. Elle ne sert que si la tâche 3 échoue, pour que la tâche 5 reste possible.
