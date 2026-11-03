@@ -1,5 +1,17 @@
 # Historique des livraisons
 
+## 3 novembre 2026 - Vocabulaire des messages d’erreur et de secours (#207)
+
+- **Messages reformulés :** environ 110 messages de lecture seule, de stockage inaccessible, de récupération et d’import ne parlent plus de « bibliothèque », de « composition », de « JSON » ni de « prototype ». Ils gardent toute leur information opérationnelle.
+  - « Exporter la bibliothèque en mémoire » devient « Exporter les newsletters de cette fenêtre ».
+  - « Bibliothèque locale inaccessible » devient « Stockage du navigateur inaccessible ».
+  - « Exporter les données enregistrées brutes » devient « Exporter une copie de diagnostic ».
+  - Les nouvelles newsletters s’appellent « Nouvelle newsletter » ; un fichier de bibliothèque devient une « sauvegarde ».
+- **Enregistré ou sauvegardé :** « sauvegardé » ne désigne plus l’enregistrement dans le navigateur (« Modifications non enregistrées »).
+- **Conservés :** « Importer du JSON », cité par le skill `newsletter-contribution` ; « Outil de composition institutionnelle », où « composition » désigne l’action de composer.
+- **Tests :** les tests sont adaptés aux nouveaux libellés. Le test des images distantes vérifie toujours le message de l’ancienne distribution 09eff89, inchangé.
+- **Restent pour #207, après le test #206 :** le README en mode d’emploi et la bascule visible avant la lecture du stockage.
+
 ## 3 novembre 2026 - Accueil guidé de la première visite (#205)
 
 - **Première visite :** quand rien n’est encore enregistré dans ce navigateur, ou après « Tout effacer », l’accueil guide en trois étapes :
