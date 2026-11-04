@@ -1,5 +1,5 @@
 const test = require('node:test'), http = require('node:http'), path = require('node:path');
-const {root, portable, chromium, fs, assert} = require('./browser-support.cjs');
+const {root, portable, chromium, fs, assert, nativeAx, nativeAxNode} = require('./browser-support.cjs');
 
 // #210 : sur le site, un vrai lien de téléchargement du portable, une aide quand le navigateur ne propose pas l'installation,
 // et des états lisibles qui distinguent installé, disponible hors connexion et sauvegardé. Le serveur reproduit GitHub Pages :
@@ -78,5 +78,31 @@ test('#210 portable : ni lien de téléchargement ni aide à l’installation ; 
     assert.match(await page.locator('#environment').textContent(), /portable/);
     const source = await fs.readFile(path.join(root, 'app/source/pwa.js'), 'utf8');
     assert.doesNotMatch(source, /non vérifié|non préparée|Vos compositions/, 'états reformulés et vocabulaire « newsletters »');
+  } finally { await browser.close(); }
+});
+
+// #215 : #210 a choisi de ne pas mettre le portable en cache ; l’aide le dit à côté du lien, sans détecter la connexion.
+test('#215 site : le lien du portable annonce, avec lui, que le téléchargement demande une connexion', async () => {
+  const browser = await chromium.launch(), {server, url} = await serve();
+  try {
+    const page = await opened(browser, url), link = page.locator('#portable-download');
+    const note = page.locator('#portable-download-note');
+    assert.equal(await note.isVisible(), true);
+    assert.equal(await note.textContent(), 'Le téléchargement demande une connexion.');
+    assert.equal(await note.evaluate(element => element.parentElement.contains(document.getElementById('portable-download'))), true, 'phrase à côté du lien');
+    assert.equal(await link.getAttribute('aria-describedby'), 'portable-download-note');
+    assert.equal(await link.textContent(), 'Télécharger l’atelier portable', 'le nom du lien ne change pas');
+    if (nativeAx) assert.equal((await nativeAxNode(page, '#portable-download')).description?.value, 'Le téléchargement demande une connexion.');
+    const source = await fs.readFile(path.join(root, 'app/source/pwa.js'), 'utf8');
+    assert.doesNotMatch(source, /portable-download-note/, 'phrase fixe : aucun état dynamique');
+  } finally { await browser.close(); server.close(); }
+});
+
+test('#215 portable : la phrase reste absente avec le lien', async () => {
+  const browser = await chromium.launch();
+  try {
+    const page = await opened(browser, portable);
+    assert.equal(await visible(page, '#portable-download-note'), false);
+    assert.equal(await visible(page, '#portable-download'), false);
   } finally { await browser.close(); }
 });

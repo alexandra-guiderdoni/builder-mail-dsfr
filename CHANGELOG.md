@@ -4,6 +4,7 @@
 
 - **Classe DSFR orpheline (#213) :** le lien « Aller à l’aperçu du courriel » perd la classe `fr-link`, qu’aucun CSS DSFR embarqué ne définit. Son rendu et son focus sont inchangés : style calculé identique sous 991 px, à 100 % et 200 %. Le test `dsfr-classes` vérifie que chaque classe `fr-*` de l’interface, HTML et JavaScript compris, a un sélecteur exact dans le DSFR embarqué.
 - **Repère « Modèles et identité » (#214) :** le panneau devient une région nommée (`section`), comme « Composants du courriel » et l’aperçu. Il regroupe des commandes de travail principales, pas un contenu complémentaire. accesslint ne signale plus de repère complémentaire dans `main`.
+- **Téléchargement du portable (#215) :** une phrase fixe à côté de « Télécharger l’atelier portable » dit que le téléchargement demande une connexion ; le lecteur d’écran la lit avec le lien. Le portable reste hors du cache du site, comme décidé dans #210. Le portable lui-même n’affiche ni le lien ni la phrase.
 
 ## 3 novembre 2026 - Vocabulaire des messages d’erreur et de secours (#207)
 
