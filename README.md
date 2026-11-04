@@ -37,7 +37,7 @@ Pour aller plus loin (modèles, identités de service, images en ligne, plusieur
 
 ## Pour l’équipe technique
 
-Les distributions sont générées depuis `app/source/`, `app/snum/`, `app/assets/`, `scripts/` et `reference/catalogue.json`. Python 3.10+ et Node.js 24.22.1 servent seulement sur le poste de développement :
+Les distributions sont générées depuis `app/source/`, `app/snum/`, `app/assets/`, `scripts/` et `reference/catalogue.json`. Python 3.10+ et Node.js, dans la version de `.node-version`, servent seulement sur le poste de développement :
 
 ```sh
 python3 scripts/build_app.py

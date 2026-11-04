@@ -37,7 +37,7 @@ test('les dépendances du job de tests sont installées depuis le verrou et les 
   assert.doesNotMatch(jobs.tests, /playwright install|apt-get/);
   assert.match(jobs.tests, /python-version: '3\.12\.14'/);
   for (const [, ref] of text.matchAll(/uses: \S+@(\S+)/g)) assert.match(ref, /^[0-9a-f]{40}$/);
-  assert.match(jobs.tests, /node-version: '\d+\.\d+\.\d+'/);
+  assert.match(jobs.tests, /node-version-file: '\.node-version'/);
 });
 
 // Le shell du job doit transmettre les options et le code de sortie réel de npm.
