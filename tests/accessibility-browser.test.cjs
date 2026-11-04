@@ -116,3 +116,20 @@ test('la région notice reste accessible avant et après un message sans déplac
     }
   } finally { await browser.close(); }
 });
+
+// #214 : « Modèles et identité » regroupe des commandes de travail principales, pas un contenu complémentaire.
+test('le panneau Modèles et identité est une région nommée, sans repère complémentaire dans main', async () => {
+  const browser = await chromium.launch();
+  try {
+    const {page} = await open(browser);
+    const panels = page.locator('main').getByRole('region', {name: 'Modèles et identité', exact: true});
+    assert.equal(await panels.count(), 1);
+    assert.equal(await panels.evaluate(element => element.classList.contains('library-panel')), true);
+    assert.equal(await page.locator('main').getByRole('complementary').count(), 0);
+    if (nativeAx) {
+      const ax = await nativeAxNode(page, '.library-panel');
+      assert.equal(ax.role.value, 'region');
+      assert.equal(ax.name.value, 'Modèles et identité');
+    }
+  } finally { await browser.close(); }
+});

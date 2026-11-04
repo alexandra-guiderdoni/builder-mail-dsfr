@@ -3,6 +3,7 @@
 ## 4 novembre 2026 - Corrections issues de l’évaluation (#213 à #216)
 
 - **Classe DSFR orpheline (#213) :** le lien « Aller à l’aperçu du courriel » perd la classe `fr-link`, qu’aucun CSS DSFR embarqué ne définit. Son rendu et son focus sont inchangés : style calculé identique sous 991 px, à 100 % et 200 %. Le test `dsfr-classes` vérifie que chaque classe `fr-*` de l’interface, HTML et JavaScript compris, a un sélecteur exact dans le DSFR embarqué.
+- **Repère « Modèles et identité » (#214) :** le panneau devient une région nommée (`section`), comme « Composants du courriel » et l’aperçu. Il regroupe des commandes de travail principales, pas un contenu complémentaire. accesslint ne signale plus de repère complémentaire dans `main`.
 
 ## 3 novembre 2026 - Vocabulaire des messages d’erreur et de secours (#207)
 
