@@ -157,7 +157,7 @@ const spacingViolations = () => {
   const visible = e => e.getClientRects().length && getComputedStyle(e).visibility !== 'hidden', rem = parseFloat(getComputedStyle(document.documentElement).fontSize), found = [];
   for (const control of document.querySelectorAll('input:not([type=hidden]), select, textarea')) {
     if (!visible(control) || control.closest('dialog, .home-create')) continue;
-    const group = control.closest('.fr-input-group, .fr-select-group');
+    const group = control.closest('.fr-input-group, .fr-select-group, .fr-upload-group');
     if (!group) { found.push(`${control.id} : hors groupe DSFR`); continue; }
     let next = control.nextElementSibling; while (next && !visible(next)) next = next.nextElementSibling;
     const help = next && next.matches('p') ? next : null, after = (help || control);

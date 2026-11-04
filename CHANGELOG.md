@@ -1,11 +1,12 @@
 # Historique des livraisons
 
-## 4 novembre 2026 - Corrections issues de l’évaluation (#213 à #216)
+## 4 novembre 2026 - Corrections issues de l’évaluation (#212 à #216)
 
 - **Classe DSFR orpheline (#213) :** le lien « Aller à l’aperçu du courriel » perd la classe `fr-link`, qu’aucun CSS DSFR embarqué ne définit. Son rendu et son focus sont inchangés : style calculé identique sous 991 px, à 100 % et 200 %. Le test `dsfr-classes` vérifie que chaque classe `fr-*` de l’interface, HTML et JavaScript compris, a un sélecteur exact dans le DSFR embarqué.
 - **Repère « Modèles et identité » (#214) :** le panneau devient une région nommée (`section`), comme « Composants du courriel » et l’aperçu. Il regroupe des commandes de travail principales, pas un contenu complémentaire. accesslint ne signale plus de repère complémentaire dans `main`.
 - **Téléchargement du portable (#215) :** une phrase fixe à côté de « Télécharger l’atelier portable » dit que le téléchargement demande une connexion ; le lecteur d’écran la lit avec le lien. Le portable reste hors du cache du site, comme décidé dans #210. Le portable lui-même n’affiche ni le lien ni la phrase.
 - **Version de Node.js (#216) :** `.node-version` (24.22.1) est la seule source de la version exacte ; les workflows Pages et de répétition modale le lisent. `engines.node` annonce la plage compatible, bornée par les versions corrigées de CVE-2026-111497 : branche 24 à partir de 24.22.1, branche 26 à partir de 26.12.1. Hors plage, `npm ci` avertit sans bloquer, observé avec Node 24.18.0. Le README et `docs/MAINTENANCE.md` renvoient au fichier.
+- **Champ image au format DSFR (#212) :** les champs image utilisent le composant d’envoi de fichier du DSFR (`fr-upload-group`, `fr-upload`), dont le CSS officiel 1.15.4 est désormais embarqué et inventorié. Le bouton du navigateur reste, avec un texte de 0,875 rem et des marges DSFR : il passe de 11 à 14 px sous Safari. L’aide courte reste hors du libellé et associée au champ (#158). Les espacements des groupes de l’atelier sont conservés. Les champs d’import et de restauration ne changent pas. Rendu validé sur capture dans Chromium, WebKit et Firefox.
 
 ## 3 novembre 2026 - Vocabulaire des messages d’erreur et de secours (#207)
 

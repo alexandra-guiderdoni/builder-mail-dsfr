@@ -16,7 +16,7 @@ La préparation du presse-papiers dans `app/source/render.js` ajoute des bornes 
 
 ## Interface web du builder
 
-Le sous-ensemble [DSFR web 1.15.4](https://github.com/GouvernementFR/dsfr/tree/v1.15.4) est conservé dans `dsfr-web/` : modules CSS `core`, `form`, `input`, `select`, `button`, trois fontes Marianne WOFF2 et icônes référencées. [Sa provenance](dsfr-web/provenance.json) inventorie chaque fichier avec son SHA-256. Les copies CSS et binaires sont intégrales ; `LICENSE.txt` et `CGU.txt` reproduisent les textes officiels.
+Le sous-ensemble [DSFR web 1.15.4](https://github.com/GouvernementFR/dsfr/tree/v1.15.4) est conservé dans `dsfr-web/` : modules CSS `core`, `form`, `input`, `select`, `button`, `upload`, trois fontes Marianne WOFF2 et icônes référencées. [Sa provenance](dsfr-web/provenance.json) inventorie chaque fichier avec son SHA-256. Les copies CSS et binaires sont intégrales ; `LICENSE.txt` et `CGU.txt` reproduisent les textes officiels.
 
 `scripts/dsfr_assets.py` contrôle ces empreintes à chaque génération. Il incorpore les URL locales en données, remplace les déclarations de fontes par les trois faces Marianne 400/500/700 et omet les références aux cartes de sources. Aucun JavaScript DSFR ni CDN n’est ajouté. Cette incorporation permet la première ouverture hors connexion du fichier unique ; la politique de sécurité autorise les fontes incorporées seulement pour le builder.
 

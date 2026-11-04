@@ -8,7 +8,8 @@
     "dist/component/form/form.min.css",
     "dist/component/input/input.min.css",
     "dist/component/select/select.min.css",
-    "dist/component/button/button.min.css"
+    "dist/component/button/button.min.css",
+    "dist/component/upload/upload.min.css"
   ],
   "fonts": {
     "400": "dist/fonts/Marianne-Regular.woff2",
@@ -21,6 +22,7 @@
     "dist/component/form/form.min.css": "ddb28d45fad8b8780f21e517ac5c72821413d708301078ec829e781a0f1ff88c",
     "dist/component/input/input.min.css": "085d4574f34b74308d62a0e4873897e91b7241fa026e7bb769c573a4fa524cb2",
     "dist/component/select/select.min.css": "7fac1fa3e92e172e2b17967f90420fd208d35c65e18ba232c3fb4d6fe49a5526",
+    "dist/component/upload/upload.min.css": "69e62f3ce6c8c5db82a14fd63695ba937850b94157f3279b41d6e6e5924760c1",
     "dist/core/core.min.css": "c051e9cef06dc3603d5048de10319f20846276e68b864ff28b8b9b2832c62f84",
     "dist/fonts/Marianne-Bold.woff2": "03736567d99c2c360bad2c21026ca4741b15ca1e9ab533f272162a65f94cfbfb",
     "dist/fonts/Marianne-Medium.woff2": "04e63da6c3f525e8f39f3aeedcfabd85f9a6a48e33e35030cfa79c0987e577dc",
