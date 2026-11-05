@@ -1,4 +1,4 @@
-const test = require('node:test');
+const test = require('node:test'), zlib = require('node:zlib');
 const {open, enterEditor, expand, selectBlock, saved, state, assert} = require('./browser-support.cjs');
 const {chromium, webkit} = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
 
@@ -72,12 +72,37 @@ async function synthetic() {
   } finally { await browser.close(); }
 }
 
-const inspect = (page, blockId, key) => page.evaluate(async ({blockId, key}) => {
-  const value = MailBuilder.doc().blocks.find(b => b.id === blockId).values[key], image = new Image(); image.src = value; await image.decode();
-  const canvas = document.createElement('canvas'); canvas.width = image.naturalWidth; canvas.height = image.naturalHeight;
-  const ctx = canvas.getContext('2d'); ctx.drawImage(image, 0, 0); const alpha = (x, y) => ctx.getImageData(x, y, 1, 1).data[3];
-  return {value, type: /^data:([^;]+);/.exec(value)[1], width: image.naturalWidth, height: image.naturalHeight, bytes: atob(value.slice(value.indexOf(',') + 1)).length, corner: alpha(2, 2), center: alpha(image.naturalWidth >> 1, image.naturalHeight >> 1)};
-}, {blockId, key});
+// Alpha de pixels d'un PNG RGBA 8 bits non entrelacé (forme produite par canvas.toBlob), lu dans ses octets.
+function pngAlpha(buffer, points) {
+  let pos = 8, width, height; const idat = [];
+  while (pos < buffer.length) {
+    const len = buffer.readUInt32BE(pos), type = buffer.toString('ascii', pos + 4, pos + 8), data = buffer.subarray(pos + 8, pos + 8 + len);
+    if (type === 'IHDR') { width = data.readUInt32BE(0); height = data.readUInt32BE(4); assert.deepEqual([data[8], data[9], data[12]], [8, 6, 0], 'PNG RGBA 8 bits non entrelacé'); }
+    if (type === 'IDAT') idat.push(data);
+    pos += 12 + len;
+  }
+  const raw = zlib.inflateSync(Buffer.concat(idat)), stride = width * 4, out = Buffer.alloc(stride * height);
+  for (let y = 0; y < height; y++) {
+    const filter = raw[y * (stride + 1)], line = raw.subarray(y * (stride + 1) + 1, (y + 1) * (stride + 1));
+    for (let x = 0; x < stride; x++) {
+      const a = x >= 4 ? out[y * stride + x - 4] : 0, b = y ? out[(y - 1) * stride + x] : 0, c = x >= 4 && y ? out[(y - 1) * stride + x - 4] : 0;
+      const p = a + b - c, pa = Math.abs(p - a), pb = Math.abs(p - b), pc = Math.abs(p - c);
+      out[y * stride + x] = (line[x] + [0, a, b, (a + b) >> 1, pa <= pb && pa <= pc ? a : pb <= pc ? b : c][filter]) & 255;
+    }
+  }
+  return points.map(([x, y]) => out[(y * width + x) * 4 + 3]);
+}
+// #220 : sous forte charge (suite en parallèle), WebKit dessinait parfois dans un canevas l'image produite, pourtant décodée,
+// comme entièrement transparente : l'image de l'atelier était correcte, sa relecture non. La transparence d'un PNG produit est
+// donc lue dans ses octets, hors navigateur.
+const inspect = async (page, blockId, key) => {
+  const image = await page.evaluate(async ({blockId, key}) => {
+    const value = MailBuilder.doc().blocks.find(b => b.id === blockId).values[key], image = new Image(); image.src = value; await image.decode();
+    return {value, type: /^data:([^;]+);/.exec(value)[1], width: image.naturalWidth, height: image.naturalHeight, bytes: atob(value.slice(value.indexOf(',') + 1)).length};
+  }, {blockId, key});
+  if (image.type === 'image/png') [image.corner, image.center] = pngAlpha(Buffer.from(image.value.slice(image.value.indexOf(',') + 1), 'base64'), [[2, 2], [image.width >> 1, image.height >> 1]]);
+  return image;
+};
 
 async function upload(page, blockId, key, fixture, name) {
   await page.evaluate(() => { MailBuilder.notice(''); MailBuilder.error(''); });
@@ -95,6 +120,20 @@ async function prepare(page) {
   });
   await saved(page); return ids;
 }
+
+// Témoin de la lecture des octets (#220) : un PNG entièrement transparent et le PNG au disque opaque sont distingués.
+test('lecture des octets PNG : un PNG vide est distingué d’un PNG au disque opaque', async () => {
+  const browser = await chromium.launch({headless: true});
+  try {
+    const [empty, disc] = await (await browser.newPage()).evaluate(async () => Promise.all([false, true].map(async paint => {
+      const canvas = document.createElement('canvas'); canvas.width = 1000; canvas.height = 500; const ctx = canvas.getContext('2d');
+      if (paint) { ctx.fillStyle = '#000091'; ctx.beginPath(); ctx.arc(500, 250, 166, 0, 7); ctx.fill(); }
+      return [...new Uint8Array(await (await new Promise(resolve => canvas.toBlob(resolve, 'image/png'))).arrayBuffer())];
+    })));
+    assert.deepEqual(pngAlpha(Buffer.from(empty), [[2, 2], [500, 250]]), [0, 0]);
+    assert.deepEqual(pngAlpha(Buffer.from(disc), [[2, 2], [500, 250]]), [0, 255]);
+  } finally { await browser.close(); }
+});
 
 for (const engine of [chromium, webkit]) {
   test(`${engine.name()} : le contrat chiffré est annoncé près du champ d’image et suit la largeur du gabarit`, async () => {
