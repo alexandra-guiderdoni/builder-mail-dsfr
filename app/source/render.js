@@ -110,8 +110,8 @@
     M.document(value);
     return value.blocks.flatMap((b, index) => {
       const definition = M.component(b.component);
-      const issues = definition.links.filter(link => !b.values[link.label].trim()).map(link => ({block: b.id, field: link.label, message: `Renseignez l’intitulé du lien : bloc ${index + 1} « ${definition.label} », champ « ${definition.fields.find(f => f.key === link.label).label} ».`}));
-      for (const [linkIndex, link] of (b.additionalLinks || []).entries()) if (!link.label.trim()) issues.push({block: b.id, field: `footer-label-${linkIndex}`, message: `Renseignez l’intitulé du lien supplémentaire ${linkIndex + 1} : bloc ${index + 1} « ${definition.label} ».`});
+      const issues = definition.links.filter(link => !b.values[link.label].trim()).map(link => ({block: b.id, field: link.label, message: `Renseignez l’intitulé du lien : bloc ${index + 1} « ${M.blockLabel(b)} », champ « ${definition.fields.find(f => f.key === link.label).label} ».`}));
+      for (const [linkIndex, link] of (b.additionalLinks || []).entries()) if (!link.label.trim()) issues.push({block: b.id, field: `footer-label-${linkIndex}`, message: `Renseignez l’intitulé du lien supplémentaire ${linkIndex + 1} : bloc ${index + 1} « ${M.blockLabel(b)} ».`});
       return issues;
     });
   }
@@ -252,7 +252,7 @@
       const text = field.type === "image" ? M.imageSource(block, field.key) : block.values[field.key];
       if (dominant === "images" ? field.type !== "image" || !images.includes(text) : dominant !== "other" || field.type !== "text") continue;
       const size = bytes(text);
-      if (!target || size > target.bytes) target = {block: block.id, field: `field-${field.key}`, label: field.label, index: value.blocks.indexOf(block) + 1, component: A.Model.component(block.component).label, bytes: size};
+      if (!target || size > target.bytes) target = {block: block.id, field: `field-${field.key}`, label: field.label, index: value.blocks.indexOf(block) + 1, component: M.blockLabel(block), bytes: size};
     }
     return {...result, parts, dominant, hosted, occurrences: images.length, distinct: new Set(images).size,
       variants: /class="[^"]*\bhide-(?:black|white)\b/.test(markup), target};

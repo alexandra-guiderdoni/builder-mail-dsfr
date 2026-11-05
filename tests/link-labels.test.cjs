@@ -79,3 +79,11 @@ test('la copie refuse un intitulé vide avant de solliciter les capacités du pr
   scope.window = scope; vm.runInNewContext(fs.readFileSync('app/source/files.js', 'utf8'), scope);
   await assert.rejects(scope.MailBuilder.Files.copy(), /intitulé/i); assert.equal(reads, 0);
 });
+
+test('un intitulé manquant désigne l’article sans image sous le nom affiché dans la liste des blocs', () => {
+  const doc = M.create('Article', [MailBuilder.catalog.components.findIndex(c => c.id === 'mail-31')]), block = doc.blocks[0];
+  block.values.f4 = '';
+  assert.match(R.linkIssues(doc)[0].message, /bloc 1 « Article avec vignette et lien »/);
+  block.values.f0 = '';
+  assert.match(R.linkIssues(doc)[0].message, /bloc 1 « Article sans image »/);
+});

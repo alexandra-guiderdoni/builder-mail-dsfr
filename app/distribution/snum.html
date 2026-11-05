@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- PDG-LARGE-FILE-JUSTIFICATION: page autonome générée ; parseur, moteur et ressources incorporés depuis les sources séparées. -->
-<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none';script-src 'sha256-eIJ/xR8MItWHj4rwR7d6uV+Gd3xJdkTwqWhhuAAm+y4=';style-src 'unsafe-inline';img-src data: blob:;frame-src blob:;base-uri 'none';form-action 'none';connect-src 'none';worker-src 'none'"><title>Collecte SNUM · Convertisseur de courriels</title><style>:root { color-scheme:light; font:100%/1.5 Arial,Helvetica,sans-serif; color:#161616; background:#f6f6f6; }
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none';script-src 'sha256-qyMyxHTpxYyOIexmKbV8YJ/Uf4QVZl2Pbi2bBJUSA28=';style-src 'unsafe-inline';img-src data: blob:;frame-src blob:;base-uri 'none';form-action 'none';connect-src 'none';worker-src 'none'"><title>Collecte SNUM · Convertisseur de courriels</title><style>:root { color-scheme:light; font:100%/1.5 Arial,Helvetica,sans-serif; color:#161616; background:#f6f6f6; }
 * { box-sizing:border-box; } body { margin:0; } button,input,select,textarea { font:inherit; }
 header { display:flex; justify-content:space-between; gap:24px; background:#fff; border-top:6px solid #000091; border-bottom:1px solid #ddd; padding:24px 3vw; }
 h1 { margin:0 0 8px; color:#000091; font-size:1.9rem; line-height:1.25; } h2 { font-size:1.25rem; margin:0 0 18px; } h3 { font-size:1.15rem; margin:0 0 8px; }
@@ -226,6 +226,8 @@ window.MailBuilder.catalog = {"id":"6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278
   }
   const remoteBlocks = values => values.some(b => b.remoteImages && Object.keys(b.remoteImages).length);
   const imageSource = (block, key) => block.remoteImages?.[key] ?? block.values[key];
+  // Nom affiché d’un bloc : un article dont l’image est retirée devient « Article sans image » partout où il est désigné.
+  const blockLabel = block => block.component === "mail-31" && !imageSource(block, "f0") ? "Article sans image" : component(block.component).label;
   function localImage(block, key, value) {
     block.values[key] = value;
     if (block.remoteImages) { delete block.remoteImages[key]; if (!Object.keys(block.remoteImages).length) delete block.remoteImages; }
@@ -276,7 +278,7 @@ window.MailBuilder.catalog = {"id":"6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278
     component(value.component).fields.filter(f => f.type === "text").forEach((f, i) => { if (strings[i] !== undefined) value.values[f.key] = strings[i]; });
     return value;
   }
-  A.Model = Object.freeze({copy, document, library, block, blocks, component, image, imageSource, localImage, versions, url, checkUrl, urlMessages: URL_MESSAGES, id, createBlock, create, clone, hasDate, uniqueName, derive, initial, setTexts});
+  A.Model = Object.freeze({copy, document, library, block, blocks, component, image, imageSource, blockLabel, localImage, versions, url, checkUrl, urlMessages: URL_MESSAGES, id, createBlock, create, clone, hasDate, uniqueName, derive, initial, setTexts});
 })();
 
 /* Le catalogue et ses variantes contrôlées fournissent le HTML ; les données ne fournissent aucun balisage. */
@@ -391,8 +393,8 @@ window.MailBuilder.catalog = {"id":"6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278
     M.document(value);
     return value.blocks.flatMap((b, index) => {
       const definition = M.component(b.component);
-      const issues = definition.links.filter(link => !b.values[link.label].trim()).map(link => ({block: b.id, field: link.label, message: `Renseignez l’intitulé du lien : bloc ${index + 1} « ${definition.label} », champ « ${definition.fields.find(f => f.key === link.label).label} ».`}));
-      for (const [linkIndex, link] of (b.additionalLinks || []).entries()) if (!link.label.trim()) issues.push({block: b.id, field: `footer-label-${linkIndex}`, message: `Renseignez l’intitulé du lien supplémentaire ${linkIndex + 1} : bloc ${index + 1} « ${definition.label} ».`});
+      const issues = definition.links.filter(link => !b.values[link.label].trim()).map(link => ({block: b.id, field: link.label, message: `Renseignez l’intitulé du lien : bloc ${index + 1} « ${M.blockLabel(b)} », champ « ${definition.fields.find(f => f.key === link.label).label} ».`}));
+      for (const [linkIndex, link] of (b.additionalLinks || []).entries()) if (!link.label.trim()) issues.push({block: b.id, field: `footer-label-${linkIndex}`, message: `Renseignez l’intitulé du lien supplémentaire ${linkIndex + 1} : bloc ${index + 1} « ${M.blockLabel(b)} ».`});
       return issues;
     });
   }
@@ -533,7 +535,7 @@ window.MailBuilder.catalog = {"id":"6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278
       const text = field.type === "image" ? M.imageSource(block, field.key) : block.values[field.key];
       if (dominant === "images" ? field.type !== "image" || !images.includes(text) : dominant !== "other" || field.type !== "text") continue;
       const size = bytes(text);
-      if (!target || size > target.bytes) target = {block: block.id, field: `field-${field.key}`, label: field.label, index: value.blocks.indexOf(block) + 1, component: A.Model.component(block.component).label, bytes: size};
+      if (!target || size > target.bytes) target = {block: block.id, field: `field-${field.key}`, label: field.label, index: value.blocks.indexOf(block) + 1, component: M.blockLabel(block), bytes: size};
     }
     return {...result, parts, dominant, hosted, occurrences: images.length, distinct: new Set(images).size,
       variants: /class="[^"]*\bhide-(?:black|white)\b/.test(markup), target};

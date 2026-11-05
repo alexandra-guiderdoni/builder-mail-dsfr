@@ -65,3 +65,10 @@ test('homonymes : les libellés ordinaires restent inchangés hors collision ré
   const labels = ui(documents).A.UI.documentLabels().map(([, label]) => label);
   assert.equal(JSON.stringify(labels), JSON.stringify(['Édition (n° 1)', 'Édition (n° 2)', 'Autre (n° 1)']));
 });
+
+test('compteur : singulier pour un seul élément, pluriel au-delà', () => {
+  const count = (documents, extra = {}) => { const h = ui(documents); Object.assign(h.A.library, extra); h.A.UI.selections(); return h.get('library-count').textContent; };
+  assert.equal(count([doc('a', 'Une')]), '1 newsletter · 0 modèles · 0 identités');
+  assert.equal(count([doc('a', 'Une')], {templates: [doc('t', 'Modèle')], identities: [doc('i', 'Identité')]}), '1 newsletter · 1 modèle · 1 identité');
+  assert.equal(count([doc('a', 'Une'), doc('b', 'Deux')], {templates: [doc('t', 'A'), doc('u', 'B')], identities: [doc('i', 'A'), doc('j', 'B')]}), '2 newsletters · 2 modèles · 2 identités');
+});

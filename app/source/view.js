@@ -27,7 +27,7 @@
     if (input) { fieldError(input, issue.message); input.focus(); }
   }
   function option(value, label, selected = false) { return `<option value="${esc(value)}" ${selected ? "selected" : ""}>${esc(label)}</option>`; }
-  const blockLabel = (b, definition) => b.component === "mail-31" && !A.Model.imageSource(b, "f0") ? "Article sans image" : definition.label;
+  const blockLabel = b => A.Model.blockLabel(b);
   // Les homonymes importés restent distinguables dans les listes : le rang s’ajoute au nom.
   const labelled = list => list.map(x => { const same = list.filter(y => y.name === x.name); return [x.id, same.length > 1 ? `${x.name} (n° ${same.indexOf(x) + 1})` : x.name]; });
   const documentLabels = () => {
@@ -35,7 +35,7 @@
     // Un nom peut déjà contenir le suffixe généré : le préfixe ordinal global reste alors unique.
     return new Set(labels.map(([, label]) => label)).size === labels.length ? labels : labels.map(([id, label], i) => [id, `[${i + 1}] ${label}`]);
   };
-  const blockName = b => blockLabel(b, M.component(b.component));
+  const blockName = b => blockLabel(b);
   function removal() {
     // Un bloc déjà présent (par exemple relu par « Restaurer l’état précédent ») n’est pas proposé une seconde fois.
     const doc = A.doc(), entry = A.removed.get(doc.id), available = Boolean(entry) && !doc.blocks.some(b => b.id === entry.block.id);
@@ -67,7 +67,7 @@
     get("open-document").hidden = (preservedDoc === doc.id);
     get("saved-templates").innerHTML = option("", "Choisir un modèle enregistré") + labelled(A.library.templates).map(([id, label]) => option(id, label, id === template)).join("");
     get("identities").innerHTML = option("", "Choisir une identité enregistrée") + labelled(A.library.identities).map(([id, label]) => option(id, label, id === identity)).join("");
-    get("library-count").textContent = `${A.library.documents.length} newsletters · ${A.library.templates.length} modèles · ${A.library.identities.length} identités`;
+    get("library-count").textContent = [[A.library.documents, "newsletter"], [A.library.templates, "modèle"], [A.library.identities, "identité"]].map(([list, noun]) => `${list.length} ${noun}${list.length === 1 ? "" : "s"}`).join(" · ");
     A.Library?.refresh();
   }
   function blockList() {
@@ -75,7 +75,7 @@
       const definition = M.component(b.component), title = definition.fields.find(f => f.key === (b.component === "mail-31" ? "f4" : "")) || definition.fields.find(f => f.type === "text");
       const detail = title ? b.values[title.key].slice(0, 64) : "";
       // Poignée (#204) : glissable à la souris seulement ; au clavier, elle mène à « Déplacer à la position… ».
-      return `<li><button class="block-handle" type="button" data-drag-handle="${esc(b.id)}" draggable="false" aria-label="Déplacer le bloc ${i + 1} « ${esc(blockLabel(b, definition))} »"><span aria-hidden="true">⠿</span></button><button class="fr-btn fr-btn--secondary" type="button" data-select="${esc(b.id)}" aria-pressed="${A.selected === b.id}"><span>${i + 1}. ${esc(blockLabel(b, definition))}</span><small>${esc(detail)}</small></button></li>`;
+      return `<li><button class="block-handle" type="button" data-drag-handle="${esc(b.id)}" draggable="false" aria-label="Déplacer le bloc ${i + 1} « ${esc(blockLabel(b))} »"><span aria-hidden="true">⠿</span></button><button class="fr-btn fr-btn--secondary" type="button" data-select="${esc(b.id)}" aria-pressed="${A.selected === b.id}"><span>${i + 1}. ${esc(blockLabel(b))}</span><small>${esc(detail)}</small></button></li>`;
     }).join("");
     catalogueAddHelp();
   }
@@ -119,7 +119,7 @@
     const saved = capture(); shownBlock = b?.id ?? null;
     if (!b) { get("block-editor").innerHTML = "<p>Ajoutez un composant au courriel pour personnaliser son contenu.</p>"; return; }
     const definition = M.component(b.component), index = A.doc().blocks.indexOf(b);
-    get("block-editor").innerHTML = `<h3>${esc(blockLabel(b, definition))}</h3><p class="muted">${esc(definition.family)}</p>` + (b.component === "mail-00" ? '<p class="muted">Le pré-en-tête peut être supprimé lors de la copie avec Chromium. Sa présence dans l’aperçu ne garantit pas celle dans le message reçu.</p>' : "") + '<div class="actions"><button class="fr-btn fr-btn--secondary" type="button" data-show-in-preview>Voir ce bloc dans l’aperçu</button></div>' + definition.fields.map(f => {
+    get("block-editor").innerHTML = `<h3>${esc(blockLabel(b))}</h3><p class="muted">${esc(definition.family)}</p>` + (b.component === "mail-00" ? '<p class="muted">Le pré-en-tête peut être supprimé lors de la copie avec Chromium. Sa présence dans l’aperçu ne garantit pas celle dans le message reçu.</p>' : "") + '<div class="actions"><button class="fr-btn fr-btn--secondary" type="button" data-show-in-preview>Voir ce bloc dans l’aperçu</button></div>' + definition.fields.map(f => {
       const linkLabel = definition.links.some(link => link.label === f.key), required = f.type === "url" || linkLabel;
       const label = linkLabel ? `${f.label} - Intitulé du lien (obligatoire)` : required ? `${f.label} (obligatoire)` : f.label, id = `field-${f.key}`, v = b.values[f.key];
       if (f.type === "image") {

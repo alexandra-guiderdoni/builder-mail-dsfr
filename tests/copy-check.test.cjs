@@ -234,3 +234,12 @@ test('example-text : un libellé d’exemple répété dans plusieurs blocs ne s
   own.blocks.forEach((b, i) => Object.assign(b.values, {f2: 'Webinaire', f3: `https://www.exemple-info.gouv.fr/w${i}`, f4: `Titre ${i}`, f5: 'Service', f6: 'Date'}));
   assert.deepEqual(C.warnings(own, ok).filter(w => w.rule === 'example-text'), []);
 });
+
+// Le contrôle nomme le bloc comme la liste des blocs : un article dont l’image est retirée est « Article sans image ».
+test('le contrôle nomme un article sans image comme la liste des blocs', () => {
+  const doc = M.create('Article', [index('mail-31')]), block = doc.blocks[0];
+  const names = () => [...new Set(C.warnings(doc, ok).map(w => w.message.split(' : ')[0]))];
+  assert.deepEqual(names(), ['Bloc 1 « Article avec vignette et lien »']);
+  block.values.f0 = '';
+  assert.deepEqual(names(), ['Bloc 1 « Article sans image »']);
+});

@@ -69,7 +69,7 @@
   function warnings(value, weight) {
     const found = [], fromExamples = A.Examples?.copied(value) || [];
     value.blocks.forEach((block, index) => {
-      const definition = M.component(block.component), name = `Bloc ${index + 1} « ${definition.label} »`;
+      const definition = M.component(block.component), name = `Bloc ${index + 1} « ${M.blockLabel(block)} »`;
       const add = (rule, field, detail) => { if (!found.some(w => w.rule === rule && w.block === block.id)) found.push({rule, block: block.id, field, message: `${name} : ${detail}`}); };
       const items = links(block);
       for (const link of items) { const host = hostOf(link.url); if (host && demoHost(host)) add("demo-domain", link.urlField, `${link.image ? "image hébergée de démonstration" : "lien de démonstration"} vers ${host}.`); }

@@ -84,3 +84,11 @@ test('#191 : partition UTF-8 exacte, répétitions et conseil conditionnel, sans
     assert.ok(summary.includes(field.label)); assert.match(summary, /bloc 2/);
   }
 });
+
+test('le conseil de poids désigne l’article sans image sous le nom affiché dans la liste des blocs', () => {
+  const M = MailBuilder.Model, doc = M.create('Article', [MailBuilder.catalog.components.findIndex(c => c.id === 'mail-31')]), block = doc.blocks[0];
+  block.values.f0 = ''; block.values.f2 = 'Texte long '.repeat(2000);
+  const measured = R.weightDetails(`<p>${block.values.f2}</p>`, doc);
+  assert.equal(measured.dominant, 'other');
+  assert.equal(measured.target.component, 'Article sans image');
+});
