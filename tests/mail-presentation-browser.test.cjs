@@ -1,5 +1,5 @@
 const test = require('node:test'), path = require('node:path');
-const {root, evidence, open, expand, click, saved, confirmChecks, announced, focusPage, chromium, fs, assert} = require('./browser-support.cjs');
+const {root, evidence, open, expand, click, saved, confirmChecks, announced, focusPage, chromium, fastCapture, fs, assert} = require('./browser-support.cjs');
 
 function inspect() {
   const forbidden = new Set('align alink background bgcolor border cellpadding cellspacing char charoff clear color compact frameborder hspace link marginheight marginwidth text valign vlink vspace size width height'.split(' '));
@@ -40,7 +40,7 @@ function check(measure, name) {
 }
 
 test('52 composants : présentation CSS, bornes responsive, contenus longs, espacement et copie sans styles de tête', async () => {
-  const browser = await chromium.launch();
+  const browser = await chromium.launch(fastCapture(chromium.name));
   const output = path.join(evidence, 'mail-presentation'); await fs.mkdir(output, {recursive: true});
   const observations = [];
   try {

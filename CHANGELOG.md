@@ -1,9 +1,10 @@
 # Historique des livraisons
 
-## 5 novembre 2026 - Voir le bloc modifié dans l’aperçu (#211)
+## 5 novembre 2026 - Voir le bloc modifié dans l’aperçu (#211), tests plus rapides (#219)
 
 - **Voir ce bloc dans l’aperçu :** en tête des champs du bloc, l’action fait défiler la page jusqu’au bloc et l’encadre dans l’aperçu. « Revenir au champ », fixé en bas de la fenêtre, ou la touche Échap, rend le dernier champ quitté avec sa sélection et la position de la page. Fonctionne à 1280, 1024 et 390 px et au zoom de 200 %, sous Chromium, WebKit et Firefox.
 - **Sécurité de l’aperçu (#28) :** extension bornée accordée par Alex. Le script de mesure transmet aussi, sur demande, la position et la hauteur d’un repère de bloc. Les repères sont des éléments vides présents seulement dans l’aperçu : le HTML copié et exporté ne change pas. Aucune seconde iframe ni permission ; le nouveau message est filtré comme la mesure de hauteur (source, origine, jeton). L’aperçu ne défile toujours pas en interne.
+- **Tests plus rapides (#219) :** les deux tests qui comparent des captures d’écran lancent Chromium sans limite de cadence, car une capture attendait la prochaine image à 60 Hz (étude #217). Le test d’export passe de 171 à 130 s, celui de présentation de 52 à 37 s, et la suite locale de 517 à 461 s. Les images restent identiques à l’octet près. Aucune combinaison ni assertion n’est retirée ; WebKit et Firefox ne changent pas.
 
 ## 4 novembre 2026 - Corrections issues de l’évaluation (#212 à #216)
 
