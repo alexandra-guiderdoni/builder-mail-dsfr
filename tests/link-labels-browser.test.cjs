@@ -21,10 +21,15 @@ async function field(page, key) {
   if (ax) current.ax = ax;
   return current;
 }
+// #220 : l'état « enregistrées » précède déjà l'import ; sous charge, saved() rendait la main pendant la validation des images
+// (pendingInputs à 1, newsletters pas encore ajoutées). On attend donc la fin de l'import et l'ouverture de la copie ajoutée,
+// puis l'enregistrement. Le nombre de newsletters ne suffit pas : à la première visite, l'import remplace la newsletter de départ.
 async function imported(page, fixture, file = false) {
   await expand(page, 'Importer du JSON');
+  const before = await page.evaluate(() => MailBuilder.library.activeId);
   if (file) await page.locator('#project-input').setInputFiles({name: 'ancienne-bibliotheque.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(fixture))});
   else { await page.locator('#json-input').fill(JSON.stringify(fixture)); await click(page, '[data-action=json-import]'); }
+  await page.waitForFunction(active => MailBuilder.pendingInputs === 0 && MailBuilder.library.activeId !== active, before);
   await saved(page); await enterEditor(page);
 }
 
