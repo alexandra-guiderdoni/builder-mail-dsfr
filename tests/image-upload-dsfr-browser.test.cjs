@@ -22,7 +22,7 @@ test('champ image : composant DSFR d’envoi de fichier, aide hors du libellé, 
     assert.deepEqual(field.group, ['fr-upload-group']);
     assert.equal(field.fontSize, 0.875, 'la règle .fr-upload du CSS DSFR 1.15.4 doit être embarquée');
     assert.equal(field.labelHasHelp, false); assert.equal(field.helpInGroup, true);
-    assert.equal(field.labelledby, 'field-f0-label'); assert.equal(field.describedby, 'image-help-f0');
+    assert.equal(field.labelledby, null, 'nommé par le seul label for (#218)'); assert.equal(field.describedby, 'image-help-f0');
     assert.equal(field.dataField, 'f0'); assert.equal(field.imageField, true); assert.equal(field.uploads, 0);
     assert.equal(field.helpGap, 0.5); assert.equal(field.inputGap, 0.5);
     assert.ok(field.belowGroup >= 1.5, `${field.belowGroup} rem sous le groupe`);
