@@ -1,5 +1,5 @@
 const test = require('node:test'), path = require('node:path');
-const {evidence, open, expand, click, confirmChecks, fastCapture, fs, assert} = require('./browser-support.cjs');
+const {evidence, open, expand, click, confirmChecks, fs, assert} = require('./browser-support.cjs');
 const playwright = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
 
 // Largeurs de l’issue #38 sans styles de tête ; seuils responsive du gabarit avec ces styles.
@@ -93,7 +93,7 @@ test('l’export téléchargé tient sans styles de tête et garde son rendu ave
   const receipt = {bareWidths, styledWidths, longStyledWidths, fallbackWidths, fallback: 'déclarations ajoutées avec min() ou aspect-ratio retirées, styles de tête présents', variants: ['normal', 'long avec images synthétiques de proportion 2:1', 'mail-31 texte seul', 'mail-50 liens supplémentaires'], source: 'bouton « Télécharger le HTML »', comparedWith: 'Render.html, rendu dérivé', mailClientExecuted: false, engines: {}};
   try {
     for (const engine of ['chromium', 'webkit']) await t.test(engine, async () => {
-      const browser = await playwright[engine].launch(fastCapture(engine));
+      const browser = await playwright[engine].launch();
       const failures = [], logoCounts = {};
       let bare = 0, styled = 0, identical = 0, degraded = 0;
       try {

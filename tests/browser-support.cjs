@@ -39,9 +39,6 @@ const chromium = {
     return browser;
   }
 };
-// #219 : sous Chromium, une capture attend la prochaine image du compositeur (60 Hz). Sans limite de cadence, les
-// captures des deux tests lents vont plus vite et restent identiques à l'octet (étude #217). Les autres moteurs n'ont pas d'équivalent.
-const fastCapture = engine => engine === 'chromium' ? {args: ['--disable-frame-rate-limit', '--disable-gpu-vsync']} : {};
 // Arbre d'accessibilité natif : il passe par CDP, donc Chromium seulement. Ailleurs ces aides rendent null et l'appelant
 // s'appuie sur la structure ARIA que Playwright calcule de la même façon dans les trois moteurs (ariaSnapshot).
 const nativeAx = engineName === 'chromium';
@@ -163,4 +160,4 @@ async function selectBlockEffective(page, id, {focusInView = false} = {}) {
 async function focusPage(page) { await page.bringToFront(); await page.waitForFunction(() => document.hasFocus()); }
 const state = page => page.evaluate(() => JSON.parse(JSON.stringify(MailBuilder.library)));
 const store = page => page.evaluate(() => MailBuilder.Storage.load());
-module.exports = {fastCapture, root, evidence, portable, click, open, enterEditor, established, saved, expand, download, confirmChecks, announced, pageState, selectBlock, selectBlockEffective, focusPage, duplicateBlock, state, store, chromium, fs, assert, engines, engineName, note, nativeAx, nativeAxTree, nativeAxNode, ariaHeadings};
+module.exports = {root, evidence, portable, click, open, enterEditor, established, saved, expand, download, confirmChecks, announced, pageState, selectBlock, selectBlockEffective, focusPage, duplicateBlock, state, store, chromium, fs, assert, engines, engineName, note, nativeAx, nativeAxTree, nativeAxNode, ariaHeadings};
