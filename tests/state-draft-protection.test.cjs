@@ -16,9 +16,12 @@ async function setup({failSave = false, resetOnce = false} = {}) {
     return nodes.get(id);
   };
   let notify, reloads = 0, writes = 0;
+  const targets = [];
+  // #221 : le rechargement passe par une navigation vers la même adresse, sans son ancre ; location.reload() est absent
+  // du témoin, donc tout retour à reload() échoue ici.
   const scope = {URL, atob, btoa, crypto: webcrypto, setTimeout: () => 1, clearTimeout() {},
     document: {getElementById: element, activeElement: element('body')},
-    location: {reload() { reloads++; }}, addEventListener(type, fn) { events[type] = fn; },
+    location: {href: 'file:///atelier/portable.html#ancre', replace(url) { reloads++; targets.push(url); }}, addEventListener(type, fn) { events[type] = fn; },
     BroadcastChannel: class { addEventListener(type, fn) { notify = fn; } postMessage() {} }};
   scope.window = scope; scope.MailBuilder = {catalog};
   const context = vm.createContext(scope);
@@ -35,7 +38,7 @@ async function setup({failSave = false, resetOnce = false} = {}) {
   }};
   load('app/source/state.js'); await A.State.start();
   return {A, element, lock: () => notify({data: {type: 'takeover', token: 'token-autre'}}),
-    reloads: () => reloads, writes: () => writes, record: () => record, clearRecord() { record = undefined; },
+    reloads: () => reloads, targets: () => targets, writes: () => writes, record: () => record, clearRecord() { record = undefined; },
     unload() { const e = {prevented: false, preventDefault() { this.prevented = true; }}; events.beforeunload(e); return e.prevented; }};
 }
 function addDraft(A) {
@@ -51,6 +54,7 @@ test('reload : le garde natif protège encore le brouillon même après export d
   assert.equal(h.unload(), true);
   h.A.State.reload();
   assert.equal(h.reloads(), 1, 'demande de rechargement soumise au navigateur');
+  assert.deepEqual(h.targets(), ['file:///atelier/portable.html'], 'navigation vers la même adresse, sans ancre');
   assert.equal(h.unload(), true, 'beforeunload reste actif pour une décision native explicite');
   assert.equal(h.A.drafts.size, 1);
 });
