@@ -177,6 +177,41 @@ test('runEngine conserve un vrai budget dépassé après le premier test réussi
   }
 });
 
+// #221 : un fichier long reçoit une limite inscrite au registre, avec sa raison ; les autres gardent la limite commune.
+test('runEngine applique la limite propre à un fichier du registre, jamais en dessous de la limite commune', () => {
+  const fs = require('node:fs'), path = require('node:path'), os = require('node:os');
+  const {runEngine, fileBudget} = require('./run-engines.cjs');
+  assert.equal(fileBudget({'long.test.cjs': {timeoutMs: 5000, reason: 'recette longue'}}, 'long.test.cjs', 1000), 5000);
+  assert.equal(fileBudget({'long.test.cjs': {timeoutMs: 500, reason: 'recette courte'}}, 'long.test.cjs', 1000), 1000);
+  assert.equal(fileBudget({}, 'autre.test.cjs', 1000), 1000);
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'builder-runner-file-budget-'));
+  const previous = process.env.PLAYWRIGHT_MODULE;
+  try {
+    fs.mkdirSync(path.join(root, 'tests')); const dir = path.join(root, 'results'); fs.mkdirSync(dir);
+    const stub = path.join(root, 'fake-playwright.cjs');
+    fs.writeFileSync(stub, "module.exports=Object.fromEntries(['chromium','webkit','firefox'].map(name=>[name,{async launch(){throw Error('aucun navigateur attendu')}}]));");
+    fs.writeFileSync(path.join(root, 'tests', 'long.test.cjs'), "const test=require('node:test');test('attente bornée',()=>new Promise(resolve=>setTimeout(resolve,2000)));");
+    process.env.PLAYWRIGHT_MODULE = stub;
+    const run = runEngine('firefox', ['long.test.cjs'], dir, root, [], 1000, {'long.test.cjs': {timeoutMs: 15000, reason: 'recette longue'}});
+    assert.equal(run.executions[0].errorCode, null, JSON.stringify(run.executions[0])); assert.equal(run.executions[0].status, 0);
+    assert(run.results.some(r => r.status === 'pass' && r.name === 'attente bornée'), JSON.stringify(run.results));
+    assert(!run.results.some(r => r.class === 'budget'));
+  } finally {
+    if (previous === undefined) delete process.env.PLAYWRIGHT_MODULE; else process.env.PLAYWRIGHT_MODULE = previous;
+    fs.rmSync(root, {recursive: true, force: true});
+  }
+});
+
+test('le registre ne donne une limite propre qu’à un fichier navigateur existant, avec sa raison', () => {
+  const fs = require('node:fs'), path = require('node:path');
+  const {budgets = {}} = JSON.parse(fs.readFileSync(path.join(__dirname, 'engine-expectations.json'), 'utf8'));
+  for (const [file, budget] of Object.entries(budgets)) {
+    assert(fs.existsSync(path.join(__dirname, file)), file);
+    assert(Number.isSafeInteger(budget.timeoutMs) && budget.timeoutMs > 180000, file);
+    assert(typeof budget.reason === 'string' && budget.reason.length > 20, file);
+  }
+});
+
 
 test('le rendu conserve l’avertissement d’interception même quand la couverture observée est mixte', () => {
   const {render} = require('./run-engines.cjs');

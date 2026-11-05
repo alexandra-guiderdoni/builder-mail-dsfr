@@ -1,4 +1,7 @@
 {
   "comment": "Registre des seuls échecs encore non résolus. Les huit qualifications WebKit historiques (#39, #136, #137 et #141) sont retirées après correction, contre-épreuves et CI verte sur b859029. Toute réapparition reste un échec produit non expliqué et fait échouer la commande ; l’historique demeure dans Git et les rapports de qualification.",
-  "entries": []
+  "entries": [],
+  "budgets": {
+    "mail-export-engines-browser.test.cjs": {"timeoutMs": 600000, "reason": "#221 : la recette rend chaque variante d’export sous Chromium puis WebKit, quel que soit le moteur demandé ; seule, elle dure de 177 à 184 s dans npm test, au-delà de la limite commune de 180 s."}
+  }
 }

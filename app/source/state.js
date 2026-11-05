@@ -274,7 +274,7 @@
       box.innerHTML = '<h2 class="fr-h5" id="reopen-title" tabindex="-1">Exporter le travail temporaire, puis recharger</h2><p id="reopen-text"></p><div class="actions"><button class="fr-btn" type="button" id="reopen-export">Exporter le travail temporaire</button><button class="fr-btn fr-btn--secondary" type="button" id="reopen-reload">Recharger l’atelier</button></div>';
       document.getElementById("error").insertAdjacentElement("afterend", box);
       document.getElementById("reopen-export").addEventListener("click", () => { try { A.Actions["export-library"](); } catch (cause) { A.error(cause.message); } });
-      document.getElementById("reopen-reload").addEventListener("click", () => location.reload());
+      document.getElementById("reopen-reload").addEventListener("click", () => reloadPage());
     }
     const storage = !!window.indexedDB;
     document.getElementById("reopen-text").textContent = storage
@@ -355,8 +355,11 @@
   function reload() {
     if ((failed || pending || A.invalid.size || A.pendingInputs) && exportedRevision !== revision) throw new Error("Exportez d’abord les newsletters de cette fenêtre : le rechargement efface le travail non enregistré de cette fenêtre.");
     // Un export du modèle ne contient pas les brouillons : laisser beforeunload demander l’abandon.
-    leaving = !A.drafts.size; location.reload();
+    leaving = !A.drafts.size; reloadPage();
   }
+  // #221 : une navigation vers la même adresse, pas location.reload(). Sous Firefox, après un premier « Rester sur la page »,
+  // un rechargement confirmé par « Quitter la page » n’avait plus lieu ; une navigation ordinaire, elle, aboutit.
+  function reloadPage() { location.replace(location.href.split("#")[0]); }
   window.addEventListener("beforeunload", event => { if (leaving) return; if (pending || failed || A.invalid.size || A.drafts.size || A.pendingInputs) { event.preventDefault(); event.returnValue = ""; } });
   // Les vues internes attendent les écritures en cours sans exiger leur succès : le travail reste en mémoire.
   async function settle() { await queue; guard(); }

@@ -72,7 +72,8 @@ test('#199 conservation durable : accordée, non accordée, indisponible ou en e
       const {page} = await open(browser, {}, async page => page.addInitScript(mode => {
         window.__persistCalls = 0;
         if (mode === 'indisponible') { Object.defineProperty(navigator, 'storage', {configurable: true, value: undefined}); return; }
-        const storage = navigator.storage;
+        // #221 : sur le prototype. Sous WebKit, des méthodes posées sur l'objet navigator.storage disparaissaient avant que l'atelier les appelle.
+        const storage = StorageManager.prototype;
         storage.persisted = async () => false;
         storage.persist = async () => { window.__persistCalls++; if (mode === 'erreur') throw new Error('refus de recette'); return mode === 'accordée'; };
       }, mode));

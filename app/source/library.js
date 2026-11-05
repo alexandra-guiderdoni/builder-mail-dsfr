@@ -11,7 +11,10 @@
   function show(editor) {
     get("library-home").hidden = editor; get("editor-page").hidden = !editor;
     get("library-back").hidden = !editor; get("resume-document").hidden = editor || !!A.State?.fresh?.(); syncNav(); A.UI.pageTitle();
-    get(editor ? "composition-title" : "home-title").focus();
+    // #221 : défilement minimal, le même partout. Par défaut, Firefox centrait le titre et faisait sortir de la fenêtre le message
+    // d'erreur placé au-dessus (stockage indisponible) ; WebKit ne défilait pas et laissait le titre à moitié hors de la fenêtre.
+    const title = get(editor ? "composition-title" : "home-title");
+    title.focus({preventScroll: true}); title.scrollIntoView({block: "nearest"});
   }
   // Première visite (#205) : l’accueil guide en trois étapes. Les zones existantes (exemples, plan vide, aide à l’installation)
   // y sont déplacées, jamais dupliquées : identifiants et écouteurs restent uniques. Elles regagnent ensuite leur place.

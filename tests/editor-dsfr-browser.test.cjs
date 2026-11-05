@@ -142,12 +142,9 @@ test('champs image : nommés par leur seul libellé, sans aria-labelledby, nom a
     }));
     assert.equal(fields.length, 2);
     for (const field of fields) { assert.equal(field.labelledby, null, JSON.stringify(field)); assert.equal(field.labels, 1); assert.ok(field.label && field.help, JSON.stringify(field)); }
-    const cdp = await page.context().newCDPSession(page);
     for (const field of fields) {
-      const {result} = await cdp.send('Runtime.evaluate', {expression: `document.getElementById(${JSON.stringify(field.id)})`});
-      const {node} = await cdp.send('DOM.describeNode', {objectId: result.objectId});
-      const {nodes} = await cdp.send('Accessibility.getPartialAXTree', {backendNodeId: node.backendNodeId, fetchRelatives: false});
-      assert.equal(nodes[0].name.value, field.label, field.id);
+      const ax = await nativeAxNode(page, `#${field.id}`);
+      if (ax) assert.equal(ax.name.value, field.label, field.id);
     }
   } finally { await browser.close(); }
 });

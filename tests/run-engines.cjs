@@ -133,12 +133,14 @@ function preflight(engine, root) {
   const run = spawnSync(process.execPath, ['-e', `const p=require(process.env.PLAYWRIGHT_MODULE||'playwright');p[${JSON.stringify(engine)}].launch().then(b=>b.close()).then(()=>process.exit(0),e=>{console.error(String(e.message).split('\\n')[0]);process.exit(1)})`], {cwd: root, encoding: 'utf8', timeout: 60000});
   return run.status === 0 ? null : (run.stderr.trim() || 'lancement impossible');
 }
-function runEngine(engine, files, dir, root, registry, timeoutMs) {
+// #221 : un fichier dont la recette dépasse la limite commune y reçoit sa propre limite, inscrite au registre avec sa raison.
+const fileBudget = (budgets, file, timeoutMs) => Math.max(timeoutMs, budgets[file]?.timeoutMs ?? 0);
+function runEngine(engine, files, dir, root, registry, timeoutMs, budgets = {}) {
   const reporterArgs = tapReporterArgs();
   const notes = path.join(dir, `${engine}-notes.jsonl`), results = [], executions = [], interceptions = {};
   for (const file of files) {
     const executionId = randomUUID();
-    const run = spawnSync(process.execPath, ['--require', __filename, '--test', '--test-concurrency=1', ...reporterArgs, path.join(root, 'tests', file)], {cwd: root, encoding: 'utf8', timeout: timeoutMs, maxBuffer: 64 * 1024 * 1024, env: {...process.env, NODE_TEST_CONTEXT: undefined, MAIL_BUILDER_ENGINE: engine, MAIL_BUILDER_NOTES: notes, MAIL_BUILDER_RECORD_LAUNCHES: '1', MAIL_BUILDER_TEST_FILE: file, MAIL_BUILDER_EXECUTION_ID: executionId}});
+    const run = spawnSync(process.execPath, ['--require', __filename, '--test', '--test-concurrency=1', ...reporterArgs, path.join(root, 'tests', file)], {cwd: root, encoding: 'utf8', timeout: fileBudget(budgets, file, timeoutMs), maxBuffer: 64 * 1024 * 1024, env: {...process.env, NODE_TEST_CONTEXT: undefined, MAIL_BUILDER_ENGINE: engine, MAIL_BUILDER_NOTES: notes, MAIL_BUILDER_RECORD_LAUNCHES: '1', MAIL_BUILDER_TEST_FILE: file, MAIL_BUILDER_EXECUTION_ID: executionId}});
     const entries = fs.existsSync(notes) ? fs.readFileSync(notes, 'utf8').split('\n').filter(Boolean).map(line => JSON.parse(line)).filter(n => n.executionId === executionId) : [];
     const actualEngines = [...new Set(entries.filter(n => n.kind === 'browser-launch' && n.phase === 'succeeded').map(n => n.engine))].sort();
     const attributed = actualEngines.join('+') || 'not-observed';
@@ -185,13 +187,13 @@ function main(argv) {
   for (const file of only) if (!eligible.includes(file)) { console.error(`Fichier inconnu ou non éligible au runner navigateur : ${file}`); return 64; }
   const files = eligible.filter(f => !only.length || only.includes(f));
   if (!files.length) { console.error('Aucun fichier navigateur éligible sélectionné'); return 64; }
-  const registry = JSON.parse(fs.readFileSync(path.join(root, 'tests/engine-expectations.json'), 'utf8')).entries;
+  const {entries: registry, budgets = {}} = JSON.parse(fs.readFileSync(path.join(root, 'tests/engine-expectations.json'), 'utf8'));
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'mail-builder-engines-')), timeoutMs = Number(option('timeout-ms')) || 180000;
   const results = [], interceptions = {}, unavailable = [], executions = [];
   for (const engine of wanted) {
     const missing = preflight(engine, root);
     if (missing) { unavailable.push({engine, reason: missing}); continue; }
-    const run = runEngine(engine, files, dir, root, registry, timeoutMs);
+    const run = runEngine(engine, files, dir, root, registry, timeoutMs, budgets);
     results.push(...run.results); interceptions[engine] = run.interceptions; executions.push(...run.executions);
   }
   const report = summarize(results, unavailable);
@@ -199,5 +201,5 @@ function main(argv) {
   if (option('json')) fs.writeFileSync(option('json'), JSON.stringify({...report, results, interceptions, executions, evidenceDirectory: dir, attributionScope: 'file; mixed groups are not per-test coverage'}, null, 2));
   return exitCode(report);
 }
-module.exports = {parseTap, tapCompletion, processResults, classify, summarize, exitCode, selectFiles, runEngine, recordLaunches, render, tapReporterArgs, nodeOptionsTokens, ENGINES};
+module.exports = {parseTap, tapCompletion, processResults, classify, summarize, exitCode, selectFiles, runEngine, fileBudget, recordLaunches, render, tapReporterArgs, nodeOptionsTokens, ENGINES};
 if (require.main === module) process.exit(main(process.argv.slice(2)));
