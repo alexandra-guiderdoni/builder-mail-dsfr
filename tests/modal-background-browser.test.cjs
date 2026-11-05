@@ -1,5 +1,5 @@
 const test = require('node:test');
-const {open, saved, expand, click, chromium, assert} = require('./browser-support.cjs');
+const {open, saved, expand, click, chromium, assert, currentFrameDocument} = require('./browser-support.cjs');
 const INPUTS = ['pointerdown', 'mousedown', 'pointerup', 'mouseup', 'click'];
 
 // Observation intrusive de DOM/événements, sans EFP ni capture. Seul acquittement inter-frame : la garde d'atteinte (#173).
@@ -21,10 +21,7 @@ async function documents(page, generation, previous, t) {
   const frames = {};
   for (const id of ['preview', 'catalogue-preview']) {
     const element = await page.locator('#' + id).elementHandle();
-    const frame = await element.contentFrame();
-    const url = id === 'preview' ? await element.getAttribute('src') : 'about:srcdoc';
-    const title = id === 'preview' ? 'Fond modal' : 'Aperçu du composant';
-    await frame.waitForFunction(({url, title}) => location.href === url && document.readyState === 'complete' && document.title === title, {url, title});
+    const {frame} = id === 'preview' ? await currentFrameDocument(element, 'Fond modal') : await currentFrameDocument(element, 'Aperçu du composant', {fixedUrl: 'about:srcdoc'});
     if (previous) { assert.notEqual(frame, previous[id]); assert.equal(previous[id].isDetached(), true); }
     frames[id] = frame;
   }

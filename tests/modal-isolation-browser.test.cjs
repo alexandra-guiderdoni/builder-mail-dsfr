@@ -1,17 +1,19 @@
 const test = require('node:test');
-const {open, saved, expand, click, chromium, assert} = require('./browser-support.cjs');
+const {open, saved, expand, click, chromium, assert, currentFrameDocument} = require('./browser-support.cjs');
 
 // Contrat structurel nouveau, pas rejeu non instrumenté de #145/#150.
 // Les contrôles de DOM sont intrusifs ; aucune conclusion sur le routage interne de Chromium.
 async function previewControl(page) {
   const element = await page.locator('#preview').elementHandle();
-  const frame = await element.contentFrame();
-  const expectedURL = await element.getAttribute('src');
-  await frame.waitForFunction(url => location.href === url && document.readyState === 'complete' && document.title === 'Isolation', expectedURL);
+  const {frame} = await currentFrameDocument(element, 'Isolation');
   await frame.evaluate(() => {
     window.__controlClicks = 0;
     document.addEventListener('click', event => { if (event.isTrusted) window.__controlClicks++; }, {once: true});
   });
+  // #221 : défilement d'abord, puis deux images rendues avant le clic. Sous Chromium, un clic envoyé dans la foulée du défilement
+  // était acheminé selon l'ancienne position : il restait dans la page, sur l'élément iframe, sans atteindre l'aperçu.
+  await element.scrollIntoViewIfNeeded();
+  await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
   await frame.locator('body').click({position: {x: 20, y: 20}});
   assert.equal(await frame.evaluate(() => window.__controlClicks), 1, 'contrôle positif du document courant');
   return frame;

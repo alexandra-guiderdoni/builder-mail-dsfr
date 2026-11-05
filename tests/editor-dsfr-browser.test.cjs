@@ -13,7 +13,8 @@ test('intitulé source : saisie, aperçu, presse-papiers, fichier, rechargement 
     assert.equal(await page.evaluate(() => document.activeElement.id), 'article-source-label');
     await page.locator('#article-source-label').fill(label); await saved(page);
     await page.locator('#preview').scrollIntoViewIfNeeded();
-    const link = page.frameLocator('#preview').locator(`a[href="${url}"]`);
+    // #221 : le lien existe déjà avec l'intitulé par défaut ; on attend l'aperçu qui porte le nouvel intitulé (plus lent sous Firefox).
+    const link = page.frameLocator('#preview').locator(`a[href="${url}"]`, {hasText: label});
     await link.waitFor({state: 'visible'}); assert.equal(await link.textContent(), label);
     await click(page, '[data-action=copy]'); await confirmChecks(page);
     await page.locator('#notice').filter({hasText: 'Courriel copié en HTML et texte.'}).waitFor();

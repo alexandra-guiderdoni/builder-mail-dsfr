@@ -92,6 +92,18 @@ async function expand(page, text) {
     await page.waitForFunction(label => [...document.querySelectorAll('summary')].some(e => e.textContent.includes(label) && e.parentElement.open), text, {timeout: 3000});
   }
 }
+// #221 : document chargé à l'adresse actuelle de l'iframe, relue à chaque essai. Une adresse lue une seule fois pouvait être
+// dépassée par un nouvel aperçu, et l'attente ne finissait jamais. Un document srcdoc a une adresse fixe, donnée par fixedUrl.
+async function currentFrameDocument(element, title, {fixedUrl, timeout = 30000} = {}) {
+  const deadline = Date.now() + timeout;
+  for (;;) {
+    const url = fixedUrl ?? await element.getAttribute('src'), frame = await element.contentFrame();
+    const ready = frame && await frame.evaluate(({url, title}) => location.href === url && document.readyState === 'complete' && document.title === title, {url, title}).catch(() => false);
+    if (ready) return {frame, url};
+    if (Date.now() > deadline) throw new Error(`Document de l'iframe jamais chargé à son adresse actuelle : ${url}`);
+    await new Promise(resolve => setTimeout(resolve, 50));
+  }
+}
 /* État visible de la page au moment d’un échec : ce que l’atelier annonce, refuse ou demande, pour nommer la cause réelle. */
 const pageState = page => page.evaluate(() => ({notice: document.getElementById('notice')?.textContent.trim(), error: document.getElementById('error')?.hidden === false ? document.getElementById('error').textContent.trim() : '', checkDialog: document.getElementById('check-dialog')?.open === true, focused: document.hasFocus()})).catch(cause => ({unreadable: cause.message.split('\n')[0]}));
 // Depuis #36, une composition qui garde des contenus de démonstration demande une confirmation avant copie ou téléchargement.
@@ -162,4 +174,4 @@ async function selectBlockEffective(page, id, {focusInView = false} = {}) {
 async function focusPage(page) { await page.bringToFront(); await page.waitForFunction(() => document.hasFocus()); }
 const state = page => page.evaluate(() => JSON.parse(JSON.stringify(MailBuilder.library)));
 const store = page => page.evaluate(() => MailBuilder.Storage.load());
-module.exports = {root, evidence, portable, click, open, enterEditor, established, saved, expand, download, confirmChecks, announced, pageState, selectBlock, selectBlockEffective, focusPage, duplicateBlock, state, store, chromium, fs, assert, engines, engineName, note, nativeAx, nativeAxTree, nativeAxNode, ariaHeadings};
+module.exports = {root, evidence, portable, click, open, enterEditor, established, saved, expand, currentFrameDocument, download, confirmChecks, announced, pageState, selectBlock, selectBlockEffective, focusPage, duplicateBlock, state, store, chromium, fs, assert, engines, engineName, note, nativeAx, nativeAxTree, nativeAxNode, ariaHeadings};
