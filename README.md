@@ -11,6 +11,8 @@ Créez vos newsletters aux couleurs de l’État, puis collez-les dans votre mes
 
 ## Créer une newsletter en quatre étapes
 
+Pas à pas et en images : le [guide de prise en main](docs/PRISE-EN-MAIN.md), cinq minutes.
+
 1. **Partez d’un modèle.** Dans « Exemples », choisissez « Créer à partir de cet exemple » : la newsletter est déjà remplie, il ne reste qu’à l’adapter. Pour partir d’un plan vide, choisissez un « Point de départ », puis « Créer une newsletter ».
 2. **Remplacez les contenus.** Cliquez sur un bloc pour modifier ses textes, ses liens et ses images (« Depuis mon ordinateur »). « Ajouter un composant » ajoute un bloc.
 3. **Relisez l’aperçu** du courriel.

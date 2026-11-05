@@ -1,5 +1,9 @@
 # Historique des livraisons
 
+## 5 novembre 2026 - Guide de prise en main, noms de blocs et compteur
+
+- **Guide de prise en main :** `docs/PRISE-EN-MAIN.md` mène en cinq étapes, avec captures, de l’exemple « Lettre d’information » au courriel collé dans la messagerie, puis rappelle l’export et les cas fréquents. Le README y renvoie. Les captures sont refaites par `node scripts/captures_prise_en_main.cjs`, sur la version web avec un profil vierge. Le test `prise-en-main` vérifie que chaque libellé cité entre « » existe dans la version web construite et que chaque capture existe.
+
 ## 5 novembre 2026 - Voir le bloc modifié dans l’aperçu (#211), libellé des champs image sous VoiceOver (#218)
 
 - **Voir ce bloc dans l’aperçu :** en tête des champs du bloc, l’action fait défiler la page jusqu’au bloc et l’encadre dans l’aperçu. « Revenir au champ », fixé en bas de la fenêtre, ou la touche Échap, rend le dernier champ quitté avec sa sélection et la position de la page. Fonctionne à 1280, 1024 et 390 px et au zoom de 200 %, sous Chromium, WebKit et Firefox.
