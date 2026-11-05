@@ -36,7 +36,8 @@ test('import JSON : nom explicite cohérent avec le libellé visible et descript
     const label = await page.locator('label[for=project-input]').textContent();
     assert.equal(await page.locator('label[for=project-input]').isVisible(), true);
     assert.equal(await input.isVisible(), true);
-    assert.equal(await input.getAttribute('aria-label'), label);
+    // #218 : nommé par son seul <label for>. Avec aria-label, VoiceOver sous Safari ne lisait le libellé qu'en astuce.
+    assert.equal(await input.getAttribute('aria-label'), null);
     assert.equal(await page.getByLabel(label, {exact: true}).getAttribute('id'), 'project-input');
     assert.equal(await input.getAttribute('accept'), 'application/json,.json');
     if (nativeAx) {

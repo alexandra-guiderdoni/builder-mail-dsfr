@@ -1,6 +1,6 @@
 const test = require('node:test');
 const path = require('node:path');
-const {open, enterEditor, established, click, saved, expand, download, confirmChecks, selectBlock, state, chromium, fs, evidence, assert} = require('./browser-support.cjs');
+const {open, enterEditor, established, click, saved, expand, download, confirmChecks, selectBlock, state, chromium, fs, evidence, assert, nativeAxNode} = require('./browser-support.cjs');
 
 test('intitulé source : saisie, aperçu, presse-papiers, fichier, rechargement et transfert hors connexion', async () => {
   const browser = await chromium.launch({headless: true});
@@ -149,6 +149,21 @@ test('champs image : nommés par leur seul libellé, sans aria-labelledby, nom a
       const {nodes} = await cdp.send('Accessibility.getPartialAXTree', {backendNodeId: node.backendNodeId, fetchRelatives: false});
       assert.equal(nodes[0].name.value, field.label, field.id);
     }
+  } finally { await browser.close(); }
+});
+
+// « Restaurer une sauvegarde » : même cause que les champs image (#218). Avec aria-labelledby, VoiceOver sous Safari ne lisait
+// son libellé qu'en astuce ; nommé par son seul <label for>, il annonce le libellé puis l'aide associée.
+test('restaurer une sauvegarde : champ fichier nommé par son seul libellé, aide associée', async () => {
+  const browser = await chromium.launch({headless: true});
+  try {
+    const {page} = await open(browser);
+    await expand(page, 'Sauvegarde et import');
+    const field = await page.evaluate(() => { const input = document.getElementById('restore-input'); return {labelledby: input.getAttribute('aria-labelledby'), labels: input.labels.length, label: input.labels[0]?.textContent, describedby: input.getAttribute('aria-describedby'), help: document.getElementById('restore-help')?.textContent}; });
+    assert.equal(field.labelledby, null); assert.equal(field.labels, 1); assert.equal(field.label, 'Restaurer une sauvegarde');
+    assert.equal(field.describedby, 'restore-help'); assert.ok(field.help);
+    const ax = await nativeAxNode(page, '#restore-input');
+    if (ax) { assert.equal(ax.name.value, field.label); assert.equal(ax.description?.value, field.help); }
   } finally { await browser.close(); }
 });
 
