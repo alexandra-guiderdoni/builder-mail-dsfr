@@ -83,10 +83,12 @@ async function established(page) { await page.evaluate(() => MailBuilder.State.c
 async function saved(page) {
   await page.waitForFunction(() => document.querySelector('#save-state').textContent === 'Newsletters enregistrées dans ce navigateur.');
 }
+// #220 : comme click(), le clavier plutôt que la souris. Sous Chromium, un clic qui suit de près le défilement pendant un rechargement
+// de l'aperçu était parfois acheminé selon l'ancienne position de défilement, donc dans l'iframe de l'aperçu, et le panneau restait fermé.
 async function expand(page, text) {
   const summary = page.locator('summary').filter({hasText: text});
   if (!(await summary.evaluate(e => e.parentElement.open))) {
-    await summary.scrollIntoViewIfNeeded(); await summary.click();
+    await summary.focus(); await summary.press('Enter');
     await page.waitForFunction(label => [...document.querySelectorAll('summary')].some(e => e.textContent.includes(label) && e.parentElement.open), text, {timeout: 3000});
   }
 }
