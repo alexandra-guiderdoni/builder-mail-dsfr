@@ -1,5 +1,10 @@
 # Historique des livraisons
 
+## 5 novembre 2026 - Voir le bloc modifié dans l’aperçu (#211)
+
+- **Voir ce bloc dans l’aperçu :** en tête des champs du bloc, l’action fait défiler la page jusqu’au bloc et l’encadre dans l’aperçu. « Revenir au champ », fixé en bas de la fenêtre, ou la touche Échap, rend le dernier champ quitté avec sa sélection et la position de la page. Fonctionne à 1280, 1024 et 390 px et au zoom de 200 %, sous Chromium, WebKit et Firefox.
+- **Sécurité de l’aperçu (#28) :** extension bornée accordée par Alex. Le script de mesure transmet aussi, sur demande, la position et la hauteur d’un repère de bloc. Les repères sont des éléments vides présents seulement dans l’aperçu : le HTML copié et exporté ne change pas. Aucune seconde iframe ni permission ; le nouveau message est filtré comme la mesure de hauteur (source, origine, jeton). L’aperçu ne défile toujours pas en interne.
+
 ## 4 novembre 2026 - Corrections issues de l’évaluation (#212 à #216)
 
 - **Classe DSFR orpheline (#213) :** le lien « Aller à l’aperçu du courriel » perd la classe `fr-link`, qu’aucun CSS DSFR embarqué ne définit. Son rendu et son focus sont inchangés : style calculé identique sous 991 px, à 100 % et 200 %. Le test `dsfr-classes` vérifie que chaque classe `fr-*` de l’interface, HTML et JavaScript compris, a un sélecteur exact dans le DSFR embarqué.

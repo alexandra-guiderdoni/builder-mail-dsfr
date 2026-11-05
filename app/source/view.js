@@ -119,7 +119,7 @@
     const saved = capture(); shownBlock = b?.id ?? null;
     if (!b) { get("block-editor").innerHTML = "<p>Ajoutez un composant au courriel pour personnaliser son contenu.</p>"; return; }
     const definition = M.component(b.component), index = A.doc().blocks.indexOf(b);
-    get("block-editor").innerHTML = `<h3>${esc(blockLabel(b, definition))}</h3><p class="muted">${esc(definition.family)}</p>` + (b.component === "mail-00" ? '<p class="muted">Le pré-en-tête peut être supprimé lors de la copie avec Chromium. Sa présence dans l’aperçu ne garantit pas celle dans le message reçu.</p>' : "") + definition.fields.map(f => {
+    get("block-editor").innerHTML = `<h3>${esc(blockLabel(b, definition))}</h3><p class="muted">${esc(definition.family)}</p>` + (b.component === "mail-00" ? '<p class="muted">Le pré-en-tête peut être supprimé lors de la copie avec Chromium. Sa présence dans l’aperçu ne garantit pas celle dans le message reçu.</p>' : "") + '<div class="actions"><button class="fr-btn fr-btn--secondary" type="button" data-show-in-preview>Voir ce bloc dans l’aperçu</button></div>' + definition.fields.map(f => {
       const linkLabel = definition.links.some(link => link.label === f.key), required = f.type === "url" || linkLabel;
       const label = linkLabel ? `${f.label} - Intitulé du lien (obligatoire)` : required ? `${f.label} (obligatoire)` : f.label, id = `field-${f.key}`, v = b.values[f.key];
       if (f.type === "image") {

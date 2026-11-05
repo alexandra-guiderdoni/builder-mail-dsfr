@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- PDG-LARGE-FILE-JUSTIFICATION: page autonome générée ; parseur, moteur et ressources incorporés depuis les sources séparées. -->
-<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none';script-src 'sha256-+jjB/j1PPqoddZxbbulydMFRW+sElM0jmx90d+3ZvW0=';style-src 'unsafe-inline';img-src data: blob:;frame-src blob:;base-uri 'none';form-action 'none';connect-src 'none';worker-src 'none'"><title>Collecte SNUM · Convertisseur de courriels</title><style>:root { color-scheme:light; font:100%/1.5 Arial,Helvetica,sans-serif; color:#161616; background:#f6f6f6; }
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none';script-src 'sha256-eIJ/xR8MItWHj4rwR7d6uV+Gd3xJdkTwqWhhuAAm+y4=';style-src 'unsafe-inline';img-src data: blob:;frame-src blob:;base-uri 'none';form-action 'none';connect-src 'none';worker-src 'none'"><title>Collecte SNUM · Convertisseur de courriels</title><style>:root { color-scheme:light; font:100%/1.5 Arial,Helvetica,sans-serif; color:#161616; background:#f6f6f6; }
 * { box-sizing:border-box; } body { margin:0; } button,input,select,textarea { font:inherit; }
 header { display:flex; justify-content:space-between; gap:24px; background:#fff; border-top:6px solid #000091; border-bottom:1px solid #ddd; padding:24px 3vw; }
 h1 { margin:0 0 8px; color:#000091; font-size:1.9rem; line-height:1.25; } h2 { font-size:1.25rem; margin:0 0 18px; } h3 { font-size:1.15rem; margin:0 0 8px; }
@@ -384,7 +384,9 @@ window.MailBuilder.catalog = {"id":"6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278
     if (value.source) result = injectSourceLink(result, value.source, value.sourceLabel);
     return result;
   }
-  function body(value, preview = false) { M.document(value); const context = []; return used(value).map(b => block(b, context, preview)).join("\n"); }
+  // #211 : en aperçu seulement, un repère vide précède chaque bloc pour « Voir ce bloc dans l’aperçu ». Copie et export n’en ont pas.
+  const marker = b => `<div data-preview-block="${escape(b.id)}" style="margin:0;padding:0;height:0;overflow:hidden;"></div>`;
+  function body(value, preview = false) { M.document(value); const context = []; return used(value).map(b => (preview ? marker(b) : "") + block(b, context, preview)).join("\n"); }
   function linkIssues(value) {
     M.document(value);
     return value.blocks.flatMap((b, index) => {

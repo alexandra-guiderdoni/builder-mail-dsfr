@@ -5,8 +5,16 @@
   const slots = ["preview", "catalogue-preview"].map(id => ({frame: document.getElementById(id)}));
   const leases = new Set();
   let frame = slots[0].frame, url, token, loaded = false, navigating = false, pending, latest, active;
-  let catalogueId = "", catalogueHtml = "";
+  let catalogueId = "", catalogueHtml = "", located;
   function request() { if (token) frame?.contentWindow?.postMessage({type: "mail-preview-measure", token}, "*"); }
+  // #211 : une seule demande de position à la fois, envoyée au document chargé ; un nouvel aperçu la renvoie à son tour.
+  function settle(result) { const current = located; located = undefined; if (current) { clearTimeout(current.timer); current.resolve(result); } }
+  function ask() { if (located && loaded && token) frame?.contentWindow?.postMessage({type: "mail-preview-locate", token, block: located.block}, "*"); }
+  function locate(block) {
+    settle(null);
+    if (!frame || typeof block !== "string") return Promise.resolve(null);
+    return new Promise(resolve => { located = {block, resolve, timer: setTimeout(() => settle(null), 3000)}; ask(); });
+  }
   function navigate(next) {
     const previous = url;
     url = URL.createObjectURL(new Blob([next.html], {type: "text/html"}));
@@ -29,7 +37,14 @@
   }
   addEventListener("message", event => {
     const data = event.data;
-    if (!frame || event.source !== frame.contentWindow || event.origin !== "null" || !data || data.type !== "mail-preview-size" || data.token !== token) return;
+    if (!frame || event.source !== frame.contentWindow || event.origin !== "null" || !data || data.token !== token) return;
+    if (data.type === "mail-preview-block") {
+      if (!loaded || !located || data.block !== located.block) return;
+      if (data.found !== true) { settle(null); return; }
+      if (Number.isSafeInteger(data.top) && Number.isSafeInteger(data.height) && data.top >= 0 && data.height >= 0) settle({top: data.top, height: data.height});
+      return;
+    }
+    if (data.type !== "mail-preview-size") return;
     /* Une mesure reçue avant le chargement du nouveau document est partielle : sous Firefox, la hauteur chutait puis remontait à chaque frappe. */
     if (!loaded) return;
     if (!frame.clientWidth || !Number.isSafeInteger(data.height) || data.height < 0 || data.width !== frame.clientWidth) return;
@@ -42,7 +57,7 @@
       if (frame !== ownedFrame) return;
       navigating = false;
       if (pending) { const next = pending; pending = undefined; navigate(next); return; }
-      loaded = true; request();
+      loaded = true; request(); ask();
       const finished = active; active = undefined;
       if (finished) {
         const notify = finished.next.onLoad; finished.next.onLoad = undefined;
@@ -67,7 +82,7 @@
   function suspend() {
     const lease = {}; leases.add(lease);
     if (leases.size === 1) {
-      resize.disconnect(); frame = null; loaded = navigating = false; pending = active = token = undefined;
+      resize.disconnect(); frame = null; loaded = navigating = false; pending = active = token = undefined; settle(null);
       if (url) URL.revokeObjectURL(url); url = undefined;
       for (const slot of slots) {
         const old = slot.frame, placeholder = document.createElement("div");
@@ -93,5 +108,5 @@
       resize.observe(frame);
     };
   }
-  A.Preview = Object.freeze({show, catalogue, suspend});
+  A.Preview = Object.freeze({show, catalogue, suspend, locate});
 })();

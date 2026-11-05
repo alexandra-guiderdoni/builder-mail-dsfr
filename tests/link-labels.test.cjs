@@ -34,7 +34,12 @@ test('un seul des deux liens de même destination est neutralisé dans l’aper�
   assert.equal((preview.match(/Intitulé du lien à renseigner/g) || []).length, 1);
   assert.equal((preview.match(/<a\b[^>]*href=/g) || []).length, 1);
   assert(preview.includes('Lire le second dossier')); assert.equal(JSON.stringify(doc), before);
-  for (const c of MailBuilder.catalog.components) { const valid = M.create('Rendu valide', [c.id]); assert.equal(R.body(valid, true), R.body(valid)); }
+  // #211 : l'aperçu n'ajoute qu'un repère vide par bloc ; une fois ces repères retirés, il égale la sortie.
+  const marker = /<div data-preview-block="[^"]+" style="margin:0;padding:0;height:0;overflow:hidden;"><\/div>/g;
+  for (const c of MailBuilder.catalog.components) {
+    const valid = M.create('Rendu valide', [c.id]), body = R.body(valid, true);
+    assert.equal((body.match(marker) || []).length, valid.blocks.length); assert.equal(body.replace(marker, ''), R.body(valid));
+  }
 });
 
 test('les 13 intitulés vides ou blancs bloquent les sorties, sans empêcher aperçu ni récupération JSON', () => {

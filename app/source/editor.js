@@ -13,10 +13,52 @@
     A.notice(`Bloc «\u00a0${A.UI.blockName(A.doc().blocks.find(b => b.id === id))}\u00a0» déplacé ${A.UI.blockPlace(id)}.`);
     await saving; return true;
   }
+  // #211 : « Voir ce bloc dans l’aperçu » fait défiler la page jusqu’au bloc et l’encadre ; « Revenir au champ » rend le champ
+  // quitté avec sa sélection et la position de la page. De l’aperçu, le parent ne reçoit que la position du repère du bloc.
+  let lastField = null, viewing = null;
+  document.addEventListener("focusout", event => {
+    const field = event.target;
+    if (!field.id || !field.matches?.("input, textarea, select") || !get("block-editor").contains(field)) return;
+    let start = null, end = null, direction = "none";
+    try { start = field.selectionStart; end = field.selectionEnd; direction = field.selectionDirection; } catch { /* champ sans sélection */ }
+    lastField = {id: field.id, block: A.selected, start, end, direction, scroll: scrollY};
+  });
+  function endViewing(restore) {
+    const state = viewing; viewing = null;
+    get("preview-return").hidden = true; get("preview-highlight").hidden = true;
+    if (!state || !restore) return;
+    scrollTo({top: state.scroll, behavior: "instant"});
+    const field = state.field && get(state.field.id);
+    if (field && get("block-editor").contains(field)) {
+      field.focus({preventScroll: true});
+      if (typeof state.field.start === "number") try { field.setSelectionRange(state.field.start, state.field.end, state.field.direction || "none"); } catch { /* champ sans sélection */ }
+    } else get("block-editor").querySelector("[data-show-in-preview]")?.focus({preventScroll: true});
+  }
+  async function showInPreview() {
+    const id = A.selected, field = lastField?.block === id ? lastField : null, scroll = field ? field.scroll : scrollY;
+    const place = await A.Preview.locate(id);
+    if (A.selected !== id) return;
+    if (!place) { A.notice("L’aperçu n’est pas prêt : réessayez dans un instant."); return; }
+    const frame = get("preview"), box = frame.getBoundingClientRect(), top = box.top + scrollY + parseFloat(getComputedStyle(frame).borderTopWidth) + place.top;
+    Object.assign(get("preview-highlight").style, {top: `${top}px`, left: `${box.left + scrollX}px`, width: `${box.width}px`, height: `${place.height}px`});
+    get("preview-highlight").hidden = !place.height;
+    const label = field && document.querySelector(`label[for="${CSS.escape(field.id)}"]`)?.textContent.trim(), back = get("preview-return").querySelector("button");
+    back.textContent = label ? `Revenir au champ «\u00a0${label}\u00a0»` : "Revenir aux champs du bloc";
+    const name = A.UI.blockName(A.doc().blocks.find(b => b.id === id));
+    get("preview-return-help").textContent = place.height ? `Le bloc «\u00a0${name}\u00a0» est encadré dans l’aperçu, en haut de l’écran.` : `Le bloc «\u00a0${name}\u00a0» n’occupe aucune place visible dans l’aperçu.`;
+    viewing = {field, scroll};
+    get("preview-return").hidden = false;
+    scrollTo({top: Math.max(0, top - 16), behavior: "instant"});
+    back.focus({preventScroll: true});
+  }
+  document.addEventListener("keydown", event => { if (viewing && event.key === "Escape" && !document.querySelector("dialog[open]")) { event.preventDefault(); endViewing(true); } });
+  addEventListener("resize", () => { if (viewing) get("preview-highlight").hidden = true; });
   document.addEventListener("click", event => {
     const action = event.target.closest("[data-action]");
     if (action && !action.disabled) attempt(async () => { await A.Actions[action.dataset.action](); if (["new-document", "use-template"].includes(action.dataset.action)) { await A.Library.open(A.library.activeId); get("document-name").focus(); get("document-name").select(); } });
     if (event.target.closest("[data-return-to-block]")) A.UI.focusBlock(A.selected);
+    if (event.target.closest("[data-show-in-preview]")) attempt(showInPreview);
+    if (event.target.closest("[data-preview-return]")) endViewing(true);
     const selected = event.target.closest("[data-select]");
     if (selected) attempt(() => { A.State.guardEdit(); A.selected = selected.dataset.select; A.UI.blockList(); A.UI.fields(); get("block-editor").querySelector("textarea,input")?.focus(); });
     const operation = event.target.closest("[data-block-action]");

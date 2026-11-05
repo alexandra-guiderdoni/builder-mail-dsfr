@@ -72,4 +72,8 @@ iframe { display:block; width:100%; height:760px; border:1px solid var(--border-
 .mail-weight[data-level=alert] { color:var(--text-default-error); background:var(--background-contrast-error); border-left:4px solid var(--border-plain-error); padding:8px 12px; font-weight:700; }
 
 body:has(#check-dialog[open]) #preview { pointer-events: none; }
+/* #211 : cadre posé sur l’aperçu, aux coordonnées de la page, et barre de retour fixée en bas de la fenêtre. */
+.preview-highlight { position:absolute; z-index:1; box-sizing:border-box; pointer-events:none; outline:3px solid var(--border-action-high-blue-france); outline-offset:-3px; }
+.preview-return:not([hidden]) { position:fixed; z-index:2; left:0; right:0; bottom:0; display:flex; justify-content:center; padding:.75rem 1rem; background:var(--background-default-grey); border-top:1px solid var(--border-default-grey); }
+.preview-return .fr-btn { max-width:100%; overflow-wrap:anywhere; }
 .preview-placeholder { box-sizing:border-box; width:100%; border:1px solid var(--border-default-grey); background:var(--background-alt-grey); color:var(--text-mention-grey); padding:16px; }

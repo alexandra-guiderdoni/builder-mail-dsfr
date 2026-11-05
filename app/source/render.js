@@ -103,7 +103,9 @@
     if (value.source) result = injectSourceLink(result, value.source, value.sourceLabel);
     return result;
   }
-  function body(value, preview = false) { M.document(value); const context = []; return used(value).map(b => block(b, context, preview)).join("\n"); }
+  // #211 : en aperçu seulement, un repère vide précède chaque bloc pour « Voir ce bloc dans l’aperçu ». Copie et export n’en ont pas.
+  const marker = b => `<div data-preview-block="${escape(b.id)}" style="margin:0;padding:0;height:0;overflow:hidden;"></div>`;
+  function body(value, preview = false) { M.document(value); const context = []; return used(value).map(b => (preview ? marker(b) : "") + block(b, context, preview)).join("\n"); }
   function linkIssues(value) {
     M.document(value);
     return value.blocks.flatMap((b, index) => {
