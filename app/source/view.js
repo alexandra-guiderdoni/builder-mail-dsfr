@@ -67,7 +67,7 @@
     get("open-document").hidden = (preservedDoc === doc.id);
     get("saved-templates").innerHTML = option("", "Choisir un modèle enregistré") + labelled(A.library.templates).map(([id, label]) => option(id, label, id === template)).join("");
     get("identities").innerHTML = option("", "Choisir une identité enregistrée") + labelled(A.library.identities).map(([id, label]) => option(id, label, id === identity)).join("");
-    get("library-count").textContent = [[A.library.documents, "newsletter"], [A.library.templates, "modèle"], [A.library.identities, "identité"]].map(([list, noun]) => `${list.length} ${noun}${list.length === 1 ? "" : "s"}`).join(" · ");
+    get("library-count").textContent = [[A.library.documents, "newsletter"], [A.library.templates, "modèle"], [A.library.identities, "identité"]].map(([list, noun]) => A.Model.quantity(list.length, noun)).join(" · ");
     A.Library?.refresh();
   }
   function blockList() {
@@ -140,7 +140,7 @@
     document.title = get("editor-page").hidden ? `Mes newsletters – ${brand}` : `${name ? `${name} – ` : ""}Éditeur – ${brand}`;
   }
   function summary() {
-    get("composition-summary").textContent = `${A.doc().blocks.length} blocs dans « ${A.doc().name} »`;
+    get("composition-summary").textContent = `${A.Model.quantity(A.doc().blocks.length, "bloc")} dans « ${A.doc().name} »`;
     // Le résumé suit immédiatement le modèle ; la mesure reste différée après la frappe.
     A.Files.staleWeight("Poids du courriel à copier : calcul en cours…");
   }
@@ -166,7 +166,7 @@
     select.innerHTML = families.map(f => `<optgroup label="${esc(f)}">${visible.filter(c => c.family === f).map(c => option(c.id, c.label)).join("")}</optgroup>`).join("");
     select.size = narrowWindow.matches ? 1 : Math.max(2, visible.length + families.length);
     if (visible.some(c => c.id === previous)) select.value = previous;
-    get("catalogue-count").textContent = `${visible.length} composants sur ${A.catalog.components.length}`;
+    get("catalogue-count").textContent = `${A.Model.quantity(visible.length, "composant")} sur ${A.catalog.components.length}`;
     catalogPreview();
   }
   // Aperçu d’un composant avant insertion : une composition jetable d’un seul bloc, jamais enregistrée.

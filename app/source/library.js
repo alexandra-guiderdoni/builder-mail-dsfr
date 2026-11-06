@@ -43,7 +43,7 @@
   function refresh() {
     welcome();
     const labels = new Map(A.UI.documentLabels());
-    get("newsletter-list").innerHTML = A.library.documents.map(doc => `<li class="fr-col-12 fr-col-md-6" data-document="${esc(doc.id)}"><div class="app-panel"><h3><button class="fr-btn fr-btn--tertiary-no-outline" data-library-action="open" aria-label="Ouvrir ${esc(labels.get(doc.id))}">${esc(labels.get(doc.id))}</button></h3><p>${esc(doc.subject || "Sans objet")} · ${doc.blocks.length} blocs${doc.id === A.library.activeId ? " · Newsletter ouverte" : ""}</p><div class="actions">${[["rename", "Renommer"], ["duplicate", "Dupliquer"], ["export", "Exporter"], ["remove", "Supprimer"]].map(([action, label]) => `<button class="fr-btn fr-btn--secondary" data-library-action="${action}" aria-label="${label} la newsletter ${esc(labels.get(doc.id))}">${label}</button>`).join("")}</div></div></li>`).join("");
+    get("newsletter-list").innerHTML = A.library.documents.map(doc => `<li class="fr-col-12 fr-col-md-6" data-document="${esc(doc.id)}"><div class="app-panel"><h3><button class="fr-btn fr-btn--tertiary-no-outline" data-library-action="open" aria-label="Ouvrir ${esc(labels.get(doc.id))}">${esc(labels.get(doc.id))}</button></h3><p>${esc(doc.subject || "Sans objet")} · ${A.Model.quantity(doc.blocks.length, "bloc")}${doc.id === A.library.activeId ? " · Newsletter ouverte" : ""}</p><div class="actions">${[["rename", "Renommer"], ["duplicate", "Dupliquer"], ["export", "Exporter"], ["remove", "Supprimer"]].map(([action, label]) => `<button class="fr-btn fr-btn--secondary" data-library-action="${action}" aria-label="${label} la newsletter ${esc(labels.get(doc.id))}">${label}</button>`).join("")}</div></div></li>`).join("");
     get("resume-document").textContent = `Reprendre « ${labels.get(A.doc().id)} »`;
   }
   function focusRow(id, action = "open") {
@@ -82,7 +82,7 @@
   }
   function ask(kind, id) {
     A.State.guard(); const doc = find(id), removing = kind === "remove";
-    currentDialog = {kind, id, index: A.library.documents.findIndex(d => d.id === id)};
+    currentDialog = {kind, id, index: A.library.documents.findIndex(d => d.id === id), opener: document.activeElement};
     get("library-dialog-title").textContent = removing ? `Supprimer « ${new Map(A.UI.documentLabels()).get(doc.id)} » ?` : "Renommer la newsletter";
     get("library-dialog-description").textContent = removing ? "Cette newsletter sera retirée de ce navigateur. Les fichiers déjà exportés restent conservés." : "Le nom change dans Mes newsletters ; l’objet du courriel reste conservé.";
     get("library-name-field").hidden = removing; get("library-name").disabled = removing;
@@ -119,7 +119,10 @@
   get("library-dialog").addEventListener("close", () => {
     if (!currentDialog) return;
     if (currentDialog.kind === "item") { currentDialog.opener?.focus(); return; }
-    const exists = A.library.documents.some(d => d.id === currentDialog.id), fallback = A.library.documents[Math.min(currentDialog.index, A.library.documents.length - 1)].id;
+    const exists = A.library.documents.some(d => d.id === currentDialog.id);
+    // Dans l’éditeur, si la newsletter existe toujours (suppression annulée, renommage), le focus revient au bouton qui a ouvert la fenêtre (RGAA 7.1).
+    if (exists && !get("editor-page").hidden && currentDialog.opener?.isConnected) { currentDialog.opener.focus(); return; }
+    const fallback = A.library.documents[Math.min(currentDialog.index, A.library.documents.length - 1)].id;
     focusRow(exists ? currentDialog.id : fallback, exists ? currentDialog.kind : "open");
   });
   get("library-form").addEventListener("submit", async event => {

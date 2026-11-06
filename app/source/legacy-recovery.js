@@ -85,6 +85,6 @@
     title.focus(); return true;
   }
   function close() { current = undefined; get("legacy-url-recovery")?.remove(); get("workspace").hidden = false; }
-  const summary = () => current ? `${current.plan.library.documents.length} newsletters, ${current.plan.library.templates.length} modèles et ${current.plan.library.identities.length} identités à récupérer ; ${current.plan.links.length} adresse${current.plan.links.length > 1 ? "s" : ""} à corriger.` : "";
+  const summary = () => current ? `${M.quantity(current.plan.library.documents.length, "newsletter")}, ${M.quantity(current.plan.library.templates.length, "modèle")} et ${M.quantity(current.plan.library.identities.length, "identité")} à récupérer ; ${M.quantity(current.plan.links.length, "adresse")} à corriger.` : "";
   A.LegacyRecovery = Object.freeze({inspect, offer, close, summary, pending: () => !!current});
 })();

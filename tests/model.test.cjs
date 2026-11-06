@@ -152,3 +152,11 @@ test('la copie sépare les conteneurs ; une image acceptée ne dispense pas de c
   }
   assert.equal(M.library(lib), lib);
 });
+
+test('quantity : singulier pour un élément, pluriel pour zéro et au-delà', () => {
+  assert.equal(M.quantity(0, 'bloc'), '0 blocs');
+  assert.equal(M.quantity(1, 'bloc'), '1 bloc');
+  assert.equal(M.quantity(2, 'bloc'), '2 blocs');
+  assert.equal(M.quantity(1, 'adresse HTTPS abrégée', 'adresses HTTPS abrégées'), '1 adresse HTTPS abrégée');
+  assert.equal(M.quantity(3, 'adresse HTTPS abrégée', 'adresses HTTPS abrégées'), '3 adresses HTTPS abrégées');
+});

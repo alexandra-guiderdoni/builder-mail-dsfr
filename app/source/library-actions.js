@@ -149,7 +149,11 @@
     "copy": A.Files.copy,
     "example-json": () => { A.State.guard(); A.Files.json(M.create("Exemple de newsletter", [5, 19, 40]), "exemple.courriel.json"); A.notice("Exemple de fichier de newsletter proposé au téléchargement. Votre newsletter actuelle est conservée."); },
     "json-import": async () => {
-      const incoming = await A.Imports.prepare(get("json-input").value), merged = A.Imports.merge(A.library, incoming), ticket = A.State.noticeTicket();
+      // Contenu refusé (RGAA 11.10) : l’erreur est rattachée au champ, qui reprend le focus ; l’annonce précédente est effacée.
+      const input = get("json-input"); let incoming, merged;
+      try { incoming = await A.Imports.prepare(input.value); merged = A.Imports.merge(A.library, incoming); }
+      catch (cause) { A.UI.fieldError(input, cause.message); A.notice(""); input.focus(); throw cause; }
+      A.UI.fieldError(input, ""); const ticket = A.State.noticeTicket();
       return A.State.change(lib => { Object.assign(lib, merged); A.State.withoutStarter(lib); }).then(async () => { await A.Library.open(A.library.activeId); A.notice(`Newsletter ou sauvegarde ajoutée. Les éléments existants sont conservés.${A.Imports.upgradedNote(incoming)}`, ticket); });
     }
   };

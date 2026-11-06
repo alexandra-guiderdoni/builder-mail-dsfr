@@ -19,7 +19,7 @@ test('Dupliquer et Retirer nomment le bloc ou la composition dans leur intitulé
     const {page} = await open(browser);
     await click(page, '[data-select] >> nth=1');
     const names = scoped(await buttons(page));
-    for (const expected of ['Dupliquer le bloc', 'Retirer le bloc', 'Dupliquer la newsletter', 'Retirer la newsletter'])
+    for (const expected of ['Dupliquer le bloc', 'Retirer le bloc', 'Dupliquer la newsletter', 'Supprimer la newsletter'])
       assert.equal(names.filter(n => n === expected).length, 1, `${expected} attendu une fois dans ${JSON.stringify(names)}`);
     assert(!names.includes('Dupliquer') && !names.includes('Retirer'), `Intitulé sans objet dans ${JSON.stringify(names)}`);
     assert.equal(new Set(names).size, names.length, `Intitulés en double dans ${JSON.stringify(names)}`);

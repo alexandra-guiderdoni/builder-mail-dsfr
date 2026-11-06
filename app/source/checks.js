@@ -158,7 +158,7 @@
     const esc = A.Render.escape, copy = action === "copy";
     get("check-dialog-title").textContent = copy ? "Vérifier avant de copier" : "Vérifier avant de télécharger";
     get("check-dialog-description").textContent = `${list.length} point${list.length > 1 ? "s" : ""} à vérifier. Ces avertissements ne bloquent pas : corrigez le bloc concerné ou poursuivez.`;
-    get("check-list").innerHTML = list.map((w, i) => `<li><p>${esc(w.message)}</p><button class="fr-btn fr-btn--tertiary" type="button" data-check-index="${i}">Aller au bloc ${A.doc().blocks.findIndex(b => b.id === w.block) + 1}</button></li>`).join("");
+    get("check-list").innerHTML = list.map((w, i) => `<li><p id="check-message-${i}">${esc(w.message)}</p><button class="fr-btn fr-btn--tertiary" type="button" data-check-index="${i}" aria-describedby="check-message-${i}">Aller au bloc ${A.doc().blocks.findIndex(b => b.id === w.block) + 1}</button></li>`).join("");
     get("check-confirm").textContent = copy ? "Copier quand même" : "Télécharger quand même";
     return new Promise((resolve, reject) => {
       const release = A.Preview.suspend();

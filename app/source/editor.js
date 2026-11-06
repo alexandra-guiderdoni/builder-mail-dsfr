@@ -109,8 +109,8 @@
       } else if (actionName === "remove") {
         if (selected) {
           if (!A.UI.focusBlock(selected.id)) editor.querySelector("textarea,input")?.focus();
-          A.notice(`Bloc ${name} retiré. « Annuler le retrait » le rétablit à sa place. Bloc «\u00a0${A.UI.blockName(selected)}\u00a0» sélectionné, ${A.UI.blockPlace(selected.id)}.`);
-        } else { catalogue.focus(); A.notice(`Bloc ${name} retiré. « Annuler le retrait » le rétablit à sa place. La newsletter ne contient plus de bloc\u00a0: ajoutez un composant depuis le catalogue.`); }
+          A.notice(`Bloc ${name} retiré. « Annuler le retrait du bloc » le rétablit à sa place. Bloc «\u00a0${A.UI.blockName(selected)}\u00a0» sélectionné, ${A.UI.blockPlace(selected.id)}.`);
+        } else { catalogue.focus(); A.notice(`Bloc ${name} retiré. « Annuler le retrait du bloc » le rétablit à sa place. La newsletter ne contient plus de bloc\u00a0: ajoutez un composant depuis le catalogue.`); }
       } else {
         const links = selected?.additionalLinks;
         const target = (actionName === "add-footer-link" && get(`field-footer-url-${links.length - 1}`)) || editor.querySelector("textarea,input") || catalogue;
@@ -127,12 +127,15 @@
     const next = M.copy(A.library);
     try {
       if (input.hasAttribute("data-link-label") && !input.value.trim()) throw new Error("Renseignez l’intitulé du lien.");
+      if (input.id === "document-name" && !input.value.trim()) throw new Error("Renseignez le nom de la newsletter.");
       mutator(next); M.library(next); A.invalid.delete(input.id); A.UI.fieldError(input, "");
       A.State.change(mutator, false, true); A.UI.selections(); A.UI.blockList();
     } catch (cause) { A.invalid.add(input.id); A.UI.fieldError(input, cause.message); A.error(`${cause.message} Ce champ n’est pas enregistré.`); }
   }
   get("document-name").addEventListener("input", event => edit(event.target, lib => { lib.documents.find(d => d.id === lib.activeId).name = event.target.value; }));
   get("subject").addEventListener("input", event => edit(event.target, lib => { lib.documents.find(d => d.id === lib.activeId).subject = event.target.value; }));
+  // Une nouvelle saisie retire le signalement d’un JSON refusé.
+  get("json-input").addEventListener("input", event => A.UI.fieldError(event.target, ""));
   const isUrlInput = input => input.type === "url" && (input.dataset.field || input.hasAttribute("data-source") || input.dataset.footerLinkField === "url");
   function urlCheck(input, id) {
     const block = A.doc().blocks.find(b => b.id === id), footer = input.dataset.footerLinkField === "url" || (!input.hasAttribute("data-source") && M.component(block.component).family === "Pieds de page");

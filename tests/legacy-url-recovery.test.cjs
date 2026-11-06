@@ -53,3 +53,9 @@ test('#193 : ancien export refusé avec les emplacements à corriger, sans réin
   block.values[field(block)] = 'https://exemple.invalid/destination-choisie';
   assert.deepEqual(I.parse(JSON.stringify(value)).value, value);
 });
+
+test('une seule adresse abrégée : message au singulier', () => {
+  const value = library(), block = value.documents[0].blocks[0];
+  block.values[field(block)] = RAW;
+  assert.throws(() => I.parse(JSON.stringify(value)), error => /contenant 1 adresse HTTPS abrégée\./.test(error.message));
+});

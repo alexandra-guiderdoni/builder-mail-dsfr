@@ -2,6 +2,8 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
+const {execFileSync} = require('node:child_process');
+const catalog = JSON.parse(execFileSync('python3', ['-c', 'import json;from scripts.catalogue import compile_catalogue;print(json.dumps(compile_catalogue()))'], {encoding: 'utf8'}));
 
 function ui(documents, activeId = documents[0].id) {
   const nodes = new Map();
@@ -12,10 +14,11 @@ function ui(documents, activeId = documents[0].id) {
   };
   const escape = value => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;');
   const A = {library: {documents, activeId, templates: [], identities: []},
-    doc: () => documents.find(d => d.id === activeId), Render: {escape}, Model: {}, State: {guard() {}}, error() {}};
+    doc: () => documents.find(d => d.id === activeId), Render: {escape}, catalog, State: {guard() {}}, error() {}};
   const scope = {MailBuilder: A, document: {getElementById: get, fonts: {ready: {then() {}}}}, ResizeObserver: class {observe() {}}, matchMedia: () => ({matches: false, addEventListener() {}}), setTimeout, clearTimeout};
   scope.window = scope;
-  for (const f of ['app/source/view.js', 'app/source/library.js']) vm.runInNewContext(fs.readFileSync(f, 'utf8'), scope, {filename: f});
+  // Le vrai modèle fournit les libellés et accords ; le reste de l’interface est simulé.
+  for (const f of ['app/source/model.js', 'app/source/view.js', 'app/source/library.js']) vm.runInNewContext(fs.readFileSync(f, 'utf8'), scope, {filename: f});
   return {A, get};
 }
 const doc = (id, name) => ({id, name, subject: 'Même objet', blocks: []});
@@ -71,4 +74,11 @@ test('compteur : singulier pour un seul élément, pluriel au-delà', () => {
   assert.equal(count([doc('a', 'Une')]), '1 newsletter · 0 modèles · 0 identités');
   assert.equal(count([doc('a', 'Une')], {templates: [doc('t', 'Modèle')], identities: [doc('i', 'Identité')]}), '1 newsletter · 1 modèle · 1 identité');
   assert.equal(count([doc('a', 'Une'), doc('b', 'Deux')], {templates: [doc('t', 'A'), doc('u', 'B')], identities: [doc('i', 'A'), doc('j', 'B')]}), '2 newsletters · 2 modèles · 2 identités');
+});
+
+test('nombre de blocs au singulier dans le résumé et sur la carte de la newsletter', () => {
+  const one = {...doc('a', 'Courte'), blocks: [{id: 'b1', component: 'mail-02', values: {}}]};
+  const h = ui([one]); h.A.Files = {staleWeight() {}};
+  h.A.UI.summary(); assert.equal(h.get('composition-summary').textContent, '1 bloc dans « Courte »');
+  h.A.UI.selections(); assert.match(h.get('newsletter-list').innerHTML, / · 1 bloc(?!s)/);
 });

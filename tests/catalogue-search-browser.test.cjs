@@ -38,6 +38,7 @@ test('la recherche ignore accents, casse, tirets et apostrophes, et reconnaît l
   assert.equal(await page.locator('#catalogue-count').textContent(), '0 composants sur 52');
   const narrowed = await search(page, 'bouton secondaire');
   assert.deepEqual(narrowed, ['mail-41']);
+  assert.equal(await page.locator('#catalogue-count').textContent(), '1 composant sur 52');
 }));
 
 test('un aperçu du composant choisi précède l’insertion et ne modifie pas la composition', () => session(async ({page}) => {

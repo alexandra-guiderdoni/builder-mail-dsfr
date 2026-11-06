@@ -158,6 +158,8 @@
   const remoteBlocks = values => values.some(b => b.remoteImages && Object.keys(b.remoteImages).length);
   const imageSource = (block, key) => block.remoteImages?.[key] ?? block.values[key];
   // Nom affiché d’un bloc : un article dont l’image est retirée devient « Article sans image » partout où il est désigné.
+  // Nombre suivi de son nom accordé : singulier pour un élément, pluriel pour zéro et au-delà.
+  const quantity = (n, singular, plural = `${singular}s`) => `${n} ${n === 1 ? singular : plural}`;
   const blockLabel = block => block.component === "mail-31" && !imageSource(block, "f0") ? "Article sans image" : component(block.component).label;
   function localImage(block, key, value) {
     block.values[key] = value;
@@ -209,5 +211,5 @@
     component(value.component).fields.filter(f => f.type === "text").forEach((f, i) => { if (strings[i] !== undefined) value.values[f.key] = strings[i]; });
     return value;
   }
-  A.Model = Object.freeze({copy, document, library, block, blocks, component, image, imageSource, blockLabel, localImage, versions, url, checkUrl, urlMessages: URL_MESSAGES, id, createBlock, create, clone, hasDate, uniqueName, derive, initial, setTexts});
+  A.Model = Object.freeze({copy, document, library, block, blocks, component, image, imageSource, blockLabel, quantity, localImage, versions, url, checkUrl, urlMessages: URL_MESSAGES, id, createBlock, create, clone, hasDate, uniqueName, derive, initial, setTexts});
 })();

@@ -38,7 +38,7 @@
       try { return normalized("library", M.copy(M.library(value))); }
       catch (cause) {
         const legacy = A.LegacyRecovery?.inspect(value);
-        if (legacy) throw new Error(`Ancienne sauvegarde contenant ${legacy.links.length} adresses HTTPS abrégées. Le fichier original et vos newsletters actuelles restent inchangés. Corrigez les destinations dans une copie du fichier avant de l’importer : ${legacy.links.map(link => `${link.label} (${link.path.join(".")})`).join(" ; ")}. Aucune adresse ne sera complétée automatiquement.`);
+        if (legacy) throw new Error(`Ancienne sauvegarde contenant ${M.quantity(legacy.links.length, "adresse HTTPS abrégée", "adresses HTTPS abrégées")}. Le fichier original et vos newsletters actuelles restent inchangés. Corrigez les destinations dans une copie du fichier avant de l’importer : ${legacy.links.map(link => `${link.label} (${link.path.join(".")})`).join(" ; ")}. Aucune adresse ne sera complétée automatiquement.`);
         throw cause;
       }
     }

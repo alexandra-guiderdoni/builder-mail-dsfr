@@ -97,7 +97,7 @@
   async function copy() {
     A.State.guard();
     A.Render.assertOutput(A.doc());
-    if (!navigator.clipboard?.write || !window.ClipboardItem) throw new Error("La copie enrichie est indisponible ici. Téléchargez le mail HTML pour sa reprise sur votre poste.");
+    if (!navigator.clipboard?.write || !window.ClipboardItem) throw new Error("La copie enrichie est indisponible ici. Utilisez « Télécharger le HTML » pour reprendre le courriel sur votre poste.");
     // Le poids affiché est celui du HTML remis au presse-papiers ; une annonce de copie précédente ne survit pas à un échec.
     const html = A.Render.clipboardHtml(A.doc()), result = A.Render.weightDetails(html, A.doc());
     // Le builder et SNUM exposent un jeton pour préserver un retour plus récent pendant la copie.

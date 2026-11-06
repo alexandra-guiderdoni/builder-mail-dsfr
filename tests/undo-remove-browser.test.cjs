@@ -40,6 +40,7 @@ test('annuler le dernier retrait restaure le bloc avec image à sa place, sans e
     const button = page.locator('#undo-remove');
     assert.equal(await button.isVisible(), true, 'Le retrait doit proposer « Annuler le retrait ».');
     assert.equal(await button.textContent(), `Annuler le retrait du bloc ${g('Article avec vignette et lien')}`);
+    assert.match(await page.locator('#notice').textContent(), /«\sAnnuler le retrait du bloc\s» le rétablit/, 'le message cite le libellé exact du bouton');
     assert.ok((await page.locator('#notice').textContent()).startsWith(`Bloc ${g('Article avec vignette et lien')} retiré.`));
 
     await selectBlock(page, paragraph.id);

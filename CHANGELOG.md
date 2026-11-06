@@ -1,10 +1,23 @@
 # Historique des livraisons
 
+## 6 novembre 2026 - Préaudit RGAA et ses cinq corrections
+
+- **Préaudit RGAA 4.1.2 :** `docs/accessibilite/preaudit-20261106/` couvre 21 états de la version web sous Chromium. axe ne relève aucune violation sur 17 analyses, et le validateur HTML ne trouve aucune erreur. Le dossier ne vaut ni conformité ni taux : il donne un statut provisoire par critère et liste ce qui reste à juger par une personne. Il a relevé cinq écarts mineurs, corrigés ci-dessous. Le test `preaudit-rgaa` les couvre sous Chromium, Firefox et WebKit.
+- **Nom de newsletter vide (11.11) :** le message sous le champ était « Identifiant et nom de newsletter requis. », un texte de validation interne. Il devient « Renseignez le nom de la newsletter. ».
+- **Catalogue avec le texte à 200 % (10.4) :** les noms longs de « Composant et variante » étaient coupés. Ils passent désormais à la ligne. Firefox, qui ne permet pas ce retour à la ligne dans une liste, garde un défilement horizontal.
+- **Focus après une suppression annulée (7.1) :** dans l’éditeur, annuler « Supprimer la newsletter », par le bouton ou par Échap, renvoyait le focus sur le titre « Votre newsletter ». Il revient désormais au bouton, comme dans les autres fenêtres de confirmation.
+- **JSON refusé (11.10) :** l’erreur était affichée seulement en haut de page. Elle est maintenant rattachée au champ « Contenu d’une newsletter ou d’une sauvegarde », qui est marqué invalide et reprend le focus. L’annonce précédente est effacée, et une nouvelle saisie retire le signalement.
+- **« Aller au bloc » dans « Vérifier avant de copier » (11.9) :** chaque bouton est maintenant décrit par son avertissement. Deux boutons « Aller au bloc 1 » ne se confondent plus au lecteur d’écran.
+
 ## 5 novembre 2026 - Guide de prise en main, noms de blocs et compteur
 
 - **Guide de prise en main :** `docs/PRISE-EN-MAIN.md` mène en cinq étapes, avec captures, de l’exemple « Lettre d’information » au courriel collé dans la messagerie, puis rappelle l’export et les cas fréquents. Le README y renvoie. Les captures sont refaites par `node scripts/captures_prise_en_main.cjs`, sur la version web avec un profil vierge. Le test `prise-en-main` vérifie que chaque libellé cité entre « » existe dans la version web construite et que chaque capture existe.
 - **Nom des blocs dans les messages :** un article dont l’image est retirée s’appelle « Article sans image » dans la liste des blocs, mais « Article avec vignette et lien » dans « Vérifier avant de copier », dans l’erreur d’intitulé de lien manquant et dans le conseil de poids du courriel. Un utilisateur pouvait ne pas reconnaître son bloc. Le nom affiché vient désormais d’une seule fonction du modèle, `blockLabel`, utilisée partout où un bloc est désigné.
 - **Compteur au singulier :** « 1 newsletters » devient « 1 newsletter », de même pour un modèle et une identité. Le pluriel reste à partir de deux, et à zéro comme avant.
+- **Relecture du vocabulaire :** les 542 textes de l’interface, les citations de libellés et les 93 libellés de champs du catalogue ont été relus.
+  - Accords : « 1 bloc dans… », « 1 composant sur 52 », la carte d’une newsletter, le résumé de récupération et « 1 adresse HTTPS abrégée » s’accordent désormais au singulier. Ils passent tous par une seule fonction du modèle, `quantity`.
+  - Libellés cités : le message après un retrait cite le bouton exact, « Annuler le retrait du bloc ».
+  - Vocabulaire : dans l’éditeur, le bouton de suppression d’une newsletter s’appelle « Supprimer la newsletter », comme sur sa carte et dans la fenêtre de confirmation. « Téléchargez le mail HTML » devient « Utilisez « Télécharger le HTML » pour reprendre le courriel sur votre poste ».
 
 ## 5 novembre 2026 - Voir le bloc modifié dans l’aperçu (#211), libellé des champs image sous VoiceOver (#218)
 

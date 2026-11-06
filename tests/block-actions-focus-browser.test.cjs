@@ -106,7 +106,7 @@ test('Retirer met le focus sur le bloc voisin, ou sur le catalogue quand il n’
     assert.equal(focus.select, following.id, 'Retirer doit cibler le bloc suivant dans la liste.');
     assert.equal(focus.pressed, 'true');
     await status(page);
-    assert.equal(await notice(page), `Bloc ${g(middle.label)} retiré. « Annuler le retrait » le rétablit à sa place. Bloc ${g(following.label)} sélectionné, en position 3 sur ${current.length - 1}.`);
+    assert.equal(await notice(page), `Bloc ${g(middle.label)} retiré. « Annuler le retrait du bloc » le rétablit à sa place. Bloc ${g(following.label)} sélectionné, en position 3 sur ${current.length - 1}.`);
 
     // Le dernier bloc retiré, la liste fermée : le bloc précédent reçoit le focus et la liste se rouvre.
     current = await blocks(page);
@@ -117,7 +117,7 @@ test('Retirer met le focus sur le bloc voisin, ou sur le catalogue quand il n’
     focus = await active(page);
     assert.equal(focus.select, previous.id, 'Retirer le dernier bloc doit cibler le bloc précédent.');
     assert.equal(await page.locator('#block-list').evaluate(e => e.closest('details').open), true);
-    assert.equal(await notice(page), `Bloc ${g(last.label)} retiré. « Annuler le retrait » le rétablit à sa place. Bloc ${g(previous.label)} sélectionné, en position ${current.length - 1} sur ${current.length - 1}.`);
+    assert.equal(await notice(page), `Bloc ${g(last.label)} retiré. « Annuler le retrait du bloc » le rétablit à sa place. Bloc ${g(previous.label)} sélectionné, en position ${current.length - 1} sur ${current.length - 1}.`);
 
     current = await blocks(page);
     while (current.length > 1) {
@@ -130,7 +130,7 @@ test('Retirer met le focus sur le bloc voisin, ou sur le catalogue quand il n’
     await click(page, '[data-block-action=remove]'); await saved(page);
     focus = await active(page);
     assert.equal(focus.tag, 'SUMMARY'); assert.equal(focus.text, 'Ajouter un composant');
-    assert.equal(await notice(page), `Bloc ${g(only.label)} retiré. « Annuler le retrait » le rétablit à sa place. La newsletter ne contient plus de bloc\u00a0: ajoutez un composant depuis le catalogue.`);
+    assert.equal(await notice(page), `Bloc ${g(only.label)} retiré. « Annuler le retrait du bloc » le rétablit à sa place. La newsletter ne contient plus de bloc\u00a0: ajoutez un composant depuis le catalogue.`);
     assert.deepEqual(observations.errors, []);
   } finally { await browser.close(); }
 });
