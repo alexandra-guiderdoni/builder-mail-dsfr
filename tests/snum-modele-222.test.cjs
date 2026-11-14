@@ -79,39 +79,43 @@ test('#222 : objet avec le jour de semaine, sans zéro initial, même sans jour 
   assert.equal(doc.blocks[2].values.f0.split('\n')[0], 'L’essentiel de l’actualité · 5 mars 2027');
 });
 
-// Identité réelle de la revue de presse (#223), identique dans les seize envois relevés : signature et liens mailto.
-const SIGNATURE = ['Équipe Communication / Événementiel du SNUM', 'Secteur relations bénéficiaires, gouvernance interne, communication',
-  'Bureau aide à la gouvernance et fonctions support (BGS)', 'Service du numérique (SNUM) du SG'];
+// Pied de la revue de presse repris du courriel réel (#223), sur la recette du modèle éditorial validé :
+// mention et signature dans un paragraphe, puis la phrase et les trois liens mailto tels quels.
+const CLOSING = 'Revue de presse · Diffusion deux fois par semaine\nDocument à usage interne\n\nÉquipe Communication / Événementiel du SNUM\n'
+  + 'Secteur relations bénéficiaires, gouvernance interne, communication\nBureau aide à la gouvernance et fonctions support (BGS)\nService du numérique (SNUM) du SG';
+const PROMPT = 'Vous souhaitez gérer votre abonnement ? Vous avez des questions ?';
 const LINKS = [
-  ['→ S’abonner', 'agents-snum-subscribe@listes.finances.gouv.fr', 'Je souhaite m\'abonner à la revue de presse du SNUM'],
-  ['→ Se désabonner', 'agents-snum-unsubscribe@listes.finances.gouv.fr', 'Je souhaite me désabonner de la revue de presse du SNUM'],
-  ['→ Nous contacter', 'gouvernance.sg-snum@finances.gouv.fr', 'Des questions sur la revue de presse du SNUM ?']
+  {url: "mailto:agents-snum-subscribe@listes.finances.gouv.fr?subject=Je%20souhaite%20m'abonner%20à%20la%20revue%20de%20presse%20du%20SNUM", label: '→ S’abonner'},
+  {url: 'mailto:agents-snum-unsubscribe@listes.finances.gouv.fr?subject=Je%20souhaite%20me%20désabonner%20de%20la%20revue%20de%20presse%20du%20SNUM', label: '→ Se désabonner'},
+  {url: 'mailto:gouvernance.sg-snum@finances.gouv.fr?subject=Des%20questions%20sur%20la%20revue%20de%20presse%20du%20SNUM%20?', label: '→ Nous contacter'}
 ];
 
-test('#223 : en-tête, introduction fixe, articles, signature, pied Marianne avec la mention, puis abonnements', () => {
+test('#223 : en-tête et pied du modèle éditorial validé, avec les textes et liens du courriel réel', () => {
   const doc = convert(packet(['ia', 'securite']));
-  assert.deepEqual(doc.blocks.map(b => b.component), ['mail-02', 'mail-05', 'mail-19', 'mail-17', 'mail-31', 'mail-17', 'mail-31', 'mail-39', 'mail-47', 'mail-50']);
+  assert.deepEqual(doc.blocks.map(b => b.component), ['mail-02', 'mail-05', 'mail-19', 'mail-17', 'mail-31', 'mail-17', 'mail-31', 'mail-19', 'mail-50']);
   assert.equal(doc.blocks[0].values.f4, 'Service du numérique (SNUM)');
   assert.equal(doc.blocks[1].values.f0, 'Revue de presse');
   assert.equal(doc.blocks[2].values.f0, 'L’essentiel de l’actualité · 16 mars 2027\n\nCi-dessous les principales informations à retenir de ces derniers jours.\n\nBonne lecture !');
-  const [signature, footer, links] = doc.blocks.slice(-3);
-  assert.deepEqual(['f0', 'f1', 'f2', 'f3'].map(key => signature.values[key]), SIGNATURE);
-  assert.equal(footer.values.f0, 'Revue de presse · Diffusion deux fois par semaine\nDocument à usage interne\n');
-  assert.equal(footer.values.f7, 'Service du numérique (SNUM)');
-  assert.equal(links.values.f0, 'Vous souhaitez gérer votre abonnement ? Vous avez des questions ?');
-  const actual = [{label: links.values.f2, url: links.values.f1}, ...links.additionalLinks].map(({label, url}) => {
-    const mail = new URL(url); return [label, mail.pathname, mail.searchParams.get('subject')];
-  });
-  assert.deepEqual(actual, LINKS);
+  const [closing, links] = doc.blocks.slice(-2);
+  assert.equal(closing.values.f0, CLOSING);
+  assert.equal(links.values.f0, PROMPT);
+  assert.deepEqual([{url: links.values.f1, label: links.values.f2}, ...links.additionalLinks], LINKS);
 });
 
-test('#223 : cadre bordé continu jusqu’au pied Marianne, mention dans la colonne de texte, abonnements sous le cadre', () => {
+test('#223 : rien d’autre que le courriel réel dans le pied, ni pied Marianne ni lien vers des données personnelles', () => {
+  const doc = convert(packet(['ia', 'securite'])), html = R.html(doc);
+  assert.deepEqual(doc.blocks.filter(b => ['mail-39', 'mail-47', 'mail-51'].includes(b.component)), []);
+  assert.doesNotMatch(html, /données personnelles|info\.gouv\.fr/);
+  const hrefs = [...html.matchAll(/href="([^"]*)"/g)].map(m => m[1].replace(/&#39;/g, "'"));
+  assert.deepEqual(hrefs.filter(href => !href.startsWith('https://exemple.invalid/')), LINKS.map(link => link.url));
+});
+
+test('#223 : cadre bordé continu jusqu’au paragraphe de clôture, mention dans la colonne de texte, actions sous le cadre', () => {
   const doc = convert(packet(['ia', 'securite'])), html = R.html(doc);
   const template = id => MailBuilder.catalog.components.find(c => c.id === id).template;
   const framed = id => /border-left:\s*1px #e5e5e5 solid/.test(template(id));
   const inside = doc.blocks.slice(2, -1).map(b => b.component);
   assert.deepEqual(inside.filter(id => !framed(id)), [], 'chaque bloc du corps porte les bordures latérales du cadre');
-  assert.equal(inside.at(-1), 'mail-47'); assert.match(template('mail-47'), /border-bottom:1px #e5e5e5 solid/);
   assert.equal(doc.blocks.at(-1).component, 'mail-50'); assert(!framed('mail-50'));
   // La mention suit la colonne de texte de 496 px des articles, et non le bord du cadre de 600 px.
   const at = html.indexOf('Revue de presse · Diffusion deux fois par semaine');

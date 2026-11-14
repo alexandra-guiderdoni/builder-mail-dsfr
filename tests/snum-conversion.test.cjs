@@ -28,7 +28,7 @@ test('SNUM : la paire synthétique convertie donne exactement la sortie attendue
 
 test('SNUM : archive à cinq thématiques, rubriques dans l’ordre du courriel, un article court par entrée', () => {
   const packet = JSON.parse(inputText), doc = MailBuilder.SnumAdapter.convert(inputText).document;
-  assert.deepEqual(doc.blocks.map(b => b.component), ['mail-02', 'mail-05', 'mail-19', 'mail-17', 'mail-31', 'mail-31', 'mail-17', 'mail-31', 'mail-17', 'mail-31', 'mail-17', 'mail-31', 'mail-17', 'mail-31', 'mail-31', 'mail-39', 'mail-47', 'mail-50']);
+  assert.deepEqual(doc.blocks.map(b => b.component), ['mail-02', 'mail-05', 'mail-19', 'mail-17', 'mail-31', 'mail-31', 'mail-17', 'mail-31', 'mail-17', 'mail-31', 'mail-17', 'mail-31', 'mail-17', 'mail-31', 'mail-31', 'mail-19', 'mail-50']);
   const articles = doc.blocks.filter(b => b.component === 'mail-31');
   assert.deepEqual(articles.map(b => b.values.f3), ['fictif-02', 'fictif-05', 'fictif-04', 'fictif-06', 'fictif-07', 'fictif-01', 'fictif-03'].map(id => packet.articles.find(a => a.id === id).url));
   for (const block of articles) {
@@ -37,15 +37,13 @@ test('SNUM : archive à cinq thématiques, rubriques dans l’ordre du courriel,
     assert.equal(block.values.f5, `${article.source}, ${article.publication_date_iso.split('-').reverse().join('/')}`);
     assert.equal(block.values.f6, article.takeaway);
   }
-  const privacy = doc.blocks.find(b => b.component === 'mail-47');
-  assert.equal(privacy.values.f2, 'Informations sur les données personnelles'); assert.equal(privacy.values.f1, M.createBlock(47).values.f1); assert.equal(privacy.values.f7, 'Service du numérique (SNUM)');
 });
 
 test('SNUM : le rendu garde les titres natifs et la ligne à retenir, sans fait, intérêt, mots-clés ni remarques', () => {
   const packet = JSON.parse(inputText), doc = MailBuilder.SnumAdapter.convert(inputText).document;
   const html = R.html(doc), plain = R.plain(doc), actual = headings(html);
-  // h1 titre, h2 par rubrique, h3 par article, puis h3 du contact de service.
-  assert.deepEqual(actual.map(h => h.level), [1, 2, 3, 3, 2, 3, 2, 3, 2, 3, 2, 3, 3, 3]);
+  // h1 titre, h2 par rubrique, h3 par article ; le paragraphe de clôture n’a pas de titre.
+  assert.deepEqual(actual.map(h => h.level), [1, 2, 3, 3, 2, 3, 2, 3, 2, 3, 2, 3, 3]);
   for (const article of packet.articles) {
     assert.match(html, new RegExp(`<h3[^>]*>\\s*<a[^>]*href="${article.url.replaceAll('.', '\\.')}"`));
     assert.equal(html.split(article.url).length - 1, 1);
@@ -55,14 +53,14 @@ test('SNUM : le rendu garde les titres natifs et la ligne à retenir, sans fait,
   assert(!html.includes('Mots-clés')); assert(!html.includes('Essentiel')); assert(!html.includes('Consulter la source'));
   for (const item of packet.watch) { assert(!plain.includes(item.title)); assert(!plain.includes(item.summary)); }
   assert.equal((R.html({...doc, blocks: doc.blocks.filter(b => b.component === 'mail-31')}).match(/<img\b/gi) || []).length, 0);
-  assert(html.includes('Informations sur les données personnelles'));
+  assert(!html.includes('données personnelles'));
 });
 
 test('SNUM : un seul article, une seule rubrique, pied complet', () => {
   const packet = JSON.parse(inputText);
   packet.articles = [packet.articles[1]];
   const result = MailBuilder.SnumAdapter.convert(JSON.stringify(packet)), doc = result.document;
-  assert.deepEqual(doc.blocks.map(b => b.component), ['mail-02', 'mail-05', 'mail-19', 'mail-17', 'mail-31', 'mail-39', 'mail-47', 'mail-50']);
+  assert.deepEqual(doc.blocks.map(b => b.component), ['mail-02', 'mail-05', 'mail-19', 'mail-17', 'mail-31', 'mail-19', 'mail-50']);
   assert.equal(doc.blocks[3].values.f0, '01. Intelligence artificielle (IA)');
   assert.equal(doc.blocks[4].values.f5, 'Gazette fictive de l’innovation, 12/03/2027');
   assert.equal(result.notice, '1 article · 1 rubrique. 2 remarques de collecte restent dans le paquet source, hors du courriel.');
