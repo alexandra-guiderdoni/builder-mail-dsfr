@@ -3,8 +3,8 @@
   "version": 1,
   "catalogue": "6ca8ea12a0dcbdd6e59f287b6435b06367b8a44c4278f74858e8cddd6e72af8b",
   "id": "sortie-attendue-46",
-  "name": "Revue de presse - mardi 16 mars 2027",
-  "subject": "Revue de presse - mardi 16 mars 2027",
+  "name": "Revue de presse du Service - Mardi 16 mars 2027",
+  "subject": "Revue de presse du Service - Mardi 16 mars 2027",
   "blocks": [
     {
       "id": "bloc-01",
@@ -22,7 +22,7 @@
       "id": "bloc-02",
       "component": "mail-05",
       "values": {
-        "f0": "Revue de presse - mardi 16 mars 2027"
+        "f0": "Revue de presse"
       },
       "source": ""
     },
@@ -30,7 +30,7 @@
       "id": "bloc-03",
       "component": "mail-19",
       "values": {
-        "f0": "Édition du mardi 16 mars 2027\n\nVeille du 2 mars 2027 au 15 mars 2027 · 7 articles sélectionnés, dont 2 essentiels."
+        "f0": "L’essentiel de l’actualité · 16 mars 2027\n\nCi-dessous les principales informations à retenir de ces derniers jours.\n\nBonne lecture !"
       },
       "source": ""
     },
@@ -38,7 +38,7 @@
       "id": "bloc-04",
       "component": "mail-17",
       "values": {
-        "f0": "01. Numérique"
+        "f0": "01. Intelligence artificielle (IA)"
       },
       "source": ""
     },
@@ -49,10 +49,10 @@
         "f0": "",
         "f1": "",
         "f2": "",
-        "f3": "https://lettre-demo.exemple.invalid/referentiel-formulaires",
-        "f4": "Un référentiel imaginaire d’écoconception pour les formulaires en ligne",
-        "f5": "Lettre de démonstration du numérique · 9 mars 2027",
-        "f6": "Le référentiel fictif propose vingt critères répartis en quatre familles.\nÀ retenir : Les critères les plus simples concernent le poids des pages et le nombre d’étapes.\nPour le SNUM : Vérifier lesquels de ces critères nos formulaires respectent déjà.\nMots-clés : écoconception · formulaires · sobriété · référentiel"
+        "f3": "https://gazette-fictive.exemple.invalid/2027/03/assistant-relecture",
+        "f4": "L’Agence fictive des registres expérimente un assistant de relecture",
+        "f5": "Gazette fictive de l’innovation, 12/03/2027",
+        "f6": "Les gains mesurés portent sur la relecture et non sur la rédaction initiale."
       },
       "source": ""
     },
@@ -63,10 +63,10 @@
         "f0": "",
         "f1": "",
         "f2": "",
-        "f3": "https://journal-demo.exemple.invalid/listes-diffusion",
-        "f4": "Messagerie : une administration fictive simplifie ses listes de diffusion",
-        "f5": "Journal de démonstration · 3 mars 2027",
-        "f6": "Trois cents listes inactives ont été archivées après un appel à confirmation.\nÀ retenir : Un propriétaire nommé par liste évite le retour des doublons.\nPour le SNUM : Piste pour le nettoyage annuel de nos propres listes.\nMots-clés : messagerie · listes de diffusion · gouvernance"
+        "f3": "https://observatoire-imaginaire.exemple.invalid/registre-algorithmes",
+        "f4": "Une collectivité inventée publie le registre de ses algorithmes",
+        "f5": "Observatoire imaginaire des données, 05/03/2027",
+        "f6": "Chaque fiche indique la finalité, les données utilisées et le recours possible."
       },
       "source": ""
     },
@@ -74,7 +74,7 @@
       "id": "bloc-07",
       "component": "mail-17",
       "values": {
-        "f0": "02. Intelligence artificielle (IA)"
+        "f0": "02. Achat public"
       },
       "source": ""
     },
@@ -85,59 +85,23 @@
         "f0": "",
         "f1": "",
         "f2": "",
-        "f3": "https://gazette-fictive.exemple.invalid/2027/03/assistant-relecture",
-        "f4": "L’Agence fictive des registres expérimente un assistant de relecture",
-        "f5": "Essentiel · Gazette fictive de l’innovation · 12 mars 2027",
-        "f6": "L’agence imaginaire a ouvert un essai de six semaines à quarante agents volontaires.\nÀ retenir : Les gains mesurés portent sur la relecture et non sur la rédaction initiale.\nPour le SNUM : Comparer ce protocole d’essai à nos propres critères d’évaluation.\nMots-clés : assistant de relecture · expérimentation · évaluation"
+        "f3": "https://achats-imaginaires.exemple.invalid/guide-reversibilite",
+        "f4": "Achats numériques : un guide fictif sur les clauses de réversibilité",
+        "f5": "Revue imaginaire des achats publics, 15/03/2027",
+        "f6": "La réversibilité se prépare dès la rédaction du cahier des charges."
       },
       "source": ""
     },
     {
       "id": "bloc-09",
-      "component": "mail-31",
+      "component": "mail-17",
       "values": {
-        "f0": "",
-        "f1": "",
-        "f2": "",
-        "f3": "https://observatoire-imaginaire.exemple.invalid/registre-algorithmes",
-        "f4": "Une collectivité inventée publie le registre de ses algorithmes",
-        "f5": "Observatoire imaginaire des données · 5 mars 2027",
-        "f6": "Le registre fictif décrit onze traitements et leur responsable.\nÀ retenir : Chaque fiche indique la finalité, les données utilisées et le recours possible.\nPour le SNUM : Un format de fiche réutilisable pour notre propre inventaire.\nMots-clés : transparence · algorithmes publics · registre"
+        "f0": "03. Ressources humaines et nominations"
       },
       "source": ""
     },
     {
       "id": "bloc-10",
-      "component": "mail-17",
-      "values": {
-        "f0": "03. Commande publique"
-      },
-      "source": ""
-    },
-    {
-      "id": "bloc-11",
-      "component": "mail-31",
-      "values": {
-        "f0": "",
-        "f1": "",
-        "f2": "",
-        "f3": "https://achats-imaginaires.exemple.invalid/guide-reversibilite",
-        "f4": "Achats numériques : un guide fictif sur les clauses de réversibilité",
-        "f5": "Essentiel · Revue imaginaire des achats publics · 15 mars 2027",
-        "f6": "Le guide inventé propose six clauses types et un calendrier de sortie.\nÀ retenir : La réversibilité se prépare dès la rédaction du cahier des charges.\nPour le SNUM : Utile pour les prochains renouvellements de nos marchés d’hébergement.\nMots-clés : réversibilité · clauses types · marchés publics"
-      },
-      "source": ""
-    },
-    {
-      "id": "bloc-12",
-      "component": "mail-17",
-      "values": {
-        "f0": "04. Ressources humaines"
-      },
-      "source": ""
-    },
-    {
-      "id": "bloc-13",
       "component": "mail-31",
       "values": {
         "f0": "",
@@ -145,16 +109,52 @@
         "f2": "",
         "f3": "https://bulletin-rh.exemple.invalid/parcours-donnee",
         "f4": "Un parcours imaginaire de formation aux métiers de la donnée",
-        "f5": "Bulletin fictif des ressources humaines · 10 mars 2027",
-        "f6": "Le parcours fictif compte quatre modules et un projet tutoré.\nÀ retenir : Le projet tutoré est jugé plus formateur que les modules théoriques.\nPour le SNUM : Inspirer le plan de formation de nos équipes techniques.\nMots-clés : formation · métiers de la donnée · compétences"
+        "f5": "Bulletin fictif des ressources humaines, 10/03/2027",
+        "f6": "Le projet tutoré est jugé plus formateur que les modules théoriques."
+      },
+      "source": ""
+    },
+    {
+      "id": "bloc-11",
+      "component": "mail-17",
+      "values": {
+        "f0": "04. Vie de Bercy"
+      },
+      "source": ""
+    },
+    {
+      "id": "bloc-12",
+      "component": "mail-31",
+      "values": {
+        "f0": "",
+        "f1": "",
+        "f2": "",
+        "f3": "https://chronique-inventee.exemple.invalid/mutualisation-outils",
+        "f4": "Une note fictive sur la mutualisation des outils collaboratifs",
+        "f5": "Chronique inventée des ministères, 11/03/2027",
+        "f6": "La mutualisation suppose un référent par direction."
+      },
+      "source": ""
+    },
+    {
+      "id": "bloc-13",
+      "component": "mail-17",
+      "values": {
+        "f0": "05. Numérique"
       },
       "source": ""
     },
     {
       "id": "bloc-14",
-      "component": "mail-17",
+      "component": "mail-31",
       "values": {
-        "f0": "05. Bercy"
+        "f0": "",
+        "f1": "",
+        "f2": "",
+        "f3": "https://lettre-demo.exemple.invalid/referentiel-formulaires",
+        "f4": "Un référentiel imaginaire d’écoconception pour les formulaires en ligne",
+        "f5": "Lettre de démonstration du numérique, 09/03/2027",
+        "f6": "Les critères les plus simples concernent le poids des pages et le nombre d’étapes."
       },
       "source": ""
     },
@@ -165,43 +165,54 @@
         "f0": "",
         "f1": "",
         "f2": "",
-        "f3": "https://chronique-inventee.exemple.invalid/mutualisation-outils",
-        "f4": "Une note fictive sur la mutualisation des outils collaboratifs",
-        "f5": "Chronique inventée des ministères · 11 mars 2027",
-        "f6": "La note imaginaire recense cinq outils et leurs usages croisés.\nÀ retenir : La mutualisation suppose un référent par direction.\nPour le SNUM : Point d’appui pour les échanges avec les directions métiers.\nMots-clés : mutualisation · outils collaboratifs · coordination"
+        "f3": "https://journal-demo.exemple.invalid/listes-diffusion",
+        "f4": "Messagerie : une administration fictive simplifie ses listes de diffusion",
+        "f5": "Journal de démonstration, 03/03/2027",
+        "f6": "Un propriétaire nommé par liste évite le retour des doublons."
       },
       "source": ""
     },
     {
       "id": "bloc-16",
-      "component": "mail-19",
+      "component": "mail-51",
       "values": {
-        "f0": "Sélection d’articles préparée à partir de la Collecte.\n\nL’équipe de veille du Service"
+        "f0": "Revue de presse · Diffusion deux fois par semaine\nDocument à usage interne"
       },
       "source": ""
     },
     {
       "id": "bloc-17",
+      "component": "mail-39",
+      "values": {
+        "f0": "L’équipe de la revue de presse",
+        "f1": "Secteur à renseigner",
+        "f2": "Bureau à renseigner",
+        "f3": "Service"
+      },
+      "source": ""
+    },
+    {
+      "id": "bloc-18",
       "component": "mail-50",
       "values": {
-        "f0": "Pour gérer votre réception ou nous écrire :",
+        "f0": "Vous souhaitez gérer votre abonnement ? Vous avez des questions ?",
         "f1": "mailto:abonnement@exemple.invalid?subject=Inscription",
-        "f2": "→ Recevoir la revue"
+        "f2": "→ S’abonner"
       },
       "source": "",
       "additionalLinks": [
         {
           "url": "mailto:desabonnement@exemple.invalid?subject=Desinscription",
-          "label": "→ Ne plus la recevoir"
+          "label": "→ Se désabonner"
         },
         {
-          "url": "mailto:veille@exemple.invalid?subject=Question",
-          "label": "→ Écrire à l’équipe"
+          "url": "mailto:contact@exemple.invalid?subject=Question",
+          "label": "→ Nous contacter"
         }
       ]
     },
     {
-      "id": "bloc-18",
+      "id": "49051ef2-115d-4f29-a452-4c37b34c42d4",
       "component": "mail-47",
       "values": {
         "f0": "Revue de presse du Service.",

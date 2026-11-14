@@ -33,7 +33,8 @@ test('SNUM autonome hors connexion : rubriques, JSON transporté, rendu identiqu
     assert.equal(converted.blocks.filter(b => b.component === 'mail-17').length, 5);
     assert.equal(converted.blocks.filter(b => b.component === 'mail-31').length, 5);
     const preview = converter.frameLocator('#preview');
-    for (const title of ['Numérique', 'Intelligence artificielle (IA)', 'Commande publique', 'Ressources humaines', 'Bercy']) assert((await preview.locator('body').textContent()).includes(title));
+    // Archive à cinq thématiques : libellés de la revue de presse (#222), Numérique conservé.
+    for (const title of ['Numérique', 'Intelligence artificielle (IA)', 'Achat public', 'Ressources humaines et nominations', 'Vie de Bercy']) assert((await preview.locator('body').textContent()).includes(title));
     const titleSize = await preview.locator('h3 a').filter({hasText: 'Article 0'}).evaluate(e => parseFloat(getComputedStyle(e).fontSize));
     assert.equal(titleSize, 18); assert(!(await preview.locator('body').textContent()).includes(packet.watch[0].summary));
     const projectPath = await download(converter, '#export-json', 'snum-generique.json');

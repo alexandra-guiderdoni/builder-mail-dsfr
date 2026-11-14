@@ -1,8 +1,15 @@
-/* Copie locale V519 : contrôle du jour ajouté pour #24 ; projet SNUM source intact. */
+/* Copie locale V519 : contrôle du jour ajouté pour #24 ; onze rubriques de la revue de presse (#222) ; projet SNUM source intact. */
 (() => {
   "use strict";
   const months = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
-  const labels = {numerique: "Numérique", ia: "Intelligence artificielle (IA)", commande: "Commande publique", rh: "Ressources humaines", bercy: "Bercy"};
+  // Ordre du courriel ; « numerique » ne sert plus qu’à relire les collectes archivées à cinq thématiques.
+  const rubrics = Object.freeze([
+    ["ia", "Intelligence artificielle (IA)"], ["administration", "Administration électronique"], ["dsi", "DSI, méthode, métier"],
+    ["economie", "Économie numérique"], ["infrastructure", "Infrastructure, réseaux"], ["securite", "Sécurité informatique"],
+    ["applications", "Applications et développement"], ["droit", "Droit, informatique et libertés"], ["commande", "Achat public"],
+    ["rh", "Ressources humaines et nominations"], ["bercy", "Vie de Bercy"], ["numerique", "Numérique"]
+  ].map(pair => Object.freeze(pair)));
+  const labels = Object.fromEntries(rubrics);
   const packetFields = ["schema_version", "edition_date", "edition_date_long", "window_start", "window_end", "articles", "watch"];
   const articleFields = ["id", "rubric", "title", "source", "publication_date_iso", "publication_date_long", "url", "fact", "keywords", "takeaway", "snum_interest", "essential"];
   const fail = message => { throw new Error(message); };
@@ -132,5 +139,5 @@
     });
   }
 
-  window.SnumMail = Object.freeze({parse, build});
+  window.SnumMail = Object.freeze({parse, build, rubrics});
 })();
