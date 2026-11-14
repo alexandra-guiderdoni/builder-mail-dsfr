@@ -1,5 +1,9 @@
 # Historique des livraisons
 
+## 14 novembre 2026 - Pied Marianne de la revue SNUM rétabli
+
+- **Cadre refermé :** sans pied de page, le cadre ombré s’arrêtait net après la signature. Le pied Marianne revient et le referme par son trait, avec le logo et « Service du numérique (SNUM) ». Il porte la mention de diffusion et, dans son lien obligatoire, le vrai lien « Nous contacter » des envois de l’équipe. La signature reste un paragraphe ; la gestion des abonnements suit, sous le cadre. Le test `#223 : cadre ombré et bordé continu` vérifie l’ombre et les bordures de chaque bloc du corps et le trait de fermeture.
+
 ## 14 novembre 2026 - Pied SNUM sur le modèle éditorial validé (#223, #224)
 
 - **Pied du modèle validé :** comme dans la recette du skill `newsletter-contribution`, un paragraphe réunit la mention de diffusion et la signature, à la place de la signature `mail-39` et du pied Marianne `mail-47`. Le lien « Informations sur les données personnelles », absent des envois de l’équipe, disparaît.

@@ -28,7 +28,7 @@ test('SNUM : la paire synthétique convertie donne exactement la sortie attendue
 
 test('SNUM : archive à cinq thématiques, rubriques dans l’ordre du courriel, un article court par entrée', () => {
   const packet = JSON.parse(inputText), doc = MailBuilder.SnumAdapter.convert(inputText).document;
-  assert.deepEqual(doc.blocks.map(b => b.component), ['mail-02', 'mail-05', 'mail-19', 'mail-17', 'mail-31', 'mail-31', 'mail-17', 'mail-31', 'mail-17', 'mail-31', 'mail-17', 'mail-31', 'mail-17', 'mail-31', 'mail-31', 'mail-19', 'mail-50']);
+  assert.deepEqual(doc.blocks.map(b => b.component), ['mail-02', 'mail-05', 'mail-19', 'mail-17', 'mail-31', 'mail-31', 'mail-17', 'mail-31', 'mail-17', 'mail-31', 'mail-17', 'mail-31', 'mail-17', 'mail-31', 'mail-31', 'mail-19', 'mail-47', 'mail-50']);
   const articles = doc.blocks.filter(b => b.component === 'mail-31');
   assert.deepEqual(articles.map(b => b.values.f3), ['fictif-02', 'fictif-05', 'fictif-04', 'fictif-06', 'fictif-07', 'fictif-01', 'fictif-03'].map(id => packet.articles.find(a => a.id === id).url));
   for (const block of articles) {
@@ -60,7 +60,7 @@ test('SNUM : un seul article, une seule rubrique, pied complet', () => {
   const packet = JSON.parse(inputText);
   packet.articles = [packet.articles[1]];
   const result = MailBuilder.SnumAdapter.convert(JSON.stringify(packet)), doc = result.document;
-  assert.deepEqual(doc.blocks.map(b => b.component), ['mail-02', 'mail-05', 'mail-19', 'mail-17', 'mail-31', 'mail-19', 'mail-50']);
+  assert.deepEqual(doc.blocks.map(b => b.component), ['mail-02', 'mail-05', 'mail-19', 'mail-17', 'mail-31', 'mail-19', 'mail-47', 'mail-50']);
   assert.equal(doc.blocks[3].values.f0, '01. Intelligence artificielle (IA)');
   assert.equal(doc.blocks[4].values.f5, 'Gazette fictive de l’innovation, 12/03/2027');
   assert.equal(result.notice, '1 article · 1 rubrique. 2 remarques de collecte restent dans le paquet source, hors du courriel.');
