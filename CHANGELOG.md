@@ -1,5 +1,11 @@
 # Historique des livraisons
 
+## 14 novembre 2026 - Pied SNUM sur le modèle éditorial validé (#223, #224)
+
+- **Pied du modèle validé :** comme dans la recette du skill `newsletter-contribution`, un paragraphe réunit la mention de diffusion et la signature, à la place de la signature `mail-39` et du pied Marianne `mail-47`. Le lien « Informations sur les données personnelles », absent des envois de l’équipe, disparaît.
+- **Textes et liens exacts :** les trois liens mailto sont repris caractère pour caractère du courriel d’origine, et la phrase de gestion des abonnements garde ses espaces insécables avant « ? ». Les intitulés « S’abonner », « Se désabonner » et « Nous contacter » prennent la forme du modèle validé : flèche et espaces insécables.
+- **En-tête (#224) :** aucun composant hors catalogue ; l’en-tête Marianne et le titre principal du modèle validé sont conservés.
+
 ## 14 novembre 2026 - Pied de la revue SNUM et identité réelle (#223)
 
 - **Cadre continu :** le texte de clôture et la gestion des abonnements, deux composants prévus sous le cadre, étaient placés au milieu du cadre bordé. Les bordures latérales s’interrompaient entre la signature et le pied Marianne, et la mention de diffusion s’alignait sur le bord du cadre au lieu de la colonne de texte. La mention passe dans le pied Marianne, alignée sur les articles ; la gestion des abonnements vient sous le cadre, comme dans le courriel de l’équipe. Le test `#223 : cadre bordé continu` vérifie que chaque bloc du corps porte les bordures du cadre et que la mention est dans la colonne de 496 px.

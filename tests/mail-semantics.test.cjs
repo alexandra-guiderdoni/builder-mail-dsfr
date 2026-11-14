@@ -17,8 +17,8 @@ test('SNUM : principal, rubriques et articles ont des titres natifs ; la ligne �
   const article=actual.findIndex(h=>h.text===packet.articles[0].title);
   assert(article>1);assert.equal(actual[article].level,3);assert(!actual.some(h=>h.level>3));
   assert(!actual.some(h=>packet.articles.some(a=>h.text===a.takeaway)));assert(R.html(doc).includes(packet.articles[0].takeaway));
-  // Principal, une partie par rubrique, un titre par article, puis le titre du contact de service.
-  assert.equal(actual.length,1+new Set(packet.articles.map(a=>a.rubric)).size+packet.articles.length+1);
+  // Principal, une partie par rubrique, un titre par article ; le paragraphe de clôture du modèle validé n’a pas de titre.
+  assert.equal(actual.length,1+new Set(packet.articles.map(a=>a.rubric)).size+packet.articles.length);
   assert.equal(JSON.stringify(doc),before);
 });
 
