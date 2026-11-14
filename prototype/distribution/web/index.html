@@ -1,7 +1,7 @@
 <!doctype html>
 <!-- PDG-LARGE-FILE-JUSTIFICATION: prototype distribué autonome, assemblé depuis des sources séparées ; scripts et images incorporés pour le double-clic hors connexion. -->
 <html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-z3mUto/rOUVFR1VINT0mrTDJ1E3Cx9XmGmp/V1D+2tQ='; style-src 'unsafe-inline'; img-src data: blob:; frame-src blob:; base-uri 'none'; form-action 'none'; connect-src 'self'; worker-src 'self'; manifest-src 'self'"><meta name="theme-color" content="#000091">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-qUK1/6nzWAf1xKaThikEh302mJ5iQxykj6TDrCov8OI='; style-src 'unsafe-inline'; img-src data: blob:; frame-src blob:; base-uri 'none'; form-action 'none'; connect-src 'self'; worker-src 'self'; manifest-src 'self'"><meta name="theme-color" content="#000091">
 <title>Builder de courriels DSFR - prototype de faisabilité</title><link rel="manifest" href="./manifest.webmanifest"><style>:root { color-scheme:light; font:100%/1.5 Arial,Helvetica,sans-serif; color:#161616; background:#f6f6f6; }
 * { box-sizing:border-box; }
 body { margin:0; }
@@ -67,11 +67,18 @@ small { font-size:.9rem; }
 <div role="tabpanel" id="walk-save" aria-labelledby="tab-save"><p>Chargez l’exemple, personnalisez son titre, sauvegardez et rouvrez le brouillon. Rechargez ensuite réellement la page pour distinguer stockage et mémoire.</p><div class="actions"><button data-action="demo">1. Charger l’exemple</button><button data-action="save">2. Sauvegarder maintenant</button><button data-action="restore">3. Relire le brouillon</button></div></div>
 <div role="tabpanel" id="walk-transport" aria-labelledby="tab-transport" hidden><p>Exportez la composition puis importez ce fichier dans un autre profil. Vérifiez les images. Le HTML est la sortie de diffusion ; l’envoi et la réception dans la messagerie restent une recette sur poste cible.</p><div class="actions"><button data-action="project">1. Exporter la composition</button><button data-action="mail">2. Exporter le courriel</button><button data-action="copy">3. Copier le courriel</button></div></div>
 <div role="tabpanel" id="walk-invalid" aria-labelledby="tab-invalid" hidden><p>Le format invalide doit être refusé avant tout remplacement de votre composition. Contrôlez le titre et le nombre de blocs après cette action.</p><div class="actions"><button data-action="invalid">Essayer un import invalide</button></div></div>
-</section></main><script>/* Copie locale V519 : contrôle du jour ajouté pour #24 ; projet SNUM source intact. */
+</section></main><script>/* Copie locale V519 : contrôle du jour ajouté pour #24 ; onze rubriques de la revue de presse (#222) ; projet SNUM source intact. */
 (() => {
   "use strict";
   const months = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
-  const labels = {numerique: "Numérique", ia: "Intelligence artificielle (IA)", commande: "Commande publique", rh: "Ressources humaines", bercy: "Bercy"};
+  // Ordre du courriel ; « numerique » ne sert plus qu’à relire les collectes archivées à cinq thématiques.
+  const rubrics = Object.freeze([
+    ["ia", "Intelligence artificielle (IA)"], ["administration", "Administration électronique"], ["dsi", "DSI, méthode, métier"],
+    ["economie", "Économie numérique"], ["infrastructure", "Infrastructure, réseaux"], ["securite", "Sécurité informatique"],
+    ["applications", "Applications et développement"], ["droit", "Droit, informatique et libertés"], ["commande", "Achat public"],
+    ["rh", "Ressources humaines et nominations"], ["bercy", "Vie de Bercy"], ["numerique", "Numérique"]
+  ].map(pair => Object.freeze(pair)));
+  const labels = Object.fromEntries(rubrics);
   const packetFields = ["schema_version", "edition_date", "edition_date_long", "window_start", "window_end", "articles", "watch"];
   const articleFields = ["id", "rubric", "title", "source", "publication_date_iso", "publication_date_long", "url", "fact", "keywords", "takeaway", "snum_interest", "essential"];
   const fail = message => { throw new Error(message); };
@@ -201,7 +208,7 @@ small { font-size:.9rem; }
     });
   }
 
-  window.SnumMail = Object.freeze({parse, build});
+  window.SnumMail = Object.freeze({parse, build, rubrics});
 })();
 
 /* Décodage natif partagé : imports et fichiers locaux, sans modification des données. */

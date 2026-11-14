@@ -19,8 +19,8 @@
       "copy": "snum-packet.js",
       "sha256": "c58ede03622a97bc2a48da6a330d20d19efa3d37669993e03b3a0481d17f084b",
       "sha256_scope": "amont historique : empreinte du fichier SNUM tel que copié à l’origine, avant adaptation",
-      "adapted_sha256": "ca834f805037a96bad381d488cf957bb9801a13201440eb5b5899f4a34ffd396",
-      "adaptation": "Copie locale adaptée pour #24 : contrôle du jour de semaine contre la date (UTC) et commentaire d’en-tête ; le projet SNUM source reste intact."
+      "adapted_sha256": "0c37d43c0f20d81a849a95b11093a97b6e35365bf38770e4c5b79496e29918ed",
+      "adaptation": "Copie locale adaptée pour #24 (contrôle du jour de semaine contre la date, UTC) et #222 (onze rubriques de la revue de presse, ancienne valeur numerique conservée, liste exportée) ; le projet SNUM source reste intact."
     }
   ],
   "adaptations": [

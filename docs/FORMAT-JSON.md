@@ -96,7 +96,7 @@ Ces contrôles ne redimensionnent aucune image et ne migrent aucun document : un
 
 ## Collecte SNUM séparée
 
-Ouvrir [snum.html](../app/distribution/snum.html), coller le paquet V519 ou le bloc complet de Collecte, puis convertir. La page crée une composition de ce même contrat : rubriques, titres d’articles, faits, enseignements, intérêt SNUM et mots-clés sont répartis en blocs. Les remarques de collecte restent hors du courriel.
+Ouvrir [snum.html](../app/distribution/snum.html), coller le paquet V519 ou le bloc complet de Collecte, puis convertir. La page crée une composition de ce même contrat : rubriques dans l’ordre de la revue de presse, puis par article son titre lié, sa source et sa date, et sa ligne à retenir. Le fait, l’intérêt SNUM, les mots-clés et les remarques de collecte restent hors du courriel. Rubriques acceptées : `ia`, `administration`, `dsi`, `economie`, `infrastructure`, `securite`, `applications`, `droit`, `commande`, `rh`, `bercy`, et `numerique` pour les collectes archivées ; toute autre valeur est refusée.
 
 Exporter la composition JSON puis l’importer dans le builder pour modifier l’identité, le contenu ou les blocs. Le rendu HTML utilise le même moteur dans les deux pages. Le paquet métier SNUM est analysé seulement par cette page dédiée ; le builder reçoit la composition générique.
 

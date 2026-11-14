@@ -1,5 +1,14 @@
 # Historique des livraisons
 
+## 14 novembre 2026 - Modèle SNUM au format de la revue de presse (#222)
+
+- **Onze rubriques :** la page SNUM accepte les rubriques de la revue de presse, dans l’ordre du courriel : Intelligence artificielle (IA), Administration électronique, DSI, méthode, métier, Économie numérique, Infrastructure, réseaux, Sécurité informatique, Applications et développement, Droit, informatique et libertés, Achat public, Ressources humaines et nominations, Vie de Bercy. Une collecte archivée à cinq thématiques reste convertible : « Numérique » vient après les onze. Toute autre rubrique est refusée. La liste est exportée par le parseur (`SnumMail.rubrics`) : l’adaptateur ne la recopie pas.
+- **Ordre fixe :** seules les rubriques non vides sont affichées, numérotées dans l’ordre du courriel, quel que soit l’ordre des articles dans le paquet. Auparavant, l’ordre d’apparition des articles décidait.
+- **Article court :** titre lié, « source, JJ/MM/AAAA », puis la ligne à retenir. Le fait, l’intérêt SNUM, les mots-clés et la mention « Essentiel » restent dans le paquet. Sur le paquet réel archivé le 14 novembre (25 articles), le courriel passe de 7 621 à 4 732 pixels de haut à 760 px de large, sans débordement à 375 px.
+- **Cadre de la revue :** objet « Revue de presse du <service> - <Jour> <J> <mois> <AAAA> », ligne « L’essentiel de l’actualité · date », introduction fixe, puis mention de diffusion, signature, gestion des abonnements et pied Marianne. L’identité reste fictive dans le dépôt (#223).
+- **Notice au singulier :** « 1 article · 1 rubrique », « 1 remarque de collecte reste ».
+- **Provenance :** empreinte adaptée de `prototype/reference/snum-packet.js` mise à jour ; distributions régénérées.
+
 ## 6 novembre 2026 - Préaudit RGAA et ses cinq corrections
 
 - **Préaudit RGAA 4.1.2 :** `docs/accessibilite/preaudit-20261106/` couvre 21 états de la version web sous Chromium. axe ne relève aucune violation sur 17 analyses, et le validateur HTML ne trouve aucune erreur. Le dossier ne vaut ni conformité ni taux : il donne un statut provisoire par critère et liste ce qui reste à juger par une personne. Il a relevé cinq écarts mineurs, corrigés ci-dessous. Le test `preaudit-rgaa` les couvre sous Chromium, Firefox et WebKit.

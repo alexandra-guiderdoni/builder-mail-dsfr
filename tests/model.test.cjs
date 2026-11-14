@@ -90,7 +90,8 @@ test('le convertisseur SNUM crée les rubriques et un bloc par article sans perd
   assert.equal(R.plain(doc).split(packet.articles[0].url).length - 1, 2);
   assert.equal(R.html(doc).split(packet.articles[0].url).length - 1, 2);
   assert(!R.plain(doc).includes(packet.watch[0].title)); assert(!R.html(doc).includes(packet.watch[0].summary));
-  for (const item of packet.articles) for (const key of ['fact', 'takeaway', 'snum_interest']) assert(R.plain(doc).includes(item[key]));
+  // Format de la revue de presse (#222) : seule la ligne à retenir passe dans le courriel.
+  for (const item of packet.articles) { assert(R.plain(doc).includes(item.takeaway)); for (const key of ['fact', 'snum_interest']) assert(!R.plain(doc).includes(item[key])); }
 });
 
 test('le schéma JSON documente les 52 composants et l’exemple est importable dans le builder générique', () => {
