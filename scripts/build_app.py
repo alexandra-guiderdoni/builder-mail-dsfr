@@ -107,12 +107,19 @@ def build():
         )
         + "font-src data:;connect-src 'self';worker-src 'self';manifest-src 'self'",
     )
+    # L'aperçu SNUM reprend le module d'aperçu du builder et son script de mesure : il prend la hauteur du courriel.
     snum_script = "\n".join(
         core
+        + [
+            "window.MailBuilder.previewMeasure = Object.freeze("
+            + measure_payload
+            + ");"
+        ]
         + [
             (ROOT / "prototype/reference/snum-packet.js").read_text(encoding="utf-8"),
             (ROOT / "app/snum/adapter.js").read_text(encoding="utf-8"),
             (SOURCE / "files.js").read_text(encoding="utf-8"),
+            (SOURCE / "preview.js").read_text(encoding="utf-8"),
             (ROOT / "app/snum/page.js").read_text(encoding="utf-8"),
         ]
     )
@@ -130,7 +137,10 @@ def build():
         .replace("@@SCRIPT@@", snum_script)
         .replace(
             "@@CSP@@",
-            csp.replace(digest, snum_digest) + "connect-src 'none';worker-src 'none'",
+            csp.replace(digest, snum_digest).replace(
+                "script-src ", f"script-src 'sha256-{measure_hash}' "
+            )
+            + "connect-src 'none';worker-src 'none'",
         )
     )
     manifest = {

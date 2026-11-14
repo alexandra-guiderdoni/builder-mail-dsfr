@@ -15,9 +15,12 @@ test('le bundle reste un script HTML complet et la CSP autorise les deux emprein
     assert.deepEqual(scriptPolicy.match(/sha256-([^']+)/g).sort(), ['sha256-' + hash(measure), 'sha256-' + hash(scripts[0][1])].sort());
     assert(html.includes('sandbox="allow-scripts"')); assert(!html.includes('allow-same-origin'));
   }
-  const snum = fs.readFileSync('app/distribution/snum.html', 'utf8');
-  assert(snum.includes('sandbox=""')); assert(!snum.includes('sha256-' + hash(measure)));
-  assert(!snum.includes('window.MailBuilder.previewMeasure'));
+  // L’aperçu SNUM reçoit le même script de mesure que le builder : il prend la hauteur du courriel, sans défilement interne.
+  const snum = fs.readFileSync('app/distribution/snum.html', 'utf8'), snumScripts = [...snum.matchAll(/<script>([\s\S]*?)<\/script>/g)];
+  assert.equal(snumScripts.length, 1); assert(snum.includes('window.MailBuilder.previewMeasure'));
+  assert(snum.includes('sandbox="allow-scripts"')); assert(!snum.includes('allow-same-origin'));
+  const snumPolicy = /(?:^|;)script-src ([^;]+)/.exec(/http-equiv="Content-Security-Policy" content="([^"]+)"/.exec(snum)[1])[1];
+  assert.deepEqual(snumPolicy.match(/sha256-([^']+)/g).sort(), ['sha256-' + hash(measure), 'sha256-' + hash(snumScripts[0][1])].sort());
 });
 
 
