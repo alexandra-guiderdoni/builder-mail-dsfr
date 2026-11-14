@@ -1,5 +1,11 @@
 # Historique des livraisons
 
+## 14 novembre 2026 - Pied de la revue SNUM et identité réelle (#223)
+
+- **Cadre continu :** le texte de clôture et la gestion des abonnements, deux composants prévus sous le cadre, étaient placés au milieu du cadre bordé. Les bordures latérales s’interrompaient entre la signature et le pied Marianne, et la mention de diffusion s’alignait sur le bord du cadre au lieu de la colonne de texte. La mention passe dans le pied Marianne, alignée sur les articles ; la gestion des abonnements vient sous le cadre, comme dans le courriel de l’équipe. Le test `#223 : cadre bordé continu` vérifie que chaque bloc du corps porte les bordures du cadre et que la mention est dans la colonne de 496 px.
+- **Identité réelle :** l’objet « Revue de presse du SNUM - <Jour> <J> <mois> <AAAA> », l’en-tête « Service du numérique (SNUM) », la signature de l’équipe sur quatre lignes et les trois liens mailto (S’abonner, Se désabonner, Nous contacter) reprennent ceux des seize envois relevés. L’identité fictive de #222 est retirée.
+- **Données personnelles :** le pied Marianne garde le lien du catalogue vers la politique de données personnelles ; les envois de l’équipe n’en portent pas.
+
 ## 14 novembre 2026 - Modèle SNUM au format de la revue de presse (#222)
 
 - **Onze rubriques :** la page SNUM accepte les rubriques de la revue de presse, dans l’ordre du courriel : Intelligence artificielle (IA), Administration électronique, DSI, méthode, métier, Économie numérique, Infrastructure, réseaux, Sécurité informatique, Applications et développement, Droit, informatique et libertés, Achat public, Ressources humaines et nominations, Vie de Bercy. Une collecte archivée à cinq thématiques reste convertible : « Numérique » vient après les onze. Toute autre rubrique est refusée. La liste est exportée par le parseur (`SnumMail.rubrics`) : l’adaptateur ne la recopie pas.
