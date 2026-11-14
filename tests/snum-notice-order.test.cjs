@@ -30,12 +30,14 @@ async function setup(t) {
     static revokeObjectURL(url) { objectURLs.delete(url); URL.revokeObjectURL(url); }
   }
   const scope = {console, URL: OwnedURL, URLSearchParams, Blob, TextEncoder, crypto: webcrypto, atob, btoa, performance,
-    setTimeout, clearTimeout, document: {getElementById: el}, navigator: {clipboard: {write(items) { const gate = deferred(); writes.push({items, ...gate}); return gate.promise; }}}};
+    setTimeout, clearTimeout, addEventListener() {}, ResizeObserver: class { observe() {} disconnect() {} },
+    document: {getElementById: el}, navigator: {clipboard: {write(items) { const gate = deferred(); writes.push({items, ...gate}); return gate.promise; }}}};
   scope.window = scope;
   scope.ClipboardItem = class { constructor(parts) { this.parts = parts; this.types = Object.keys(parts); } };
-  scope.MailBuilder = {catalog};
+  // L’aperçu réel (preview.js) est chargé comme dans la page ; seul son script de mesure, sans effet ici, est vide.
+  scope.MailBuilder = {catalog, previewMeasure: {source: '', hash: 'mesure-vide'}};
   const context = vm.createContext(scope);
-  for (const file of ['app/source/model.js', 'app/source/render.js', 'prototype/reference/snum-packet.js', 'app/snum/adapter.js', 'app/source/files.js']) {
+  for (const file of ['app/source/model.js', 'app/source/render.js', 'prototype/reference/snum-packet.js', 'app/snum/adapter.js', 'app/source/files.js', 'app/source/preview.js']) {
     vm.runInContext(fs.readFileSync(path.join(root, file), 'utf8'), context, {filename: file});
   }
   const A = scope.MailBuilder;
