@@ -1,6 +1,6 @@
 # Atelier autonome de courriels DSFR
 
-Statut : application et corrections implémentées ; qualification métier partielle. Les sections de faisabilité conservent le cadrage initial. Le [bilan de livraison au 1er novembre 2026](docs/ETAT-LIVRAISON.md) consolide l’état livré et les limites ; le [suivi des corrections](docs/SUIVI-CORRECTIONS.md) et la [recette](docs/RECETTE-APPLICATION.md) conservent leurs campagnes historiques.
+Statut : application et corrections implémentées ; qualification métier partielle. Les sections de faisabilité conservent le cadrage initial. Le [bilan de livraison](docs/ETAT-LIVRAISON.md) consolide l’état livré et les limites ; le [suivi des corrections](docs/SUIVI-CORRECTIONS.md) et la [recette](docs/RECETTE-APPLICATION.md) conservent leurs campagnes historiques.
 
 ## Résultat métier
 
@@ -21,7 +21,7 @@ Les deux parcours métier annoncés sont Windows avec Firefox vers Outlook insta
 | Images | Fichiers locaux incorporés ; choix facultatif d’une adresse HTTPS directe sur chaque champ image, avec repli local conservé et format v2 explicite (#192, décision du 28 octobre). |
 | Conservation | Bibliothèque locale, sauvegarde automatique, modèles et identités réutilisables ; export/import de fichiers de travail. |
 | Sorties | Copier le mail mis en forme et télécharger le HTML autonome. |
-| Accessibilité | Atteindre et démontrer 100 % des critères RGAA applicables sur l’échantillon audité ; aucun taux favorable déduit des seules sondes. Le [dossier courant](docs/accessibilite/css-20261023/RAPPORT.md) conserve preuves et qualifications manquantes. |
+| Accessibilité | Atteindre et démontrer 100 % des critères RGAA applicables sur l’échantillon audité ; aucun taux favorable déduit des seules sondes. La [campagne du 23 octobre](docs/accessibilite/css-20261023/RAPPORT.md) et le [préaudit du 6 novembre](docs/accessibilite/preaudit-20261106/RAPPORT.md) documentent les vérifications et leurs limites. |
 | Dépôt | Application séparée dans le dépôt existant ; provenance et version amont explicites. |
 
 ## Frontières impératives

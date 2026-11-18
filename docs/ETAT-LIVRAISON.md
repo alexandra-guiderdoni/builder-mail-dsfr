@@ -1,15 +1,35 @@
-# État de livraison au 1er novembre 2026
+# État de livraison au 18 novembre 2026
 
-Ce bilan concerne le code livré au commit `cbe93e3207d9ef94fc6940a99a7d0aa486e331cb`. Il consolide les résultats vérifiés ; les reçus et rapports datés conservent leur SHA et leur périmètre d’origine.
+La dernière version applicative publiée est `eed1667` (14 novembre). Les tests et le déploiement sur GitHub Pages ont réussi pour cette révision. [Exécution GitHub Actions](https://github.com/alexandra-guiderdoni/builder-mail-dsfr/actions/runs/43634651056)
 
-## Livraison et validation
+## Livraisons de novembre
 
-- Code commité et poussé sur `main` ; référence distante et arbre local propre vérifiés avant cette actualisation documentaire.
-- [CI 40842375729](https://github.com/alexandra-guiderdoni/builder-mail-dsfr/actions/runs/40842375729) réussie sur ce SHA : **606 tests, 606 réussites, zéro échec et zéro test ignoré**, Node.js **24.22.1**. Le journal brut a été relu le 1er novembre. Ce résultat n’est pas une nouvelle exécution locale de la suite.
+- **Revue de presse SNUM.** Le modèle présente les articles en format court dans onze rubriques, selon un ordre fixe. Le pied Marianne referme le cadre et porte la mention de diffusion et le lien « Nous contacter ». L’aperçu s’adapte à la hauteur du courriel. [Guide d’utilisation](UTILISATION.md)
+- **Prise en main.** L’accueil de première visite permet de créer une newsletter depuis un exemple, de la sauvegarder et de retrouver l’aide à l’installation. Le guide illustré décrit le parcours jusqu’à la copie du courriel. [Guide de prise en main](PRISE-EN-MAIN.md)
+- **Accessibilité.** Les cinq écarts relevés lors du préaudit du 6 novembre ont été corrigés. Les contrôles humains encore nécessaires sont consignés dans le [rapport de préaudit](accessibilite/preaudit-20261106/RAPPORT.md).
+
+## Feuille de route
+
+Quatre tickets sont ouverts au 18 novembre.
+
+| Chantier | Prochaine étape | Suite |
+| --- | --- | --- |
+| Accueil de première visite | [#206](https://github.com/alexandra-guiderdoni/builder-mail-dsfr/issues/206) est en attente. Le parcours testable [#205](https://github.com/alexandra-guiderdoni/builder-mail-dsfr/issues/205) est livré. Alex doit relire le [protocole](protocole-test-206.md) et recruter 3 à 5 utilisateurs. | [#207](https://github.com/alexandra-guiderdoni/builder-mail-dsfr/issues/207) prévoit de finaliser l’accueil après le test et le traitement des blocages critiques. |
+| Messageries | [#13](https://github.com/alexandra-guiderdoni/builder-mail-dsfr/issues/13) est reporté. La réception du courriel et des images dans Outlook et Mélissa doit être vérifiée sur le poste cible par un opérateur habilité. | [#52](https://github.com/alexandra-guiderdoni/builder-mail-dsfr/issues/52), également reporté, dépend de #13 pour qualifier le rendu dans Outlook classique sous Windows. |
+
+L’accès et l’installation depuis le parc, les essais avec le lecteur d’écran retenu sur Windows et la qualification RGAA complète restent à vérifier.
+
+## Archives de diagnostic
+
+Les huit branches de diagnostic sont conservées sous les tags Git `archive/diag/*`. Chaque tag reprend le dernier commit de la branche correspondante. Le correctif d’isolation des aperçus de `fix/modal-isolation-study` figure sur `main` depuis `9598f54`. Les neuf branches distantes ont été supprimées le 18 novembre.
+
+## Bilan historique du 1er novembre
+
+- [CI 40842375729](https://github.com/alexandra-guiderdoni/builder-mail-dsfr/actions/runs/40842375729) réussie sur `cbe93e3` : **606 tests, 606 réussites, zéro échec et zéro test ignoré**, Node.js **24.22.1**. Le journal brut a été relu le 1er novembre. Ce résultat n’est pas une nouvelle exécution locale de la suite.
 - La [livraison précédente 2829a9b](https://github.com/alexandra-guiderdoni/builder-mail-dsfr/commit/2829a9beb0a892f334af37e462f715ec196395ae) avait 602 tests réussis ; ses huit fichiers publics avaient été comparés octet pour octet aux distributions. Cette comparaison ne vaut pas vérification des huit fichiers du correctif `cbe93e3`.
-- Le dernier correctif empêche qu’un résultat de chargement d’image distante recrée un brouillon après annulation. Quatre tests de régression ont été ajoutés ; les 33 tests ciblés, dont Chromium et WebKit, ainsi que le build et les contrôles de distributions ont passé avant le commit. La nouvelle contre-revue Claude demandée pour ce SHA n’a pas été transmise dans cette session.
+- Le correctif `cbe93e3` empêche qu’un résultat de chargement d’image distante recrée un brouillon après annulation. Quatre tests de régression ont été ajoutés ; les 33 tests ciblés, dont Chromium et WebKit, ainsi que le build et les contrôles de distributions ont passé avant le commit. La nouvelle contre-revue Claude demandée pour ce SHA n’a pas été transmise dans cette session.
 
-## Fonctionnalités et investigations livrées
+### Fonctionnalités et investigations de cette campagne
 
 - **#191 : poids du courriel.** Mesure du HTML préparé pour la copie ou le téléchargement, répartition par catégorie et conseils préservant les logos. Le poids du HTML réellement reçu reste inconnu ; aucun seuil local n’a été relevé pour masquer une alerte.
 - **#192 : images HTTPS.** Les 24 champs image proposent une adresse HTTPS directe en complément de l’import local. Le repli local reste conservé. Les références distantes utilisent un format v2 explicite ; les fichiers entièrement locaux restent v1. Les hébergeurs reçoivent des requêtes ; disponibilité hors connexion, archivage, poids distant et réception ne sont pas garantis.
@@ -20,17 +40,6 @@ Ce bilan concerne le code livré au commit `cbe93e3207d9ef94fc6940a99a7d0aa486e3
 - **#173 : clic après modale.** Investigation clôturée avec cause historique **inconnue et bornée** ; diagnostic enrichi sans modifier le geste ni affaiblir le test. La CI verte n’explique pas cet échec ancien.
 
 Le [bilan détaillé des cinq tickets](qualification/backlog-cinq-20261028/ETAT.md) et son [reçu natif](qualification/backlog-cinq-20261028/NATIF.json) précisent les environnements et les limites. La session native y chargeait `404b817` : ne pas la présenter comme une recette native complète du dernier SHA.
-
-## Backlog GitHub et qualifications restantes
-
-Deux issues seulement sont ouvertes au contrôle du 1er novembre, toutes deux marquées « reporté » :
-
-- [#13 — transport et réception réels Outlook/Mélissa](https://github.com/alexandra-guiderdoni/builder-mail-dsfr/issues/13).
-- [#52 — compatibilité Outlook classique Windows](https://github.com/alexandra-guiderdoni/builder-mail-dsfr/issues/52).
-
-Leur qualification demande le poste cible et un opérateur habilité. Les réceptions historiques sur Mac ne prouvent pas le rendu de cette version ni celui des images distantes. Aucun envoi n’est exécuté par le builder.
-
-L’absence d’autres tickets ouverts ne signifie pas que toutes les exigences sont démontrées : conformité RGAA exhaustive, lecteur d’écran retenu sur le parc, accès et installation depuis le parc restent à qualifier. Les rapports d’accessibilité datés et leurs matrices 106 critères / 258 tests ne sont pas réécrits comme des preuves de la version actuelle. Aucun GO global pour la chaîne de messagerie ne découle de ce bilan.
 
 ## Documents de référence
 

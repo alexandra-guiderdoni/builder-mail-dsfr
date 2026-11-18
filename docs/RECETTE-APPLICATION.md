@@ -1,8 +1,8 @@
 # Recette de l’application autonome
 
-## État consolidé au 1er novembre 2026
+## État courant
 
-Le [bilan de livraison](ETAT-LIVRAISON.md) est le point d’entrée courant : `cbe93e3`, CI **606/606**, zéro échec et zéro test ignoré. #191/#192/#193 sont livrées ; #173/#179/#188/#190/#192 sont clôturées avec leurs limites explicites. Seules **#13 et #52** restent ouvertes et reportées sur GitHub. La répétition vocale globale reste non confirmée, la cause historique du clic reste inconnue, et la réception de cette version dans Outlook/Mélissa reste non qualifiée.
+Le [bilan de livraison](ETAT-LIVRAISON.md) indique la révision publiée et les qualifications encore attendues pour la première visite et les messageries.
 
 ## Campagnes historiques conservées
 
