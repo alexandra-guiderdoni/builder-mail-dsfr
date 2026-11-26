@@ -195,12 +195,12 @@
   // Tout effacer (#201) : la bibliothèque revient à l’état d’un navigateur neuf, sans état précédent récupérable,
   // par le point d’entrée commun (#208). Le programme hors connexion n’est pas touché.
   let resetBusy = false;
-  // #229 : une seule voie, celle du répartiteur d’actions de l’éditeur, qui exécute A.Actions[data-action] et rapporte ses erreurs.
-  A.Actions["reset-library"] = () => {
+  // #229 : une seule voie ouvre la fenêtre, l’action « reset-library » de la table d’actions, exécutée par le répartiteur de l’éditeur.
+  function askReset() {
     A.State.guard();
     get("reset-dialog-description").textContent = `Tout le contenu de ce navigateur sera supprimé : ${counted(A.library)}. Il ne pourra pas être récupéré dans l’atelier. Exportez-le d’abord pour en garder un fichier.`;
     get("reset-dialog-error").textContent = ""; get("reset-dialog").showModal(); get("reset-cancel").focus();
-  };
+  }
   get("reset-export").addEventListener("click", () => { try { A.Actions["export-library"](); } catch (cause) { get("reset-dialog-error").textContent = cause.message; } });
   get("reset-cancel").addEventListener("click", () => get("reset-dialog").close());
   get("reset-dialog").addEventListener("cancel", event => { if (resetBusy) event.preventDefault(); });
@@ -256,5 +256,5 @@
   get("example-close").addEventListener("click", () => get("example-dialog").close());
   get("example-dialog").addEventListener("close", () => { const opener = previewing?.opener; previewing = null; get("example-frame").replaceChildren(); releasePreviews?.(); releasePreviews = null; if (previewUrl) { URL.revokeObjectURL(previewUrl); previewUrl = ""; } opener?.isConnected && opener.focus(); });
   get("example-create").addEventListener("click", () => { const key = previewing?.key; previewing = null; get("example-dialog").close(); if (key) attempt(() => createFrom(key)); });
-  A.Library = Object.freeze({subjectNotice, refresh, welcome, open, home, duplicate, ask, askRemoval});
+  A.Library = Object.freeze({subjectNotice, refresh, welcome, open, home, duplicate, ask, askRemoval, askReset});
 })();
