@@ -70,13 +70,13 @@ npm run check
 npm test
 ```
 
-`npm run check` contrôle l’empreinte de la copie SNUM adaptée, compare les octets générés aux sources et contrôle aussi que le prototype conservé est reproductible. Les tests utilisent le Chromium attendu par Playwright. Si ce navigateur manque sur le poste de développement, le préparer explicitement avec le CLI de la version épinglée (`npx --no-install playwright install chromium`) ; cette préparation n’est pas une installation sur le poste métier.
+`npm run check` contrôle l’empreinte de la copie SNUM adaptée, compare les octets générés aux sources et contrôle aussi que le prototype conservé est reproductible. `npm test` lance le Chromium et le WebKit attendus par Playwright : quinze fichiers de la suite ouvrent WebKit pour leurs cas propres à ce moteur. Si l’un des deux manque sur le poste de développement, la suite est rouge sans défaut produit, avec le motif « Executable doesn't exist » ; le préparer explicitement avec le CLI de la version épinglée (`npx --no-install playwright install chromium webkit`). Cette préparation n’est pas une installation sur le poste métier. Un moteur absent fait échouer ses tests : il n’est jamais compté comme réussi.
 
 Les scénarios navigateur créent des contextes isolés, téléchargent des fichiers réels et produisent des preuves sous `evidence/application/`, ignorées par Git. `MAIL_BUILDER_EVIDENCE` peut désigner un autre répertoire pour préserver une campagne précédente. Le parcours presse-papiers Chromium utilise les permissions du profil de recette. Les pannes de quota et les bibliothèques inconnues sont injectées dans ce seul profil.
 
 ### Suite navigateur multi-moteur
 
-`npm test` reste la suite de référence sous Chromium. `npm run test:engines` rejoue les fichiers qui lancent un navigateur sur Chromium, WebKit et Firefox (Playwright), un moteur après l'autre. Options : `--engines=webkit,firefox`, `--files=<fichier>.test.cjs,...`, `--json=<chemin>` pour garder le rapport structuré. Le moteur se choisit pour un fichier seul avec `MAIL_BUILDER_ENGINE=webkit node --test tests/<fichier>`. Le point d'extension est `tests/browser-support.cjs` ; le nom `chromium` importé par les tests désigne désormais le moteur choisi.
+`npm test` reste la suite de référence : Chromium pour tous les fichiers, WebKit en plus pour les cas qui le nomment. Elle ne demande pas le Firefox de Playwright. `npm run test:engines` rejoue les fichiers qui lancent un navigateur sur Chromium, WebKit et Firefox (Playwright), un moteur après l'autre. Options : `--engines=webkit,firefox`, `--files=<fichier>.test.cjs,...`, `--json=<chemin>` pour garder le rapport structuré. Le moteur se choisit pour un fichier seul avec `MAIL_BUILDER_ENGINE=webkit node --test tests/<fichier>`. Le point d'extension est `tests/browser-support.cjs` ; le nom `chromium` importé par les tests désigne désormais le moteur choisi.
 
 Le rapport sépare quatre issues, jamais mélangées :
 
