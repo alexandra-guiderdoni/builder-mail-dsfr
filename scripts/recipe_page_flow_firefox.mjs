@@ -1,4 +1,5 @@
 import fs from 'node:fs/promises';
+import {readFileSync} from 'node:fs';
 import path from 'node:path';
 import http from 'node:http';
 import assert from 'node:assert/strict';
@@ -8,6 +9,8 @@ import {createHash} from 'node:crypto';
 import {Firefox} from '../tests/firefox-support.mjs';
 import collectorReceipts from './collector_receipt.cjs';
 const {newCollection, beginCollection, finishCollection, collectionFailure}=collectorReceipts;
+// Textes de l’atelier attendus par les recettes : tests/recipe-texts.test.cjs les compare aux sources (#230).
+const T=JSON.parse(readFileSync(new URL('./recipe_texts.json',import.meta.url),'utf8'));
 
 export function qualifyZoom(reference, measured, requestedFactor) {
  // #196 : à 200 % natif (#179), Firefox exprime aussi fenêtre et écran en pixels CSS zoomés ; exiger leur stabilité refusait le vrai zoom.
@@ -45,7 +48,12 @@ export function consumeCleanupReceipt(receipt, cleanup, resource='owned-firefox'
 }
 
 async function runRecipe() {
-const root=process.cwd(),out=path.resolve(process.argv[2] || 'evidence/page-flow-firefox-'+Date.now());
+// #233 : la racine vient de l’emplacement du script, comme dans les autres recettes ; seul le dossier de sortie donné en argument suit le répertoire courant.
+const root=path.resolve(import.meta.dirname,'..'),out=process.argv[2]?path.resolve(process.argv[2]):path.join(root,'evidence/page-flow-firefox-'+Date.now());
+// #233 : refus avant toute écriture. Plus bas, beginCollection remplace le reçu canonique par un reçu incomplet, ce qui est son contrat ;
+// un répertoire déjà utilisé ne doit pas l’atteindre.
+let preexisting=[];try{preexisting=await fs.readdir(out)}catch(error){if(error.code!=='ENOENT')throw error}
+if(preexisting.length){console.error('Répertoire de recette non vide : aucune allocation ('+out+')');process.exitCode=1;return}
 const receipt=newCollection(root,{completed:false,profiles:[],cases:[],zoomChecks:[],errors:[],humanQualification:false,screenReaderExecuted:false,windowsExecuted:false});
 const sql=`import sqlite3,sys,time,json
 con=sqlite3.connect(sys.argv[1]);name='browser.content.full-zoom'
@@ -54,13 +62,13 @@ con.execute('INSERT OR REPLACE INTO prefs (id,groupID,settingID,value,timestamp)
 con.commit();print(json.dumps(con.execute('SELECT settings.name,prefs.groupID,prefs.value,typeof(prefs.value) FROM prefs JOIN settings ON settings.id=prefs.settingID WHERE settings.name=?',(name,)).fetchall()));con.close()
 `;
 const hash=b=>createHash('sha256').update(b).digest('hex');
-const host=http.createServer(async(req,res)=>{try{const base=path.resolve('app/distribution/web'),p=new URL(req.url,'http://127.0.0.1').pathname,file=path.resolve(base,p==='/'?'index.html':p.slice(1));assert(file.startsWith(base+path.sep));const bytes=await fs.readFile(file);res.writeHead(200,{'Content-Type':file.endsWith('.html')?'text/html; charset=utf-8':file.endsWith('.js')?'text/javascript':file.endsWith('.png')?'image/png':'application/json'});res.end(bytes)}catch{res.writeHead(404);res.end()}});
+const host=http.createServer(async(req,res)=>{try{const base=path.join(root,'app/distribution/web'),p=new URL(req.url,'http://127.0.0.1').pathname,file=path.resolve(base,p==='/'?'index.html':p.slice(1));assert(file.startsWith(base+path.sep));const bytes=await fs.readFile(file);res.writeHead(200,{'Content-Type':file.endsWith('.html')?'text/html; charset=utf-8':file.endsWith('.js')?'text/javascript':file.endsWith('.png')?'image/png':'application/json'});res.end(bytes)}catch{res.writeHead(404);res.end()}});
 let firefox;
 async function stopFirefox(){
  try{return consumeCleanupReceipt(receipt,await firefox.stop(),'owned-firefox',{neverAllocated:firefox.allocation===null})}
  catch(error){collectionFailure(receipt,'cleanup',error,{resource:'owned-firefox'});return false}
 }
-const surfaces=[['portable',pathToFileURL(path.resolve('app/distribution/portable.html')).href],['web',null]],zoomReferences={};
+const surfaces=[['portable',pathToFileURL(path.join(root,'app/distribution/portable.html')).href],['web',null]],zoomReferences={};
 async function zoomMeasurement(){return firefox.evaluate('({width:innerWidth,height:innerHeight,outerWidth,outerHeight,dpr:devicePixelRatio,screenWidth:screen.width,screenHeight:screen.height,visualScale:visualViewport?.scale??null})')}
 async function child() {
  const src=await firefox.evaluate('document.getElementById("preview").src');
@@ -74,16 +82,16 @@ async function child() {
 async function key(value){await firefox.call('input.performActions',{context:firefox.context,actions:[{type:'key',id:'keyboard',actions:[{type:'keyDown',value},{type:'keyUp',value}]}]})}
 async function dimensions(){return await firefox.evaluate(`(()=>{const box=e=>({client:e.clientHeight,scroll:e.scrollHeight,height:e.getBoundingClientRect().height,top:e.getBoundingClientRect().top,bottom:e.getBoundingClientRect().bottom}),select=document.getElementById('catalogue');return{viewport:{width:innerWidth,height:innerHeight,dpr:devicePixelRatio,outerWidth,outerHeight,screenWidth:screen.width,screenHeight:screen.height,visualScale:visualViewport?.scale??null},list:box(document.getElementById('block-list')),catalogue:{...box(select),size:select.size,count:select.options.length,groups:select.querySelectorAll('optgroup').length,value:select.value,last:box(select.options[select.options.length-1])},text:box(document.getElementById('field-f0')),json:box(document.getElementById('json-input')),focus:document.activeElement.id,selection:[document.getElementById('field-f0').selectionStart,document.getElementById('field-f0').selectionEnd],pageWidth:document.documentElement.scrollWidth}})()`)}
 try {
- await fs.mkdir(out,{recursive:true});const preexisting=await fs.readdir(out);
- await beginCollection(out,'recu.json',receipt);assert.equal(preexisting.length,0,'Répertoire de recette non vide : aucune allocation');
- const files=(await fs.readdir('app/source')).map(f=>'app/source/'+f).concat(['scripts/build_app.py','scripts/recipe_page_flow_firefox.mjs','scripts/collector_receipt.cjs','tests/firefox-support.mjs','app/distribution/portable.html','app/distribution/web/index.html','app/distribution/web/sw.js','app/distribution/snum.html']);
- receipt.sourceSha256=Object.fromEntries(await Promise.all(files.map(async f=>[f,hash(await fs.readFile(f))])));
+ await fs.mkdir(out,{recursive:true});
+ await beginCollection(out,'recu.json',receipt);
+ const files=(await fs.readdir(path.join(root,'app/source'))).map(f=>'app/source/'+f).concat(['scripts/build_app.py','scripts/recipe_page_flow_firefox.mjs','scripts/recipe_texts.json','scripts/collector_receipt.cjs','tests/firefox-support.mjs','app/distribution/portable.html','app/distribution/web/index.html','app/distribution/web/sw.js','app/distribution/snum.html']);
+ receipt.sourceSha256=Object.fromEntries(await Promise.all(files.map(async f=>[f,hash(await fs.readFile(path.join(root,f)))])));
  await fs.copyFile(new URL(import.meta.url),path.join(out,'collecteur.mjs'));
  await new Promise(resolve=>host.listen(0,'127.0.0.1',resolve));
  surfaces[1][1]='http://127.0.0.1:'+host.address().port+'/';
  for(const factor of [1,2]) {
   firefox=new Firefox(path.join(out,'zoom-'+factor));
-  await firefox.start();await firefox.navigate(pathToFileURL(path.resolve('app/distribution/portable.html')).href);if(!await stopFirefox())throw Error('Nettoyage Firefox incomplet : aucune nouvelle allocation');
+  await firefox.start();await firefox.navigate(pathToFileURL(path.join(root,'app/distribution/portable.html')).href);if(!await stopFirefox())throw Error('Nettoyage Firefox incomplet : aucune nouvelle allocation');
   await fs.writeFile(path.join(firefox.profile,'user.js'),'user_pref("browser.zoom.full",true);\nuser_pref("accessibility.tabfocus",7);\n');
   const setting=JSON.parse(execFileSync('python3',['-c',sql,path.join(firefox.profile,'content-prefs.sqlite'),String(factor)],{encoding:'utf8'}));
   await firefox.start();receipt.profiles.push({factor,requestedFactor:factor,setting,browser:firefox.version});
@@ -95,14 +103,18 @@ try {
    assert(zoom.qualified,'Zoom non qualifié : '+JSON.stringify(zoom));
   }
   for(const[surface,url]of surfaces) {
-   await firefox.navigate(url);await firefox.click('[data-action=resume-document]');
+   await firefox.navigate(url);
+   // Première visite (#205) : « reprendre » est masqué tant que rien n’est enregistré ; la newsletter de départ s’ouvre alors directement.
+   if(await firefox.evaluate(`(()=>{const b=document.querySelector('[data-action=resume-document]');return b.getClientRects().length>0})()`))await firefox.click('[data-action=resume-document]');else await firefox.evaluate(`MailBuilder.Library.open(MailBuilder.library.activeId).then(()=>true)`);
+   await firefox.wait(`!document.querySelector('#editor-page').hidden`);
+  
    const packet=await firefox.evaluate(`JSON.stringify(MailBuilder.Model.create('Parcours sans barres',MailBuilder.catalog.components.map(c=>c.id)))`),file=path.join(out,surface+'-'+factor+'.json');
-   await fs.writeFile(file,packet);await firefox.details('Fichiers et récupération');await firefox.files('#project-input',file);await firefox.wait(`document.getElementById('notice').textContent.includes('Import ajouté')`);
+   await fs.writeFile(file,packet);await firefox.details(T.filesPanel);await firefox.files('#project-input',file);await firefox.wait(`document.getElementById('notice').textContent.includes('Import ajouté')`);
    const block=await firefox.evaluate(`MailBuilder.doc().blocks.find(b=>b.component==='mail-19').id`);
    await firefox.click('[data-select="'+block+'"]');
    const long=Array.from({length:35},(_,i)=>'Ligne '+i+' — contenu de recette sans barre interne.').join('\n');
-   await firefox.field('#field-f0',long);await firefox.wait(`document.getElementById('save-state').textContent==='Bibliothèque sauvegardée dans ce navigateur.'`);
-   await firefox.details('Ajouter un composant');await firefox.details('Importer du JSON');await firefox.field('#json-input',packet);
+   await firefox.field('#field-f0',long);await firefox.wait(`document.getElementById('save-state').textContent===${JSON.stringify(T.saved)}`);
+   await firefox.details(T.addComponentPanel);await firefox.details(T.jsonPanel);await firefox.field('#json-input',packet);
    for(const width of factor===1?[390,1024,1280]:[null]) {
     if(width)await firefox.call('browsingContext.setViewport',{context:firefox.context,viewport:{width,height:900}});
     await firefox.evaluate('document.fonts.ready.then(()=>true)');

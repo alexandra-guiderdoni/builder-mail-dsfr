@@ -86,7 +86,10 @@ async function run(root, baseline, output) {
         } else {
           const doc = library.documents.find(doc => doc.name === item.name);
           if (!doc) throw new Error('Composition source absente : ' + item.name);
-          await page.locator('[data-action=resume-document]').focus(); await page.keyboard.press('Enter');
+          // Première visite (#205) : « reprendre » est masqué tant que rien n’est enregistré ; la newsletter de départ s’ouvre alors directement.
+          if (await page.locator('[data-action=resume-document]').isVisible()) await page.locator('[data-action=resume-document]').press('Enter');
+          else await page.evaluate(() => MailBuilder.Library.open(MailBuilder.library.activeId));
+          await page.locator('#editor-page').waitFor({state: 'visible'});
           await page.locator('#project-input').setInputFiles({name: 'qualification.courriel.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(doc))});
           await page.waitForFunction(name => MailBuilder.doc()?.name === name && document.getElementById('notice').textContent.includes('Import ajouté'), item.name);
         }
