@@ -19,6 +19,8 @@ async function filled(page) {
   await saved(page);
 }
 async function home(page) { await page.locator('[data-action=library-home]').click(); await page.locator('#library-home').waitFor(); }
+// #229 : la zone d'erreur (role="alert") reste muette ; une erreur du répartiteur d'actions s'y écrirait.
+const silent = async (page, moment) => assert.deepEqual(await page.evaluate(() => { const e = document.querySelector('#error'); return {hidden: e.hidden, text: e.textContent}; }), {hidden: true, text: ''}, moment);
 const visible = page => page.evaluate(() => ({save: document.querySelector('#save-state').textContent, count: document.querySelector('#library-count').textContent,
   documents: MailBuilder.library.documents.map(d => ({name: d.name, components: d.blocks.map(b => b.component)})), templates: MailBuilder.library.templates.length, identities: MailBuilder.library.identities.length}));
 
@@ -27,11 +29,13 @@ test('#201 tout effacer : fenêtre avec export préalable, puis état visible d�
   try {
     const {page} = await open(browser); await filled(page); await home(page);
     await page.locator('[data-action=reset-library]').click(); await page.locator(dialog).waitFor({state: 'visible'});
+    await silent(page, 'aucune erreur à l’ouverture');
     assert.match(await page.locator('#reset-dialog-description').textContent(), /2 newsletters, 1 modèle, 1 identité/);
     const download = page.waitForEvent('download'); await page.locator('#reset-export').click();
     assert.match((await download).suggestedFilename(), /bibliotheque-courriels/);
     assert.equal(await page.locator(dialog).isVisible(), true, 'exporter n’est pas confirmer');
     await page.locator('#reset-cancel').click(); await page.locator(dialog).waitFor({state: 'hidden'});
+    await silent(page, 'aucune erreur après annulation');
     assert.deepEqual((await state(page)).documents.map(d => d.name), ['Lettre A', 'Lettre B'], 'annuler ne change rien');
     await page.locator('[data-action=reset-library]').click(); await page.locator(dialog).waitFor({state: 'visible'});
     await page.locator('#reset-confirm').click(); await page.locator(dialog).waitFor({state: 'hidden'});

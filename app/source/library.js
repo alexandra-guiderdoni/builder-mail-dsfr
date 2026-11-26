@@ -195,14 +195,12 @@
   // Tout effacer (#201) : la bibliothèque revient à l’état d’un navigateur neuf, sans état précédent récupérable,
   // par le point d’entrée commun (#208). Le programme hors connexion n’est pas touché.
   let resetBusy = false;
-  get("library-home").addEventListener("click", event => {
-    if (!event.target.closest("[data-action=reset-library]")) return;
-    attempt(async () => {
-      A.State.guard();
-      get("reset-dialog-description").textContent = `Tout le contenu de ce navigateur sera supprimé : ${counted(A.library)}. Il ne pourra pas être récupéré dans l’atelier. Exportez-le d’abord pour en garder un fichier.`;
-      get("reset-dialog-error").textContent = ""; get("reset-dialog").showModal(); get("reset-cancel").focus();
-    });
-  });
+  // #229 : une seule voie, celle du répartiteur d’actions de l’éditeur, qui exécute A.Actions[data-action] et rapporte ses erreurs.
+  A.Actions["reset-library"] = () => {
+    A.State.guard();
+    get("reset-dialog-description").textContent = `Tout le contenu de ce navigateur sera supprimé : ${counted(A.library)}. Il ne pourra pas être récupéré dans l’atelier. Exportez-le d’abord pour en garder un fichier.`;
+    get("reset-dialog-error").textContent = ""; get("reset-dialog").showModal(); get("reset-cancel").focus();
+  };
   get("reset-export").addEventListener("click", () => { try { A.Actions["export-library"](); } catch (cause) { get("reset-dialog-error").textContent = cause.message; } });
   get("reset-cancel").addEventListener("click", () => get("reset-dialog").close());
   get("reset-dialog").addEventListener("cancel", event => { if (resetBusy) event.preventDefault(); });
