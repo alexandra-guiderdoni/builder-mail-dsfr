@@ -13,6 +13,9 @@ async function twoCompositions(page) {
 }
 
 const activeId = page => page.evaluate(() => MailBuilder.library.activeId);
+// L’ouverture change la newsletter active, attend la sauvegarde, puis rend le focus au titre. Agir entre les deux
+// envoyait parfois la touche suivante au titre : la bascule est attendue jusqu’à ce focus final.
+const opened = (page, id) => page.waitForFunction(id => MailBuilder.library.activeId === id && document.activeElement?.id === 'composition-title', id);
 
 test('frappe sur le sélecteur fermé : aucune bascule de composition active', async () => {
   const browser = await chromium.launch();
@@ -39,12 +42,12 @@ test('bouton « Ouvrir cette newsletter » : bascule la composition sélectionn�
     const {X, Y} = await twoCompositions(page);
     await page.locator('#documents').selectOption(Y);
     await click(page, '[data-action=open-document]');
-    await page.waitForFunction(y => MailBuilder.library.activeId === y, Y);
+    await opened(page, Y);
     assert.equal(await activeId(page), Y, 'Le bouton explicite bascule la composition active.');
     // Re-sélectionner X et cliquer : bascule inverse.
     await page.locator('#documents').selectOption(X);
     await click(page, '[data-action=open-document]');
-    await page.waitForFunction(x => MailBuilder.library.activeId === x, X);
+    await opened(page, X);
     assert.equal(await activeId(page), X, 'Le bouton revient à la composition précédente sans intermédiaire.');
   } finally { await browser.close(); }
 });
