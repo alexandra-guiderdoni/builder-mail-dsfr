@@ -1,5 +1,12 @@
 # Historique des livraisons
 
+## 26 novembre 2026 - Correctifs de la revue de code (#229, #231, #232, #236)
+
+- **« Tout effacer » sans erreur technique (#229) :** ouvrir la fenêtre écrivait « A.Actions[action.dataset.action] is not a function » dans la zone d’erreur, annoncée aux lecteurs d’écran, et le message restait après annulation. L’ouverture passe par la table d’actions commune, seule voie désormais. Le test `#201 tout effacer` vérifie que la zone d’erreur reste muette à l’ouverture et après annulation.
+- **Sauvegarde après un rendu en échec (#236) :** si l’affichage échouait pendant une modification, celle-ci restait en mémoire sans être enregistrée, alors que l’état affichait « Newsletters enregistrées ». La sauvegarde est tentée avant que l’erreur ne remonte. Aucun échec de ce genre n’a été observé en usage ; le test `change-render-failure-browser` le provoque.
+- **Aperçu et objet du courriel (#231) :** un objet contenant le texte « default-src 'none'; » figeait la hauteur de l’aperçu et désactivait « Voir ce bloc dans l’aperçu ». L’autorisation du script de mesure est posée dans la balise de politique de sécurité, plus dans la première occurrence du texte. La politique de l’aperçu ne change pas. Le convertisseur SNUM, qui reprend ce module, est régénéré.
+- **Prérequis de `npm test` (#232) :** la maintenance annonçait Chromium seul ; la suite ouvre aussi WebKit dans quinze fichiers. Les deux moteurs et la commande qui les prépare sont documentés.
+
 ## 14 novembre 2026 - Pied Marianne de la revue SNUM rétabli
 
 - **Cadre refermé :** sans pied de page, le cadre ombré s’arrêtait net après la signature. Le pied Marianne revient et le referme par son trait, avec le logo et « Service du numérique (SNUM) ». Il porte la mention de diffusion et, dans son lien obligatoire, le vrai lien « Nous contacter » des envois de l’équipe. La signature reste un paragraphe ; la gestion des abonnements suit, sous le cadre. Le test `#223 : cadre ombré et bordé continu` vérifie l’ombre et les bordures de chaque bloc du corps et le trait de fermeture.

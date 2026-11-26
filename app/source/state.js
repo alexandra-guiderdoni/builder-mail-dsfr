@@ -164,7 +164,9 @@
     if (readOnly) throw readOnlyError();
     if (input === "edit") guardEdit(); else if (restoring || !input) guard(); const next = M.copy(A.library); mutator(next); M.versions(next); M.library(next); A.library = next; revision++; lastChange = Date.now(); pruneDrafts(); if (!navigation) { editorial = true; begin(false); }
     if (!A.doc().blocks.some(b => b.id === A.selected)) A.selected = A.doc().blocks[0]?.id || null;
-    if (redraw) { clearTimeout(previewTimer); A.UI.refresh(); } else { A.UI.summary(); previewAfterInput(); }
+    // #236 : la modification est déjà en mémoire. Si le rendu lève, la sauvegarde est tentée quand même, puis l’erreur du rendu remonte.
+    try { if (redraw) { clearTimeout(previewTimer); A.UI.refresh(); } else { A.UI.summary(); previewAfterInput(); } }
+    catch (cause) { try { save(); } catch { /* le refus de sauvegarde a son propre affichage ; l’erreur du rendu prime */ } throw cause; }
     return save();
   }
   // Une restauration n’est annoncée qu’après relecture et validation de l’état précédent.

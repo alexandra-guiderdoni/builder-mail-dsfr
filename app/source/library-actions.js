@@ -69,6 +69,7 @@
     "duplicate-document": () => A.Library.duplicate(A.library.activeId),
     "remove-document": () => A.Library.ask("remove", A.library.activeId),
     "library-home": () => A.Library.home(),
+    "reset-library": () => A.Library.askReset(),
     "welcome-restore": () => { const input = get("restore-input"); input.closest("details").open = true; input.focus(); },
     "resume-document": () => A.Library.open(A.library.activeId),
     "open-document": async () => { const id = get("documents").value; if (id && id !== A.library.activeId) await A.Library.open(id); },

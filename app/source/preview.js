@@ -24,7 +24,8 @@
   }
   function show(value, onLoad) {
     const started = performance.now();
-    const marker = "default-src &#39;none&#39;;", rendered = A.Render.html(value, true);
+    // #231 : le repère est la balise meta entière. Le titre la précède et peut reprendre le texte de la politique ; échappé, il ne peut pas contenir « <meta ».
+    const marker = "<meta http-equiv=\"Content-Security-Policy\" content=\"default-src &#39;none&#39;;", rendered = A.Render.html(value, true);
     if (!rendered.includes(marker)) throw new Error("La politique de sécurité de l’aperçu n’est pas reconnue.");
     const html = rendered.replace(marker, `${marker}script-src &#39;sha256-${measure.hash}&#39;;`)
       .replace("</body>", `<script>${measure.source}<\/script></body>`);

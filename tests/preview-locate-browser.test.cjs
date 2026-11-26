@@ -122,3 +122,19 @@ test('voir le bloc : repères seulement dans l’aperçu, message forgé ignoré
     assert.ok(await page.evaluate(id => MailBuilder.Preview.locate(id), ids[4]), 'l’aperçu rétabli situe de nouveau le bloc');
   } finally { await browser.close(); }
 });
+
+// #231 : l’objet du courriel précède la politique de sécurité dans le HTML d’aperçu. S’il en reprend le texte,
+// l’autorisation du script de mesure doit quand même aller dans la balise meta, pas dans le titre.
+test('#231 : un objet qui reprend le texte de la politique de sécurité garde hauteur et localisation', async () => {
+  const browser = await chromium.launch();
+  try {
+    const {page} = await open(browser, {viewport: {width: 1280, height: 900}});
+    const ids = await compose(page);
+    await page.evaluate(() => MailBuilder.State.change(lib => { lib.documents.find(d => d.id === lib.activeId).subject = "Rapport default-src 'none'; suite"; }));
+    await previewReady(page);
+    const position = await page.evaluate(id => MailBuilder.Preview.locate(id), ids[3]);
+    assert.ok(position && position.height > 0, 'la localisation d’un bloc rend une position');
+    const frame = page.frames().find(f => f.parentFrame() === page.mainFrame() && f.url().startsWith('blob:'));
+    assert.equal(await frame.evaluate(() => document.title), "Rapport default-src 'none'; suite", 'le titre de l’aperçu reste l’objet saisi');
+  } finally { await browser.close(); }
+});
