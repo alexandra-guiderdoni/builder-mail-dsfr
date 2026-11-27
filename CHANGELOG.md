@@ -1,5 +1,10 @@
 # Historique des livraisons
 
+## 27 novembre 2026 - L’atelier refuse d’être encadré par une autre page (#238)
+
+- **Protection contre l’encadrement :** affiché dans le cadre d’une autre page, l’atelier fonctionnait normalement ; sous Chromium, il y relisait même les newsletters enregistrées, ce qui ouvrait la voie à une activation de « Tout effacer » par superposition, attaque non montée. Il ne démarre plus dans ce cas : il ne lit rien, affiche un message et un lien pour s’ouvrir dans sa propre fenêtre. La protection est faite par script, la seule voie possible sur GitHub Pages, où aucun en-tête ne peut être posé. Le test `frame-refusal-browser` encadre réellement l’atelier depuis une autre origine, sous Chromium et WebKit.
+- **À savoir :** intégrer l’atelier dans une autre page par un cadre n’est plus possible.
+
 ## 27 novembre 2026 - Exception ANDI documentée (#237)
 
 - **Politique de sécurité :** l’atelier autorise deux sources tierces pour ANDI, outil d’audit d’accessibilité injecté par favori. L’exception était testée mais absente de la maintenance. Elle y est décrite, avec ce qu’elle autorise exactement et la décision de la conserver. Rien ne change dans les distributions.

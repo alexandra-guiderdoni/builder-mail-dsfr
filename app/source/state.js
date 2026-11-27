@@ -172,6 +172,13 @@
   // Une restauration n’est annoncée qu’après relecture et validation de l’état précédent.
   async function restorable() { try { const previous = await A.Storage.load("previous"); return !!previous && !!M.library(previous.library); } catch { return false; } }
   async function start() {
+    // #238 : encadré par une autre page, l’atelier ne lit rien et ne démarre pas. Aucun en-tête ne peut l’interdire
+    // sur l’hébergement retenu ; sans script le cadre est inerte, avec script il s’arrête ici.
+    if (window.self !== window.top) {
+      get("workspace").hidden = true; get("workspace").removeAttribute("aria-busy");
+      get("save-state").textContent = "Atelier non démarré : il est affiché à l’intérieur d’une autre page.";
+      get("frame-refusal-link").href = location.href; get("frame-refusal").hidden = false; return;
+    }
     let record, upgraded = false;
     try {
       record = await A.Storage.load();

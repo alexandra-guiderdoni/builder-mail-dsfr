@@ -286,3 +286,13 @@ La politique des deux distributions de l’atelier (`portable.html` et `web/inde
 Aucune page de l’atelier ne charge ces ressources : elles n’entrent que si un auditeur lance ANDI. Le convertisseur SNUM et l’aperçu isolé n’ont pas cette exception. Elle est construite dans `scripts/build_app.py` (variables `andi` et `andi_jquery`) ; `tests/andi-csp-browser.test.cjs` vérifie que ces sources passent et qu’un autre jQuery, un autre chemin de `ssa.gov` et un site tiers restent bloqués.
 
 Décision du 27 novembre 2026 : l’exception est conservée. La retirer des distributions publiées obligerait à auditer un fichier différent de celui qui est servi. Elle ne se prête à un abus que si du HTML peut d’abord être injecté dans la page, ce que l’échappement du rendu empêche. Non évalué : le risque propre aux deux hébergeurs. Si ANDI cesse d’être utilisé, retirer les deux variables, régénérer les distributions et retirer le test.
+
+## Refus d’encadrement par une autre page (#238)
+
+L’atelier ne démarre pas quand il est affiché dans le cadre d’une autre page : il ne lit pas le stockage, masque l’espace de travail et propose un lien pour s’ouvrir dans sa propre fenêtre. Le contrôle est au début de `State.start` (`app/source/state.js`) et compare la fenêtre à la fenêtre principale ; il vaut pour le portable comme pour la variante web, quelle que soit l’origine de la page qui encadre.
+
+Pourquoi par script : la directive `frame-ancestors` est ignorée dans une balise `meta`, et GitHub Pages ne permet pas de poser d’en-tête HTTP. Une page qui encadrerait l’atelier en lui interdisant les scripts obtient un atelier inerte, sans rien à activer. Ne pas ajouter `frame-ancestors` à la balise `meta` : elle serait sans effet. Si l’hébergement change et permet les en-têtes, poser `Content-Security-Policy: frame-ancestors 'none'` en plus.
+
+Constaté avant ce contrôle, le 27 novembre 2026 : encadré par un site tiers sous Chromium, l’atelier relisait les newsletters enregistrées en fenêtre principale ; WebKit cloisonnait déjà le stockage. `tests/frame-refusal-browser.test.cjs` encadre réellement la variante web depuis une autre origine, sous Chromium et WebKit. Le convertisseur SNUM n’a pas ce contrôle : il ne conserve rien dans le navigateur. L’aperçu, lui-même un cadre de l’atelier, n’est pas concerné : il n’exécute pas ce script.
+
+Conséquence à connaître : intégrer l’atelier dans un portail ou un intranet par un cadre n’est plus possible. Le lier, oui.
