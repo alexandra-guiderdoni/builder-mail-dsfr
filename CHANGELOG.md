@@ -1,5 +1,10 @@
 # Historique des livraisons
 
+## 27 novembre 2026 - Relance de publication corrigée dans la maintenance (#244)
+
+- **Procédure de relance :** la maintenance recommandait de relancer le seul job de publication en échec. Essayée le 26 novembre, cette relance échoue quand l’artefact est déjà déposé : le job en dépose un second, que la publication refuse. La procédure recommande maintenant une exécution neuve du workflow, voie par laquelle la publication a été obtenue ce jour-là. Le workflow ne change pas.
+- **Revue de code du 26 novembre versée au dépôt :** le rapport, sa contre-revue et les captures avant et après correctif sont sous `docs/`.
+
 ## 27 novembre 2026 - Collectes de référence incomplètes refusées (#234)
 
 - **Outils d’audit :** `scripts/audit_receipt.py` et `scripts/audit_contrasts.cjs` lisaient la collecte de référence `browser.json` sans regarder si elle était terminée. Une collecte interrompue, en erreur ou, pour les contrastes, sans aucune source mesurée servait de référence. Les deux la refusent maintenant, avec la règle que la recette des téléchargements appliquait déjà : elle est désormais écrite une seule fois, dans `scripts/collector_receipt.cjs`. L’application ne change pas.
