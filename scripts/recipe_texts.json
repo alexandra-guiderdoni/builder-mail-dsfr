@@ -1,0 +1,13 @@
+{
+  "saved": "Newsletters enregistrées dans ce navigateur.",
+  "filesPanel": "Sauvegarde et import",
+  "templatesPanel": "Mes modèles",
+  "identitiesPanel": "Identités de service",
+  "addComponentPanel": "Ajouter un composant",
+  "jsonPanel": "Importer du JSON",
+  "importAdded": "Import ajouté à Mes newsletters",
+  "imageEmbedded": "Image locale incorporée",
+  "mailDownloaded": "Courriel proposé au téléchargement.",
+  "mailCopied": "Courriel copié en HTML et texte.",
+  "unsupportedVersion": "Version de newsletter non prise en charge"
+}

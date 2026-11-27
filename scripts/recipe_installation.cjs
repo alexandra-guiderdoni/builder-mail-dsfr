@@ -5,6 +5,8 @@ const path = require('node:path');
 const http = require('node:http');
 const assert = require('node:assert/strict');
 const root = path.resolve(__dirname, '..');
+// Textes de l’atelier attendus par les recettes : tests/recipe-texts.test.cjs les compare aux sources (#230).
+const T = require('./recipe_texts.json');
 const directory = path.join(root, 'evidence/application', `native-install-${Date.now()}`);
 const profile = path.join(directory, 'profile');
 const report = {scope: 'PWA installée sur Mac via DevTools ; boucle locale uniquement', checks: [], errors: [], lifecycle: [], targets: []};
@@ -68,11 +70,15 @@ async function launchApp(cdp) {
     context = await launch(); report.browser = context.browser().version();
     const page = context.pages()[0]; page.on('pageerror', e => report.errors.push(e.message));
     await page.goto(manifestId); await ready(page); await page.waitForFunction(() => !!navigator.serviceWorker.controller);
-    await page.locator('[data-action=resume-document]').press('Enter');
+    // Première visite (#205) : « reprendre » est masqué tant que rien n’est enregistré ; la newsletter de départ s’ouvre alors directement,
+    // comme enterEditor dans tests/browser-support.cjs.
+    if (await page.locator('[data-action=resume-document]').isVisible()) await page.locator('[data-action=resume-document]').press('Enter');
+    else await page.evaluate(() => MailBuilder.Library.open(MailBuilder.library.activeId));
+    await page.locator('#editor-page').waitFor({state: 'visible'});
     await page.locator('#document-name').fill('Composition de recette installation native');
     await page.locator('[data-image-field]').first().setInputFiles(path.join(root, 'app/assets/icon-192.png'));
-    await page.locator('#notice').filter({hasText: 'Image locale incorporée'}).waitFor();
-    await page.waitForFunction(() => document.querySelector('#save-state').textContent === 'Bibliothèque sauvegardée dans ce navigateur.');
+    await page.locator('#notice').filter({hasText: T.imageEmbedded}).waitFor();
+    await page.waitForFunction(text => document.querySelector('#save-state').textContent === text, T.saved);
     const snapshot = await page.evaluate(() => JSON.parse(JSON.stringify(MailBuilder.library)));
     const cdp = await context.browser().newBrowserCDPSession();
     await cdp.send('PWA.install', {manifestId, installUrlOrBundleUrl: manifestId}); installed = true;

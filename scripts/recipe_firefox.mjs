@@ -6,6 +6,8 @@ import {createRequire} from 'node:module';
 import assert from 'node:assert/strict';
 import {Firefox} from '../tests/firefox-support.mjs';
 const require = createRequire(import.meta.url), root = path.resolve(import.meta.dirname, '..');
+// Textes de l’atelier attendus par les recettes : tests/recipe-texts.test.cjs les compare aux sources (#230).
+const T = require('./recipe_texts.json');
 const directory = path.join(root, 'evidence/application', `firefox-${Date.now()}`), downloads = path.join(directory, 'downloads');
 await fs.mkdir(downloads, {recursive: true});
 const firefox = new Firefox(directory), report = {scope: 'Firefox natif sur le Mac de développement', checks: [], errors: []}; let server;
@@ -38,40 +40,47 @@ const cleanupReceipt = async () => {
 };
 const stopped = async () => { const receipt = await cleanupReceipt(); if (receipt?.status !== 'closed') report.cleanup_error ||= 'Aucun processus fermé avant relance.'; if (report.cleanup_error) throw new Error('Fermeture Firefox non prouvée ; relance refusée.'); };
 
-const saved = () => firefox.wait(`document.querySelector('#save-state').textContent==='Bibliothèque sauvegardée dans ce navigateur.'`);
+// Première visite (#205) : « reprendre » est masqué tant que rien n’est enregistré ; la newsletter de départ s’ouvre alors directement,
+// comme enterEditor dans tests/browser-support.cjs.
+const enterEditor = async () => {
+  if (await firefox.evaluate(`(()=>{const b=document.querySelector('[data-action=resume-document]');return b.getClientRects().length>0})()`)) await firefox.click('[data-action=resume-document]');
+  else await firefox.evaluate(`MailBuilder.Library.open(MailBuilder.library.activeId).then(()=>true)`);
+  await firefox.wait(`!document.querySelector('#editor-page').hidden`);
+};
+const saved = () => firefox.wait(`document.querySelector('#save-state').textContent===${JSON.stringify(T.saved)}`);
 try {
   await firefox.start(); report.browser = firefox.version;
   await firefox.call('browser.setDownloadBehavior', {downloadBehavior: {type: 'allowed', destinationFolder: downloads}});
   await firefox.navigate(portable); assert.equal(await firefox.evaluate(`document.querySelectorAll('#catalogue option').length`), 52);
-  assert(await firefox.evaluate(`!document.querySelector('#library-home').hidden`)); await firefox.click('[data-action=resume-document]');
+  assert(await firefox.evaluate(`!document.querySelector('#library-home').hidden`)); await enterEditor();
   await firefox.field('#document-name', 'Composition Firefox'); await firefox.field('#block-editor textarea', 'Service de recette Firefox');
-  await firefox.details('Mes modèles'); await firefox.field('#template-name', 'Modèle Firefox'); await firefox.click('[data-action=save-template]');
-  await firefox.details('Identités de service'); await firefox.field('#identity-name', 'Identité Firefox'); await firefox.click('[data-action=save-identity]');
+  await firefox.details(T.templatesPanel); await firefox.field('#template-name', 'Modèle Firefox'); await firefox.click('[data-action=save-template]');
+  await firefox.details(T.identitiesPanel); await firefox.field('#identity-name', 'Identité Firefox'); await firefox.click('[data-action=save-identity]');
   await firefox.click('[data-action=library-home]'); await firefox.click('[data-action=new-document]'); await saved();
   const packetText = process.env.SNUM_RECIPE_PACKET ? await fs.readFile(process.env.SNUM_RECIPE_PACKET, 'utf8') : JSON.stringify(require('../tests/fixtures/snum.cjs')());
   const packet = JSON.parse(packetText);
   await firefox.navigate('file://' + path.join(root, 'app/distribution/snum.html'));
   await firefox.field('#snum-input', packetText); await firefox.click('#convert'); await firefox.click('#export-json');
   const converted = await downloaded('snum.composition.courriel.json');
-  await firefox.navigate(portable); await firefox.details('Fichiers et récupération'); await firefox.files('#project-input', converted.path);
-  await firefox.wait(`document.querySelector('#notice').textContent.startsWith('Import ajouté à la bibliothèque')`); await saved();
+  await firefox.navigate(portable); await firefox.details(T.filesPanel); await firefox.files('#project-input', converted.path);
+  await firefox.wait(`document.querySelector('#notice').textContent.startsWith(${JSON.stringify(T.importAdded)})`); await saved();
   const article = await firefox.evaluate(`MailBuilder.doc().blocks.find(b=>b.values.f3===${JSON.stringify(packet.articles[0].url)}).id`);
   await firefox.click(`[data-select="${article}"]`); await firefox.click('[data-block-action=duplicate]');
-  await firefox.details('Ajouter un composant'); await firefox.evaluate(`(()=>{document.querySelector('#catalogue').value='mail-29';return true})()`); await firefox.click('[data-action=add-block]');
-  await firefox.files('[data-image-field]', path.join(root, 'app/assets/icon-192.png')); await firefox.wait(`document.querySelector('#notice').textContent.includes('Image locale incorporée')`); await saved();
+  await firefox.details(T.addComponentPanel); await firefox.evaluate(`(()=>{document.querySelector('#catalogue').value='mail-29';return true})()`); await firefox.click('[data-action=add-block]');
+  await firefox.files('[data-image-field]', path.join(root, 'app/assets/icon-192.png')); await firefox.wait(`document.querySelector('#notice').textContent.includes(${JSON.stringify(T.imageEmbedded)})`); await saved();
   report.checks.push('52 composants disponibles ; compositions, modèle, identité, conversion SNUM séparée puis import JSON générique, duplication et image locale par l’interface');
-  await firefox.details('Fichiers et récupération'); await firefox.click('[data-action=export-document]'); const project = await downloaded(await exportName('MailBuilder.doc().name', 'courriel.json'));
-  await confirmOutput('export-mail', 'Courriel proposé au téléchargement.'); const mail = await downloaded(await exportName('MailBuilder.doc().name', 'html'));
+  await firefox.details(T.filesPanel); await firefox.click('[data-action=export-document]'); const project = await downloaded(await exportName('MailBuilder.doc().name', 'courriel.json'));
+  await confirmOutput('export-mail', T.mailDownloaded); const mail = await downloaded(await exportName('MailBuilder.doc().name', 'html'));
   // #96 : l’image est recompressée à l’import ; les sorties doivent conserver l’image enregistrée, pas les octets source.
   const image = await firefox.evaluate(`MailBuilder.doc().blocks.find(b=>b.component==='mail-29').values.f0`);
   assert.match(image, /^data:image\/png;base64,/);
   const dimensions = await firefox.evaluate(`(async()=>{const image=new Image();image.src=${JSON.stringify(image)};await image.decode();return [image.naturalWidth,image.naturalHeight]})()`);
   assert.deepEqual(dimensions, [192, 192]);
   assert(mail.text.includes(image)); assert.equal(JSON.parse(project.text).blocks.find(b=>b.component==='mail-29').values.f0, image); assert.equal(mail.text.split(packet.articles[0].url.replaceAll('&', '&amp;')).length - 1, 2);
-  await confirmOutput('copy', 'Courriel copié en HTML et texte.');
+  await confirmOutput('copy', T.mailCopied);
   report.checks.push('téléchargements réels avec image et liens source dupliqués ; écriture du presse-papiers par activation clavier native');
   const badPath = path.join(directory, 'invalid.json'); const bad = JSON.parse(project.text); bad.version = 99; await fs.writeFile(badPath, JSON.stringify(bad));
-  const count = await firefox.evaluate('MailBuilder.library.documents.length'); await firefox.files('#project-input', badPath); await firefox.wait(`document.querySelector('#error').textContent.includes('Version de composition')`); assert.equal(await firefox.evaluate('MailBuilder.library.documents.length'), count);
+  const count = await firefox.evaluate('MailBuilder.library.documents.length'); await firefox.files('#project-input', badPath); await firefox.wait(`document.querySelector('#error').textContent.includes(${JSON.stringify(T.unsupportedVersion)})`); assert.equal(await firefox.evaluate('MailBuilder.library.documents.length'), count);
   await firefox.click('[data-action=export-library]'); const library = await downloaded(await exportName(JSON.stringify('bibliotheque-courriels'), 'json'));
   const snapshot = JSON.parse(library.text); assert.equal(snapshot.templates.length, 1); assert.equal(snapshot.identities.length, 1);
   report.checks.push('import invalide refusé ; fichier de bibliothèque contenant compositions, modèle et identité');
@@ -90,11 +99,12 @@ try {
   });
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve)); const url = `http://127.0.0.1:${server.address().port}/`;
   await firefox.navigate(url); await firefox.wait('!!navigator.serviceWorker.controller');
-  await firefox.details('Fichiers et récupération'); await firefox.files('#project-input', library.path); await saved();
-  assert.equal(await firefox.evaluate('MailBuilder.library.documents.length'), count + 1);
+  await firefox.details(T.filesPanel); await firefox.files('#project-input', library.path); await saved();
+  // Première visite (#205) : dans ce profil neuf de la variante web, l’import remplace la newsletter de départ, qui n’est pas un travail à garder.
+  assert.equal(await firefox.evaluate('MailBuilder.library.documents.length'), count);
   await new Promise(resolve => { server.close(resolve); server.closeAllConnections(); });
-  await assert.rejects(fetch(url)); await firefox.navigate(url); assert.equal(await firefox.evaluate('MailBuilder.library.documents.length'), count + 1);
-  await stopped(); await firefox.start(); await firefox.navigate(url); assert.equal(await firefox.evaluate('MailBuilder.library.documents.length'), count + 1);
+  await assert.rejects(fetch(url)); await firefox.navigate(url); assert.equal(await firefox.evaluate('MailBuilder.library.documents.length'), count);
+  await stopped(); await firefox.start(); await firefox.navigate(url); assert.equal(await firefox.evaluate('MailBuilder.library.documents.length'), count);
   await firefox.capture('web-hors-ligne-apres-redemarrage.png');
   report.checks.push('bibliothèque transportée vers la variante web ; rechargement serveur arrêté puis redémarrage complet hors connexion');
   report.errors = firefox.errors; assert.deepEqual(report.errors, []); report.verdict = 'PARCOURS_FIREFOX_OBSERVE';

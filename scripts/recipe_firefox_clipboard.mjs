@@ -1,5 +1,6 @@
 // PDG-LARGE-FILE-JUSTIFICATION: A single comparative recipe owns both Firefox profiles and each private clipboard transaction, so interruption, cleanup and publication guards share one lifecycle.
 import fs from 'node:fs/promises';
+import {readFileSync} from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
 import {execFile, execFileSync} from 'node:child_process';
@@ -12,6 +13,8 @@ import collectors from './collector_receipt.cjs';
 const {newCollection, beginCollection, finishCollection, collectionFailure} = collectors;
 const execute = promisify(execFile), hash = value => createHash('sha256').update(value).digest('hex');
 const root = path.resolve(import.meta.dirname, '..');
+// Textes de l’atelier attendus par les recettes : tests/recipe-texts.test.cjs les compare aux sources (#230).
+const T = JSON.parse(readFileSync(new URL('./recipe_texts.json', import.meta.url), 'utf8'));
 
 export function publicationGuard(expected, observed) {
   // Publication is narrower than native semantic equivalence: no unrecognized serialization is released.
@@ -152,7 +155,7 @@ async function frozenSources(expectedSHA, helper) {
   assert.equal(head, expectedSHA, 'SHA différent de la référence autorisée');
   assert.equal(execFileSync('git', ['status', '--porcelain'], {cwd: root, encoding: 'utf8'}).trim(), '', 'Un candidat propre et commité est requis');
   const files = execFileSync('git', ['ls-files', 'app/source', 'app/snum', 'shared', 'app/distribution', 'scripts/build_app.py',
-    'scripts/recipe_firefox_clipboard.mjs', 'scripts/clipboard_recipe.swift', 'scripts/clipboard_owned_payload.py', 'scripts/collector_receipt.cjs', 'tests/firefox-support.mjs'], {cwd: root, encoding: 'utf8'}).trim().split('\n').filter(Boolean);
+    'scripts/recipe_firefox_clipboard.mjs', 'scripts/recipe_texts.json', 'scripts/clipboard_recipe.swift', 'scripts/clipboard_owned_payload.py', 'scripts/collector_receipt.cjs', 'tests/firefox-support.mjs'], {cwd: root, encoding: 'utf8'}).trim().split('\n').filter(Boolean);
   for (const required of ['scripts/recipe_firefox_clipboard.mjs', 'scripts/clipboard_recipe.swift', 'scripts/clipboard_owned_payload.py', 'tests/firefox-support.mjs', 'app/distribution/portable.html']) assert(files.includes(required), 'Source de recette non versionnée');
   const stat = await fs.lstat(helper); assert(stat.isFile() && !stat.isSymbolicLink(), 'Helper compilé explicite requis');
   const sources = Object.fromEntries(await Promise.all(files.map(async file => [file, hash(await fs.readFile(path.join(root, file)))])));
@@ -163,7 +166,11 @@ async function frozenSources(expectedSHA, helper) {
 async function prepareFixture(firefox, marker, preheader) {
   await firefox.navigate(pathToFileURL(path.join(root, 'app/distribution/portable.html')).href);
   assert.equal(firefox.allocation?.status, 'owned-session');
-  await firefox.click('[data-action=resume-document]');
+  // Première visite (#205) : « reprendre » est masqué tant que rien n’est enregistré ; la newsletter de départ s’ouvre alors directement,
+  // comme enterEditor dans tests/browser-support.cjs.
+  if (await firefox.evaluate(`(()=>{const b=document.querySelector('[data-action=resume-document]');return b.getClientRects().length>0})()`)) await firefox.click('[data-action=resume-document]');
+  else await firefox.evaluate(`MailBuilder.Library.open(MailBuilder.library.activeId).then(()=>true)`);
+  await firefox.wait(`!document.querySelector('#editor-page').hidden`);
   const expected = await firefox.evaluate(`(async()=>{
     const A=MailBuilder,marker=${JSON.stringify(marker)},preheader=${JSON.stringify(preheader)};
     const doc=A.Model.create('Recette Firefox '+marker,[0,2,31,47]);
@@ -175,7 +182,7 @@ async function prepareFixture(firefox, marker, preheader) {
     if(!html.includes(marker)||!plain.includes(marker))throw Error('Marqueur synthétique absent des sorties attendues');
     return{html,plain};
   })()`);
-  await firefox.wait(`document.getElementById('save-state').textContent==='Bibliothèque sauvegardée dans ce navigateur.'`);
+  await firefox.wait(`document.getElementById('save-state').textContent===${JSON.stringify(T.saved)}`);
   return expected;
 }
 

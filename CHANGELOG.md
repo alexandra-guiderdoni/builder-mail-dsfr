@@ -1,5 +1,12 @@
 # Historique des livraisons
 
+## 26 novembre 2026 - Recettes natives remises en état (#230, #233)
+
+- **Recettes exécutables à nouveau (#230) :** les recettes Firefox, mise en page et installation ne pouvaient plus réussir depuis le 2 novembre. Elles attendaient des textes disparus (« Bibliothèque sauvegardée dans ce navigateur. », le volet « Fichiers et récupération », « Import ajouté à la bibliothèque », « Version de composition ») et activaient « reprendre », masqué à la première visite depuis #205. Elles lisent maintenant leurs textes dans `scripts/recipe_texts.json` et entrent dans l’éditeur comme les tests. Rejouées sur le Mac de développement : les trois rendent le code 0. L’application ne change pas.
+- **Garde-fou dans `npm test` :** `tests/recipe-texts.test.cjs` échoue si un texte attendu par une recette quitte les sources, si une recette en recopie un en dur, ou si elle active « reprendre » sans vérifier qu’il est visible.
+- **Refus avant toute écriture (#233) :** relancée sur un répertoire déjà utilisé, la recette de mise en page remplaçait le reçu réussi par un reçu incomplet avant de refuser. Elle refuse maintenant d’abord, et prend la racine du dépôt à l’emplacement du script. Le contrat du collecteur de reçus est inchangé.
+- **Non exécutées :** la recette de presse-papiers Firefox et celle des téléchargements, alignées de la même façon, demandent un binaire relu ou une collecte de référence.
+
 ## 26 novembre 2026 - Correctifs de la revue de code (#229, #231, #232, #236)
 
 - **« Tout effacer » sans erreur technique (#229) :** ouvrir la fenêtre écrivait « A.Actions[action.dataset.action] is not a function » dans la zone d’erreur, annoncée aux lecteurs d’écran, et le message restait après annulation. L’ouverture passe par la table d’actions commune, seule voie désormais. Le test `#201 tout effacer` vérifie que la zone d’erreur reste muette à l’ouverture et après annulation.
