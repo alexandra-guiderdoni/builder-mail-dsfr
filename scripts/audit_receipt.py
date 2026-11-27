@@ -153,6 +153,25 @@ def collection_provenance(raw, browser):
     }
 
 
+def upstream_collection_problems(browser):
+    """Motifs de refus d'une collecte amont ; liste vide si elle est complète."""
+    problems = []
+    if browser.get("completed") is not True:
+        problems.append("completed différent de true")
+    if browser.get("collection_status") != "completed":
+        problems.append(f"collection_status {browser.get('collection_status')!r}")
+    for key in ("run_id", "git_parent"):
+        if not browser.get(key):
+            problems.append(key + " absent")
+    for key in ("errors", "collection_errors", "proof_errors", "cleanup_errors"):
+        value = browser.get(key)
+        if not isinstance(value, list):
+            problems.append(key + " absent")
+        elif value:
+            problems.append(f"{key} : {len(value)} entrée(s)")
+    return problems
+
+
 def heading_outline(value):
     """Un relevé positif exige des titres identifiés, pas une égalité vide."""
     return isinstance(value, list) and bool(value) and all(
@@ -459,6 +478,8 @@ def collect(journal):
     blocks = len({block for item in exports for block in item["blocks"]})
     check("composants-exportes", blocks == 52, f"{blocks} composants")
     browser = read(RAW / "browser.json")
+    incomplete = upstream_collection_problems(browser)
+    check("collecte-navigateur-complete", not incomplete, "; ".join(incomplete))
     check(
         "etats-navigateur",
         len(browser["snapshots"]) == 11 and not browser["errors"],

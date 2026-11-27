@@ -3,6 +3,7 @@ const fs = require('node:fs/promises');
 const path = require('node:path');
 const {createHash} = require('node:crypto');
 const {pathToFileURL} = require('node:url');
+const {usableBaseline} = require('./collector_receipt.cjs');
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
 function compareDownload(expected, downloaded, intermediate) {
   if (![expected, downloaded, intermediate].every(Buffer.isBuffer)) throw new TypeError('Trois artefacts binaires sont requis.');
@@ -13,9 +14,7 @@ function compareDownload(expected, downloaded, intermediate) {
 }
 async function verifyBaseline(root, baseline, io = fs) {
   const receipt = JSON.parse(await io.readFile(path.join(baseline, 'browser.json'), 'utf8'));
-  if (receipt.completed !== true || receipt.collection_status !== 'completed' || !receipt.run_id ||
-      !receipt.git_parent || !receipt.measuredFilesSha256 || !Object.keys(receipt.measuredFilesSha256).length ||
-      ['errors','collection_errors','proof_errors','cleanup_errors'].some(key => !Array.isArray(receipt[key]) || receipt[key].length)) throw new Error('Collecte export de référence absente, incomplète ou en erreur.');
+  if (!usableBaseline(receipt)) throw new Error('Collecte export de référence absente, incomplète ou en erreur.');
   for (const [file, digest] of Object.entries(receipt.measuredFilesSha256)) {
     const absolute = path.resolve(root, file);
     if (!absolute.startsWith(path.resolve(root) + path.sep)) throw new Error('Source hors du candidat.');

@@ -114,6 +114,52 @@ expect(
 
 module = load()
 
+# Collecte amont (#234) : un browser.json incomplet ou en erreur n’est pas une référence.
+complete_collection = {
+    "completed": True,
+    "collection_status": "completed",
+    "run_id": "collector-test",
+    "git_parent": "0" * 40,
+    "errors": [],
+    "collection_errors": [],
+    "proof_errors": [],
+    "cleanup_errors": [],
+}
+expect(
+    module.upstream_collection_problems(complete_collection) == [],
+    "une collecte amont complète doit être acceptée",
+)
+for label, change in {
+    "completed false": {"completed": False},
+    "completed absent": {"completed": None},
+    "statut incomplete": {"collection_status": "incomplete"},
+    "statut running": {"collection_status": "running"},
+    "run_id absent": {"run_id": None},
+    "git_parent absent": {"git_parent": None},
+    "erreur": {"errors": ["proof: source modifiée"]},
+    "erreur de collecte": {"collection_errors": [{"phase": "collection"}]},
+    "erreur de preuve": {"proof_errors": [{"phase": "proof"}]},
+    "erreur de nettoyage": {"cleanup_errors": [{"phase": "cleanup"}]},
+    "tableau d’erreurs absent": {"proof_errors": None},
+}.items():
+    expect(
+        module.upstream_collection_problems({**complete_collection, **change}),
+        "collecte amont refusée attendue : " + label,
+    )
+collect_function = next(
+    node
+    for node in tree.body
+    if isinstance(node, ast.FunctionDef) and node.name == "collect"
+)
+expect(
+    any(
+        isinstance(node, ast.Call)
+        and getattr(node.func, "id", "") == "upstream_collection_problems"
+        for node in ast.walk(collect_function)
+    ),
+    "collect doit contrôler la complétion de la collecte amont",
+)
+
 # Journal : le compteur vient des entrées, pas d’un littéral.
 journal = module.Journal()
 expect(journal.check("a", True, "ok") is True, "check doit renvoyer True si vrai")
