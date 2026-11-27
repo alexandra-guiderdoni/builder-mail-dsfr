@@ -2,7 +2,7 @@
 const {chromium} = require('playwright');
 const fs = require('node:fs/promises'), path = require('node:path'), assert = require('node:assert/strict');
 const {createHash} = require('node:crypto');
-const {newCollection, beginCollection, finishCollection, collectionFailure} = require('./collector_receipt.cjs');
+const {newCollection, beginCollection, finishCollection, collectionFailure, usableBaseline} = require('./collector_receipt.cjs');
 const root = path.resolve(__dirname, '..');
 const output = path.resolve(root, process.env.BUILDER_CONTRAST_OUTPUT || 'evidence/contrastes-20261022/mesures');
 const baseline = path.resolve(root, process.env.BUILDER_CONTRAST_BASELINE || 'evidence/contrastes-20261022/baseline');
@@ -143,6 +143,7 @@ async function collect(page, scene, selectors, width) {
 (async()=>{
   await beginCollection(output, 'receipt.json', report);
   const source=JSON.parse(await fs.readFile(path.join(baseline,'browser.json'),'utf8'));
+  assert(usableBaseline(source),'Collecte de référence absente, incomplète ou en erreur.');
   const files=[...Object.keys(source.measuredFilesSha256),'reference/dsfr-web/dist/component/select/select.min.css','scripts/audit_contrasts.cjs','scripts/collector_receipt.cjs'];
   report.sourceSha256=Object.fromEntries(await Promise.all(files.map(async file=>[file,hash(await fs.readFile(path.join(root,file)))])));
   for (const [file,digest] of Object.entries(source.measuredFilesSha256)) assert.equal(report.sourceSha256[file],digest,'Source différente de la capture de référence');

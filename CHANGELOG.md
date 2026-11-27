@@ -1,5 +1,10 @@
 # Historique des livraisons
 
+## 27 novembre 2026 - Collectes de référence incomplètes refusées (#234)
+
+- **Outils d’audit :** `scripts/audit_receipt.py` et `scripts/audit_contrasts.cjs` lisaient la collecte de référence `browser.json` sans regarder si elle était terminée. Une collecte interrompue, en erreur ou, pour les contrastes, sans aucune source mesurée servait de référence. Les deux la refusent maintenant, avec la règle que la recette des téléchargements appliquait déjà : elle est désormais écrite une seule fois, dans `scripts/collector_receipt.cjs`. L’application ne change pas.
+- **Tests :** `tests/audit-contrasts-baseline.test.cjs` lance l’outil de contrastes sur trois références défectueuses et vérifie le refus avant tout lancement de navigateur ; `tests/audit_receipt_contract.py` couvre onze défauts de collecte et vérifie que le contrôle est bien appelé.
+
 ## 26 novembre 2026 - Recettes natives remises en état (#230, #233)
 
 - **Recettes exécutables à nouveau (#230) :** les recettes Firefox, mise en page et installation ne pouvaient plus réussir depuis le 2 novembre. Elles attendaient des textes disparus (« Bibliothèque sauvegardée dans ce navigateur. », le volet « Fichiers et récupération », « Import ajouté à la bibliothèque », « Version de composition ») et activaient « reprendre », masqué à la première visite depuis #205. Elles lisent maintenant leurs textes dans `scripts/recipe_texts.json` et entrent dans l’éditeur comme les tests. Rejouées sur le Mac de développement : les trois rendent le code 0. L’application ne change pas.

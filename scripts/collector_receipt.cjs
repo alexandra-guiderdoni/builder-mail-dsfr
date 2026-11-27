@@ -71,4 +71,11 @@ async function finishCollection({root, output, filename, report, sources}, io = 
   return report;
 }
 
-module.exports = {newCollection, beginCollection, finishCollection, collectionFailure};
+// Une collecte ne sert de référence que terminée, identifiée, sans erreur et avec des sources mesurées.
+function usableBaseline(receipt) {
+  return receipt?.completed === true && receipt.collection_status === 'completed' && Boolean(receipt.run_id) &&
+    Boolean(receipt.git_parent) && Object.keys(receipt.measuredFilesSha256 || {}).length > 0 &&
+    ['errors', 'collection_errors', 'proof_errors', 'cleanup_errors'].every(key => Array.isArray(receipt[key]) && !receipt[key].length);
+}
+
+module.exports = {newCollection, beginCollection, finishCollection, collectionFailure, usableBaseline};
