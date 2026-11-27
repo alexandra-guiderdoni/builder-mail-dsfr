@@ -4,6 +4,8 @@ const fs = require('node:fs/promises');
 const path = require('node:path');
 const crypto = require('node:crypto');
 const {newCollection, beginCollection, finishCollection, collectionFailure} = require('./collector_receipt.cjs');
+// Textes de l'atelier attendus par les collecteurs et les recettes : source unique, contrôlée par tests/recipe-texts.test.cjs.
+const T = require('./recipe_texts.json'), panels = [T.templatesPanel, T.identitiesPanel, T.addComponentPanel, T.filesPanel, T.jsonPanel];
 const root = path.resolve(__dirname, '..'), output = path.resolve(root, process.env.BUILDER_AUDIT_OUTPUT || 'evidence/accessibilite-20261022');
 const axePath = '/Users/alex/Claude/git-hors-workflow/ay11-pre-audit/node_modules/axe-core/axe.min.js';
 const snapshots = [], interactions = [], errors = [];
@@ -11,7 +13,14 @@ const report = newCollection(root, {bypassCSPForLocalAxe: true, humanQualificati
 let measuredFilesSha256 = {};
 const hash = data => crypto.createHash('sha256').update(data).digest('hex');
 const activate = async (page, selector) => { await page.locator(selector).focus(); await page.keyboard.press('Enter'); };
-async function editor(page) { await page.locator('[data-action=resume-document]').waitFor({state: 'visible'}); await activate(page, '[data-action=resume-document]'); await page.locator('#editor-page').waitFor({state: 'visible'}); }
+// #205 : « reprendre » est masqué tant que rien n'est enregistré ; l'entrée suit alors enterEditor de tests/browser-support.cjs.
+async function editor(page) {
+  if (await page.locator('[data-action=resume-document]').isVisible()) await activate(page, '[data-action=resume-document]');
+  else await page.evaluate(() => MailBuilder.Library.open(MailBuilder.library.activeId));
+  await page.locator('#editor-page').waitFor({state: 'visible'});
+}
+// #205 : la liste et ses actions n'apparaissent qu'une fois la newsletter enregistrée, comme established des tests.
+const established = async page => { await page.evaluate(() => MailBuilder.State.change(() => {})); await page.waitForFunction(text => document.getElementById('save-state').textContent === text, T.saved); };
 async function keyboardCycle(page, id, start, reverse = false) {
   await page.locator(start).focus();
   const trace = [];
@@ -94,13 +103,13 @@ async function capture(page, id, state) {
     const exports = await page.evaluate(lib => lib.documents.map(doc => ({name: doc.name, blocks: doc.blocks.map(b => b.component), html: MailBuilder.Render.exportHtml(doc)})), qualification);
     for (const [i, item] of exports.entries()) await fs.writeFile(path.join(output, 'exports', `${String(i + 1).padStart(2, '0')}.html`), item.html);
     await fs.writeFile(path.join(output, 'exports/index.json'), JSON.stringify(exports.map((v, i) => ({id: String(i + 1).padStart(2, '0'), name: v.name, blocks: v.blocks, sha256: hash(v.html), artifactKind: 'download-html', renderer: 'Render.exportHtml'})), null, 2));
-    for (const text of ['Mes modèles', 'Identités de service', 'Ajouter un composant', 'Fichiers et récupération', 'Importer du JSON']) {
+    for (const text of panels) {
       const summary = page.locator('summary').filter({hasText: text}); await summary.focus(); await page.keyboard.press('Enter');
     }
     await capture(page, 'editor-expanded', 'Toutes les sections ouvertes');
     await page.locator('#article-source').fill('http://exemple.invalid/');
     await capture(page, 'editor-invalid', 'URL non HTTPS refusée'); await focus(page, 'Erreur URL');
-    await activate(page, '[data-action=cancel-fields]');
+    await activate(page, '[data-action=cancel-fields]'); await established(page);
     await activate(page, '[data-action=library-home]'); await activate(page, '[data-library-action=rename]');
     await capture(page, 'rename-dialog', 'Dialogue de renommage'); await focus(page, 'Ouverture du dialogue');
     await page.locator('#library-name').fill(''); await activate(page, '#library-confirm');
@@ -139,10 +148,10 @@ async function capture(page, id, state) {
     const keys = await native.newPage(); await keys.goto('file://' + path.join(root,'app/distribution/portable.html'));
     await keys.waitForFunction(()=>window.MailBuilder?.ready);
     const keyboard = [await keyboardCycle(keys,'home','.skip'),await keyboardCycle(keys,'home','.skip',true)];
-    await activate(keys,'[data-library-action=rename]');
+    await established(keys); await activate(keys,'[data-library-action=rename]');
     keyboard.push(await keyboardCycle(keys,'rename-dialog','#library-name'),await keyboardCycle(keys,'rename-dialog','#library-name',true));
     await keys.keyboard.press('Escape'); await focus(keys,'Fermeture par Échap'); await editor(keys);
-    for (const text of ['Mes modèles','Identités de service','Ajouter un composant','Fichiers et récupération','Importer du JSON']) await activate(keys,'summary:has-text("'+text+'")');
+    for (const text of panels) await activate(keys,'summary:has-text("'+text+'")');
     keyboard.push(await keyboardCycle(keys,'expanded','.skip'),await keyboardCycle(keys,'expanded','.skip',true));
     const protocols = await layoutProtocols(keys,'editor');
     const converter = await native.newPage(); await converter.goto('file://' + path.join(root,'app/distribution/snum.html'));

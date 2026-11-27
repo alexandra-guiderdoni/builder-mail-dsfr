@@ -8,7 +8,15 @@ const output = path.resolve(root, process.env.BUILDER_CONTRAST_OUTPUT || 'eviden
 const baseline = path.resolve(root, process.env.BUILDER_CONTRAST_BASELINE || 'evidence/contrastes-20261022/baseline');
 const hash = value => createHash('sha256').update(value).digest('hex');
 const report = newCollection(root, {completed: false, bypassCSP: false, humanQualification: false, screenReaderExecuted: false, observations: [], negativeControls: [], errors: []});
+// Textes de l'atelier : source unique, contrôlée par tests/recipe-texts.test.cjs.
+const T = require('./recipe_texts.json'), panels = [T.templatesPanel, T.identitiesPanel, T.addComponentPanel, T.filesPanel, T.jsonPanel];
 const click = async (page, selector) => {const e = page.locator(selector); await e.waitFor({state:'visible'}); await e.focus(); await e.press('Enter');};
+
+// #205 : « reprendre » est masqué tant que rien n'est enregistré.
+const enter = async page => { if (await page.locator('[data-action=resume-document]').isVisible()) await click(page, '[data-action=resume-document]'); else await page.evaluate(() => MailBuilder.Library.open(MailBuilder.library.activeId)); };
+
+// #205 : la liste et ses actions n'apparaissent qu'une fois la newsletter enregistrée, comme established des tests.
+const established = async page => { await page.evaluate(() => MailBuilder.State.change(() => {})); await page.waitForFunction(text => document.getElementById('save-state').textContent === text, T.saved); };
 
 function rgba(value) {
   if (/^#[0-9a-f]{6}$/i.test(value)) return [...value.slice(1).match(/../g).map(v => parseInt(v, 16)), 1];
@@ -154,15 +162,15 @@ async function collect(page, scene, selectors, width) {
       const context=await browser.newContext({viewport:{width,height:1000},colorScheme:'light',deviceScaleFactor:1});
       const page=await context.newPage(); page.on('pageerror',e=>report.errors.push(e.message));
       await page.goto('file://'+path.join(root,'app/distribution/portable.html')); await page.waitForFunction(()=>window.MailBuilder?.ready); await page.evaluate(()=>document.fonts.ready);
-      await collect(page,'home',['#starter'],width); await click(page,'[data-action=resume-document]'); await collect(page,'editor',['#documents'],width);
-      for (const title of ['Mes modèles','Identités de service','Ajouter un composant','Fichiers et récupération','Importer du JSON']) await click(page,'summary:has-text("'+title+'")');
+      await collect(page,'home',['#starter'],width); await enter(page); await collect(page,'editor',['#documents'],width);
+      for (const title of panels) await click(page,'summary:has-text("'+title+'")');
       await collect(page,'editor-expanded',['#documents','#saved-templates','#identities'],width);
       await page.locator('#article-source').fill('http://exemple.invalid/'); await collect(page,'editor-invalid',['#documents','#saved-templates','#identities'],width);
-      await click(page,'[data-action=cancel-fields]'); await click(page,'[data-action=library-home]'); await click(page,'[data-library-action=rename]');
+      await click(page,'[data-action=cancel-fields]'); await established(page); await click(page,'[data-action=library-home]'); await click(page,'[data-library-action=rename]');
       await collect(page,'rename-dialog',['#starter','#library-dialog-description'],width);
       await page.locator('#library-name').fill(''); await click(page,'#library-confirm'); await collect(page,'rename-invalid',['#starter','#library-dialog-description'],width);
       await click(page,'#library-cancel'); await click(page,'[data-library-action=remove]'); await collect(page,'delete-dialog',['#starter','#library-dialog-title','#library-dialog-description'],width);
-      await click(page,'#library-cancel'); await click(page,'[data-action=resume-document]');
+      await click(page,'#library-cancel'); await enter(page);
       const block=await page.evaluate(()=>MailBuilder.doc().blocks.find(b=>b.component==='mail-19').id); await click(page,`[data-select="${block}"]`);
       await page.locator('#article-source').fill('https://exemple.invalid/source'); await page.locator('#article-source-label').fill('Lire le dossier');
       await collect(page,'source-label',['#documents','#saved-templates','#identities'],width);

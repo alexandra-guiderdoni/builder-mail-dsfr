@@ -8,6 +8,10 @@ const contractFile = path.join(__dirname, '../assets/builder-contract.json');
 // Contrat du consommateur (#197) : seulement ce dont le skill dépend. Libellés et valeurs par défaut des champs, et styles,
 // en sont exclus : les changer ne modifie ni le format ni les gabarits que le skill remplit, et les valeurs par défaut sont
 // des exemples à remplacer. Les noms de composants restent, car les références les citent. Les fonctions sont éprouvées par leur comportement, pas par l'empreinte des fichiers sources.
+// #235 : aucun script du skill n'appelle `block`, `clipboardHtml` ni `exportHtml`, et les deux dernières exigent un DOM que
+// builder-document.cjs ne fournit pas. Elles restent déclarées pour la même raison que les noms de composants : SKILL.md,
+// references/copy-and-reception.md et evals/scenarios.md citent `clipboardHtml` et `exportHtml` par leur nom, et les tests du
+// skill appellent les trois. Les renommer dans l'atelier doit donc faire échouer ce contrat, pour que ces textes soient revus.
 const API = {Model: ['create', 'createBlock', 'component', 'document', 'versions', 'setTexts'],
   Render: ['html', 'plain', 'assertOutput', 'block', 'clipboardHtml', 'exportHtml']};
 const REMOTE_IMAGE = 'https://example.org/image.png';
