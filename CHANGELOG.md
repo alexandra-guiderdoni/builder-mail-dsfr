@@ -1,5 +1,11 @@
 # Historique des livraisons
 
+## 27 novembre 2026 - Outils d’audit d’accessibilité remis en état (#243)
+
+- **Collecte et contrastes exécutables à nouveau :** `scripts/audit_browser.cjs` et `scripts/audit_contrasts.cjs` ne pouvaient plus aboutir. Ils activaient « reprendre », masqué à la première visite depuis #205, cherchaient un volet renommé, et attendaient à l’accueil une liste qui n’apparaît plus qu’après un premier enregistrement. Ils entrent maintenant dans l’éditeur comme les tests, enregistrent la newsletter avant les actions de liste, et lisent leurs textes dans `scripts/recipe_texts.json`. Rejoués : onze états collectés, puis quatre-vingts observations de contraste et cinq contrôles négatifs. L’application ne change pas.
+- **Même garde-fou que les recettes :** `tests/recipe-texts.test.cjs` couvre désormais ces deux outils.
+- **À savoir :** l’état « home » collecté est maintenant l’accueil de première visite ; la liste des newsletters n’est plus relevée seule, seulement sous les fenêtres de renommage et de suppression.
+
 ## 27 novembre 2026 - L’atelier refuse d’être encadré par une autre page (#238)
 
 - **Protection contre l’encadrement :** affiché dans le cadre d’une autre page, l’atelier fonctionnait normalement ; sous Chromium, il y relisait même les newsletters enregistrées, ce qui ouvrait la voie à une activation de « Tout effacer » par superposition, attaque non montée. Il ne démarre plus dans ce cas : il ne lit rien, affiche un message et un lien pour s’ouvrir dans sa propre fenêtre. La protection est faite par script, la seule voie possible sur GitHub Pages, où aucun en-tête ne peut être posé. Le test `frame-refusal-browser` encadre réellement l’atelier depuis une autre origine, sous Chromium et WebKit.
