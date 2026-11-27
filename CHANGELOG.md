@@ -1,5 +1,9 @@
 # Historique des livraisons
 
+## 27 novembre 2026 - Exception ANDI documentée (#237)
+
+- **Politique de sécurité :** l’atelier autorise deux sources tierces pour ANDI, outil d’audit d’accessibilité injecté par favori. L’exception était testée mais absente de la maintenance. Elle y est décrite, avec ce qu’elle autorise exactement et la décision de la conserver. Rien ne change dans les distributions.
+
 ## 27 novembre 2026 - Relance de publication corrigée dans la maintenance (#244)
 
 - **Procédure de relance :** la maintenance recommandait de relancer le seul job de publication en échec. Essayée le 26 novembre, cette relance échoue quand l’artefact est déjà déposé : le job en dépose un second, que la publication refuse. La procédure recommande maintenant une exécution neuve du workflow, voie par laquelle la publication a été obtenue ce jour-là. Le workflow ne change pas.

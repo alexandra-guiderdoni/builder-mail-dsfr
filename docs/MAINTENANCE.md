@@ -275,3 +275,14 @@ Le modèle conserve les données locales dans `values` et sélectionne les réf�
 La CSP du builder ajoute seulement `https:` à `img-src` (et à celle de son aperçu). Aucun `connect-src`, script externe, wildcard ou privilège de sandbox n’est ajouté ; la CSP extérieure SNUM reste restrictive. L’application d’URL utilise le chargeur d’image du navigateur sans fetch, proxy ni archive ; `no-referrer` est demandé aux images distantes. Les dimensions attestent un décodage, pas le MIME, le poids ou la réception. Les URL et données locales sont préservées sans réencodage à la copie/export.
 
 Tests ciblés : `remote-images.test.cjs`, `remote-images-browser.test.cjs`, `image-import-browser.test.cjs`, `image-limits-browser.test.cjs`, `schema-validation.test.cjs`, `preview-contract.test.cjs`. La fixture gzip de 09eff89 vérifie le refus par la vraie distribution ancienne ; son hash est conservé. La sélection par `selectOption` est une preuve de gestion du changement, pas une preuve clavier natif. Les recettes natives et la réception restent des preuves distinctes.
+
+## Exception ANDI de la politique de sécurité (#237)
+
+La politique des deux distributions de l’atelier (`portable.html` et `web/index.html`) autorise deux sources tierces, pour l’outil d’audit d’accessibilité ANDI qu’un auditeur injecte par un favori :
+
+- dans `script-src` et `style-src`, le répertoire `https://www.ssa.gov/accessibility/andi/` ;
+- dans `script-src`, le fichier exact `https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js`, que charge ANDI.
+
+Aucune page de l’atelier ne charge ces ressources : elles n’entrent que si un auditeur lance ANDI. Le convertisseur SNUM et l’aperçu isolé n’ont pas cette exception. Elle est construite dans `scripts/build_app.py` (variables `andi` et `andi_jquery`) ; `tests/andi-csp-browser.test.cjs` vérifie que ces sources passent et qu’un autre jQuery, un autre chemin de `ssa.gov` et un site tiers restent bloqués.
+
+Décision du 27 novembre 2026 : l’exception est conservée. La retirer des distributions publiées obligerait à auditer un fichier différent de celui qui est servi. Elle ne se prête à un abus que si du HTML peut d’abord être injecté dans la page, ce que l’échappement du rendu empêche. Non évalué : le risque propre aux deux hébergeurs. Si ANDI cesse d’être utilisé, retirer les deux variables, régénérer les distributions et retirer le test.
